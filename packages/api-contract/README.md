@@ -14,6 +14,16 @@ import { contractVersion, openApiSha256, operationCount } from "@cueframe/api-co
 import openApi from "@cueframe/api-contract/openapi.json" with { type: "json" };
 ```
 
+## Use the contract
+
+```bash
+npm install @cueframe/api-contract
+```
+
+Requires Node.js 24 or newer for the JavaScript exports. Other languages and generators can read the [public OpenAPI JSON](https://github.com/cueframe-ai/cueframe-mcp/blob/main/api/openapi.json) directly. Use the versioned npm package when you need reproducible generation.
+
+The contract describes the hosted API at `https://api.cueframe.ai`; installing it does not run a server. Start with the [API reference](https://docs.cueframe.ai/docs/api), [API walkthrough](https://cueframe.ai/api), or [TypeScript SDK](../sdk).
+
 ## One contract chain
 
 ```
