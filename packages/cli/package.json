@@ -1,18 +1,17 @@
 {
   "name": "cueframe",
   "version": "0.8.1",
-  "description": "Agent-native CLI for CueFrame \u2014 author compositions and render video from the terminal (early-access preview).",
+  "description": "CueFrame video editing CLI: manage media, edit compositions and render MP4s from terminals and scripts.",
   "keywords": [
     "cueframe",
-    "video",
-    "render",
+    "video-editing",
+    "video-rendering",
     "composition",
     "cli",
-    "agent",
-    "ffmpeg",
-    "remotion"
+    "automation",
+    "mcp"
   ],
-  "homepage": "https://docs.cueframe.ai",
+  "homepage": "https://cueframe.ai/cli",
   "author": "CueFrame, Inc.",
   "license": "Apache-2.0",
   "type": "module",

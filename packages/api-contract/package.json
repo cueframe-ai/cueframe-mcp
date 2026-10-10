@@ -1,7 +1,7 @@
 {
   "name": "@cueframe/api-contract",
   "version": "3.0.1",
-  "description": "Sanitized, versioned OpenAPI contract for the public CueFrame API.",
+  "description": "Versioned OpenAPI contract and composition schemas for the CueFrame video editing and rendering API.",
   "type": "module",
   "license": "Apache-2.0",
   "main": "./dist/index.js",
@@ -38,8 +38,19 @@
     "url": "git+https://github.com/cueframe-ai/cueframe-mcp.git",
     "directory": "packages/api-contract"
   },
-  "homepage": "https://docs.cueframe.ai",
+  "homepage": "https://cueframe.ai/api",
   "engines": {
     "node": ">=24"
+  },
+  "keywords": [
+    "cueframe",
+    "openapi",
+    "video-editing",
+    "video-rendering",
+    "api",
+    "json-schema"
+  ],
+  "bugs": {
+    "url": "https://github.com/cueframe-ai/cueframe-mcp/issues"
   }
 }

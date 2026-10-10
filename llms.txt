@@ -1,4 +1,4 @@
-# CueFrame MCP
+# CueFrame — MCP, CLI and video API
 
 > CueFrame is a hosted video editing and composition service for AI agents. This repository contains its agent plugin, 18 skills, TypeScript SDK, CLI, public API contract, and registry metadata. It does not contain the hosted MCP server implementation.
 
@@ -27,6 +27,13 @@ Use skills for the requested task, preserving existing media, timing, audio, and
 - [3D scenes](https://github.com/cueframe-ai/cueframe-mcp/blob/main/skills/cueframe-scene-shot/SKILL.md): Author product shots and camera motion.
 - [Preview and refine](https://github.com/cueframe-ai/cueframe-mcp/blob/main/skills/cueframe-compose-loop/SKILL.md): Inspect frames and motion, then render when appropriate.
 - [All skills](https://github.com/cueframe-ai/cueframe-mcp/tree/main/skills): Music, branding, product demos, social reels, and multiple output formats.
+
+## CLI and API workflows
+
+- [CLI quickstart](https://cueframe.ai/cli.md): Node.js requirements, account checks, rendering existing projects, batch scripts and failures.
+- [API quickstart](https://cueframe.ai/api.md): Authentication, REST example, asynchronous render status and safe retries.
+- [CLI walkthrough](https://cueframe.ai/cli): Render an editable template from the terminal.
+- [API walkthrough](https://cueframe.ai/api): Download the complete JavaScript example and inspect its output.
 
 ## Developer resources
 

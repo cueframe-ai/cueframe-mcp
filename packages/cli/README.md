@@ -140,6 +140,18 @@ Restart your agent session after installation. Interactive MCP clients open a br
 | Export to Final Cut / Premiere | `npx -y cueframe@0.8 export fcpxml \| premiere <projectId> -s <sug_…> --wait -o cut.zip` |
 | Validate without mutating | use `--dry-run` where command help lists it |
 
+## Render existing projects from a script
+
+After authentication, render each saved project in sequence. This uses the existing composition and downloads the MP4; it does not create an edit. Each render is metered.
+
+```bash
+set -e
+for project_id in "$@"; do
+  npx -y cueframe@0.8 render "$project_id" -o "${project_id}.mp4" --json
+done
+```
+
+Save this as `render-projects.sh` and pass project IDs: `bash render-projects.sh PROJECT_ID_1 PROJECT_ID_2`. `set -e` stops the batch on a failed command. Lifecycle output is NDJSON, so consume one JSON object per line. Check [the API quickstart](https://cueframe.ai/api.md) for retrieving an existing render job after an interrupted connection; do not submit a new render merely to check its status.
 ---
 
 © CueFrame, Inc. Open source under Apache-2.0.
