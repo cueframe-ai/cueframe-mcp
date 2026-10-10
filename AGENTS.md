@@ -6,7 +6,7 @@ This repository is the public home of [CueFrame](https://cueframe.ai)'s agent su
 - `packages/api-contract` (`@cueframe/api-contract`): the public OpenAPI document, its reviewed operation inventory and a content-addressed manifest, built from `api/`.
 - `packages/sdk` (`@cueframe/sdk`): the typed TypeScript client. `src/generated/` is Orval output; `client.ts`, `errors.ts` and `sse.ts` are hand-written.
 - `packages/skills` (`@cueframe/skills`): the root `skills/` tree as an npm package; `SKILLS_DIR` from `@cueframe/skills/dir` points at its `dist/skills`.
-- `packages/cli` (`cueframe`): the command-line client. `cueframe install` writes the agent skills (copied from `@cueframe/skills` at build time) and the MCP config into a project.
+- `packages/cli` (`cueframe`): the command-line client. `cueframe install` writes the agent skills (copied from `@cueframe/skills` at build time) into `~/.agents/skills` and `~/.claude/skills`, and updates detected clients’ MCP configuration.
 
 The MCP server package, `@cueframe/mcp`, is private and lives in the application repository; it is not in this tree. `server.json` is the registry entry for the hosted server, and `glama/` holds a discovery shim (not a workspace member; it has its own `package.json` and lockfile).
 

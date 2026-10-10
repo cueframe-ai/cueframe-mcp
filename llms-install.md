@@ -52,11 +52,13 @@ Put the block from Step 1 in the client's MCP config: `.mcp.json` (Claude Code),
 
 ## Step 3: install the skills
 
-Either install this plugin through your client's plugin or marketplace command (the install lines are in [README.md](./README.md)), or let the CLI write the skills into the project:
+Either install this plugin through your client's plugin or marketplace command (the install lines are in [README.md](./README.md)), or let the CLI install the skills into `~/.agents/skills` and `~/.claude/skills`:
 
 ```
 npx -y cueframe@0.8 install
 ```
+
+Restart your agent session after installation so it can load the server and skills.
 
 ## Step 4: verify
 

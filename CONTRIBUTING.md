@@ -2,6 +2,10 @@
 
 ## How to contribute
 
+New here? Browse [good first issues](https://github.com/cueframe-ai/cueframe-mcp/labels/good%20first%20issue). These have a limited scope, named files, and acceptance criteria; they should not require access to private infrastructure or paid cloud operations. Comment on an issue with your proposed approach before starting so maintainers can help avoid duplicate work.
+
+The easiest entry points are documentation, per-client setup examples, and skill guidance. For a skill change, edit root `skills/`, regenerate its cards with `pnpm build:plugin`, and include the generated files. For code changes, start with the Development section below. Hosted server implementation changes happen in the application repository; this repository accepts reports and public toolkit fixes.
+
 Reports, ideas, documentation fixes and code pull requests are welcome. Open a GitHub issue with a bug report, a feature request or a correction, or open a focused pull request when you have a proposed fix.
 
 A great issue includes:

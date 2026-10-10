@@ -1,102 +1,167 @@
 # CueFrame MCP
 
-CueFrame composes, edits and renders finished video from an agent: bring footage, a brief or a brand and get back an MP4 with content-aware reframing, captions behind the subject and motion graphics authored as real components. See a render end to end in [the quickstart](https://docs.cueframe.ai/docs/quickstart#render).
+Give your agent tools to compose, edit, preview, and render video. Bring footage, a brief, or a brand; get a finished MP4 and an editable project with clips, captions, and motion graphics.
 
-This is the one public repository for CueFrame's agent surface. It is three things; most people want the first.
+[First render](https://cueframe.ai/start) · [Connection guide](https://docs.cueframe.ai/docs/setup) · [Templates](https://cueframe.ai/templates) · [API reference](https://docs.cueframe.ai/docs/api)
 
-1. **The plugin.** Eighteen agent skills under [`skills/`](./skills), the session router and the manifests that install them into Claude Code, Codex and ChatGPT, Cursor, Gemini CLI and any Agent Skills client, every one pointed at the hosted MCP server.
-2. **The developer toolkit.** The OpenAPI contract under [`api/`](./api) and the npm packages built from this tree: `@cueframe/api-contract`, `@cueframe/sdk`, `@cueframe/skills` and the `cueframe` CLI.
-3. **The registry files.** `server.json` for the MCP registry, `glama.json`, and the stdio discovery shim in [`glama/`](./glama).
+[![A real CueFrame render: PHENOMENAL behind a Yosemite ranger, with word-timed captions](assets/readme/yosemite-render.jpg)](https://cueframe.ai/start)
 
-Documentation: https://docs.cueframe.ai · OpenAPI: https://api.cueframe.ai/v1/openapi.json
+*A frame from the Yosemite Peregrines template. [Watch the video and try the same edit](https://cueframe.ai/start).*
 
-## Install the plugin
+## Connect your agent
 
-Claude Code (skills, the session router and the MCP server in one plugin):
+For Claude Code, Codex, Cursor, VS Code, and other supported local agents, run this in your terminal with **Node.js 24 or newer**:
 
+```bash
+npx -y cueframe@0.8 install
 ```
+
+The installer detects supported agents and adds the hosted CueFrame MCP endpoint to their configuration. It installs the skills in `~/.agents/skills` and `~/.claude/skills`, preserving locally modified skills by default. It can update multiple detected clients; use `--dry-run` to inspect the changes first.
+
+Restart your agent session. Then ask:
+
+> Use CueFrame's get_account tool to check my connection and show my available credits.
+
+Your client may prompt you to authenticate or open a browser. Sign in to CueFrame and authorize the connection; interactive OAuth clients need no API key. Cloud operations use credits. Check your balance and estimated costs before starting paid work; see [cloud rates](https://cueframe.ai/pricing).
+
+**ChatGPT and Claude Desktop:** use your client's hosted connector setup with `https://api.cueframe.ai/v1/mcp`, then authenticate. The terminal installer does not configure ChatGPT. See the [connection guide](https://docs.cueframe.ai/docs/setup) and [CueFrame connection skill](skills/cueframe-connect/SKILL.md) for supported paths. Skills installation and hosted connector setup are separate steps.
+
+**Already connected?** Skip installation and give your agent a video task. If CueFrame's tools do not appear, restart the client and check its MCP connection settings.
+
+## Make your first video
+
+Try the [Yosemite first-render walkthrough](https://cueframe.ai/start): render a template, change one word, and render again from the same project.
+
+1. Download the **full original footage** from the [National Park Service](https://www.nps.gov/media/video/view.htm?id=53135a56-4998-4d6e-b26d-24fe0acca1c3) as `yosemite-peregrines.mp4`. Use the original source, because the finished demo has its title baked in. Follow the source's download and reuse guidance.
+2. Give your connected agent the source file and this instruction:
+
+   > Use CueFrame to start the yosemite-peregrines template from cueframe-ai/cueframe-templates with this original video. Load template.cueframe and its prepared subject matte. Preview the editable project and estimate cloud costs. After I approve the render, return the MP4 link and project ID.
+
+3. After the first render, ask:
+
+   > In that same project, replace the behind-subject title PHENOMENAL with EXTRAORDINARY. Preserve the footage, spoken captions, audio, timing, placement, and depth. Preview the changed title, estimate the render cost, and render after I approve.
+
+The template selects 83.616–93.359 seconds of the original video. You should get two MP4s from one editable project. Uploading footage and running cloud operations use credits; the two renders are billed separately.
+
+[![The same Yosemite project open in CueFrame Studio, with EXTRAORDINARY selected as an editable title layer](assets/readme/yosemite-editor.webp)](https://cueframe.ai/start)
+
+*The project stays editable: the desktop editor shows the title as a separate layer, alongside footage and captions. [Watch the title change](https://cueframe.ai/start).*
+
+### What happens over MCP?
+
+```mermaid
+flowchart LR
+    A[Your request + footage] --> B[Your agent + CueFrame skills]
+    B --> C[Hosted CueFrame MCP]
+    C --> D[Editable project + preview]
+    D --> E[Render job → MP4 link]
+```
+
+The agent inspects available tools, checks your account, prepares media and the project, previews changes, and submits a render. Long-running operations return IDs; the agent waits for completion and gives you the result. You do not need to write the tool calls yourself. The [detailed quickstart](https://docs.cueframe.ai/docs/quickstart) explains the individual calls.
+
+For your next video, describe the result and provide the inputs:
+
+> Turn this interview into a 20-second vertical clip with word-timed captions. Preview the strongest moment and show estimated costs before rendering.
+
+> Find an image-carousel component for these product photos. Show suitable choices and their required inputs before creating the video.
+
+> Change only the final title in this project. Keep the rest of the edit unchanged.
+
+## Other installation options
+
+Choose one setup path. A plugin installs the skills and hosted MCP configuration together. A server-only connection adds tools; skills provide the workflow guidance.
+
+<details>
+<summary><strong>Claude Code and Codex plugins</strong></summary>
+
+Claude Code:
+
+```bash
 claude plugin marketplace add cueframe-ai/cueframe-mcp
 claude plugin install cueframe@cueframe
 ```
 
 Codex:
 
-```
+```bash
 codex plugin marketplace add cueframe-ai/cueframe-mcp
 codex plugin add cueframe@cueframe
 ```
 
+Restart the session, authenticate when prompted, and ask the agent to call `get_account`.
+
+</details>
+
+<details>
+<summary><strong>Gemini CLI and Agent Skills clients</strong></summary>
+
 Gemini CLI:
 
-```
+```bash
 gemini extensions install https://github.com/cueframe-ai/cueframe-mcp
 ```
 
-Any of the 70+ clients that support Agent Skills (reads `skills/` and `skills.sh.json` directly):
+Install skills in any client that supports Agent Skills:
 
-```
+```bash
 npx skills add cueframe-ai/cueframe-mcp
 ```
 
-Any MCP client, server only (then install the skills with one of the lines above or the CLI below). The browser opens to sign in on the first call; headless clients send `Authorization: Bearer cf_live_…` instead:
+Skills alone do not connect the MCP server. Add the hosted endpoint through your client's MCP settings if it is not already connected.
 
-```
+</details>
+
+<details>
+<summary><strong>MCP server only, manual setup, and headless clients</strong></summary>
+
+The hosted endpoint is **`https://api.cueframe.ai/v1/mcp`**, using Streamable HTTP. For example, in Claude Code:
+
+```bash
 claude mcp add --transport http cueframe https://api.cueframe.ai/v1/mcp
 ```
 
-Cursor and VS Code: use the one-click install links on https://docs.cueframe.ai/docs/setup (the same page lists every other client's config block, since the key names differ per client).
+For Cursor and VS Code, use the one-click links in the [connection guide](https://docs.cueframe.ai/docs/setup). Configuration keys differ between clients. Per-client examples are in [`examples/`](./examples).
 
-Hermes:
+Interactive clients can use browser sign-in. Headless clients send `Authorization: Bearer cf_live_…`; see [llms-install.md](./llms-install.md) for authentication and stdio bridge options. The `glama/` shim executes no tools and cannot be used to make videos.
 
-```yaml
-mcp_servers:
-  cueframe:
-    url: https://api.cueframe.ai/v1/mcp
-    auth: oauth
-```
+</details>
 
-OpenClaw:
+## Skills included
 
-```
-openclaw mcp add cueframe --url https://api.cueframe.ai/v1/mcp --transport streamable-http --auth oauth
-```
+Skills teach the agent how to carry out video tasks. You describe the task; the agent selects the relevant guidance.
 
-The CueFrame CLI, which wires the server into every agent on your machine and writes the skills into the current project:
-
-```
-npx -y cueframe@0.8 install
-```
-
-Or let your agent do it. Paste this into the agent:
-
-> Install the CueFrame plugin from https://github.com/cueframe-ai/cueframe-mcp, connect the CueFrame MCP server at https://api.cueframe.ai/v1/mcp, run get_account to confirm it works, then ask me for my footage or the video I want to make.
-
-Connecting and authenticating step by step, including the desktop app's local server: [llms-install.md](./llms-install.md). Per-client examples live in [`examples/`](./examples): Claude Code, Cursor, Codex, Hermes, OpenClaw, and an SDK script that renders a clip end to end.
-
-### The skills
-
-| Skill | What it does |
+| Task | Skills |
 | --- | --- |
-| `add-music-bed` | Retrofits a music bed (and ambience or SFX) onto an existing composition — license-aware search, correct mix hierarchy, ducking under speech, cuts moved onto the beat. Triggers on "add music to this", "this video feels dead", "put a bed under it", "it needs sound", "add background music", "make the cuts hit the beat", "add some sfx", "the audio is just silence". |
-| `brand-reel` | Produces a 12–20 second 9:16 brand-identity reel — three-beat arc, bespoke cards in the brand's own type and palette, footage graded into the palette. Triggers on "brand video", "identity reel", "make our brand a video", "turn our brand into a reel", "a video that feels like us", "showcase our brand", "anthem video for our launch". |
-| `clip-a-talking-head` | Cuts a podcast, talk, or interview into shorts that open on the strongest sentence, reframe to the active speaker, and carry transcript-timed captions. Triggers on "clip this podcast", "pull the best moments out of this talk", "make shorts from this interview", "cut this down for social", "find the viral moment", "turn this recording into clips", "the good part is buried". |
-| `composing-video` | Use when an agent is asked to make ANY video with CueFrame — a product launch, announcement, promo, teaser, social clip, reel, short, explainer, animated explainer, concept video, product/dev-tool demo, walkthrough, or founder/talking-head piece. Triggers on "make a video", "launch video", "promo", "teaser", "reel", "short", "explainer", "animated explainer", "demo video", "talking-head", or turning long-form footage into clips. |
-| `cueframe-brand-demo` | Use when turning a local app into a brand-consistent product demo with CueFrame — extract the brand straight from the repo (colors/fonts/logo/motion), capture a Playwright walkthrough of the running app, and author a branded, auto-zoomed demo whose intro/outro/logo/colors/fonts/motion are frozen by CueFrame's engine — e.g. "make an on-brand demo of my app", "record my localhost and produce a branded launch video". This is the end-to-end brand pipeline over the CueFrame curated tools. |
-| `cueframe-cli` | Use when editing, clipping, or rendering video via the CueFrame CLI — e.g. "make a 9:16 short from this podcast", "pull the best moments out of this MP4", "render a clip", or any task that calls the `cueframe` binary. Also use when comparing CueFrame against direct-ffmpeg approaches. |
-| `cueframe-component-authoring` | Use when authoring, forking, or customizing a CueFrame motion-graphics component/primitive/graphic — e.g. "customize the cinematic-title primitive", "make my own animated lower-third", "fork a CueFrame template and edit it", "author a custom graphic and render it". Covers cloud MCP, local desktop, and CLI project paths through the same component-v2 contract. Use BEFORE hand-writing a component from scratch — forking a built-in is usually the faster start. |
-| `cueframe-compose-loop` | Use when an AI agent should DRIVE CueFrame to a high-quality clip itself — author a composition, look at rendered frames, score it with CueFrame's judge, fix the weakest thing, and repeat until it's good — e.g. "turn this source into a polished 9:16 clip", "compose and self-correct until it scores well". This is the agent-driven convergence loop over the CueFrame primitives in the `cueframe-cli` skill. |
-| `cueframe-connect` | Use when CueFrame is not connected yet, the user asks how to connect or authenticate CueFrame, or another CueFrame skill is about to call a tool and needs the one-time setup path for Claude Code, Claude, ChatGPT, Cursor, Codex, VS Code, Windsurf, Zed, Antigravity CLI, Copilot CLI, or an x402 wallet. |
-| `cueframe-product-video` | Use when turning a screen recording (with cursor/click events) into a polished, auto-zooming product video or demo reel via CueFrame — e.g. "make a product demo from this Browserbase capture", "auto-zoom this screen recording to where the user clicked", "turn this walkthrough into a social demo". This is a USE-CASE recipe over the CueFrame primitives in the `cueframe-cli` skill. |
-| `cueframe-scene-shot` | Author a CueFrame 3D world-object shot as canonical SceneShotSpecV2 JSON. Use for slabs, pages, phones, laptops, captured component or video surfaces, world text, camera motion, studio lighting, focus, and product-shot recipes. |
-| `cueframe-storyboard` | Use BEFORE composing when starting a NEW video from scratch and you need to plan its structure — turning a rough ask ("make a launch video", "30s promo", "an explainer for our API") into a concrete beat flow. Owns the intake + storyboard step: interview the user for the brief, resolve the format from the platform, and lay out the hook→body→cta beats that drive the compose workflow. Triggers on "plan a video", "storyboard", "structure this video", "outline the video", "where do I start", or any new-video ask that has no structure yet. Hand off to composing-video for per-beat craft. |
-| `every-format-from-one-edit` | Derives content-aware 9:16, 1:1, and 4:5 siblings from one finished composition — same edit, every platform, no re-editing. Triggers on "make this vertical too", "I need this for TikTok and LinkedIn", "every aspect ratio", "square version of this", "resize for Reels", "one video, all platforms", "port this edit to Shorts". |
-| `extracting-brand-kits` | Use when the user says "make my video look like THIS" with a reference video, screenshots, or a moodboard — build a CueFrame brand kit FROM that inspiration so every subsequent compose speaks its visual language. Owns the extraction step: sample the reference's graphics-bearing frames, upload them as exemplars, reproduce each recurring motif as an authored graphic verified against the reference, and upsert the kit with the full language payload. Triggers on "match this style", "like this reference", "use this video as inspiration", "extract a brand kit", "moodboard". Hand off to cueframe-storyboard/composing-video once the kit is bound. |
-| `launch-video` | Turns screen recordings and product footage into a 30–90 second 16:9 launch film — payoff-first hook, real product surface punched in, a building bed or narration, one CTA end card. Triggers on "make a launch video", "announcement video for this feature", "turn this screen recording into a demo film", "product video from these captures", "we're shipping Friday and need a video", "feature announcement". |
-| `make-a-social-reel` | Turns footage into a finished 9:16 social reel — hook inside 2 seconds, poster-grade type, a decided music bed, one final render. Triggers on "make me a reel from this", "turn this into a short", "cut a clip for TikTok / Reels / Shorts", "make this vertical", "make a social clip from this video", "the opening is boring", "can you make this pop for Instagram". |
-| `rebrand-a-video` | Swaps the brand kit under an existing video and re-renders — tokens, bumpers, logo, captions, and motion re-theme automatically; hardcoded card values get surgical edits. Triggers on "rebrand this video", "swap the brand", "we changed our colors", "new logo, same video", "make this video match the new brand", "re-theme our launch video", "white-label this for a client". |
-| `video-craft-standards` | The definition of DONE for every video made with CueFrame — per-artifact checklists (social reel, launch film, brand reel, talking-head clip) with kill criteria. Read this BEFORE composing and score your work against it BEFORE rendering. Other skills quote this document; when a skill and this document disagree, this document wins. Triggers on "is this good enough", "quality bar", "what should a finished reel have", "review my video", or any request to make a video when no other skill has stated the bar. |
+| Plan and compose a new video | [cueframe-storyboard](skills/cueframe-storyboard/SKILL.md), [composing-video](skills/composing-video/SKILL.md) |
+| Clip a podcast or interview | [clip-a-talking-head](skills/clip-a-talking-head/SKILL.md) |
+| Make a launch film or social reel | [launch-video](skills/launch-video/SKILL.md), [make-a-social-reel](skills/make-a-social-reel/SKILL.md) |
+| Make a brand reel or change an existing brand | [brand-reel](skills/brand-reel/SKILL.md), [rebrand-a-video](skills/rebrand-a-video/SKILL.md) |
+| Extract a visual style | [extracting-brand-kits](skills/extracting-brand-kits/SKILL.md) |
+| Create a product demo | [cueframe-brand-demo](skills/cueframe-brand-demo/SKILL.md), [cueframe-product-video](skills/cueframe-product-video/SKILL.md) |
+| Customize motion graphics or make a 3D shot | [cueframe-component-authoring](skills/cueframe-component-authoring/SKILL.md), [cueframe-scene-shot](skills/cueframe-scene-shot/SKILL.md) |
+| Add music or adapt to more formats | [add-music-bed](skills/add-music-bed/SKILL.md), [every-format-from-one-edit](skills/every-format-from-one-edit/SKILL.md) |
+| Preview, refine, and check quality | [cueframe-compose-loop](skills/cueframe-compose-loop/SKILL.md), [video-craft-standards](skills/video-craft-standards/SKILL.md) |
+| Connect or work through the CLI | [cueframe-connect](skills/cueframe-connect/SKILL.md), [cueframe-cli](skills/cueframe-cli/SKILL.md) |
 
-Skills name each other, so a session starts with the router (`hooks/session-inject.md`, the same text Cursor reads from `rules/cueframe.mdc`) choosing the entry point: `cueframe-storyboard` then `composing-video` for a new video, `clip-a-talking-head` for footage, `cueframe-connect` when the server is not connected yet.
+Claude Code's session hook and Cursor's rule help select the entry point. Other hosts load the installed skills through their own mechanisms. Scoped edits should preserve unrelated work.
+
+## What this repository contains
+
+This repository contains the **agent plugin**, **developer toolkit**, and **registry files**. The hosted MCP server is maintained separately in the application repository. You connect to CueFrame's hosted service; cloning this repository does not run that service locally.
+
+| Area | What you can use or contribute |
+| --- | --- |
+| [`skills/`](skills), host manifests, [`hooks/`](hooks), [`rules/`](rules) | Agent workflows, plugin installation, and task routing |
+| [`packages/`](packages) | The public API contract, TypeScript SDK, CLI, and packaged skills |
+| [`examples/`](examples), [`llms-install.md`](llms-install.md) | Client setup and an end-to-end SDK render example |
+| [`server.json`](server.json), [`glama/`](glama) | Hosted-server registration and a discovery-only shim |
+| [`tools/`](tools), [`scripts/`](scripts) | Generators, validation, packaging, and repository checks |
+
+## Contribute
+
+Documentation, client examples, skill improvements, and toolkit fixes are welcome. Start with [good first issues](https://github.com/cueframe-ai/cueframe-mcp/labels/good%20first%20issue) or read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, generated-file rules, tests, and commit sign-off.
+
+Edit skills in root `skills/`; change generated API clients through their documented inputs. Report hosted-service problems in this repository's issue tracker with reproduction steps and a request ID when available. Report vulnerabilities privately using [SECURITY.md](SECURITY.md). Community participation follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Build on the API
 
@@ -132,7 +197,7 @@ Root `skills/` is the single source: the plugin hosts read it from this reposito
 
 ## Hosted, desktop-local, and the discovery shim
 
-Three different things answer to "the CueFrame MCP server"; keep them apart.
+The hosted service, desktop integration, and registry shim serve different purposes.
 
 - **The hosted server** at `https://api.cueframe.ai/v1/mcp` is the product. Every install line above talks to it; it authenticates with OAuth or an API key and does the composing and rendering. Its package, `@cueframe/mcp`, is private.
 - **The CueFrame desktop app ships its own local MCP server** for the project you have open. It needs no account and is connected through the connection file the app publishes; the app's Agents settings show the exact command, and https://docs.cueframe.ai explains it. Its bundled binary is called `cueframe-mcp`; it lives inside the app bundle.
