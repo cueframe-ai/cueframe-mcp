@@ -1,6 +1,6 @@
 # Scope and routing evaluation cases
 
-`skill-routing-cases.json` records nine acceptance scenarios for CUE-691/CUE-692. The hermetic `tools/skills-policy.test.mjs` checks instruction regressions, synchronized routing and fixture integrity. It does **not** execute an agent, a desktop session or hosted media jobs, and is not evidence that the model passed these scenarios.
+`skill-routing-cases.json` records nine acceptance scenarios for skill scope and routing. The hermetic `tools/skills-policy.test.mjs` checks instruction regressions, synchronized routing and fixture integrity. It does **not** execute an agent, a desktop session or hosted media jobs, and is not evidence that the model passed these scenarios.
 
 For a model behavior evaluation, run each request with the declared skills and an explicit mock/live tool inventory plus current project context. Supply an approved composition for revision cases, a transcript and source facts for the interview, and an accepted brief for Director composition. Provide only local operations in the local-only case; provide account/quote reads plus Director operations in the hosted case; omit export in the missing-capability case.
 

@@ -1,0 +1,42 @@
+# CueFrame MCP
+
+> CueFrame is a hosted video editing and composition service for AI agents. This repository contains its agent plugin, 18 skills, TypeScript SDK, CLI, public API contract, and registry metadata. It does not contain the hosted MCP server implementation.
+
+## Connect and make a video
+
+The production MCP endpoint is https://api.cueframe.ai/v1/mcp using Streamable HTTP. Supported interactive clients authenticate through OAuth; headless callers use an API key. Run `get_account` before metered operations and check entitlements, credits, and estimated costs. Local footage is uploaded only when the user chooses a hosted workflow.
+
+For supported local agents, Node.js 24 or newer is required for `npx -y cueframe@0.8 install`. Restart the agent session after installation. ChatGPT uses a hosted connector instead of a local configuration file. Skills installation supplies workflow guidance; it is distinct from connecting MCP tools.
+
+- [README](https://github.com/cueframe-ai/cueframe-mcp/blob/main/README.md): Installation options, first render, repository overview, and packages.
+- [Agent install guide](https://github.com/cueframe-ai/cueframe-mcp/blob/main/llms-install.md): Connection, authentication, and headless setup.
+- [First render](https://cueframe.ai/start): Render the Yosemite template, change one title, and render again from the same editable project.
+- [Setup](https://docs.cueframe.ai/docs/setup): Supported client configuration and authentication.
+- [Tool-by-tool quickstart](https://docs.cueframe.ai/docs/quickstart): Media ingestion, composition, asynchronous jobs, and rendering.
+- [Pricing](https://cueframe.ai/pricing): Hosted operation costs.
+
+## Tasks and skills
+
+Use skills for the requested task, preserving existing media, timing, audio, and styling during scoped edits. Reusable component packages require an existing composition, placement, exact source selection, and explicit media bindings; complete-video templates start a project. Read the current tool schema and returned requirements instead of inventing fields or choosing by a remembered component name. Search by the user's intent; inspect the catalog when a query returns no results.
+
+- [Connect](https://github.com/cueframe-ai/cueframe-mcp/blob/main/skills/cueframe-connect/SKILL.md): Configure a client only when setup is needed.
+- [Storyboard](https://github.com/cueframe-ai/cueframe-mcp/blob/main/skills/cueframe-storyboard/SKILL.md): Plan a new video.
+- [Compose video](https://github.com/cueframe-ai/cueframe-mcp/blob/main/skills/composing-video/SKILL.md): Build an editable video from a brief and media.
+- [Clip interviews and podcasts](https://github.com/cueframe-ai/cueframe-mcp/blob/main/skills/clip-a-talking-head/SKILL.md): Select excerpts, reframe, and add word-timed captions.
+- [Motion graphics](https://github.com/cueframe-ai/cueframe-mcp/blob/main/skills/cueframe-component-authoring/SKILL.md): Discover, fork, customize, and place components.
+- [3D scenes](https://github.com/cueframe-ai/cueframe-mcp/blob/main/skills/cueframe-scene-shot/SKILL.md): Author product shots and camera motion.
+- [Preview and refine](https://github.com/cueframe-ai/cueframe-mcp/blob/main/skills/cueframe-compose-loop/SKILL.md): Inspect frames and motion, then render when appropriate.
+- [All skills](https://github.com/cueframe-ai/cueframe-mcp/tree/main/skills): Music, branding, product demos, social reels, and multiple output formats.
+
+## Developer resources
+
+API and generated-client files are derived. Edit skills only in root skills/. The hosted server, desktop-local server, and glama/ discovery shim are distinct; the shim executes no video tools.
+
+- [API reference](https://docs.cueframe.ai/docs/api): Current REST endpoints and schemas.
+- [OpenAPI](https://api.cueframe.ai/v1/openapi.json): The service's public contract.
+- [SDK](https://github.com/cueframe-ai/cueframe-mcp/tree/main/packages/sdk): Typed TypeScript client.
+- [CLI](https://github.com/cueframe-ai/cueframe-mcp/tree/main/packages/cli): Command-line video workflows and installation.
+- [SDK render example](https://github.com/cueframe-ai/cueframe-mcp/tree/main/examples/render-a-clip): Import a sample, create an edit, and render.
+- [Contributing](https://github.com/cueframe-ai/cueframe-mcp/blob/main/CONTRIBUTING.md): Build, tests, generated paths, and signed-off commits.
+- [Good first issues](https://github.com/cueframe-ai/cueframe-mcp/labels/good%20first%20issue): Scoped public contribution tasks.
+- [Security reporting](https://github.com/cueframe-ai/cueframe-mcp/blob/main/SECURITY.md): Private vulnerability reporting.

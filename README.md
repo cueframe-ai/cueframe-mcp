@@ -1,8 +1,10 @@
-# CueFrame MCP
+# CueFrame MCP — video editing for agents
 
-Give your agent tools to compose, edit, preview, and render video. Bring footage, a brief, or a brand; get a finished MP4 and an editable project with clips, captions, and motion graphics.
+[![MCP: Streamable HTTP](https://img.shields.io/badge/MCP-Streamable_HTTP-2563eb)](https://api.cueframe.ai/v1/mcp) [![Agent Skills](https://img.shields.io/badge/Agent_Skills-18-15803d)](skills/) [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue)](LICENSE) [![Documentation](https://img.shields.io/badge/Docs-CueFrame-6d28d9)](https://docs.cueframe.ai)
 
-[First render](https://cueframe.ai/start) · [Connection guide](https://docs.cueframe.ai/docs/setup) · [Templates](https://cueframe.ai/templates) · [API reference](https://docs.cueframe.ai/docs/api)
+CueFrame is a hosted video editing service accessed through the Model Context Protocol (MCP). Give your agent tools to compose, edit, preview, and render video. Bring footage, a brief, or a brand; get a finished MP4 and an editable project with clips, captions, and motion graphics.
+
+[First render](https://cueframe.ai/start) · [Connection guide](https://docs.cueframe.ai/docs/setup) · [Templates](https://cueframe.ai/templates) · [API reference](https://docs.cueframe.ai/docs/api) · [Agent documentation index](llms.txt)
 
 [![A real CueFrame render: PHENOMENAL behind a Yosemite ranger, with word-timed captions](assets/readme/yosemite-render.jpg)](https://cueframe.ai/start)
 

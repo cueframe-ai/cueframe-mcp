@@ -11,15 +11,18 @@
   "repository": "https://github.com/cueframe-ai/cueframe-mcp",
   "license": "Apache-2.0",
   "keywords": [
-    "video",
+    "mcp",
+    "model-context-protocol",
+    "agent-skills",
     "video-editing",
+    "video-composition",
     "motion-graphics",
     "captions",
-    "rendering",
-    "mcp",
+    "video-rendering",
     "claude-code",
     "codex",
-    "cursor"
+    "cursor",
+    "gemini-cli"
   ],
   "skills": "./skills/",
   "mcpServers": "./mcp.json",

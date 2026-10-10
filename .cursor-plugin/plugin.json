@@ -9,12 +9,18 @@
   },
   "license": "Apache-2.0",
   "keywords": [
-    "video",
+    "mcp",
+    "model-context-protocol",
+    "agent-skills",
     "video-editing",
+    "video-composition",
     "motion-graphics",
     "captions",
-    "rendering",
-    "mcp"
+    "video-rendering",
+    "claude-code",
+    "codex",
+    "cursor",
+    "gemini-cli"
   ],
   "logo": "assets/logo-400.png"
 }

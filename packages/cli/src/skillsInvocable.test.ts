@@ -43,7 +43,7 @@ describe('shipped skills are executable verbatim', () => {
    * an agent through `npx -y cueframe …` or a raw `curl /v1` without ever naming MCP
    * routes it onto the fallback path and leaves it there — which is how a September
    * session found the broken CLI push and then the undocumented REST contract edges
-   * instead of the maintained tool surface (CUE-14). Naming MCP is the whole bar; this
+   * instead of the maintained tool surface. Naming MCP is the whole bar; this
    * does not police where in the file it is said.
    */
   it.each(files)('%s names MCP if it routes an agent to the CLI or raw REST', (_name, path) => {

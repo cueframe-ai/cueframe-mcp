@@ -24,7 +24,7 @@ const ERROR_ADVICE: Partial<Record<ApiErrorCode, string>> = {
   // server appends them verbatim), so they name the remedy, not one
   // transport's spelling of it — a CLI command handed to an agent that has no
   // shell is a dead end, and routing an MCP caller back to the CLI contradicts
-  // the MCP-first surface (CUE-15 P0).
+  // the MCP-first surface.
   unauthorized:
     "The credential is invalid or expired for this target, or it belongs to a different environment. Re-authenticate the way you connected: reconnect the MCP server, run `cueframe login` in a terminal, or supply a current API key.",
   forbidden:
