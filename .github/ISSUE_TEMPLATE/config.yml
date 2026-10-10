@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability privately
+    url: https://github.com/cueframe-ai/cueframe-mcp/security/policy
+    about: Use our private reporting process instead of opening a public issue.
+  - name: Setup and API documentation
+    url: https://docs.cueframe.ai/docs/setup
+    about: Find connection and authentication instructions before reporting a setup problem.
