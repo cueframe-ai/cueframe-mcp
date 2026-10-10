@@ -6,6 +6,6 @@
     "start": "node run.mjs"
   },
   "dependencies": {
-    "@cueframe/sdk": "^0.3.0"
+    "@cueframe/sdk": "^0.6.2"
   }
 }

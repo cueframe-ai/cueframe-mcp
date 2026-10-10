@@ -1,8 +1,14 @@
-# CueFrame MCP — video editing for agents
+# CueFrame — MCP, CLI and video API
 
 [![MCP: Streamable HTTP](https://img.shields.io/badge/MCP-Streamable_HTTP-2563eb)](https://api.cueframe.ai/v1/mcp) [![Agent Skills](https://img.shields.io/badge/Agent_Skills-18-15803d)](skills/) [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue)](LICENSE) [![Documentation](https://img.shields.io/badge/Docs-CueFrame-6d28d9)](https://docs.cueframe.ai)
 
-CueFrame is a hosted video editing service accessed through the Model Context Protocol (MCP). Give your agent tools to compose, edit, preview, and render video. Bring footage, a brief, or a brand; get a finished MP4 and an editable project with clips, captions, and motion graphics.
+CueFrame is a hosted service for composing, editing and rendering video. Connect your agent over MCP, automate an edit from the CLI, or integrate the REST API into your application. Each surface works with editable projects containing clips, captions and motion graphics, and renders them to MP4.
+
+| Your workflow | Start here |
+| --- | --- |
+| Ask an agent to make or edit a video | [MCP and agent plugin](#mcp-and-agent-plugin) |
+| Run video workflows from a terminal or script | [CLI](#cli) |
+| Build video editing into an application | [API and TypeScript SDK](#api-and-typescript-sdk) |
 
 [First render](https://cueframe.ai/start) · [Connection guide](https://docs.cueframe.ai/docs/setup) · [Templates](https://cueframe.ai/templates) · [API reference](https://docs.cueframe.ai/docs/api) · [Agent documentation index](llms.txt)
 
@@ -10,7 +16,7 @@ CueFrame is a hosted video editing service accessed through the Model Context Pr
 
 *A frame from the Yosemite Peregrines template. [Watch the video and try the same edit](https://cueframe.ai/start).*
 
-## Connect your agent
+## MCP and agent plugin
 
 For Claude Code, Codex, Cursor, VS Code, and other supported local agents, run this in your terminal with **Node.js 24 or newer**:
 
@@ -147,6 +153,47 @@ Skills teach the agent how to carry out video tasks. You describe the task; the 
 
 Claude Code's session hook and Cursor's rule help select the entry point. Other hosts load the installed skills through their own mechanisms. Scoped edits should preserve unrelated work.
 
+## CLI
+
+Use the CLI for explicit video commands, shell scripts and structured JSON output. It connects to the hosted API; it does not run a local renderer. Requires **Node.js 24 or newer**.
+
+```bash
+npx -y cueframe@0.8 --help
+npx -y cueframe@0.8 login
+npx -y cueframe@0.8 api GET /v1/me --json
+npx -y cueframe@0.8 describe --json
+```
+
+`login` opens the browser to authenticate. Headless scripts can supply `CUEFRAME_API_KEY`. The account request checks your connection and credits; `describe` lists command arguments and options without making an API call.
+
+[CLI guide](packages/cli/README.md) · [CLI walkthrough](https://cueframe.ai/cli) · [Templates](https://cueframe.ai/templates) · [npm package](https://www.npmjs.com/package/cueframe)
+
+## API and TypeScript SDK
+
+Use the REST API to create projects, import media, change compositions and follow render jobs from your application. Requests go to **`https://api.cueframe.ai`** with an API key from [your account](https://app.cueframe.ai). Check your account before metered operations; cloud rendering and processing use credits.
+
+For TypeScript or JavaScript on **Node.js 24+**, install the typed client:
+
+```bash
+npm install @cueframe/sdk
+```
+
+```js
+import { account, createClient } from "@cueframe/sdk";
+
+if (!process.env.CUEFRAME_API_KEY) throw new Error("Set CUEFRAME_API_KEY");
+createClient({
+  baseUrl: "https://api.cueframe.ai",
+  apiKey: process.env.CUEFRAME_API_KEY,
+});
+const result = await account.getAccount();
+console.log(result.plan, result.entitlements);
+```
+
+Other languages can call REST directly or generate a client from the versioned [public OpenAPI contract](packages/api-contract). The SDK is a client for the hosted service, not the server implementation.
+
+[API walkthrough](https://cueframe.ai/api) · [API reference](https://docs.cueframe.ai/docs/api) · [SDK guide](packages/sdk/README.md) · [Render example](examples/render-a-clip) · [npm package](https://www.npmjs.com/package/@cueframe/sdk)
+
 ## What this repository contains
 
 This repository contains the **agent plugin**, **developer toolkit**, and **registry files**. The hosted MCP server is maintained separately in the application repository. You connect to CueFrame's hosted service; cloning this repository does not run that service locally.
@@ -165,7 +212,7 @@ Documentation, client examples, skill improvements, and toolkit fixes are welcom
 
 Edit skills in root `skills/`; change generated API clients through their documented inputs. Report hosted-service problems in this repository's issue tracker with reproduction steps and a request ID when available. Report vulnerabilities privately using [SECURITY.md](SECURITY.md). Community participation follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## Build on the API
+## Published packages
 
 | Package | Purpose | npm |
 | --- | --- | --- |

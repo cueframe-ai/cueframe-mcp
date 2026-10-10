@@ -1,77 +1,76 @@
 # cueframe
 
 Agent-native CLI for **CueFrame** — turn media into rendered video from the
-terminal. Every command speaks `--json` (an NDJSON event stream) and the binary
-self-describes via `npx -y cueframe describe --json`, so agents can drive it without
+terminal. Commands support `--json` for structured output and the binary
+self-describes via `npx -y cueframe@0.8 describe --json`, so agents can drive it without
 guesswork.
 
 > Connects to the hosted CueFrame service — create an API key at
-> [app.cueframe.ai](https://app.cueframe.ai), or use `npx -y cueframe login`.
+> [app.cueframe.ai](https://app.cueframe.ai), or use `npx -y cueframe@0.8 login`.
 
 ## Run it
 
-There is nothing to install. Every command in this README runs as
-`npx -y cueframe …` and is executable verbatim:
+Run the CLI without a global installation:
 
 ```bash
-npx -y cueframe --help
+npx -y cueframe@0.8 --help
 ```
 
-`npx -y cueframe install` wires the CueFrame MCP server into every agent on your
-machine — but note it installs **no binary**: npx unpacks to an ephemeral cache and
-leaves nothing on your `PATH`. That is deliberate. `npx` re-resolves the current
-version on every call (~0.5s warm), so these commands can never go stale the way a
-pinned global install does.
+Requires **Node.js 24 or newer**. The `@0.8` selector keeps these commands on the documented minor release. `npx` downloads the package into its cache; it does not install a persistent binary on your `PATH`.
 
-Running many commands in a row and want to skip that overhead? Install it once and
-drop the `npx -y ` prefix:
+For repeated terminal use, you can install that release globally:
 
 ```bash
-npm i -g cueframe               # optional — needs a user-writable npm prefix
+npm install -g cueframe@0.8
 ```
 
-This is an optimization, not the supported path. On a default Linux install it fails
-with `EACCES: permission denied, mkdir '/usr/local/lib/node_modules/cueframe'` unless
-you have configured an npm prefix in your home directory.
+The same commands then run as `cueframe …`.
 
 ## Authenticate
 
 ```bash
-npx -y cueframe auth <cf_live_… key>        # static API key (CI / headless)
+npx -y cueframe@0.8 auth <cf_live_… key>        # static API key (CI / headless)
 # or
-npx -y cueframe login                       # OAuth device flow (browser)
+npx -y cueframe@0.8 login                       # OAuth device flow (browser)
 ```
 
 The key can also be supplied via the `CUEFRAME_API_KEY` environment variable.
+
+## Check your connection
+
+```bash
+npx -y cueframe@0.8 api GET /v1/me --json
+```
+
+This reads your account and credit entitlements without rendering. Cloud processing and rendering consume credits; see [cloud rates](https://cueframe.ai/pricing).
 
 ## Quick start — upload → author → render
 
 ```bash
 # 1. Register media (video / image / audio)
-npx -y cueframe upload ./source.mp4 --json              # → mediaItemId
+npx -y cueframe@0.8 upload ./source.mp4 --json              # → mediaItemId
 
 # 2. Create a project (sets aspect / format)
-npx -y cueframe project create -n promo -a 9:16 --json  # → projectId
+npx -y cueframe@0.8 project create -n promo -a 9:16 --json  # → projectId
 
 # 3. Author the composition — tracks of clips, per-clip reframe/trim,
 #    optional captions. The composition is the source of truth.
-npx -y cueframe composition put <projectId> -b @composition.json
+npx -y cueframe@0.8 composition put <projectId> -b @composition.json
 
 # 4. Render the saved composition to MP4 (queues, SSE-watches, downloads)
-npx -y cueframe render <projectId> -o out.mp4 --json
+npx -y cueframe@0.8 render <projectId> -o out.mp4 --json
 ```
 
 `render` takes only a project id and renders whatever composition is saved on
-it — no clip suggestion required. Run `npx -y cueframe describe --json` for the full
-composition schema and every command + flag.
+it — no clip suggestion required. Run `npx -y cueframe@0.8 describe --json` for command arguments and options. See the [API reference](https://docs.cueframe.ai/docs/api) for composition fields.
 
 ## Let CueFrame pick the clip (podcast → short)
 
 ```bash
-npx -y cueframe upload ./long.mp4 --analyze --json                 # media + AI clip suggestions
-npx -y cueframe clips <mediaItemId> --json                         # list suggestions (sug_…)
-npx -y cueframe project create -n short -a 9:16 --from-suggestion <sug_…> --json
-npx -y cueframe render <projectId> -o short.mp4 --json
+npx -y cueframe@0.8 upload ./long.mp4 --analyze --json                 # media + AI clip suggestions
+npx -y cueframe@0.8 clips <mediaItemId> --json                         # list suggestions (sug_…)
+npx -y cueframe@0.8 project create -n short -a 9:16 --from-suggestion <sug_…> --json
+npx -y cueframe@0.8 render <projectId> -o short.mp4 --json
 ```
 
 Both paths converge on `render`; the suggestion on-ramp just authors the
@@ -85,10 +84,10 @@ The public catalog lives in `cueframe-ai/cueframe-templates`; your org keeps
 its own under `POST /v1/templates`.
 
 ```bash
-cueframe template run yosemite-warp-text --preset granite --media source=sample --values text=CARVED -o carved.mp4
-cueframe template run ./template.cueframe --media source=./clip.mp4 --values title="Journey" --no-render --json
-cueframe template status <jobId> --wait --json       # reconnect to a running preparation
-cueframe template validate ./template.cueframe          # on the API with your key; nothing is stored
+npx -y cueframe@0.8 template run yosemite-warp-text --preset granite --media source=sample --values text=CARVED -o carved.mp4
+npx -y cueframe@0.8 template run ./template.cueframe --media source=./clip.mp4 --values title="Journey" --no-render --json
+npx -y cueframe@0.8 template status <jobId> --wait --json       # reconnect to a running preparation
+npx -y cueframe@0.8 template validate ./template.cueframe          # on the API with your key; nothing is stored
 ```
 
 `run` publishes a local document to your org (a catalog slug is imported on
@@ -114,35 +113,32 @@ prepared matte at another bake version.
 ## Wire it into your agents
 
 ```bash
-npx -y cueframe install
+npx -y cueframe@0.8 install
 ```
 
-Detects every agent on the machine — Claude Code, Cursor, Codex, VS Code, Windsurf,
-Zed, Antigravity CLI, Copilot CLI and more — and wires the CueFrame MCP server into each
-one's config. Auth happens on the agent's first call via a browser "Allow"; no API key.
+Detects supported local agents and adds `https://api.cueframe.ai/v1/mcp` to their configuration. It also copies the bundled skills to `~/.agents/skills` and `~/.claude/skills`, preserving locally changed skills by default. This can update multiple detected clients; inspect the changes first:
 
-It also copies the usage skills to `~/.claude/skills/`. **Only Claude Code reads that
-directory** — every other agent gets the same verb surface as MCP tools from the server,
-so there is nothing further to install for them.
+```bash
+npx -y cueframe@0.8 install --dry-run --json
+```
 
-Claude Desktop and ChatGPT can't be wired from the command line (neither reads a local
-MCP config) — add `https://api.cueframe.ai/v1/mcp` as a custom connector instead.
+Restart your agent session after installation. Interactive MCP clients open a browser to authorize on the first call. ChatGPT uses its hosted connector setup separately; see the [connection guide](https://docs.cueframe.ai/docs/setup).
 
 ## For agents
 
-- **`--json` everywhere** — NDJSON lifecycle: `<verb>_prepare → <verb>_progress* → <verb>_complete | error`, plus a non-zero exit on failure.
-- **`npx -y cueframe describe --json`** — the full command tree as structured JSON.
-- **`npx -y cueframe api <METHOD> <path>`** — raw escape hatch over the v1 API.
+- **`--json`** — lifecycle events use NDJSON: `<verb>_prepare → <verb>_progress* → <verb>_complete | error`, plus a non-zero exit on failure.
+- **`npx -y cueframe@0.8 describe --json`** — the full command tree as structured JSON.
+- **`npx -y cueframe@0.8 api <METHOD> <path>`** — raw escape hatch over the v1 API.
 
 ## Common commands
 
 | Need to… | Command |
 |---|---|
-| List projects | `npx -y cueframe list` |
-| Read a composition + ETag | `npx -y cueframe composition get <projectId> --json` |
-| Write a composition | `npx -y cueframe composition put <projectId> -b @comp.json` |
-| Export to Final Cut / Premiere | `npx -y cueframe export fcpxml \| premiere <projectId> -s <sug_…> --wait -o cut.zip` |
-| Validate without mutating | append `--dry-run` |
+| List projects | `npx -y cueframe@0.8 list` |
+| Read a composition + ETag | `npx -y cueframe@0.8 composition get <projectId> --json` |
+| Write a composition | `npx -y cueframe@0.8 composition put <projectId> -b @comp.json` |
+| Export to Final Cut / Premiere | `npx -y cueframe@0.8 export fcpxml \| premiere <projectId> -s <sug_…> --wait -o cut.zip` |
+| Validate without mutating | use `--dry-run` where command help lists it |
 
 ---
 
