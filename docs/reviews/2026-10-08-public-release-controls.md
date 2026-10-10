@@ -1,96 +1,30 @@
-# Public release controls and package availability
+# Public repository controls
 
-Reviewed against main `f682b0cd` on October 8, 2026. This records readiness work,
-not a completed publication. The repository remains private.
+Updated October 9, 2026 after creating a fresh repository and making it public. The previous repository remains privately archived. This document describes the public toolkit repository, not the application repository or its packages.
 
-## Verified repository settings
+## Verified GitHub settings
 
-- Default Actions token is read-only; workflows cannot approve pull requests.
-- Actions SHA pinning is now required at repository level (API readback verified).
-- Dependency vulnerability alerts are now enabled (API returned 204 on readback).
-- Every third-party action in the three workflows is pinned to a full SHA.
-- CI runs on `pull_request`, never `pull_request_target`, and receives no release secrets.
-- Checkout credentials are not persisted. Release secrets are limited to the
-  manual main-branch publisher, after the reusable CI workflow succeeds.
-- `SECURITY.md` provides a private reporting address. GitHub private vulnerability
-  reporting returned 404; it was not verified enabled.
-- Branch protection and ruleset APIs return 403: unavailable under the current
-  private-repository plan. These controls are **not enabled** by the JSON file below.
-- Latest main CI run 37795243934 failed with zero steps in both jobs; this is not
-  passing release evidence. Resolve the Actions execution block before release.
+- Repository visibility: public; default branch: main.
+- Main requires a pull request and resolved conversations, including for administrators. Zero required approvals supports a solo maintainer while preserving the PR workflow.
+- Force pushes and branch deletion are prohibited.
+- GitHub private vulnerability reporting, dependency vulnerability alerts, secret scanning, and push protection are enabled.
+- GitHub Actions remains disabled by maintainer choice. No automated status checks are required while disabled; local validation and review are necessary before merging. The prepared protection payload matches this setting, rather than requiring checks that cannot run.
+- The existing workflows use pinned action SHAs and fork-safe read-only PR jobs. They are not execution evidence while Actions is disabled.
 
-## Apply at the authorized visibility switch
+The main policy is recorded in `.github/release-main-protection.json`, and secret protection in `.github/release-secret-protection.json`. Verify live API settings after applying these payloads; files alone do not enable controls. If automated checks are enabled in the future, verify real passing job names before making them required.
 
-Do not change visibility until the separate content/history clearance is recorded.
-Once public (or after a plan upgrade), apply the prepared main-branch policy:
+## Packages and plugin
 
-```sh
-gh api --method PUT repos/cueframe-ai/cueframe-mcp/branches/main/protection \
-  --input .github/release-main-protection.json
-gh api --method PUT repos/cueframe-ai/cueframe-mcp/private-vulnerability-reporting
-gh api --method PATCH repos/cueframe-ai/cueframe-mcp \
-  --input .github/release-secret-protection.json
-```
+Anonymous metadata and tarball access passed for @cueframe/api-contract 3.0.1, @cueframe/sdk 0.6.2, @cueframe/skills 0.2.2, and cueframe 0.8.1. The CLI documentation pin is 0.8. Package versions are independent; the agent plugin version is derived from packages/skills/package.json.
 
-The branch policy requires a PR, passing `node` and `hygiene` checks, an up-to-date
-branch, and resolved conversations, including for administrators. It prohibits
-force pushes and deletion. Zero approvals allows a solo maintainer to merge their
-own PR after checks; it does not require a second maintainer who may not exist.
-Confirm the actual successful check names before applying and read all settings
-back afterward. Scheduled live-spec drift is diagnostic, not a required PR check.
+The GitHub release [v0.2.2](https://github.com/cueframe-ai/cueframe-mcp/releases/tag/v0.2.2) supplies a validated hook-free plugin ZIP for the OpenAI/Codex submission path. Its content-addressed release manifest identifies the source commit. Publishing the artifact does not imply any directory has approved it. No npm access changes or application-package publication were needed for this repository visibility change.
 
-## npm prerequisites
+## Verification
 
-The current root pin is **0.6**, superseding the old 0.5 release checklist.
-Anonymous registry requests returned 404 for all current versions:
+A clean external clone passed frozen-lockfile installation, pnpm check, pnpm build, and pnpm test in that order with Node 24 and pnpm 10.32.1. The tracked working tree stayed clean. Full-history Gitleaks scanning found no credentials; fixtures were reviewed for confidential data. The final discovery updates also passed check/build/test and plugin artifact generation/verification.
 
-| Package | Version |
-| --- | --- |
-| `@cueframe/api-contract` | `2.1.0` |
-| `@cueframe/sdk` | `0.5.0` |
-| `@cueframe/skills` | `0.1.2` |
-| `cueframe` | `0.6.0` |
+Fresh-host OAuth and runtime checks across every advertised client remain distinct acceptance work. A working production MCP video flow does not prove every host integration or directory review.
 
-The public CLI latest tag still resolves to 0.4.10. A 404 means unavailable to an
-anonymous consumer; it does not establish whether a restricted version exists.
+## Discovery
 
-`pnpm check:public-packages` checks exact source versions and tarball access
-without reading npm configuration or credentials. It deliberately fails today.
-It runs after publishing, not in the prepublication CI that must pass before
-those versions can exist. The existing pack/install smoke validates unpublished
-tarballs in an empty consumer before publication.
-
-The skills package's future publish configuration is public. This does not change
-an existing restricted package. At the authorized package release, check existing
-version ownership/content first, bump any already-published version whose bytes
-would change, and explicitly change existing skills access if needed:
-
-```sh
-npm access set status=public @cueframe/skills
-```
-
-This exposes **existing package versions**, so it belongs to the publication step
-after their content has been cleared, not an automatic build or validation step.
-No npm package or access setting was changed during this review.
-
-The publisher now waits for the complete reusable CI workflow, then publishes in
-dependency order and verifies anonymous availability. New versions published after
-the source repository becomes public request npm provenance automatically. Versions
-published while it is private cannot gain provenance retroactively; publish a new
-version after the switch if provenance is required. No workflow was dispatched.
-
-Sources: [GitHub security settings](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-security-and-analysis-settings-for-your-repository),
-[npm provenance](https://docs.npmjs.com/generating-provenance-statements/).
-
-## Local validation
-
-After integrating current main and the readiness changes, `pnpm check`,
-`pnpm build`, and `pnpm test` passed in order (83 SDK tests, 238 CLI tests,
-50 tooling tests). Generated API consumer drift verification and actionlint
-passed. OpenAI artifact generation and content verification passed.
-
-All four packed packages installed in an empty consumer; published entry points,
-55 request-body schema exports, the CLI help command, and all 18 bundled skills
-passed the smoke checks. The system temporary disk was full, so the successful
-smoke used temporary files and npm cache on the workspace drive. This verifies
-local release tarballs, not public npm availability or fresh-host OAuth.
+GitHub About metadata, topics, README imagery, host-manifest keywords, and llms.txt provide product and agent entry points. Existing registry listings, submitted forms, curated-list pull requests, and access blockers are tracked in the [public directory submission issue](https://github.com/cueframe-ai/cueframe-mcp/issues/4). Always distinguish submitted, accepted, and searchable.
