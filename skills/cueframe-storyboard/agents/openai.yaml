@@ -1,0 +1,6 @@
+interface:
+  display_name: "CueFrame Storyboard: brief → flow"
+  short_description: "Use BEFORE composing when starting a NEW video from scratch and you need to…"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  default_prompt: "Use $cueframe-storyboard before composing when starting a NEW video from scratch and you need to plan its structure — turning a rough ask (\"make a launch video\", \"30s promo\", \"an explainer for our API\") into a concrete beat flow."

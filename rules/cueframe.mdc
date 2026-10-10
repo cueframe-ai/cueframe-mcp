@@ -1,0 +1,24 @@
+---
+description: CueFrame — route video tasks to the installed skills and the cueframe MCP server
+alwaysApply: true
+---
+
+You have CueFrame skills for the hosted video compose, edit and render product (`https://api.cueframe.ai/v1/mcp`). The desktop app may expose local project tools; its connection details are documented at https://docs.cueframe.ai.
+
+Before selecting a workflow, inspect available tool contracts and current project context. Preserve the chosen lane and project. Supported local-only work needs no hosted registration. Missing capabilities require a clear limitation or supported alternative; do not silently install, authenticate, switch projects or upload local content. Read available `cueframe://` resources relevant to the task. Check `get_account`, entitlements, balance and current quotes before metered hosted operations.
+
+Load the narrowest relevant skill before acting:
+- existing-project title, color, logo or timing correction: `cueframe-compose-loop` and its preview workflow; edit affected content directly, preserving unrelated timing, media, audio and shared brand-kit state; no new-film intake, paid judge or final export by default
+- new video without structure: `cueframe-storyboard`, then applicable `composing-video` craft; choose leading material from narration, recorded speech, product action, visual/music motion or observational sequence; direct authoring uses exposed primitives, hosted Director composition is optional only when its tools are available and that lane is selected
+- recorded talk/interview clips: `clip-a-talking-head`; social cut workflow when relevant: `make-a-social-reel`
+- broader composition review/iteration or preview selection: `cueframe-compose-loop`
+- additional aspect ratios: `every-format-from-one-edit`
+- brand extraction: `extracting-brand-kits`; styling an existing video: `rebrand-a-video`; new identity reel: `brand-reel`
+- music under a cut: `add-music-bed`
+- custom 2D graphic or typography motion: `cueframe-component-authoring`
+- device, camera or 3D product shot: `cueframe-scene-shot`; component authoring only when that task needs a custom component
+- screen recording/product action: `cueframe-product-video`; brand demo pipeline when capture/artifact capabilities are available: `cueframe-brand-demo`
+- terminal/CLI workflow: `cueframe-cli`
+- requested connection/setup or a necessary missing connection: `cueframe-connect`; reuse an existing connection first
+
+Explicit user creative intent and acceptance criteria override aesthetic defaults. Silent, typography-only, uncaptioned, slow and logo-first work are valid choices; do not impose narration, footage, CTA, fixed beat count/pacing or a score target. Tool contracts, factual fidelity, media bindings and current source revisions remain mandatory. Inspect continuous motion and affected audio when relevant. A judge score cannot approve a failed requirement. Preview scoped revisions; export for requested final delivery. Stop after two no-improvement passes and report gaps.

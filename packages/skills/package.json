@@ -1,0 +1,39 @@
+{
+  "name": "@cueframe/skills",
+  "version": "0.2.2",
+  "description": "CueFrame agent skills: the SKILL.md tree the CueFrame plugin ships, packaged for programs that copy or embed the skills.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    "./dir": {
+      "types": "./skills-dir.d.ts",
+      "default": "./skills-dir.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "skills-dir.js",
+    "skills-dir.d.ts",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "prepublishOnly": "pnpm build && pnpm check"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cueframe-ai/cueframe-mcp.git",
+    "directory": "packages/skills"
+  },
+  "homepage": "https://docs.cueframe.ai",
+  "engines": {
+    "node": ">=24"
+  }
+}

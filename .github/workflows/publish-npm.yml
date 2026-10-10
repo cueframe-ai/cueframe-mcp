@@ -1,0 +1,125 @@
+name: Publish npm packages
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-npm
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    if: github.ref == 'refs/heads/main'
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
+  publish:
+    needs: validate
+    if: github.ref == 'refs/heads/main' # a dispatch from another branch must not publish that tree as the immutable public version
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      id-token: write # npm provenance for public repositories
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 24
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+      - name: NPM_TOKEN is present
+        # The publish step authenticates through NODE_AUTH_TOKEN (setup-node's `registry-url` above points
+        # NPM_CONFIG_USERCONFIG at an .npmrc whose auth line reads that variable). Fail here, before the
+        # build, rather than on the first `pnpm publish`. The install itself needs no token: every
+        # workspace dependency, @cueframe/skills included, resolves through the workspace protocol.
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "${NPM_TOKEN}" ]; then
+            echo "::error::NPM_TOKEN is not set; nothing can be published"
+            exit 1
+          fi
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: publish committed package versions in dependency order
+        # api-contract has no workspace dependency; sdk and skills are bundled into cli at build time; so
+        # each package's inputs are on npm before it is published. A version that already exists on npm is
+        # skipped, so re-running after a partial failure is safe. Each package's publishConfig.access
+        # decides its visibility. Existing restricted packages need an explicit npm access change.
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
+        run: |
+          set -euo pipefail
+          provenance_args=()
+          if [ "${REPOSITORY_PRIVATE}" = "false" ]; then
+            provenance_args+=(--provenance)
+          fi
+          for package_dir in packages/api-contract packages/sdk packages/skills packages/cli; do
+            package_name="$(node -p "require('./${package_dir}/package.json').name")"
+            package_version="$(node -p "require('./${package_dir}/package.json').version")"
+            if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
+              echo "${package_name}@${package_version} is already published; skipping"
+              continue
+            fi
+            # A private repository cannot provide public provenance. After the visibility switch,
+            # attest every new public package automatically. Existing immutable versions are skipped.
+            (cd "${package_dir}" && pnpm publish --no-git-checks "${provenance_args[@]}")
+          done
+
+      - name: verify anonymous metadata and tarball access
+        run: pnpm check:public-packages
+
+  registry:
+    # Publishes server.json to the MCP registry (registry.modelcontextprotocol.io). server.json lists
+    # the hosted remote only, so nothing here depends on what npm serves; it runs after the npm job
+    # only so one dispatch publishes everything in a fixed order.
+    needs: publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 24
+      - name: publish server.json when its version is new
+        # Authentication is `login http`: the registry fetches https://cueframe.ai/.well-known/mcp-registry-auth
+        # (an ed25519 public key, `v=MCPv1; k=ed25519; p=...`) and the private key signs the challenge.
+        # Flag names confirmed with `mcp-publisher login http --help` at v1.8.1: -domain, -private-key (hex),
+        # -algorithm (default ed25519), -registry.
+        env:
+          MCP_PUBLISHER_PRIVATE_KEY: ${{ secrets.MCP_PUBLISHER_PRIVATE_KEY }}
+          MCP_PUBLISHER_VERSION: 1.8.1
+          MCP_PUBLISHER_SHA256: a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc
+        run: |
+          set -euo pipefail
+          name="$(node -p "require('./server.json').name")"
+          v="$(node -p "require('./server.json').version")"
+          encoded="$(node -p "encodeURIComponent(require('./server.json').name)")"
+          if curl -fsSL "https://registry.modelcontextprotocol.io/v0/servers/${encoded}/versions" \
+            | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>process.exit((JSON.parse(s).servers||[]).some(e=>(e.server||e).version==='${v}')?0:1))"; then
+            echo "${name} ${v} is already in the registry; skipping"
+            exit 0
+          fi
+          if [ -z "${MCP_PUBLISHER_PRIVATE_KEY}" ]; then
+            echo "::error::MCP_PUBLISHER_PRIVATE_KEY is not set; cannot authenticate to the MCP registry"
+            exit 1
+          fi
+          curl -sSfL -o "$RUNNER_TEMP/mcp-publisher.tgz" "https://github.com/modelcontextprotocol/registry/releases/download/v${MCP_PUBLISHER_VERSION}/mcp-publisher_linux_amd64.tar.gz"
+          echo "${MCP_PUBLISHER_SHA256}  $RUNNER_TEMP/mcp-publisher.tgz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/mcp-publisher.tgz" -C "$RUNNER_TEMP" mcp-publisher
+          "$RUNNER_TEMP/mcp-publisher" login http --domain cueframe.ai --private-key "${MCP_PUBLISHER_PRIVATE_KEY}"
+          "$RUNNER_TEMP/mcp-publisher" publish server.json

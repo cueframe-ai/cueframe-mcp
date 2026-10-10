@@ -1,0 +1,15 @@
+{
+  "name": "cueframe-glama-introspection-shim",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "Local stdio MCP shim that replays a snapshot of the hosted CueFrame MCP server's tool list and instructions so registries such as Glama can introspect it headlessly. Discovery only: tool execution happens on https://api.cueframe.ai/v1/mcp.",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1"
+  }
+}

@@ -1,0 +1,111 @@
+[
+  {
+    "name": "discover_builtin",
+    "tool": "list_catalog",
+    "arguments": {
+      "projection": "component-library",
+      "origin": "builtin",
+      "limit": 10,
+      "q": "Wheel"
+    }
+  },
+  {
+    "name": "resolve_exact_builtin",
+    "tool": "resolve_builtin_component",
+    "arguments": {
+      "collection": "curated-looks",
+      "id": "builtin:reference-component-wheel-full",
+      "revision": "2577db06c45171396e2f0199b2616877dfa25f3f68be0ec75fefea8e6a54755b"
+    }
+  },
+  {
+    "name": "read_insertion_witnesses",
+    "tool": "get_composition",
+    "arguments": {
+      "projectId": "observed-project",
+      "componentExecutionVersions": "3",
+      "includeDependencies": "true"
+    }
+  },
+  {
+    "name": "insert_exact_builtin",
+    "tool": "apply_template",
+    "arguments": {
+      "template": "builtin:reference-component-wheel-full",
+      "body": {
+        "projectId": "observed-project",
+        "documentSha256": "2577db06c45171396e2f0199b2616877dfa25f3f68be0ec75fefea8e6a54755b",
+        "insert": {
+          "startTime": 3,
+          "idPrefix": "wheel-insertion-1"
+        },
+        "expectedRevision": 1,
+        "commandId": "insert-wheel-1",
+        "values": {},
+        "media": {
+          "image1": {
+            "sample": true
+          },
+          "image2": {
+            "sample": true
+          },
+          "image3": {
+            "sample": true
+          },
+          "image4": {
+            "sample": true
+          },
+          "image5": {
+            "sample": true
+          },
+          "image6": {
+            "sample": true
+          },
+          "image7": {
+            "sample": true
+          },
+          "image8": {
+            "sample": true
+          }
+        },
+        "componentExecutionVersions": [
+          3
+        ],
+        "expectedBrandIdentity": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    }
+  },
+  {
+    "name": "wait_for_score",
+    "tool": "wait_job",
+    "arguments": {
+      "kind": "verify",
+      "id": "returned-job-id"
+    }
+  },
+  {
+    "name": "render_inserted_wheel",
+    "tool": "create_render",
+    "arguments": {
+      "projectId": "observed-project",
+      "body": {
+        "compositionId": "observed-composition",
+        "format": {
+          "aspectRatio": "16:9",
+          "fps": 30,
+          "resolution": "fhd"
+        },
+        "intent": "final"
+      }
+    }
+  },
+  {
+    "name": "wait_for_render",
+    "tool": "wait_job",
+    "arguments": {
+      "kind": "render",
+      "id": "returned-render-id",
+      "projectId": "observed-project"
+    }
+  }
+]

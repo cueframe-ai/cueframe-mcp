@@ -1,0 +1,10 @@
+{
+  "name": "cueframe",
+  "version": "0.2.2",
+  "description": "Make and edit videos with CueFrame over MCP.",
+  "mcpServers": {
+    "cueframe": {
+      "httpUrl": "https://api.cueframe.ai/v1/mcp"
+    }
+  }
+}

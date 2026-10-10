@@ -1,0 +1,6 @@
+interface:
+  display_name: "Add a music bed"
+  short_description: "Retrofits a music bed (and ambience or SFX) onto an existing composition…"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  default_prompt: "Use $add-music-bed to retrofit a music bed (and ambience or SFX) onto an existing composition — license-aware search, correct mix hierarchy, ducking under speech, cuts moved onto the beat."

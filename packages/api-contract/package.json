@@ -1,0 +1,45 @@
+{
+  "name": "@cueframe/api-contract",
+  "version": "3.0.1",
+  "description": "Sanitized, versioned OpenAPI contract for the public CueFrame API.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./openapi.json": "./dist/openapi.json",
+    "./public-surface.json": "./dist/public-surface.json",
+    "./manifest.json": "./dist/manifest.json",
+    "./scene-schema.json": "./dist/scene-schema.json",
+    "./scene-examples.json": "./dist/scene-examples.json",
+    "./contract-manifest.json": "./dist/contract-manifest.json",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node ../../tools/check-openapi-public.mjs",
+    "prepublishOnly": "pnpm build"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cueframe-ai/cueframe-mcp.git",
+    "directory": "packages/api-contract"
+  },
+  "homepage": "https://docs.cueframe.ai",
+  "engines": {
+    "node": ">=24"
+  }
+}

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Make a social reel"
+  short_description: "Turns footage into a finished 9:16 social reel — hook inside 2 seconds…"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  default_prompt: "Use $make-a-social-reel to turn footage into a finished 9:16 social reel — hook inside 2 seconds, poster-grade type, a decided music bed, one final render."

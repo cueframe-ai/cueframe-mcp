@@ -1,0 +1,22 @@
+{
+  // Shared TypeScript settings for workspace packages.
+  //
+  // WHAT THIS REPLACES. 24 package tsconfigs repeated the same six options by
+  // hand, and had already drifted: `module` was spelled three ways
+  // (`ES2022`, `esnext`, `ESNext`), `moduleResolution` two (`bundler`,
+  // `Bundler`), and `target` split ES2020/ES2022. Two of those are casing that
+  // tsc ignores; the ES2020 split is real, and it was invisible.
+  //
+  // Only genuinely unanimous options live here, plus the majority
+  // target/module/moduleResolution. Anything a package legitimately differs on
+  // — `declaration`, `outDir`, `rootDir`, `lib`, `include` — stays with the
+  // package, where the difference is visible instead of buried in a base.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  }
+}

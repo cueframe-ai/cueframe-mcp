@@ -1,0 +1,6 @@
+*
+!glama/package.json
+!glama/package-lock.json
+!glama/tools.json
+!glama/instructions.txt
+!glama/server.mjs

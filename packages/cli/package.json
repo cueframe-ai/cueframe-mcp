@@ -1,0 +1,67 @@
+{
+  "name": "cueframe",
+  "version": "0.8.1",
+  "description": "Agent-native CLI for CueFrame \u2014 author compositions and render video from the terminal (early-access preview).",
+  "keywords": [
+    "cueframe",
+    "video",
+    "render",
+    "composition",
+    "cli",
+    "agent",
+    "ffmpeg",
+    "remotion"
+  ],
+  "homepage": "https://docs.cueframe.ai",
+  "author": "CueFrame, Inc.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bin": {
+    "cueframe": "dist/cueframe.js"
+  },
+  "main": "dist/cueframe.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "add-mcp": "^2.4.0",
+    "better-auth": "1.6.22",
+    "commander": "^13.1.0",
+    "open": "^10.1.0",
+    "ora": "^8.2.0",
+    "pino": "^10.3.1",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "build": "tsup && node scripts/copy-agent-skills.mjs && node scripts/check-bundle-free-of-kernel.mjs",
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build",
+    "check:bundle": "node scripts/check-bundle-free-of-kernel.mjs"
+  },
+  "devDependencies": {
+    "@cueframe/sdk": "workspace:^",
+    "zod": "^4.5.4",
+    "@types/node": "^24.0.0",
+    "tsup": "^8.5.1",
+    "vitest": "^4.1.2",
+    "@cueframe/skills": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cueframe-ai/cueframe-mcp.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/cueframe-ai/cueframe-mcp/issues"
+  }
+}

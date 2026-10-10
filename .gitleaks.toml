@@ -1,0 +1,23 @@
+# gitleaks configuration; CI runs `gitleaks git` over the full history with this file.
+#
+# The contract sync records the sha256 of each api/*.json input in api/contract-manifest.json,
+# and `pnpm --filter @cueframe/api-contract build` copies that manifest into
+# packages/api-contract/dist and embeds the same digests in dist/index.js, dist/index.d.ts and
+# dist/manifest.json. A bare 64-character lowercase hex value next to a "*.json" key trips the
+# generic-api-key rule. The exception below is scoped to that rule, those paths and that shape
+# (a rule-scoped allowlist, which inherits the default rule's other attributes). A global
+# [[allowlists]] with a path condition would skip those files wholesale; this one does not:
+# any other secret planted in those files, and any 64-hex value anywhere else, is still reported.
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "generic-api-key"
+
+  [[rules.allowlists]]
+  description = "sha256 digests recorded by the contract sync in the manifest and its built copies"
+  condition = "AND"
+  paths = ['''^api/contract-manifest\.json$''', '''^packages/api-contract/dist/.*''']
+  regexTarget = "secret"
+  regexes = ['''^[0-9a-f]{64}$''']

@@ -1,0 +1,1 @@
+{ "mcpServers": { "cueframe": { "type": "http", "url": "https://api.cueframe.ai/v1/mcp" } } }

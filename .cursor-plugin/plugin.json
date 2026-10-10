@@ -1,0 +1,20 @@
+{
+  "name": "cueframe",
+  "displayName": "CueFrame",
+  "version": "0.2.2",
+  "description": "Make and edit videos with CueFrame: composition, motion graphics, captions, clipping and rendering skills, plus the hosted MCP server.",
+  "author": {
+    "name": "CueFrame, Inc.",
+    "email": "support@cueframe.ai"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "video",
+    "video-editing",
+    "motion-graphics",
+    "captions",
+    "rendering",
+    "mcp"
+  ],
+  "logo": "assets/logo-400.png"
+}

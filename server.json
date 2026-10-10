@@ -1,0 +1,11 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "ai.cueframe/cueframe",
+  "title": "CueFrame",
+  "description": "Turn footage into finished video: reframing, captions behind the subject, motion graphics, renders.",
+  "version": "1.2.0",
+  "websiteUrl": "https://cueframe.ai",
+  "repository": { "url": "https://github.com/cueframe-ai/cueframe-mcp", "source": "github" },
+  "icons": [{ "src": "https://cueframe.ai/icon.svg", "mimeType": "image/svg+xml" }],
+  "remotes": [{ "type": "streamable-http", "url": "https://api.cueframe.ai/v1/mcp" }]
+}

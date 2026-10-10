@@ -1,0 +1,56 @@
+name: spec drift
+
+on:
+  pull_request:
+    paths:
+      - api/openapi.json
+      - .github/workflows/spec-drift.yml
+  schedule:
+    # Daily, so a copy that goes stale without a pull request is still caught.
+    - cron: '17 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: spec-drift-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 24
+      # The live spec goes through the same scene vendoring that produced the
+      # repo copy, so the gate compares like with like. No install: the script
+      # imports node builtins and two files in tools/.
+      - name: fetch the spec production serves
+        run: node tools/spec-drift.mjs --emit-base prod-openapi.json
+      - name: full drift report
+        uses: oasdiff/oasdiff-action/diff@5e81b5c380accc6b523f9d32a637ca630e33620b # v0.1.17
+        with:
+          base: prod-openapi.json
+          revision: api/openapi.json
+          format: text
+          output-to-file: spec-drift.txt
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: spec-drift
+          path: spec-drift.txt
+      # Base is the live spec because that is the contract clients already hold,
+      # so a breaking result means the repo copy promises something prod does not serve.
+      - name: repo copy does not break the live contract
+        uses: oasdiff/oasdiff-action/breaking@5e81b5c380accc6b523f9d32a637ca630e33620b # v0.1.17
+        with:
+          base: prod-openapi.json
+          revision: api/openapi.json
+          fail-on: ERR
+          # Keep both specs inside CI; the default uploads them to oasdiff.com.
+          review: 'false'

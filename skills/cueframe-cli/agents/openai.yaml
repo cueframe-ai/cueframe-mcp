@@ -1,0 +1,6 @@
+interface:
+  display_name: "CueFrame CLI"
+  short_description: "Use when editing, clipping, or rendering video via the CueFrame CLI — e.g.…"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  default_prompt: "Use $cueframe-cli when editing, clipping, or rendering video via the CueFrame CLI — e.g. \"make a 9:16 short from this podcast\", \"pull the best moments out of this MP4\", \"render a clip\", or any task that calls the `cueframe` binary."

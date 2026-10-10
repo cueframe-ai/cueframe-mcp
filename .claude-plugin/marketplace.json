@@ -1,0 +1,6 @@
+{
+  "name": "cueframe",
+  "owner": { "name": "CueFrame", "url": "https://cueframe.ai" },
+  "metadata": { "description": "Official CueFrame agent skills for composing, editing and rendering video." },
+  "plugins": [{ "name": "cueframe", "source": "./", "description": "Make and edit videos with CueFrame: composition, motion graphics, captions, clipping and rendering skills, plus the hosted MCP server.", "category": "media" }]
+}

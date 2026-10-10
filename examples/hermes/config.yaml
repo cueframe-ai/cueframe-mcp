@@ -1,0 +1,4 @@
+mcp_servers:
+  cueframe:
+    url: https://api.cueframe.ai/v1/mcp
+    auth: oauth

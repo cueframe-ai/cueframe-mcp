@@ -1,0 +1,60 @@
+// Static instruction regressions and evaluation-case integrity; not model behavior evaluations.
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync, readdirSync, existsSync } from 'node:fs';
+const root = new URL('../', import.meta.url);
+const read = (file) => readFileSync(new URL(file, root), 'utf8');
+const skills = readdirSync(new URL('skills/', root), { withFileTypes: true }).filter((x) => x.isDirectory()).map((x) => x.name);
+const router = read('hooks/session-inject.md');
+
+test('all independently installed skills preserve scope, lane and metering safeguards', () => {
+  assert.equal(skills.length, 18);
+  for (const skill of skills) {
+    const text = read(`skills/${skill}/SKILL.md`);
+    for (const phrase of ['User intent and acceptance criteria override', 'current source revisions remain mandatory', 'preserve the chosen local/hosted lane', 'Do not silently install, authenticate, switch projects or upload local content', 'check `get_account`, entitlements, balance and quotes', 'preserve unrelated timing, media, audio and shared brand-kit state', 'No restarted intake, new approval pause, paid judge or final export by default', 'scores never override acceptance failures']) assert.ok(text.includes(phrase), `${skill}: missing ${phrase}`);
+    assert.doesNotMatch(text, /7\.5|narration first, always|standards win|checklist wins|preserve the MEANING of K1|Even a 30s piece must|if there.s no product on it, it.s slop|product\/human is the opening shot, not a title card/);
+  }
+});
+
+test('Claude and Cursor route the same narrow workflows without hypothetical skills', () => {
+  assert.equal(read('rules/cueframe.mdc').replace(/^---\n[\s\S]*?\n---\n/, '').trim(), router.trim());
+  const twoD = router.split('\n').find((line) => line.includes('custom 2D'));
+  assert.match(twoD, /cueframe-component-authoring/);
+  assert.doesNotMatch(twoD, /cueframe-scene-shot/);
+  assert.match(router.split('\n').find((line) => line.includes('device, camera or 3D')), /cueframe-scene-shot/);
+  assert.match(router, /existing-project.*cueframe-compose-loop/);
+  assert.doesNotMatch(router, /cueframe-refresh-sections|cueframe-type-motion/);
+});
+
+test('direct authoring and selected hosted Director remain separate execution lanes', () => {
+  const text = read('skills/cueframe-storyboard/SKILL.md');
+  assert.match(text, /\*\*Direct authoring:\*\*/);
+  assert.match(text, /\*\*Hosted Director, when available and selected:\*\*/);
+  assert.match(text, /Relay its compose\/render quote before/);
+  assert.match(text, /A local project does not require hosted registration/);
+});
+
+test('styling preserves layout and isolated corrections cannot mutate a shared kit', () => {
+  const text = read('skills/rebrand-a-video/SKILL.md');
+  assert.match(text, /Do not upsert a shared kit for one local correction/);
+  assert.match(text, /Styling preserves layout; a full redesign requires explicit scope/);
+  assert.match(text, /rebuild only for an explicitly requested redesign/);
+});
+
+test('fixed hosted caption judge limitations do not become creative requirements', () => {
+  for (const skill of ['composing-video', 'cueframe-compose-loop', 'video-craft-standards']) {
+    const text = read(`skills/${skill}/SKILL.md`);
+    assert.match(text, /caption criterion|caption criteria/);
+    assert.match(text, /do not add captions solely|not a reason to add captions/i);
+    assert.match(text, /do not change judge behavior|does not repair the judge/);
+  }
+});
+
+test('evaluation fixtures cover creative intent, scope and capability routes with real skills', () => {
+  const cases = JSON.parse(read('tools/fixtures/skill-routing-cases.json'));
+  assert.deepEqual(cases.map((x) => x.id), ['narrated-explainer', 'silent-brand-study', 'recorded-interview', 'one-title-change', 'local-only', 'hosted-director', 'two-dimensional', 'three-dimensional', 'missing-capability']);
+  for (const scenario of cases) {
+    assert.ok(scenario.request && scenario.expect.length && scenario.reject.length);
+    for (const skill of scenario.skills) assert.ok(existsSync(new URL(`skills/${skill}/SKILL.md`, root)), `${scenario.id}: unknown skill ${skill}`);
+  }
+});

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Extracting brand kits: reference pixels → a kit the engine honors"
+  short_description: "Use when the user says \"make my video look like THIS\" with a reference video…"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  default_prompt: "Use $extracting-brand-kits when the user says \"make my video look like THIS\" with a reference video, screenshots, or a moodboard — build a CueFrame brand kit FROM that inspiration so every subsequent compose speaks its visual language."

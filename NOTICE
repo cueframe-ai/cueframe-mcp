@@ -1,0 +1,14 @@
+CueFrame MCP, SDK and CLI
+Copyright 2026 CueFrame, Inc.
+
+Licensed under the Apache License, Version 2.0.
+
+This repository contains no code from @cueframe/kernel (AGPL-3.0-only). The CLI's
+authoring verbs validate and bind through the hosted API; the API contract and the
+scene schema arrive as generated JSON under api/.
+
+Third-party notices: see each package's dependencies on npm. In addition,
+scripts/server.schema.2025-12-11.json is the MCP registry's server.json schema, copied
+unchanged from github.com/modelcontextprotocol/registry, whose LICENSE places it under the
+MIT License with a transition to Apache-2.0 in progress (contributions with relicensing
+consent are Apache-2.0; the rest remain MIT).

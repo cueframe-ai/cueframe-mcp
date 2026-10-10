@@ -1,0 +1,6 @@
+interface:
+  display_name: "Connect CueFrame"
+  short_description: "Use when CueFrame is not connected yet, the user asks how to connect or…"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  default_prompt: "Use $cueframe-connect when CueFrame is not connected yet, the user asks how to connect or authenticate CueFrame, or another CueFrame skill is about to call a tool and needs the one-time setup path for Claude Code, Claude, ChatGPT, Cursor, Codex, VS Code, Windsurf, Zed, Antigravity CLI, Copilot CLI, or an x402 wallet."

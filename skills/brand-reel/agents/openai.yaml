@@ -1,0 +1,6 @@
+interface:
+  display_name: "Brand reel"
+  short_description: "Produces a 12–20 second 9:16 brand-identity reel — three-beat arc, bespoke…"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  default_prompt: "Use $brand-reel to produce a 12–20 second 9:16 brand-identity reel — three-beat arc, bespoke cards in the brand's own type and palette, footage graded into the palette."

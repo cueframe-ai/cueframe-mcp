@@ -1,0 +1,6 @@
+interface:
+  display_name: "Rebrand a video"
+  short_description: "Swaps the brand kit under an existing video and re-renders — tokens, bumpers…"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  default_prompt: "Use $rebrand-a-video to swap the brand kit under an existing video and re-renders — tokens, bumpers, logo, captions, and motion re-theme automatically; hardcoded card values get surgical edits."

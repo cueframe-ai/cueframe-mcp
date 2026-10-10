@@ -1,0 +1,395 @@
+[
+  {
+    "id": "world-objects",
+    "title": "World objects",
+    "summary": "Nested satin card and fitted page.",
+    "slots": [
+      "page"
+    ],
+    "spec": {
+      "version": 2,
+      "referenceSize": {
+        "width": 1920,
+        "height": 1080
+      },
+      "environment": {
+        "kind": "photographic-studio-v1"
+      },
+      "backdrop": {
+        "kind": "solid",
+        "color": "$brand:colors.background"
+      },
+      "layers": [
+        {
+          "kind": "group",
+          "id": "cards",
+          "transform": {
+            "position": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": 1
+          },
+          "opacity": 1,
+          "children": [
+            {
+              "kind": "slab",
+              "id": "hero",
+              "transform": {
+                "position": [
+                  0,
+                  0,
+                  0
+                ],
+                "rotation": [
+                  0,
+                  0,
+                  0
+                ],
+                "scale": 1
+              },
+              "opacity": 1,
+              "width": 720,
+              "height": 900,
+              "thickness": 32,
+              "cornerRadius": 32,
+              "edgeRadius": 15,
+              "finish": "satin",
+              "surfaces": {
+                "front": {
+                  "source": "component",
+                  "component": {
+                    "version": 1,
+                    "componentId": "hero-card",
+                    "sourceVersionId": "0000000000000000000000000000000000000000000000000000000000000000"
+                  },
+                  "captureFrame": 12,
+                  "layout": {
+                    "width": 720,
+                    "height": 900
+                  }
+                }
+              }
+            },
+            {
+              "kind": "page",
+              "id": "page",
+              "transform": {
+                "position": [
+                  760,
+                  0,
+                  -20
+                ],
+                "rotation": [
+                  0,
+                  0,
+                  0
+                ],
+                "scale": 1
+              },
+              "opacity": 1,
+              "width": 640,
+              "height": 800,
+              "fit": "contain",
+              "transparency": "straight",
+              "depthWrite": true,
+              "backface": "hidden",
+              "surfaces": {
+                "content": {
+                  "source": "image",
+                  "assetSlot": "page"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "animation": [
+        {
+          "target": {
+            "kind": "layer",
+            "layerId": "cards"
+          },
+          "property": "rotationY",
+          "keyframes": [
+            {
+              "at": 0,
+              "value": 0
+            },
+            {
+              "at": 1,
+              "value": 18.84955592153876,
+              "easing": {
+                "kind": "linear"
+              }
+            }
+          ]
+        }
+      ],
+      "post": {
+        "grain": 0,
+        "vignette": 0,
+        "focus": null
+      },
+      "constraints": [],
+      "camera": {
+        "position": [
+          0,
+          0,
+          1483.6378065054962
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "fov": 0.6981317007977318
+      }
+    }
+  },
+  {
+    "id": "camera-tunnel",
+    "title": "Camera travel through depth bands",
+    "summary": "Camera positionZ forward travel plus lateral positionX, over three image planes each animating positionZ at its own rate.",
+    "slots": [
+      "near",
+      "mid",
+      "far"
+    ],
+    "spec": {
+      "version": 2,
+      "referenceSize": {
+        "width": 1920,
+        "height": 1080
+      },
+      "environment": {
+        "kind": "photographic-studio-v1"
+      },
+      "backdrop": {
+        "kind": "solid",
+        "color": "$brand:colors.background"
+      },
+      "layers": [
+        {
+          "kind": "page",
+          "id": "near",
+          "transform": {
+            "position": [
+              -320,
+              0,
+              600
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": 1
+          },
+          "opacity": 1,
+          "width": 720,
+          "height": 900,
+          "fit": "contain",
+          "transparency": "straight",
+          "depthWrite": true,
+          "backface": "hidden",
+          "surfaces": {
+            "content": {
+              "source": "image",
+              "assetSlot": "near"
+            }
+          }
+        },
+        {
+          "kind": "page",
+          "id": "mid",
+          "transform": {
+            "position": [
+              280,
+              0,
+              -200
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": 1
+          },
+          "opacity": 1,
+          "width": 720,
+          "height": 900,
+          "fit": "contain",
+          "transparency": "straight",
+          "depthWrite": true,
+          "backface": "hidden",
+          "surfaces": {
+            "content": {
+              "source": "image",
+              "assetSlot": "mid"
+            }
+          }
+        },
+        {
+          "kind": "page",
+          "id": "far",
+          "transform": {
+            "position": [
+              -160,
+              0,
+              -1200
+            ],
+            "rotation": [
+              0,
+              0,
+              0
+            ],
+            "scale": 1
+          },
+          "opacity": 1,
+          "width": 720,
+          "height": 900,
+          "fit": "contain",
+          "transparency": "straight",
+          "depthWrite": true,
+          "backface": "hidden",
+          "surfaces": {
+            "content": {
+              "source": "image",
+              "assetSlot": "far"
+            }
+          }
+        }
+      ],
+      "animation": [
+        {
+          "target": {
+            "kind": "camera"
+          },
+          "property": "positionZ",
+          "keyframes": [
+            {
+              "at": 0,
+              "value": 1800
+            },
+            {
+              "at": 1,
+              "value": -900,
+              "easing": {
+                "kind": "bezier",
+                "x1": 0.4,
+                "y1": 0,
+                "x2": 0.2,
+                "y2": 1
+              }
+            }
+          ]
+        },
+        {
+          "target": {
+            "kind": "camera"
+          },
+          "property": "positionX",
+          "keyframes": [
+            {
+              "at": 0,
+              "value": -240
+            },
+            {
+              "at": 1,
+              "value": 240,
+              "easing": {
+                "kind": "linear"
+              }
+            }
+          ]
+        },
+        {
+          "target": {
+            "kind": "layer",
+            "layerId": "near"
+          },
+          "property": "positionZ",
+          "keyframes": [
+            {
+              "at": 0,
+              "value": 600
+            },
+            {
+              "at": 1,
+              "value": 1500,
+              "easing": {
+                "kind": "linear"
+              }
+            }
+          ]
+        },
+        {
+          "target": {
+            "kind": "layer",
+            "layerId": "mid"
+          },
+          "property": "positionZ",
+          "keyframes": [
+            {
+              "at": 0,
+              "value": -200
+            },
+            {
+              "at": 1,
+              "value": 260,
+              "easing": {
+                "kind": "linear"
+              }
+            }
+          ]
+        },
+        {
+          "target": {
+            "kind": "layer",
+            "layerId": "far"
+          },
+          "property": "positionZ",
+          "keyframes": [
+            {
+              "at": 0,
+              "value": -1200
+            },
+            {
+              "at": 1,
+              "value": -1020,
+              "easing": {
+                "kind": "linear"
+              }
+            }
+          ]
+        }
+      ],
+      "post": {
+        "grain": 0,
+        "vignette": 0,
+        "focus": null
+      },
+      "constraints": [],
+      "camera": {
+        "position": [
+          0,
+          0,
+          1483.6378065054962
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "fov": 0.6981317007977318
+      }
+    }
+  }
+]

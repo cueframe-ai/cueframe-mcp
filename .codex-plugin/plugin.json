@@ -1,0 +1,47 @@
+{
+  "name": "cueframe",
+  "version": "0.2.2",
+  "description": "Make and edit videos with CueFrame: composition, motion graphics, captions, clipping and rendering skills, plus the hosted MCP server.",
+  "author": {
+    "name": "CueFrame, Inc.",
+    "email": "support@cueframe.ai",
+    "url": "https://cueframe.ai"
+  },
+  "homepage": "https://docs.cueframe.ai",
+  "repository": "https://github.com/cueframe-ai/cueframe-mcp",
+  "license": "Apache-2.0",
+  "keywords": [
+    "video",
+    "video-editing",
+    "motion-graphics",
+    "captions",
+    "rendering",
+    "mcp",
+    "claude-code",
+    "codex",
+    "cursor"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./mcp.json",
+  "interface": {
+    "displayName": "CueFrame",
+    "shortDescription": "Compose, edit and render finished video from your agent.",
+    "longDescription": "CueFrame turns footage, a brief or a brand into finished video over MCP: content-aware reframing, captions behind the subject, motion graphics as real components, deterministic renders. The skills in this plugin teach the agent the workflows; the hosted server does the work.",
+    "developerName": "CueFrame, Inc.",
+    "category": "Creativity",
+    "websiteURL": "https://cueframe.ai",
+    "privacyPolicyURL": "https://cueframe.ai/privacy",
+    "termsOfServiceURL": "https://cueframe.ai/terms",
+    "defaultPrompt": [
+      "Use CueFrame to turn this 40-minute talk into three 60-second vertical clips with captions.",
+      "Use CueFrame to make a 30-second launch video for our product from these screenshots and this brief.",
+      "Use CueFrame to rebrand this video with our brand kit from cueframe.ai."
+    ],
+    "logo": "./assets/logo-400.png",
+    "composerIcon": "./assets/logo-400.png",
+    "capabilities": [
+      "Read",
+      "Write"
+    ]
+  }
+}

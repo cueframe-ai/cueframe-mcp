@@ -1,0 +1,34 @@
+# Line endings are LF on every platform, regardless of a clone's core.autocrlf.
+# The index is already 100% LF; only the checkout smudge differed per machine,
+# and that was enough to fail `cueframe install` (a SKILL.md written back with
+# CRLF stopped matching `startsWith('---\n')`).
+* text=auto eol=lf
+
+# The discovery snapshot is exported, not written; collapse it in diffs.
+glama/tools.json linguist-generated=true
+
+# Binaries — never normalised. `text=auto` already skips anything with NUL
+# bytes; these are listed so a text-looking asset can't be misdetected.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.icns binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.wasm binary
+*.mp4 binary
+*.mov binary
+*.webm binary
+*.mp3 binary
+*.wav binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.onnx binary
+*.hdr binary
+*.bin binary

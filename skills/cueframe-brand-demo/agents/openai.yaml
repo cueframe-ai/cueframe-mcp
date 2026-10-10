@@ -1,0 +1,6 @@
+interface:
+  display_name: "CueFrame — Brand demo recipe"
+  short_description: "Use when turning a local app into a brand-consistent product demo with…"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  default_prompt: "Use $cueframe-brand-demo when turning a local app into a brand-consistent product demo with CueFrame — extract the brand straight from the repo (colors/fonts/logo/motion), capture a Playwright walkthrough of the running app, and author a branded, auto-zoomed demo whose intro/outro/logo/colors/fonts/motion are frozen by CueFrame's engine — e.g. \"make an on-brand demo of my app\", \"record my localhost and produce a branded launch video\"."

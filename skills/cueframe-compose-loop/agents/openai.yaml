@@ -1,0 +1,6 @@
+interface:
+  display_name: "CueFrame — Compose convergence loop"
+  short_description: "Use when an AI agent should DRIVE CueFrame to a high-quality clip itself…"
+  icon_small: "./assets/icon.svg"
+  icon_large: "./assets/icon.svg"
+  default_prompt: "Use $cueframe-compose-loop when an AI agent should DRIVE CueFrame to a high-quality clip itself — author a composition, look at rendered frames, score it with CueFrame's judge, fix the weakest thing, and repeat until it's good — e.g. \"turn this source into a polished 9:16 clip\", \"compose and self-correct until it scores well\"."
