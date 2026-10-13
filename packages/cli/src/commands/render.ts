@@ -1,8 +1,8 @@
 import {
   ApiError,
   requestRaw,
-  type FormatSpecFps,
-  type FormatSpecResolution,
+  type FormatFps,
+  type FormatResolution,
 } from '@cueframe/sdk';
 import { initSdk, formatError } from '../remote/sdkClient.js';
 import { ExitCode, exitCodeForError, exitWith } from '../remote/exitCodes.js';
@@ -27,8 +27,8 @@ export async function renderCommand(
   opts: {
     target: string;
     aspect?: '9:16' | '1:1' | '16:9';
-    fps?: FormatSpecFps;
-    resolution?: FormatSpecResolution;
+    fps?: FormatFps;
+    resolution?: FormatResolution;
     out?: string;
     json?: boolean;
     dryRun?: boolean;

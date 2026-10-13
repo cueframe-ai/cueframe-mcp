@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import type { FormatSpecFps } from '@cueframe/sdk';
+import type { FormatFps } from '@cueframe/sdk';
 import { installCommand } from './commands/install.js';
 import { initCommand } from './commands/init.js';
 import { newComponentCommand } from './commands/newComponent.js';
@@ -50,7 +50,7 @@ function parseTarget(v: string | undefined): Target {
   exitWith(ExitCode.UserError);
 }
 
-function parseFps(v: string | undefined): FormatSpecFps | undefined {
+function parseFps(v: string | undefined): FormatFps | undefined {
   if (!v) return undefined;
   const n = parseInt(v, 10);
   if (n === 24 || n === 25 || n === 30 || n === 60) return n;

@@ -117,7 +117,7 @@ describe('cueframe push / sync', () => {
     const body = create.mock.calls[0][0];
     expect(createComponentBody.safeParse(body)).toMatchObject({ success: true });
     expect(body.componentId).toBe('my-badge');
-    expect(body.source?.tsxSource).toBe(INDEX_TSX);
+    expect(body.source && 'tsxSource' in body.source && body.source.tsxSource).toBe(INDEX_TSX);
     expect(body.source?.version).toBe(3);
     expect(body.source && 'definition' in body.source && body.source.definition).toEqual(scaffoldDefinition('my-badge'));
     expect(body).not.toHaveProperty('tsxSource');
@@ -139,7 +139,8 @@ describe('cueframe push / sync', () => {
     expect(update).toHaveBeenCalledTimes(1);
     expect(update.mock.calls[0][0]).toBe('my-badge');
     expect(updateComponentBody.safeParse(update.mock.calls[0][1])).toMatchObject({ success: true });
-    expect(update.mock.calls[0][1].source?.tsxSource).toBe(INDEX_TSX);
+    const updated = update.mock.calls[0][1].source;
+    expect(updated && 'tsxSource' in updated && updated.tsxSource).toBe(INDEX_TSX);
     expect(update.mock.calls[0][1].origin).toBe('customer-owned');
     expect(update.mock.calls[0][1].source?.manifest).toEqual(DEFAULT_COMPONENT_MANIFEST_V2);
   });

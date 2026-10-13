@@ -111,6 +111,7 @@ createUploadToken:
   scoreComposition: 'expert-only: the sighted judge via MCP score_composition / cueframe api',
   previewFrameJob: 'expert-only: durable still evidence via MCP preview_frame / cueframe api',
   previewComponent: 'expert-only: component motion preview via MCP preview_component / cueframe api',
+  repinComponent: 'expert-only: moving retired TSX component clips to their native successors via cueframe api POST /v1/projects/:id/components/native-upgrade',
   deleteComposition: 'expert-only: composition delete via MCP delete_composition / cueframe api',
   getProfile: 'expert-only: the org taste read via MCP get_profile / cueframe api',
   listCritics: 'expert-only: critics via MCP list_critics / cueframe api',
