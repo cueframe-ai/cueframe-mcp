@@ -8,9 +8,9 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { ComponentManifestV2 } from './componentManifestV2.zod';
+import { ComponentManifest } from './componentManifest.zod';
 import { ComponentPlacement } from './componentPlacement.zod';
-import { SceneFormat } from './sceneFormat.zod';
+import { Format } from './format.zod';
 
 export const componentUpdateResponseNameMax = 200;
 
@@ -38,15 +38,15 @@ export const ComponentUpdateResponse = zod.strictObject({
   "tokens": zod.record(zod.string(), zod.unknown()).optional(),
   "examples": zod.array(zod.record(zod.string(), zod.unknown())).optional().describe('Usage examples, as authored. A built-in primitive projects {name, mood?, params?, description?}; an authored component\'s examples are whatever it wrote, which is why the item is open. One shape for both directions: what you write here is what you read back.'),
   "durationInFrames": zod.number().gt(componentUpdateResponseDurationInFramesExclusiveMin).optional(),
-  "manifest": ComponentManifestV2.optional().describe('The stored runtime manifest (assets, graphics API, alpha policy) of an org-INSTALLED component: the same object the create/update body takes, so a manifest read back here can be written back unchanged. Built-in defaults have no stored manifest and omit it. Its `version` is always 2 (the contract version), unlike the entry\'s semver `version`.'),
+  "manifest": ComponentManifest.optional().describe('The stored runtime manifest (assets, graphics API, alpha policy) of an org-INSTALLED component: the same object its source snapshot carries, so a manifest read back here can be written back unchanged. Built-in defaults have no stored manifest and omit it. Its `version` is the runtime contract version (4 native, 2 retired TSX), unlike the entry\'s semver `version`.'),
   "id": zod.string().describe('The entry\'s id: a `primitiveId` for a built-in, a `componentId` for an installed component.'),
   "source": zod.enum(['default', 'installed']).describe('\'default\' = built-in primitive (place by primitiveId); \'installed\' = org-authored component (place by componentId).'),
   "kind": zod.enum(['component', 'transition', 'scene']).describe('RENDER kind (component | transition | scene). NOT the ClipSource variant — see `placement` for how to author it on the timeline.'),
-  "version": zod.string().describe('The ENTRY\'s version: a semver string (\'0.0.0\' until an authored component is versioned). Distinct from `manifest.version`, which is the runtime contract version and is always the literal 2.'),
+  "version": zod.string().describe('The ENTRY\'s version: a semver string (\'0.0.0\' until an authored component is versioned). Distinct from `manifest.version`, which is the runtime contract version (4 native, 2 retired TSX).'),
   "propDefaults": zod.record(zod.string(), zod.unknown()).optional(),
   "textParam": zod.string().nullish().describe('The param field that carries this primitive\'s primary text; null = no single text slot.'),
   "subtextParam": zod.string().nullish().describe('The param field for secondary text (subtitle/byline); null = none.'),
-  "format": SceneFormat.optional(),
+  "format": Format.optional(),
   "intent": zod.string().optional().describe('Selection signal: a verb naming what this primitive accomplishes (e.g. \'product-trailer\'). Match it to the beat you are authoring.'),
   "useWhen": zod.string().optional().describe('When to use this — AND when not to. The negative guidance is load-bearing; read it before picking.'),
   "pairsWith": zod.array(zod.string()).optional().describe('Authoring guidance: ids of primitives that COMPOSE well with this one in the same edit.'),

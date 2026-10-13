@@ -25,11 +25,7 @@ export interface TemplateApplyRequest {
      * @maxLength 128
      */
   commandId?: string;
-  /**
-     * @minItems 1
-     * @maxItems 1
-     */
-  componentExecutionVersions?: 3[];
+  componentExecutionVersions?: [3] | [3, 4];
   /** @pattern ^[a-f0-9]{64}$ */
   expectedBrandIdentity?: string;
   /** @minLength 1 */

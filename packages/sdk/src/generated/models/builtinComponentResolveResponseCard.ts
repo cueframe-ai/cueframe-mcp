@@ -165,7 +165,7 @@ export type BuiltinComponentResolveResponseCard = {
   componentId: string;
   /** @pattern ^[a-f0-9]{64}$ */
   sourceVersionId: string;
-  sourceVersion: 3;
+  sourceVersion: 3 | 4;
 };
   declaration: {
   state: 'v3';
@@ -381,7 +381,7 @@ export type BuiltinComponentResolveResponseCard = {
   componentId: string;
   /** @pattern ^[a-f0-9]{64}$ */
   sourceVersionId: string;
-  sourceVersion: 3;
+  sourceVersion: 3 | 4;
 };
   /** @pattern ^[a-f0-9]{64}$ */
   presetVersionId: string;
@@ -631,7 +631,7 @@ export type BuiltinComponentResolveResponseCard = {
   componentId: string;
   /** @pattern ^[a-f0-9]{64}$ */
   sourceVersionId: string;
-  sourceVersion: 3;
+  sourceVersion: 3 | 4;
 })[];
   equivalence: 'unproven' | 'verified';
 };

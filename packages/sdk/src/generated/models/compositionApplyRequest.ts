@@ -17,11 +17,7 @@ import type { CompositionOp } from './compositionOp';
 export interface CompositionApplyRequest {
   /** @minItems 1 */
   ops: CompositionOp[];
-  /**
-     * @minItems 1
-     * @maxItems 1
-     */
-  componentExecutionVersions?: 3[];
+  componentExecutionVersions?: [3] | [3, 4];
   /**
      * @minItems 1
      * @maxItems 512

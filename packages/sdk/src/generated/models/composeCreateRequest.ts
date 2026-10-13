@@ -8,7 +8,7 @@
  * OpenAPI spec version: v1
  */
 import type { ComposeCreateRequestHoldAtItem } from './composeCreateRequestHoldAtItem';
-import type { FormatSpec } from './formatSpec';
+import type { Format } from './format';
 
 /**
  * POST /projects/:id/compose body.
@@ -24,7 +24,7 @@ export interface ComposeCreateRequest {
      */
   briefId?: string;
   /** Optional format override. Phase 2 ignores this — format precedence is project.compositionFormat → 9:16 fhd 30fps default. */
-  format?: FormatSpec;
+  format?: Format;
   /** RequestScope discriminated union (per compose-api-contract.md). Editor-only scopes (captions/overlay-track/broll/overlay-instance/segment) require an editor-session token; API tokens get 403 on those. */
   scope?: unknown;
   /**

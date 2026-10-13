@@ -7,7 +7,7 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { FormatSpec } from './formatSpec';
+import type { Format } from './format';
 import type { ProjectCompositionSummary } from './projectCompositionSummary';
 import type { ProjectLastRender } from './projectLastRender';
 
@@ -19,7 +19,7 @@ export interface ProjectResponse {
   name: string;
   /** @nullable */
   description: string | null;
-  format: FormatSpec | null;
+  format: Format | null;
   /** @nullable */
   brandKitId: string | null;
   /** @nullable */

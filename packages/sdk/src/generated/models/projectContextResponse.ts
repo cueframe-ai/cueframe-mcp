@@ -9,8 +9,8 @@
  */
 import type { BrandKitResponse } from './brandKitResponse';
 import type { Composition } from './composition';
+import type { Format } from './format';
 import type { ProjectContextMedia } from './projectContextMedia';
-import type { ProjectContextResponseFormat } from './projectContextResponseFormat';
 import type { ProjectContextResponseMarkersItem } from './projectContextResponseMarkersItem';
 import type { ProjectContextTranscript } from './projectContextTranscript';
 
@@ -21,7 +21,7 @@ export interface ProjectContextResponse {
   /** The project's ACTIVE composition wire shape — identical to GET /v1/projects/{id}/composition. NULL when the project has no composition yet (a freshly created project): mint one with new_composition, or let the first apply_composition create it. */
   composition: Composition | null;
   /** The composition's format, hoisted — the pixel frame every card/graphic must be authored against. Null whenever `composition` is null. */
-  format: ProjectContextResponseFormat;
+  format: Format | null;
   /** The org's media library (most recent first, capped) — the pool this project can draw clips from. */
   media: ProjectContextMedia[];
   /** The FIRST transcribed media item's word-timed transcript, flattened — the spine a VO-driven film cuts to. `status:"ready"` carries the words; `status:"unavailable"` means the transcript exists but its body could not be fetched (retry); null means nothing in `media` is transcribed. For any OTHER transcribed item (see each entry's `hasTranscript`), read GET /v1/media/{id}/transcript. */

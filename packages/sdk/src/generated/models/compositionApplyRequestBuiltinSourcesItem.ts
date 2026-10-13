@@ -18,5 +18,5 @@ export type CompositionApplyRequestBuiltinSourcesItem = {
   componentId: string;
   /** @pattern ^[a-f0-9]{64}$ */
   sourceVersionId: string;
-  sourceVersion: 3;
+  sourceVersion: 3 | 4;
 };

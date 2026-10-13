@@ -19,8 +19,6 @@ export const templateApplyRequestExpectedRevisionMax = 9007199254740991;
 
 export const templateApplyRequestCommandIdMax = 128;
 
-export const templateApplyRequestComponentExecutionVersionsMax = 1;
-
 export const templateApplyRequestExpectedBrandIdentityRegExp = new RegExp('^[a-f0-9]{64}$');
 
 export const templateApplyRequestValuesDefault = {};
@@ -36,7 +34,8 @@ export const TemplateApplyRequest = zod.strictObject({
 }).optional(),
   "expectedRevision": zod.int().min(templateApplyRequestExpectedRevisionMin).max(templateApplyRequestExpectedRevisionMax).optional(),
   "commandId": zod.string().min(1).max(templateApplyRequestCommandIdMax).optional(),
-  "componentExecutionVersions": zod.array(zod.literal(3)).min(1).max(templateApplyRequestComponentExecutionVersionsMax).optional(),
+  "componentExecutionVersions": zod.union([zod.tuple([zod.literal(3)]),zod.tuple([zod.literal(3),
+zod.literal(4)])]).optional(),
   "expectedBrandIdentity": zod.string().regex(templateApplyRequestExpectedBrandIdentityRegExp).optional(),
   "projectId": zod.string().min(1),
   "values": zod.record(zod.string(), zod.unknown()).default(templateApplyRequestValuesDefault),

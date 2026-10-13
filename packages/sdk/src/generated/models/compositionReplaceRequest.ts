@@ -11,16 +11,12 @@ import type { Composition } from './composition';
 
 export type CompositionReplaceRequest = {
   composition: Composition;
-  /**
-     * @minItems 1
-     * @maxItems 1
-     */
-  componentExecutionVersions: 3[];
+  componentExecutionVersions: [3] | [3, 4];
   /**
      * @minItems 1
      * @maxItems 512
      */
-  builtinSources?: {
+  builtinSources?: ({
   scope: {
   kind: 'builtin';
   /**
@@ -36,8 +32,8 @@ export type CompositionReplaceRequest = {
   componentId: string;
   /** @pattern ^[a-f0-9]{64}$ */
   sourceVersionId: string;
-  sourceVersion: 3;
-}[];
+  sourceVersion: 3 | 4;
+})[];
   /** @pattern ^[a-f0-9]{64}$ */
   expectedBrandIdentity?: string;
 } | Composition;

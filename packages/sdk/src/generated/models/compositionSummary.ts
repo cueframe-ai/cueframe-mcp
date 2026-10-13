@@ -7,14 +7,14 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { FormatSpec } from './formatSpec';
+import type { Format } from './format';
 
 /**
  * A composition in a project, flagging the active one.
  */
 export interface CompositionSummary {
   compositionId: string;
-  format: FormatSpec;
+  format: Format;
   etag: string;
   isActive: boolean;
   updatedAt: number;

@@ -7,8 +7,6 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { ComponentPatchRequestSourceDefinition } from './componentPatchRequestSourceDefinition';
-import type { ComponentPatchRequestSourceManifest } from './componentPatchRequestSourceManifest';
 
 export type ComponentPatchRequestSource = {
   version: 3;
@@ -23,6 +21,517 @@ export type ComponentPatchRequestSource = {
      * @maxLength 8000000
      */
   tsxSource: string;
-  manifest: ComponentPatchRequestSourceManifest;
-  definition: ComponentPatchRequestSourceDefinition;
+  manifest: {
+  version: 2;
+  assets: {[key: string]: {
+  kind: 'image' | 'video' | 'audio' | 'data' | 'visual';
+  required: boolean;
+  /**
+     * @minItems 1
+     * @items.minLength 1
+     */
+  mimeTypes?: string[];
+  mediaDemand?: {
+  mode: 'original';
+} | {
+  mode: 'tier';
+  tier: 256 | 512 | 1024 | 2048;
+} | {
+  mode: 'auto';
+  /**
+     * @maximum 64
+     * @exclusiveMinimum 0
+     */
+  maxProjectedWidthRatio: number;
+  /**
+     * @maximum 64
+     * @exclusiveMinimum 0
+     */
+  maxProjectedHeightRatio: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  minVisibleSourceWidthRatio: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  minVisibleSourceHeightRatio: number;
+};
+}};
+  graphics: {
+  api: 'canvas2d' | 'webgl' | 'webgl2' | 'webgpu';
+  required: true;
+  accelerationPreference: 'hardware-preferred' | 'software-allowed';
+};
+  alphaPolicy: 'requires-transparency' | 'allows-opaque';
+  sceneShot?: {
+  version: 2;
+};
+  visualMedia?: {
+  version: 1;
+};
+};
+  definition: {
+  inputSchema: {[key: string]: unknown};
+  defaults: {[key: string]: unknown};
+  brandBindings: {
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  propPath: string;
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  cssVar: string;
+  fallback?: string;
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  brandKitPath?: string;
+}[];
+  timing: {
+  defaultDuration: {
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  frames: number;
+  /** @exclusiveMinimum 0 */
+  fps: number;
+};
+  /** @exclusiveMinimum 0 */
+  minDurationSec?: number;
+  /** @exclusiveMinimum 0 */
+  maxDurationSec?: number;
+};
+  /** @minItems 1 */
+  capabilities: ({
+  kind: 'clip';
+} | {
+  kind: 'cut-transition';
+  protocol: 'per-child';
+} | {
+  kind: 'content-slots';
+  /** @minItems 1 */
+  slots: ({
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  name: string;
+  /**
+     * @minimum 0
+     * @maximum 9007199254740991
+     */
+  min: number;
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  max: number;
+  ownership: 'reference' | 'exclusive';
+  sizing: 'canvas' | 'container';
+})[];
+} | {
+  kind: 'clip-wrapper';
+  ordering: 'any' | 'innermost';
+  acceptsWrappedTargets: boolean;
+} | {
+  kind: 'global-wrapper';
+  scope: 'media-lanes';
+  ordering: 'any' | 'innermost';
+  acceptsWrappedTargets: boolean;
+})[];
+  /** @minItems 1 */
+  mediaBindings?: ({
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  name: string;
+  /**
+     * @minItems 1
+     * @maxItems 16
+     * @items.minLength 1
+     * @items.maxLength 128
+     */
+  propPath: string[];
+  kind: 'image' | 'video' | 'visual';
+  collection: 'scalar' | 'array';
+  cardinality: {
+  /**
+     * @minimum 0
+     * @maximum 9007199254740991
+     */
+  min: number;
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  max?: number;
+};
+  /**
+     * @minItems 1
+     * @items.minLength 1
+     */
+  mimeTypes?: string[];
+  mediaDemand?: {
+  mode: 'original';
+} | {
+  mode: 'tier';
+  tier: 256 | 512 | 1024 | 2048;
+} | {
+  mode: 'auto';
+  /**
+     * @maximum 64
+     * @exclusiveMinimum 0
+     */
+  maxProjectedWidthRatio: number;
+  /**
+     * @maximum 64
+     * @exclusiveMinimum 0
+     */
+  maxProjectedHeightRatio: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  minVisibleSourceWidthRatio: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  minVisibleSourceHeightRatio: number;
+};
+})[];
+  preview?: {
+  params?: {[key: string]: unknown};
+  format?: {
+  aspectRatio: '16:9' | '9:16' | '1:1' | '4:5';
+  fps?: 24 | 25 | 30 | 60;
+  resolution?: 'hd' | 'fhd' | '4k';
+  platform?: string;
+};
+  assets?: {[key: string]: {
+  /** @pattern ^https:\/\/.* */
+  url: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  sha256: string;
+  /** @minLength 1 */
+  mimeType: string;
+  /** @exclusiveMinimum 0 */
+  frameRate?: number;
+  /** @exclusiveMinimum 0 */
+  durationSec?: number;
+} | {
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  mediaId: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  sha256: string;
+  /** @minLength 1 */
+  mimeType: string;
+  /** @exclusiveMinimum 0 */
+  frameRate?: number;
+  /** @exclusiveMinimum 0 */
+  durationSec?: number;
+}};
+  mediaBindings?: {[key: string]: ({
+  /** @pattern ^https:\/\/.* */
+  url: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  sha256: string;
+  /** @minLength 1 */
+  mimeType: string;
+  /** @exclusiveMinimum 0 */
+  frameRate?: number;
+  /** @exclusiveMinimum 0 */
+  durationSec?: number;
+} | {
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  mediaId: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  sha256: string;
+  /** @minLength 1 */
+  mimeType: string;
+  /** @exclusiveMinimum 0 */
+  frameRate?: number;
+  /** @exclusiveMinimum 0 */
+  durationSec?: number;
+})[]};
+};
+};
+} | {
+  version: 4;
+  /**
+     * @minLength 1
+     * @maxLength 128
+     * @pattern ^[a-zA-Z0-9][a-zA-Z0-9._-]*$
+     */
+  componentId: string;
+  /**
+     * @minLength 1
+     * @maxLength 2000000
+     */
+  template: string;
+  manifest: {
+  version: 4;
+  runtime: 'hyperframes';
+  hfContract: 1;
+  kind: 'scene';
+  sceneShot?: {
+  version: 2;
+};
+  assets: {[key: string]: {
+  kind: 'image' | 'video' | 'audio' | 'data' | 'visual';
+  required: boolean;
+  /**
+     * @minItems 1
+     * @items.minLength 1
+     */
+  mimeTypes?: string[];
+  mediaDemand?: {
+  mode: 'original';
+} | {
+  mode: 'tier';
+  tier: 256 | 512 | 1024 | 2048;
+} | {
+  mode: 'auto';
+  /**
+     * @maximum 64
+     * @exclusiveMinimum 0
+     */
+  maxProjectedWidthRatio: number;
+  /**
+     * @maximum 64
+     * @exclusiveMinimum 0
+     */
+  maxProjectedHeightRatio: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  minVisibleSourceWidthRatio: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  minVisibleSourceHeightRatio: number;
+};
+}};
+  graphics: {
+  api: 'canvas2d' | 'webgl' | 'webgl2' | 'webgpu';
+  required: true;
+  accelerationPreference: 'hardware-preferred' | 'software-allowed';
+};
+  alphaPolicy: 'requires-transparency' | 'allows-opaque';
+};
+  definition: {
+  inputSchema: {[key: string]: unknown};
+  defaults: {[key: string]: unknown};
+  brandBindings: {
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  propPath: string;
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  cssVar: string;
+  fallback?: string;
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  brandKitPath?: string;
+}[];
+  timing: {
+  defaultDuration: {
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  frames: number;
+  /** @exclusiveMinimum 0 */
+  fps: number;
+};
+  /** @exclusiveMinimum 0 */
+  minDurationSec?: number;
+  /** @exclusiveMinimum 0 */
+  maxDurationSec?: number;
+};
+  /** @minItems 1 */
+  capabilities: ({
+  kind: 'clip';
+} | {
+  kind: 'cut-transition';
+  protocol: 'per-child';
+} | {
+  kind: 'content-slots';
+  /** @minItems 1 */
+  slots: ({
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  name: string;
+  /**
+     * @minimum 0
+     * @maximum 9007199254740991
+     */
+  min: number;
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  max: number;
+  ownership: 'reference' | 'exclusive';
+  sizing: 'canvas' | 'container';
+})[];
+} | {
+  kind: 'clip-wrapper';
+  ordering: 'any' | 'innermost';
+  acceptsWrappedTargets: boolean;
+} | {
+  kind: 'global-wrapper';
+  scope: 'media-lanes';
+  ordering: 'any' | 'innermost';
+  acceptsWrappedTargets: boolean;
+})[];
+  /** @minItems 1 */
+  mediaBindings?: ({
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  name: string;
+  /**
+     * @minItems 1
+     * @maxItems 16
+     * @items.minLength 1
+     * @items.maxLength 128
+     */
+  propPath: string[];
+  kind: 'image' | 'video' | 'visual';
+  collection: 'scalar' | 'array';
+  cardinality: {
+  /**
+     * @minimum 0
+     * @maximum 9007199254740991
+     */
+  min: number;
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  max?: number;
+};
+  /**
+     * @minItems 1
+     * @items.minLength 1
+     */
+  mimeTypes?: string[];
+  mediaDemand?: {
+  mode: 'original';
+} | {
+  mode: 'tier';
+  tier: 256 | 512 | 1024 | 2048;
+} | {
+  mode: 'auto';
+  /**
+     * @maximum 64
+     * @exclusiveMinimum 0
+     */
+  maxProjectedWidthRatio: number;
+  /**
+     * @maximum 64
+     * @exclusiveMinimum 0
+     */
+  maxProjectedHeightRatio: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  minVisibleSourceWidthRatio: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  minVisibleSourceHeightRatio: number;
+};
+})[];
+  preview?: {
+  params?: {[key: string]: unknown};
+  format?: {
+  aspectRatio: '16:9' | '9:16' | '1:1' | '4:5';
+  fps?: 24 | 25 | 30 | 60;
+  resolution?: 'hd' | 'fhd' | '4k';
+  platform?: string;
+};
+  assets?: {[key: string]: {
+  /** @pattern ^https:\/\/.* */
+  url: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  sha256: string;
+  /** @minLength 1 */
+  mimeType: string;
+  /** @exclusiveMinimum 0 */
+  frameRate?: number;
+  /** @exclusiveMinimum 0 */
+  durationSec?: number;
+} | {
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  mediaId: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  sha256: string;
+  /** @minLength 1 */
+  mimeType: string;
+  /** @exclusiveMinimum 0 */
+  frameRate?: number;
+  /** @exclusiveMinimum 0 */
+  durationSec?: number;
+}};
+  mediaBindings?: {[key: string]: ({
+  /** @pattern ^https:\/\/.* */
+  url: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  sha256: string;
+  /** @minLength 1 */
+  mimeType: string;
+  /** @exclusiveMinimum 0 */
+  frameRate?: number;
+  /** @exclusiveMinimum 0 */
+  durationSec?: number;
+} | {
+  /**
+     * @minLength 1
+     * @maxLength 128
+     */
+  mediaId: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  sha256: string;
+  /** @minLength 1 */
+  mimeType: string;
+  /** @exclusiveMinimum 0 */
+  frameRate?: number;
+  /** @exclusiveMinimum 0 */
+  durationSec?: number;
+})[]};
+};
+};
 };

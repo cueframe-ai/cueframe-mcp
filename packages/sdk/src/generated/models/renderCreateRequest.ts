@@ -7,7 +7,7 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { FormatSpec } from './formatSpec';
+import type { Format } from './format';
 import type { RenderCreateRequestIntent } from './renderCreateRequestIntent';
 import type { RenderCreateRequestPriority } from './renderCreateRequestPriority';
 
@@ -22,7 +22,7 @@ export interface RenderCreateRequest {
      * @minLength 1
      */
   compositionId?: string;
-  format?: FormatSpec;
+  format?: Format;
   priority?: RenderCreateRequestPriority;
   intent?: RenderCreateRequestIntent;
   brandKitId?: string | null;

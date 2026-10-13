@@ -13,8 +13,8 @@ import type { BriefExclusion } from './briefExclusion';
 import type { BriefGates } from './briefGates';
 import type { BriefPatchRequestCaptions } from './briefPatchRequestCaptions';
 import type { BriefPatchRequestMotionStyle } from './briefPatchRequestMotionStyle';
-import type { BriefPatchRequestSeededGraphicsItem } from './briefPatchRequestSeededGraphicsItem';
-import type { FormatSpec } from './formatSpec';
+import type { Format } from './format';
+import type { TimelineClip } from './timelineClip';
 
 export interface BriefPatchRequest {
   /** @maxLength 200 */
@@ -29,7 +29,7 @@ export interface BriefPatchRequest {
   audience?: string;
   /** @maxLength 100 */
   platform?: string;
-  format?: FormatSpec;
+  format?: Format;
   /**
      * Target output duration. HONOR-OR-REFUSE: compose validates it against the beat-source window (±1.5s) and refuses a brief it cannot honor.
      * @maximum 3600
@@ -64,7 +64,7 @@ export interface BriefPatchRequest {
      * Client-authored graphic clips the Director must carry VERBATIM: seeded into the design loop's base composition as LOCKED clips (never re-authored, never discarded).
      * @maxItems 16
      */
-  seededGraphics?: BriefPatchRequestSeededGraphicsItem[];
+  seededGraphics?: TimelineClip[];
   /** @maxItems 8 */
   exclusions?: BriefExclusion[];
   gates?: BriefGates;

@@ -8,7 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { FormatSpec } from './formatSpec.zod';
+import { Format } from './format.zod';
 
 export const compositionSummarySceneCountMin = 0;
 export const compositionSummarySceneCountMax = 9007199254740991;
@@ -17,7 +17,7 @@ export const compositionSummarySceneCountMax = 9007199254740991;
 
 export const CompositionSummary = zod.strictObject({
   "compositionId": zod.string(),
-  "format": FormatSpec,
+  "format": Format,
   "etag": zod.string(),
   "isActive": zod.boolean(),
   "updatedAt": zod.number(),

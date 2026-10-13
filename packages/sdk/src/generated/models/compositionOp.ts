@@ -7,406 +7,16 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { ComponentParameterValue } from './componentParameterValue';
+import type { ComponentExecutionRef } from './componentExecutionRef';
 import type { SceneShotSpecV2 } from './sceneShotSpecV2';
-import type { TransitionSpec } from './transitionSpec';
+import type { TimelineClip } from './timelineClip';
 
 /**
  * One scoped composition operation. Discriminated by `type` — `clip.add` / `clip.remove` / `clip.update` patch clips across any family; the rest cover markers, reframe, effects, captions, format, tracks, and the server-authoritative ripple recomputes. Every variant is `.strict()`: an unknown field is refused, not ignored.
  */
 export type CompositionOp = {
-  type: 'scene.add';
-  clipId: string;
-  trackId?: string;
-  newTrack?: boolean;
-  newTrackId?: string;
-  /** @minimum 0 */
-  startTime: number;
-  /** @exclusiveMinimum 0 */
-  duration: number;
-  scene: SceneShotSpecV2;
-  assets: {[key: string]: string};
-  transitionIn?: TransitionSpec;
-} | {
-  type: 'scene.update';
-  clipId: string;
-  /** @minimum 0 */
-  startTime?: number;
-  /** @exclusiveMinimum 0 */
-  duration?: number;
-  scene?: SceneShotSpecV2;
-  assets?: {[key: string]: string};
-  transitionIn?: TransitionSpec;
-} | {
   type: 'clip.add';
-  clip: {
-  /** @minLength 1 */
-  id: string;
-  /**
-     * Timeline start (seconds).
-     * @minimum 0
-     */
-  startTime: number;
-  /**
-     * Clip duration (seconds).
-     * @exclusiveMinimum 0
-     */
-  duration: number;
-  source: {
-  kind: 'media';
-  /** @minLength 1 */
-  mediaId: string;
-  trim?: {
-  /**
-     * Source trim start (seconds).
-     * @minimum 0
-     */
-  start: number;
-  /**
-     * Source trim end (seconds).
-     * @minimum 0
-     */
-  end: number;
-};
-  excludedRanges?: {
-  /** @minimum 0 */
-  start: number;
-  /** @minimum 0 */
-  end: number;
-  reason?: string;
-}[];
-  /**
-     * @minimum 0
-     * @maximum 4
-     */
-  volume?: number;
-  muted?: boolean;
-  /** @exclusiveMinimum 0 */
-  playbackRate?: number;
-  sync?: 'video' | 'independent';
-  kenBurns?: 'in' | 'out' | 'pan-l' | 'pan-r' | 'none';
-  volumeDb?: number;
-  /** @minimum 0 */
-  fadeInMs?: number;
-  /** @minimum 0 */
-  fadeOutMs?: number;
-  loop?: boolean;
-  audioRole?: 'sfx' | 'music' | 'vo' | 'ambience';
-  duck?: {
-  /** @maximum 0 */
-  duckDb: number;
-  /** @minimum 0 */
-  attackMs: number;
-  /** @minimum 0 */
-  releaseMs: number;
-  windows?: {
-  startMs: number;
-  endMs: number;
-}[];
-};
-  anchor?: {
-  /** @minLength 1 */
-  clipId: string;
-  offsetMs: number;
-};
-  reframe?: {
-  /** @minItems 1 */
-  segments: ({
-  /**
-     * Segment START in seconds, clip-relative. Segments tile the clip's duration in order.
-     * @minimum 0
-     */
-  startSec: number;
-  /**
-     * Segment END in seconds, clip-relative. The span (endSec − startSec) is this segment's duration — the window `ease` ramps over.
-     * @exclusiveMinimum 0
-     */
-  endSec: number;
-  /** WHO/WHAT the camera tracks this segment (the reframe center), selected by `mode`: `frame-center` = no tracking, hold the geometric center (static/graphic footage, or a pure zoom); `point` = lock to a fixed source-normalized {x,y} (a non-moving on-screen element); `face` = track a detected face by `faceId` (from get_media_context), with optional `shotScale` close|standard|wide for tightness; `all-faces` = frame the bounding box of every detected face (group/ensemble shots); `active-speaker` = follow whoever is speaking (diarized talking-head / podcast). Pick by what the beat is about; pair with `zoom` for how tight. */
-  focus: {
-  mode: 'frame-center';
-} | {
-  mode: 'point';
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  x: number;
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  y: number;
-} | {
-  mode: 'face';
-  /** @minLength 1 */
-  faceId: string;
-  shotScale?: 'close' | 'standard' | 'wide';
-} | {
-  mode: 'all-faces';
-} | {
-  mode: 'active-speaker';
-};
-  /** Optional editorial LABEL for diff/log readability (e.g. 'speaker-tight', 'wide-context'). Cosmetic — NOT honored by the derive math and excluded from the variant cache key. */
-  intent?: string;
-  /**
-     * How TIGHT the framing is — the fraction of the source the output viewport shows. <1 punches IN (a smaller source fraction, magnified to fill the frame); 1 = the full frame (no crop). ~0.6–0.8 is a moderate push-in, ~0.5 a tight close-up, 0.1 the maximum zoom. There is NO zoom-OUT past the full frame (max 1). Omit for the full frame. MUTUALLY EXCLUSIVE with `focus.shotScale` — a face-tracked shot is sized EITHER by the editorial scale (shotScale, which the bake calibrates to the detected face) OR by an explicit zoom, never both. A segment carrying both is REJECTED: shotScale wins at bake time and the zoom would be silently discarded.
-     * @minimum 0.1
-     * @maximum 1
-     */
-  zoom?: number;
-  /** Zoom/center ramp DURATIONS in SECONDS at this segment's edges — NOT a unitless 0–1 curve. ~0.3–0.6s reads as a snappy push; >1s reads sluggish. Keep `in` + `out` ≤ the segment's duration (endSec − startSec): the two edges share the span, so to ramp across the WHOLE segment set one edge to the full duration and the other to 0. Omit for an instant cut to this framing. */
-  ease?: {
-  /**
-     * Ease-IN ramp DURATION in seconds at the segment START.
-     * @minimum 0
-     */
-  in: number;
-  /**
-     * Ease-OUT ramp DURATION in seconds at the segment END.
-     * @minimum 0
-     */
-  out: number;
-};
-  /** Optional FINE framing nudge off the focus center, source-normalized in [−0.3, 0.3]. A small correction (headroom, rule-of-thirds), NOT a reframe — use `focus`/`zoom` for the actual shot. Omit (treated as 0) to sit dead-center on the focus. */
-  bias?: {
-  /**
-     * Horizontal nudge, source-normalized (+ = right).
-     * @minimum -0.3
-     * @maximum 0.3
-     */
-  x: number;
-  /**
-     * Vertical nudge, source-normalized (+ = down).
-     * @minimum -0.3
-     * @maximum 0.3
-     */
-  y: number;
-};
-})[];
-};
-} | {
-  kind: 'component';
-  /** @minLength 1 */
-  componentId: string;
-  props: {[key: string]: unknown};
-  zPlane?: 'front' | 'behind-subject';
-  execution: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
-  placement: {
-  version: 3;
-  kind: 'clip';
-} | {
-  version: 3;
-  kind: 'content-slots';
-  slots: {[key: string]: {
-  /**
-     * @items.minLength 1
-     * @items.maxLength 256
-     */
-  targetClipIds: string[];
-  ownership: 'reference' | 'exclusive';
-}};
-};
-} | {
-  kind: 'overlay';
-  /**
-     * @minLength 1
-     * @pattern ^(?!custom$)
-     */
-  primitiveId: string;
-  params: {[key: string]: unknown};
-  zPlane?: 'front' | 'behind-subject';
-  anchor?: {
-  space: 'scene';
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  x: number;
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  y: number;
-};
-  /**
-     * @minimum -0.3
-     * @maximum 0.3
-     */
-  parallax?: number;
-} | {
-  kind: 'effect';
-  /** @minLength 1 */
-  primitiveId?: string;
-  params?: {[key: string]: unknown};
-  component?: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
-  /**
-     * @minItems 1
-     * @items.minLength 1
-     */
-  targetTrackIds?: string[];
-  /**
-     * @minimum 0
-     * @maximum 9007199254740991
-     */
-  wrapperOrder?: number;
-} | {
-  kind: 'card';
-  /**
-     * Your card's HTML — rendered VERBATIM as the graphic (shell motion via applyMotionPreset in a FOLLOWING call). CANVAS CONTRACT: the card renders in a viewport equal to the composition format's pixel frame (1080×1920 at 9:16 fhd); the root is NOT auto-pinned — declare explicit width/height matching the frame (box-sizing:border-box) and anchor content with flex/grid; position:absolute;inset:0 on the root does NOT fill the frame; for edge-to-edge backgrounds add an inner absolutely-positioned layer with generous negative inset. Overlay compositing applies a ~92% safe-area inset — keep critical copy away from the extreme edges. FONTS: name a family from GET /v1/fonts (list_render_fonts) — the renderer loads those faces for the card and waits for them, so `font-family: Inter` draws Inter. `@import` and remote font files are REFUSED: the card renders with no network. A family that is not on that list has no bytes behind it and the browser falls back, so end any stack with a generic (`Inter, sans-serif`) rather than relying on a system face being present.
-     * @minLength 1
-     */
-  html: string;
-  tokens?: {[key: string]: string};
-  zPlane?: 'front';
-};
-  kind?: 'video' | 'audio' | 'image' | 'overlay' | 'effect';
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  opacity?: number;
-  /** @exclusiveMinimum 0 */
-  scale?: number;
-  rotation?: number;
-  /** Clip CENTRE as a fraction of the frame: {x:0.5,y:0.5} is dead centre, 0 to 1 is inside the frame, and a little overshoot (down to -1, up to 2) is how an entrance starts off-canvas. NOT pixels: the renderer maps x to `left: x*100%`, so `x: 180` sits 180 frame-widths away and draws nothing. */
-  position?: {
-  /**
-     * @minimum -1
-     * @maximum 2
-     */
-  x: number;
-  /**
-     * @minimum -1
-     * @maximum 2
-     */
-  y: number;
-};
-  region?: {
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  x: number;
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  y: number;
-  /**
-     * @maximum 1
-     * @exclusiveMinimum 0
-     */
-  w: number;
-  /**
-     * @maximum 1
-     * @exclusiveMinimum 0
-     */
-  h: number;
-};
-  fit?: 'cover' | 'contain';
-  /** Video media clip only. Hide native captions while this clip is topmost and covers the lower picture, or when an opaque, effect-free clip has an explicitly full-frame region, even with fit:contain. Caption words and timings remain stored and resume when another visible clip takes over. */
-  captionVisibility?: 'visible' | 'hidden';
-  effects?: ({
-  /** @minLength 1 */
-  primitiveId?: string;
-  params?: {[key: string]: unknown};
-  /** @minLength 1 */
-  id?: string;
-  component?: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
-  window?: {
-  /** @minimum 0 */
-  startTime: number;
-  /** @exclusiveMinimum 0 */
-  duration: number;
-};
-})[];
-  transitionIn?: {
-  /** @minLength 1 */
-  type: string;
-  /** @exclusiveMinimum 0 */
-  duration: number;
-  /** @minLength 1 */
-  id?: string;
-  component?: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
-  /** @minLength 1 */
-  fromClipId?: string;
-  /** @minLength 1 */
-  toClipId?: string;
-  handlePolicy?: 'outgoing-overrun-at-cut-v1';
-};
-  /** @minLength 1 */
-  linkGroupId?: string;
-  /** Keyframe channels, clip-relative seconds. Each channel's values use the SAME unit as the scalar it animates: `opacity` 0 to 1, `scale` a multiplier (>0), `rotation` degrees, `position.x`/`position.y` a FRACTION of the frame like `position` (0.5 = centre; NOT pixels), `volume` 0 to 4. */
-  animate?: {[key: string]: ({
-  /** @minimum 0 */
-  time: number;
-  value: number;
-  easing?: 'linear' | 'ease' | 'easeIn' | 'easeOut' | 'easeInOut' | {
-  /**
-     * @minItems 4
-     * @maxItems 4
-     */
-  cubicBezier: [number, number, number, number];
-};
-})[]};
-};
+  clip: TimelineClip;
   trackId?: string;
   newTrack?: boolean;
   newTrackId?: string;
@@ -414,35 +24,33 @@ export type CompositionOp = {
   type: 'clip.remove';
   clipId: string;
 } | {
+  type: 'clip.setKeyframes';
+  /** @minLength 1 */
+  clipId: string;
+  property: 'opacity' | 'scale' | 'rotation' | 'position.x' | 'position.y' | 'volume';
+  keyframes: {
+  /** @minimum 0 */
+  time: number;
+  value: number;
+  ease?: string;
+}[] | null;
+} | {
   type: 'clip.update';
   clipId: string;
   patch: {
   /** @minLength 1 */
   id?: string;
-  /**
-     * Timeline start (seconds).
-     * @minimum 0
-     */
+  /** @minimum 0 */
   startTime?: number;
-  /**
-     * Clip duration (seconds).
-     * @exclusiveMinimum 0
-     */
+  /** @exclusiveMinimum 0 */
   duration?: number;
   source?: {
   kind: 'media';
-  /** @minLength 1 */
   mediaId: string;
   trim?: {
-  /**
-     * Source trim start (seconds).
-     * @minimum 0
-     */
+  /** @minimum 0 */
   start: number;
-  /**
-     * Source trim end (seconds).
-     * @minimum 0
-     */
+  /** @minimum 0 */
   end: number;
 };
   excludedRanges?: {
@@ -527,7 +135,7 @@ export type CompositionOp = {
   /** Optional editorial LABEL for diff/log readability (e.g. 'speaker-tight', 'wide-context'). Cosmetic — NOT honored by the derive math and excluded from the variant cache key. */
   intent?: string;
   /**
-     * How TIGHT the framing is — the fraction of the source the output viewport shows. <1 punches IN (a smaller source fraction, magnified to fill the frame); 1 = the full frame (no crop). ~0.6–0.8 is a moderate push-in, ~0.5 a tight close-up, 0.1 the maximum zoom. There is NO zoom-OUT past the full frame (max 1). Omit for the full frame. MUTUALLY EXCLUSIVE with `focus.shotScale` — a face-tracked shot is sized EITHER by the editorial scale (shotScale, which the bake calibrates to the detected face) OR by an explicit zoom, never both. A segment carrying both is REJECTED: shotScale wins at bake time and the zoom would be silently discarded.
+     * How TIGHT the framing is — the fraction of the source the output viewport shows. <1 punches IN (a smaller source fraction, magnified to fill the frame); 1 = the full frame (no crop). ~0.6–0.8 is a moderate push-in, ~0.5 a tight close-up, 0.1 the maximum zoom. There is NO zoom-OUT past the full frame (max 1). Omit for the full frame. MUTUALLY EXCLUSIVE with `focus.shotScale`: a face-tracked shot is sized EITHER by the editorial scale (shotScale, calibrated to the detected face) OR by an explicit zoom — never both.
      * @minimum 0.1
      * @maximum 1
      */
@@ -568,21 +176,7 @@ export type CompositionOp = {
   componentId: string;
   props: {[key: string]: unknown};
   zPlane?: 'front' | 'behind-subject';
-  execution: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
+  execution: ComponentExecutionRef;
   placement: {
   version: 3;
   kind: 'clip';
@@ -627,24 +221,7 @@ export type CompositionOp = {
   parallax?: number;
 } | {
   kind: 'effect';
-  /** @minLength 1 */
-  primitiveId?: string;
-  params?: {[key: string]: unknown};
-  component?: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
+  component?: ComponentExecutionRef;
   /**
      * @minItems 1
      * @items.minLength 1
@@ -655,15 +232,25 @@ export type CompositionOp = {
      * @maximum 9007199254740991
      */
   wrapperOrder?: number;
+  /** @minLength 1 */
+  primitiveId?: string;
+  params?: {[key: string]: unknown};
 } | {
   kind: 'card';
-  /**
-     * Your card's HTML — rendered VERBATIM as the graphic (shell motion via applyMotionPreset in a FOLLOWING call). CANVAS CONTRACT: the card renders in a viewport equal to the composition format's pixel frame (1080×1920 at 9:16 fhd); the root is NOT auto-pinned — declare explicit width/height matching the frame (box-sizing:border-box) and anchor content with flex/grid; position:absolute;inset:0 on the root does NOT fill the frame; for edge-to-edge backgrounds add an inner absolutely-positioned layer with generous negative inset. Overlay compositing applies a ~92% safe-area inset — keep critical copy away from the extreme edges. FONTS: name a family from GET /v1/fonts (list_render_fonts) — the renderer loads those faces for the card and waits for them, so `font-family: Inter` draws Inter. `@import` and remote font files are REFUSED: the card renders with no network. A family that is not on that list has no bytes behind it and the browser falls back, so end any stack with a generic (`Inter, sans-serif`) rather than relying on a system face being present.
-     * @minLength 1
-     */
+  /** @minLength 1 */
   html: string;
   tokens?: {[key: string]: string};
   zPlane?: 'front';
+} | {
+  kind: 'composition';
+  /** @minLength 1 */
+  compositionId: string;
+  trim?: {
+  /** @minimum 0 */
+  start: number;
+  /** @minimum 0 */
+  end: number;
+};
 };
   kind?: 'video' | 'audio' | 'image' | 'overlay' | 'effect';
   /**
@@ -712,34 +299,20 @@ export type CompositionOp = {
   fit?: 'cover' | 'contain';
   /** Video media clip only. Hide native captions while this clip is topmost and covers the lower picture, or when an opaque, effect-free clip has an explicitly full-frame region, even with fit:contain. Caption words and timings remain stored and resume when another visible clip takes over. */
   captionVisibility?: 'visible' | 'hidden';
-  effects?: ({
-  /** @minLength 1 */
-  primitiveId?: string;
-  params?: {[key: string]: unknown};
+  effects?: {
   /** @minLength 1 */
   id?: string;
-  component?: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
+  component?: ComponentExecutionRef;
   window?: {
   /** @minimum 0 */
   startTime: number;
   /** @exclusiveMinimum 0 */
   duration: number;
 };
-})[];
+  /** @minLength 1 */
+  primitiveId?: string;
+  params?: {[key: string]: unknown};
+}[];
   transitionIn?: {
   /** @minLength 1 */
   type: string;
@@ -747,21 +320,7 @@ export type CompositionOp = {
   duration: number;
   /** @minLength 1 */
   id?: string;
-  component?: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
+  component?: ComponentExecutionRef;
   /** @minLength 1 */
   fromClipId?: string;
   /** @minLength 1 */
@@ -770,393 +329,42 @@ export type CompositionOp = {
 };
   /** @minLength 1 */
   linkGroupId?: string;
-  /** Keyframe channels, clip-relative seconds. Each channel's values use the SAME unit as the scalar it animates: `opacity` 0 to 1, `scale` a multiplier (>0), `rotation` degrees, `position.x`/`position.y` a FRACTION of the frame like `position` (0.5 = centre; NOT pixels), `volume` 0 to 4. */
-  animate?: {[key: string]: ({
-  /** @minimum 0 */
-  time: number;
-  value: number;
-  easing?: 'linear' | 'ease' | 'easeIn' | 'easeOut' | 'easeInOut' | {
-  /**
-     * @minItems 4
-     * @maxItems 4
-     */
-  cubicBezier: [number, number, number, number];
+  tweens?: ({
+  /** @minLength 1 */
+  id: string;
+  propertyGroup: 'visual' | 'scale' | 'rotation' | 'position';
+  position: number;
+  /** @exclusiveMinimum 0 */
+  duration: number;
+  keyframes: {
+  format: 'percentage';
+  easeEach: 'none';
+  /** @minItems 2 */
+  keyframes: {
+  percentage: number;
+  properties: {[key: string]: number};
+  ease?: string;
+}[];
 };
-})[]};
+})[];
+  automation?: {
+  version: 1;
+  lanes: {
+  target: 'volume';
+  /** @minItems 2 */
+  points: {
+  t: number;
+  v: number;
+}[];
+}[];
+};
 };
 } | {
   type: 'removeClipsByMediaId';
   mediaId: string;
 } | {
   type: 'loadOverlays';
-  clips: ({
-  /** @minLength 1 */
-  id: string;
-  /**
-     * Timeline start (seconds).
-     * @minimum 0
-     */
-  startTime: number;
-  /**
-     * Clip duration (seconds).
-     * @exclusiveMinimum 0
-     */
-  duration: number;
-  source: {
-  kind: 'media';
-  /** @minLength 1 */
-  mediaId: string;
-  trim?: {
-  /**
-     * Source trim start (seconds).
-     * @minimum 0
-     */
-  start: number;
-  /**
-     * Source trim end (seconds).
-     * @minimum 0
-     */
-  end: number;
-};
-  excludedRanges?: {
-  /** @minimum 0 */
-  start: number;
-  /** @minimum 0 */
-  end: number;
-  reason?: string;
-}[];
-  /**
-     * @minimum 0
-     * @maximum 4
-     */
-  volume?: number;
-  muted?: boolean;
-  /** @exclusiveMinimum 0 */
-  playbackRate?: number;
-  sync?: 'video' | 'independent';
-  kenBurns?: 'in' | 'out' | 'pan-l' | 'pan-r' | 'none';
-  volumeDb?: number;
-  /** @minimum 0 */
-  fadeInMs?: number;
-  /** @minimum 0 */
-  fadeOutMs?: number;
-  loop?: boolean;
-  audioRole?: 'sfx' | 'music' | 'vo' | 'ambience';
-  duck?: {
-  /** @maximum 0 */
-  duckDb: number;
-  /** @minimum 0 */
-  attackMs: number;
-  /** @minimum 0 */
-  releaseMs: number;
-  windows?: {
-  startMs: number;
-  endMs: number;
-}[];
-};
-  anchor?: {
-  /** @minLength 1 */
-  clipId: string;
-  offsetMs: number;
-};
-  reframe?: {
-  /** @minItems 1 */
-  segments: ({
-  /**
-     * Segment START in seconds, clip-relative. Segments tile the clip's duration in order.
-     * @minimum 0
-     */
-  startSec: number;
-  /**
-     * Segment END in seconds, clip-relative. The span (endSec − startSec) is this segment's duration — the window `ease` ramps over.
-     * @exclusiveMinimum 0
-     */
-  endSec: number;
-  /** WHO/WHAT the camera tracks this segment (the reframe center), selected by `mode`: `frame-center` = no tracking, hold the geometric center (static/graphic footage, or a pure zoom); `point` = lock to a fixed source-normalized {x,y} (a non-moving on-screen element); `face` = track a detected face by `faceId` (from get_media_context), with optional `shotScale` close|standard|wide for tightness; `all-faces` = frame the bounding box of every detected face (group/ensemble shots); `active-speaker` = follow whoever is speaking (diarized talking-head / podcast). Pick by what the beat is about; pair with `zoom` for how tight. */
-  focus: {
-  mode: 'frame-center';
-} | {
-  mode: 'point';
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  x: number;
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  y: number;
-} | {
-  mode: 'face';
-  /** @minLength 1 */
-  faceId: string;
-  shotScale?: 'close' | 'standard' | 'wide';
-} | {
-  mode: 'all-faces';
-} | {
-  mode: 'active-speaker';
-};
-  /** Optional editorial LABEL for diff/log readability (e.g. 'speaker-tight', 'wide-context'). Cosmetic — NOT honored by the derive math and excluded from the variant cache key. */
-  intent?: string;
-  /**
-     * How TIGHT the framing is — the fraction of the source the output viewport shows. <1 punches IN (a smaller source fraction, magnified to fill the frame); 1 = the full frame (no crop). ~0.6–0.8 is a moderate push-in, ~0.5 a tight close-up, 0.1 the maximum zoom. There is NO zoom-OUT past the full frame (max 1). Omit for the full frame. MUTUALLY EXCLUSIVE with `focus.shotScale` — a face-tracked shot is sized EITHER by the editorial scale (shotScale, which the bake calibrates to the detected face) OR by an explicit zoom, never both. A segment carrying both is REJECTED: shotScale wins at bake time and the zoom would be silently discarded.
-     * @minimum 0.1
-     * @maximum 1
-     */
-  zoom?: number;
-  /** Zoom/center ramp DURATIONS in SECONDS at this segment's edges — NOT a unitless 0–1 curve. ~0.3–0.6s reads as a snappy push; >1s reads sluggish. Keep `in` + `out` ≤ the segment's duration (endSec − startSec): the two edges share the span, so to ramp across the WHOLE segment set one edge to the full duration and the other to 0. Omit for an instant cut to this framing. */
-  ease?: {
-  /**
-     * Ease-IN ramp DURATION in seconds at the segment START.
-     * @minimum 0
-     */
-  in: number;
-  /**
-     * Ease-OUT ramp DURATION in seconds at the segment END.
-     * @minimum 0
-     */
-  out: number;
-};
-  /** Optional FINE framing nudge off the focus center, source-normalized in [−0.3, 0.3]. A small correction (headroom, rule-of-thirds), NOT a reframe — use `focus`/`zoom` for the actual shot. Omit (treated as 0) to sit dead-center on the focus. */
-  bias?: {
-  /**
-     * Horizontal nudge, source-normalized (+ = right).
-     * @minimum -0.3
-     * @maximum 0.3
-     */
-  x: number;
-  /**
-     * Vertical nudge, source-normalized (+ = down).
-     * @minimum -0.3
-     * @maximum 0.3
-     */
-  y: number;
-};
-})[];
-};
-} | {
-  kind: 'component';
-  /** @minLength 1 */
-  componentId: string;
-  props: {[key: string]: unknown};
-  zPlane?: 'front' | 'behind-subject';
-  execution: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
-  placement: {
-  version: 3;
-  kind: 'clip';
-} | {
-  version: 3;
-  kind: 'content-slots';
-  slots: {[key: string]: {
-  /**
-     * @items.minLength 1
-     * @items.maxLength 256
-     */
-  targetClipIds: string[];
-  ownership: 'reference' | 'exclusive';
-}};
-};
-} | {
-  kind: 'overlay';
-  /**
-     * @minLength 1
-     * @pattern ^(?!custom$)
-     */
-  primitiveId: string;
-  params: {[key: string]: unknown};
-  zPlane?: 'front' | 'behind-subject';
-  anchor?: {
-  space: 'scene';
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  x: number;
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  y: number;
-};
-  /**
-     * @minimum -0.3
-     * @maximum 0.3
-     */
-  parallax?: number;
-} | {
-  kind: 'effect';
-  /** @minLength 1 */
-  primitiveId?: string;
-  params?: {[key: string]: unknown};
-  component?: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
-  /**
-     * @minItems 1
-     * @items.minLength 1
-     */
-  targetTrackIds?: string[];
-  /**
-     * @minimum 0
-     * @maximum 9007199254740991
-     */
-  wrapperOrder?: number;
-} | {
-  kind: 'card';
-  /**
-     * Your card's HTML — rendered VERBATIM as the graphic (shell motion via applyMotionPreset in a FOLLOWING call). CANVAS CONTRACT: the card renders in a viewport equal to the composition format's pixel frame (1080×1920 at 9:16 fhd); the root is NOT auto-pinned — declare explicit width/height matching the frame (box-sizing:border-box) and anchor content with flex/grid; position:absolute;inset:0 on the root does NOT fill the frame; for edge-to-edge backgrounds add an inner absolutely-positioned layer with generous negative inset. Overlay compositing applies a ~92% safe-area inset — keep critical copy away from the extreme edges. FONTS: name a family from GET /v1/fonts (list_render_fonts) — the renderer loads those faces for the card and waits for them, so `font-family: Inter` draws Inter. `@import` and remote font files are REFUSED: the card renders with no network. A family that is not on that list has no bytes behind it and the browser falls back, so end any stack with a generic (`Inter, sans-serif`) rather than relying on a system face being present.
-     * @minLength 1
-     */
-  html: string;
-  tokens?: {[key: string]: string};
-  zPlane?: 'front';
-};
-  kind?: 'video' | 'audio' | 'image' | 'overlay' | 'effect';
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  opacity?: number;
-  /** @exclusiveMinimum 0 */
-  scale?: number;
-  rotation?: number;
-  /** Clip CENTRE as a fraction of the frame: {x:0.5,y:0.5} is dead centre, 0 to 1 is inside the frame, and a little overshoot (down to -1, up to 2) is how an entrance starts off-canvas. NOT pixels: the renderer maps x to `left: x*100%`, so `x: 180` sits 180 frame-widths away and draws nothing. */
-  position?: {
-  /**
-     * @minimum -1
-     * @maximum 2
-     */
-  x: number;
-  /**
-     * @minimum -1
-     * @maximum 2
-     */
-  y: number;
-};
-  region?: {
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  x: number;
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  y: number;
-  /**
-     * @maximum 1
-     * @exclusiveMinimum 0
-     */
-  w: number;
-  /**
-     * @maximum 1
-     * @exclusiveMinimum 0
-     */
-  h: number;
-};
-  fit?: 'cover' | 'contain';
-  /** Video media clip only. Hide native captions while this clip is topmost and covers the lower picture, or when an opaque, effect-free clip has an explicitly full-frame region, even with fit:contain. Caption words and timings remain stored and resume when another visible clip takes over. */
-  captionVisibility?: 'visible' | 'hidden';
-  effects?: ({
-  /** @minLength 1 */
-  primitiveId?: string;
-  params?: {[key: string]: unknown};
-  /** @minLength 1 */
-  id?: string;
-  component?: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
-  window?: {
-  /** @minimum 0 */
-  startTime: number;
-  /** @exclusiveMinimum 0 */
-  duration: number;
-};
-})[];
-  transitionIn?: {
-  /** @minLength 1 */
-  type: string;
-  /** @exclusiveMinimum 0 */
-  duration: number;
-  /** @minLength 1 */
-  id?: string;
-  component?: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
-  /** @minLength 1 */
-  fromClipId?: string;
-  /** @minLength 1 */
-  toClipId?: string;
-  handlePolicy?: 'outgoing-overrun-at-cut-v1';
-};
-  /** @minLength 1 */
-  linkGroupId?: string;
-  /** Keyframe channels, clip-relative seconds. Each channel's values use the SAME unit as the scalar it animates: `opacity` 0 to 1, `scale` a multiplier (>0), `rotation` degrees, `position.x`/`position.y` a FRACTION of the frame like `position` (0.5 = centre; NOT pixels), `volume` 0 to 4. */
-  animate?: {[key: string]: ({
-  /** @minimum 0 */
-  time: number;
-  value: number;
-  easing?: 'linear' | 'ease' | 'easeIn' | 'easeOut' | 'easeInOut' | {
-  /**
-     * @minItems 4
-     * @maxItems 4
-     */
-  cubicBezier: [number, number, number, number];
-};
-})[]};
-})[];
+  clips: TimelineClip[];
 } | {
   type: 'addMarker';
   marker: {
@@ -1231,7 +439,7 @@ export type CompositionOp = {
   /** Optional editorial LABEL for diff/log readability (e.g. 'speaker-tight', 'wide-context'). Cosmetic — NOT honored by the derive math and excluded from the variant cache key. */
   intent?: string;
   /**
-     * How TIGHT the framing is — the fraction of the source the output viewport shows. <1 punches IN (a smaller source fraction, magnified to fill the frame); 1 = the full frame (no crop). ~0.6–0.8 is a moderate push-in, ~0.5 a tight close-up, 0.1 the maximum zoom. There is NO zoom-OUT past the full frame (max 1). Omit for the full frame. MUTUALLY EXCLUSIVE with `focus.shotScale` — a face-tracked shot is sized EITHER by the editorial scale (shotScale, which the bake calibrates to the detected face) OR by an explicit zoom, never both. A segment carrying both is REJECTED: shotScale wins at bake time and the zoom would be silently discarded.
+     * How TIGHT the framing is — the fraction of the source the output viewport shows. <1 punches IN (a smaller source fraction, magnified to fill the frame); 1 = the full frame (no crop). ~0.6–0.8 is a moderate push-in, ~0.5 a tight close-up, 0.1 the maximum zoom. There is NO zoom-OUT past the full frame (max 1). Omit for the full frame. MUTUALLY EXCLUSIVE with `focus.shotScale`: a face-tracked shot is sized EITHER by the editorial scale (shotScale, calibrated to the detected face) OR by an explicit zoom — never both.
      * @minimum 0.1
      * @maximum 1
      */
@@ -1268,37 +476,155 @@ export type CompositionOp = {
 } | {
   type: 'setEffects';
   clipId: string;
-  effects: ({
-  /** @minLength 1 */
-  primitiveId?: string;
-  params?: {[key: string]: unknown};
+  effects: {
   /** @minLength 1 */
   id?: string;
-  component?: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
+  component?: ComponentExecutionRef;
   window?: {
   /** @minimum 0 */
   startTime: number;
   /** @exclusiveMinimum 0 */
   duration: number;
 };
-})[];
+  /** @minLength 1 */
+  primitiveId?: string;
+  params?: {[key: string]: unknown};
+}[];
 } | {
   type: 'setCaptionStyle';
   style: {
+  /** @minLength 1 */
+  fontFamily?: string;
+  /**
+     * Font size as % of composition height (1-15, default 5). NOT px.
+     * @minimum 1
+     * @maximum 15
+     */
+  fontSize?: number;
+  /**
+     * @minimum 100
+     * @maximum 900
+     */
+  fontWeight?: number;
+  /** @minLength 1 */
+  color?: string;
+  /** @minLength 1 */
+  highlightColor?: string;
+  backgroundColor?: string;
+  plate?: 'glass' | 'solid' | 'none';
+  position?: 'top' | 'center' | 'bottom';
+  /** Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height. */
+  region?: {
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  x: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  y: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  w: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  h: number;
+};
+  textTransform?: 'none' | 'uppercase' | 'capitalize';
+  /**
+     * Base caption glyph spacing in pixels.
+     * @minimum -5
+     * @maximum 20
+     */
+  letterSpacing?: number;
+  /**
+     * Gap between caption runs as a multiple of base font size; default 0.35.
+     * @minimum 0
+     * @maximum 2
+     */
+  wordGapEm?: number;
+  /**
+     * Gap between caption lines as a multiple of base font size; default 0.25.
+     * @minimum 0
+     * @maximum 2
+     */
+  lineGapEm?: number;
+  emphasisColor?: string;
+  emphasisGradient?: string;
+  /** @exclusiveMinimum 0 */
+  emphasisScale?: number;
+  emphasisFontFamily?: string;
+  /**
+     * @minimum 100
+     * @maximum 900
+     */
+  emphasisFontWeight?: number;
+  emphasisTextTransform?: 'none' | 'uppercase' | 'capitalize';
+  emphasisLetterSpacing?: number;
+  emphasisFontStyle?: 'normal' | 'italic';
+  entrance?: 'none' | 'fade' | 'word-pop' | 'stagger-up';
+  /** @minimum 0 */
+  entranceMs?: number;
+  /** @minimum 0 */
+  entranceStaggerMs?: number;
+  /** @minimum 0 */
+  exitMs?: number;
+  emphasisPlate?: boolean;
+  emphasisPlateColor?: string;
+  emphasisPlateTextColor?: string;
+  emphasisPlateAltColor?: string;
+  emphasisPlateAltTextColor?: string;
+  /** @minimum 0 */
+  emphasisPlateRadius?: number;
+  emphasisPlatePadX?: number;
+  emphasisPlatePadY?: number;
+  /** Grow a shared emphasis plate as saved words appear while reserving its final layout width. */
+  emphasisPlateReveal?: boolean;
+  annotationColor?: string;
+  /**
+     * Annotation stroke width in its 100×100 SVG coordinate system; default 4.
+     * @minimum 0.5
+     * @maximum 12
+     */
+  annotationStrokeWidth?: number;
+  /** Native annotation stroke finish; default clean. */
+  annotationTexture?: 'clean' | 'pencil';
+  /**
+     * @maximum 100
+     * @exclusiveMinimum 0
+     */
+  maxWidthPercent?: number;
+};
+} | {
+  type: 'setCaptionDepth';
+  zPlane: 'front' | 'behind-subject';
+} | {
+  type: 'setCaptions';
+  segments: ({
+  words: ({
+  /** @minLength 1 */
+  text: string;
+  /**
+     * Word start on the composition timeline, in milliseconds.
+     * @minimum 0
+     */
+  startMs: number;
+  /**
+     * Word end on the composition timeline, in milliseconds.
+     * @minimum 0
+     */
+  endMs: number;
+  emphasis?: boolean;
+  annotate?: 'circle' | 'underline';
+})[];
+})[];
+  style?: {
   /** @minLength 1 */
   fontFamily?: string;
   /**
@@ -1554,137 +880,67 @@ export type CompositionOp = {
 })[];
 })[];
 } | {
-  type: 'setCaptionDepth';
-  zPlane: 'front' | 'behind-subject';
-} | {
-  type: 'setCaptions';
-  segments: ({
-  words: ({
+  type: 'scene.add';
   /** @minLength 1 */
-  text: string;
-  /**
-     * Word start on the composition timeline, in milliseconds.
-     * @minimum 0
-     */
-  startMs: number;
-  /**
-     * Word end on the composition timeline, in milliseconds.
-     * @minimum 0
-     */
-  endMs: number;
-  emphasis?: boolean;
-  annotate?: 'circle' | 'underline';
-})[];
-})[];
-  style?: {
+  clipId: string;
   /** @minLength 1 */
-  fontFamily?: string;
-  /**
-     * Font size as % of composition height (1-15, default 5). NOT px.
-     * @minimum 1
-     * @maximum 15
-     */
-  fontSize?: number;
-  /**
-     * @minimum 100
-     * @maximum 900
-     */
-  fontWeight?: number;
+  trackId?: string;
+  newTrack?: boolean;
   /** @minLength 1 */
-  color?: string;
-  /** @minLength 1 */
-  highlightColor?: string;
-  backgroundColor?: string;
-  plate?: 'glass' | 'solid' | 'none';
-  position?: 'top' | 'center' | 'bottom';
-  /** Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height. */
-  region?: {
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  x: number;
-  /**
-     * @minimum 0
-     * @maximum 1
-     */
-  y: number;
-  /**
-     * @maximum 1
-     * @exclusiveMinimum 0
-     */
-  w: number;
-  /**
-     * @maximum 1
-     * @exclusiveMinimum 0
-     */
-  h: number;
-};
-  textTransform?: 'none' | 'uppercase' | 'capitalize';
-  /**
-     * Base caption glyph spacing in pixels.
-     * @minimum -5
-     * @maximum 20
-     */
-  letterSpacing?: number;
-  /**
-     * Gap between caption runs as a multiple of base font size; default 0.35.
-     * @minimum 0
-     * @maximum 2
-     */
-  wordGapEm?: number;
-  /**
-     * Gap between caption lines as a multiple of base font size; default 0.25.
-     * @minimum 0
-     * @maximum 2
-     */
-  lineGapEm?: number;
-  emphasisColor?: string;
-  emphasisGradient?: string;
+  newTrackId?: string;
+  /** @minimum 0 */
+  startTime: number;
   /** @exclusiveMinimum 0 */
-  emphasisScale?: number;
-  emphasisFontFamily?: string;
+  duration: number;
+  transitionIn?: {
+  /** @minLength 1 */
+  type: string;
+  /** @exclusiveMinimum 0 */
+  duration: number;
+  /** @minLength 1 */
+  id?: string;
+  component?: ComponentExecutionRef;
+  /** @minLength 1 */
+  fromClipId?: string;
+  /** @minLength 1 */
+  toClipId?: string;
+  handlePolicy?: 'outgoing-overrun-at-cut-v1';
+};
+  scene: SceneShotSpecV2;
+  assets: {[key: string]: string};
+} | {
+  type: 'scene.update';
+  /** @minLength 1 */
+  clipId: string;
+  /** @minimum 0 */
+  startTime?: number;
+  /** @exclusiveMinimum 0 */
+  duration?: number;
+  transitionIn?: {
+  /** @minLength 1 */
+  type: string;
+  /** @exclusiveMinimum 0 */
+  duration: number;
+  /** @minLength 1 */
+  id?: string;
+  component?: ComponentExecutionRef;
+  /** @minLength 1 */
+  fromClipId?: string;
+  /** @minLength 1 */
+  toClipId?: string;
+  handlePolicy?: 'outgoing-overrun-at-cut-v1';
+};
+  scene?: SceneShotSpecV2;
+  assets?: {[key: string]: string};
+} | {
+  type: 'materializeGrid';
+  clipId: string;
+  grid: 'beat' | 'word' | 'shot';
   /**
-     * @minimum 100
-     * @maximum 900
-     */
-  emphasisFontWeight?: number;
-  emphasisTextTransform?: 'none' | 'uppercase' | 'capitalize';
-  emphasisLetterSpacing?: number;
-  emphasisFontStyle?: 'normal' | 'italic';
-  entrance?: 'none' | 'fade' | 'word-pop' | 'stagger-up';
-  /** @minimum 0 */
-  entranceMs?: number;
-  /** @minimum 0 */
-  entranceStaggerMs?: number;
-  /** @minimum 0 */
-  exitMs?: number;
-  emphasisPlate?: boolean;
-  emphasisPlateColor?: string;
-  emphasisPlateTextColor?: string;
-  emphasisPlateAltColor?: string;
-  emphasisPlateAltTextColor?: string;
-  /** @minimum 0 */
-  emphasisPlateRadius?: number;
-  emphasisPlatePadX?: number;
-  emphasisPlatePadY?: number;
-  /** Grow a shared emphasis plate as saved words appear while reserving its final layout width. */
-  emphasisPlateReveal?: boolean;
-  annotationColor?: string;
-  /**
-     * Annotation stroke width in its 100×100 SVG coordinate system; default 4.
-     * @minimum 0.5
-     * @maximum 12
-     */
-  annotationStrokeWidth?: number;
-  /** Native annotation stroke finish; default clean. */
-  annotationTexture?: 'clean' | 'pencil';
-  /**
-     * @maximum 100
+     * @maximum 2000
      * @exclusiveMinimum 0
      */
-  maxWidthPercent?: number;
-};
+  maxMarkers?: number;
 } | {
   type: 'captions.fromTranscript';
   /** @minLength 1 */
@@ -1699,24 +955,6 @@ export type CompositionOp = {
   type: 'captions.fromComposition';
   /** @minLength 1 */
   trackId: string;
-} | {
-  type: 'applyMotionPreset';
-  clipId: string;
-  preset: string;
-  params?: {
-  enterMs?: number;
-  exitMs?: number;
-  staggerMs?: number;
-};
-} | {
-  type: 'materializeGrid';
-  clipId: string;
-  grid: 'beat' | 'word' | 'shot';
-  /**
-     * @maximum 2000
-     * @exclusiveMinimum 0
-     */
-  maxMarkers?: number;
 } | {
   type: 'setFormat';
   format: {
@@ -1738,6 +976,11 @@ export type CompositionOp = {
   updates: {
   name?: string;
   enabled?: boolean;
+  /**
+     * @minimum 0
+     * @maximum 4
+     */
+  volume?: number;
 };
 } | {
   type: 'reorderTracks';
@@ -1784,38 +1027,10 @@ export type CompositionOp = {
      * @minItems 1
      * @maxItems 512
      */
-  changes: ({
+  changes: {
   /** @minLength 1 */
   placementId: string;
-  before: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
-  after: {
-  version: 3;
-  /**
-     * @minLength 1
-     * @maxLength 256
-     */
-  componentId: string;
-  /** @pattern ^[a-f0-9]{64}$ */
-  sourceVersionId: string;
-  params: {[key: string]: ComponentParameterValue | null};
-  /** @minLength 1 */
-  seed: string;
-  assets?: {[key: string]: string};
-  mediaBindings?: {[key: string]: string[]};
-};
-})[];
+  before: ComponentExecutionRef;
+  after: ComponentExecutionRef;
+}[];
 };

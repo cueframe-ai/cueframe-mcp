@@ -8,7 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { FormatSpec } from './formatSpec.zod';
+import { Format } from './format.zod';
 
 
 
@@ -18,7 +18,7 @@ import { FormatSpec } from './formatSpec.zod';
 export const RenderCreateRequest = zod.strictObject({
   "clipSuggestionId": zod.string().min(1).optional(),
   "compositionId": zod.string().min(1).optional().describe('Target a specific composition in the project; defaults to the project\'s active composition.'),
-  "format": FormatSpec.optional(),
+  "format": Format.optional(),
   "priority": zod.enum(['interactive', 'standard', 'background']).optional(),
   "intent": zod.enum(['preview', 'final']).optional(),
   "brandKitId": zod.union([zod.string().min(1),zod.null()]).optional()

@@ -23,11 +23,46 @@ import type {
 
 import { request } from '../../client';
 
+// https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
+type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
+T,
+>() => T extends Y ? 1 : 2
+? A
+: B;
+
+type WritableKeys<T> = {
+[P in keyof T]-?: IfEquals<
+  { [Q in P]: T[P] },
+  { -readonly [Q in P]: T[P] },
+  P
+>;
+}[keyof T];
+
+type UnionToIntersection<U> =
+  (U extends any ? (k: U)=>void : never) extends ((k: infer I)=>void) ? I : never;
+type DistributeReadOnlyOverUnions<T> = T extends any ? NonReadonly<T> : never;
+
+type Writable<T> = Pick<T, WritableKeys<T>>;
+type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
+  [P in keyof Writable<T>]: T[P] extends object
+    ? NonReadonly<NonNullable<T[P]>>
+    : T[P];
+} : DistributeReadOnlyOverUnions<T>;
+
+
 export const getGetCompositionUrl = (id: string,
     params?: GetCompositionParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ["componentExecutionVersions"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : String(v));
+      });
+      return;
+    }
 
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : String(value))
@@ -69,7 +104,7 @@ export const getPutCompositionUrl = (id: string,) => {
  * @summary Replace a project's composition
  */
 export const putComposition = async (id: string,
-    compositionReplaceRequest: CompositionReplaceRequest, options?: Parameters<typeof request>[1]): Promise<void> => {
+    compositionReplaceRequest: NonReadonly<CompositionReplaceRequest>, options?: Parameters<typeof request>[1]): Promise<void> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -287,7 +322,7 @@ export const getValidateCompositionUrl = () => {
  * Dry-run the FULL save-time authoring guard set against a Composition body WITHOUT persisting it and without a project. Runs the same pure, DB-free guards saveComposition enforces — wire shape, primitive membership (unknown_primitive / custom_missing_sourcecode), required-param shape (invalid_primitive_params), clip↔track family (clip_source_track_mismatch), reframe coverage (reframe_coverage_gap), and font admission (font_not_reproducible: a caption/param face that is neither bundled nor sealed in a brand font asset) — and returns ONE shape, `200 { valid, errors[] }`, for BOTH wire-shape and deep-invariant failures (no 400-vs-200 split). `valid:false` lists every authoring error (sanitized envelopes) to fix before save/render. The ONLY checks NOT run here are the two DB-bound ones — trim-bounds (media duration) and image/asset-on-video-track (media kind) — which can only be caught at save/render.
  * @summary Validate a composition body without saving it (dry-run)
  */
-export const validateComposition = async (composition: Composition, options?: Parameters<typeof request>[1]): Promise<ValidateComposition200> => {
+export const validateComposition = async (composition: NonReadonly<Composition>, options?: Parameters<typeof request>[1]): Promise<ValidateComposition200> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};

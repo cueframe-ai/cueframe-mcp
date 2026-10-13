@@ -17,9 +17,23 @@ import {
   ComponentResponse,
   ComponentSourceResponse,
   ComponentUpdateRequest,
-  ComponentUpdateResponse
+  ComponentUpdateResponse,
+  NativeUpgradeRequest,
+  NativeUpgradeResponse
 } from '../models';
 
+
+/**
+ * Repin clips that pin a retired curated TSX (version 3) component to its native (version 4) successor — the successorSourceVersionId a refusal of such a clip names. Name clip_ids, or omit them to move every clip that has a successor. Every saved input is kept. Clips with no successor are listed in withoutSuccessor.
+ * @summary Move retired TSX component clips to their native successors
+ */
+export const RepinComponentParams = zod.object({
+  "id": zod.string()
+})
+
+export const RepinComponentBody = NativeUpgradeRequest
+
+export const RepinComponentResponse = NativeUpgradeResponse
 
 /**
  * Required permission: projects:read

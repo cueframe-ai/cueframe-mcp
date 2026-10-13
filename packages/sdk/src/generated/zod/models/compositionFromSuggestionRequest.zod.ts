@@ -8,18 +8,14 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
+import { Format } from './format.zod';
 
 
 
 
 export const CompositionFromSuggestionRequest = zod.strictObject({
   "suggestionId": zod.string().min(1),
-  "format": zod.strictObject({
-  "aspectRatio": zod.enum(['16:9', '9:16', '1:1', '4:5']),
-  "fps": zod.union([zod.literal(24),zod.literal(25),zod.literal(30),zod.literal(60)]).optional(),
-  "resolution": zod.enum(['hd', 'fhd', '4k']).optional(),
-  "platform": zod.string().optional()
-}).optional()
+  "format": Format.optional()
 });
 
 export type CompositionFromSuggestionRequest = zod.input<typeof CompositionFromSuggestionRequest>;

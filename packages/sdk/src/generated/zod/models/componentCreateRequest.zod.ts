@@ -19,111 +19,217 @@ export const componentCreateRequestEjectedFromMax = 200;
 
 export const componentCreateRequestDurationInFramesExclusiveMin = 0;
 
-export const componentCreateRequestSourceComponentIdMax = 128;
+export const componentCreateRequestSourceOneComponentIdMax = 128;
 
 
-export const componentCreateRequestSourceComponentIdRegExp = new RegExp('^[a-zA-Z0-9][a-zA-Z0-9._-]*$');
-export const componentCreateRequestSourceTsxSourceMax = 8000000;
-
-
-
-export const componentCreateRequestSourceManifestAssetsMediaDemandThreeMaxProjectedWidthRatioExclusiveMin = 0;
-export const componentCreateRequestSourceManifestAssetsMediaDemandThreeMaxProjectedWidthRatioMax = 64;
-
-export const componentCreateRequestSourceManifestAssetsMediaDemandThreeMaxProjectedHeightRatioExclusiveMin = 0;
-export const componentCreateRequestSourceManifestAssetsMediaDemandThreeMaxProjectedHeightRatioMax = 64;
-
-export const componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioDefault = 1;
-export const componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin = 0;
-export const componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioMax = 1;
-
-export const componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioDefault = 1;
-export const componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin = 0;
-export const componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioMax = 1;
-
-export const componentCreateRequestSourceDefinitionBrandBindingsItemPropPathMax = 128;
-
-export const componentCreateRequestSourceDefinitionBrandBindingsItemCssVarMax = 128;
-
-export const componentCreateRequestSourceDefinitionBrandBindingsItemBrandKitPathMax = 128;
-
-export const componentCreateRequestSourceDefinitionTimingDefaultDurationFramesExclusiveMin = 0;
-export const componentCreateRequestSourceDefinitionTimingDefaultDurationFramesMax = 9007199254740991;
-
-export const componentCreateRequestSourceDefinitionTimingDefaultDurationFpsExclusiveMin = 0;
-
-export const componentCreateRequestSourceDefinitionTimingMinDurationSecExclusiveMin = 0;
-
-export const componentCreateRequestSourceDefinitionTimingMaxDurationSecExclusiveMin = 0;
-
-export const componentCreateRequestSourceDefinitionCapabilitiesItemThreeSlotsItemNameMax = 128;
-
-export const componentCreateRequestSourceDefinitionCapabilitiesItemThreeSlotsItemMinMin = 0;
-export const componentCreateRequestSourceDefinitionCapabilitiesItemThreeSlotsItemMinMax = 9007199254740991;
-
-export const componentCreateRequestSourceDefinitionCapabilitiesItemThreeSlotsItemMaxExclusiveMin = 0;
-export const componentCreateRequestSourceDefinitionCapabilitiesItemThreeSlotsItemMaxMax = 9007199254740991;
+export const componentCreateRequestSourceOneComponentIdRegExp = new RegExp('^[a-zA-Z0-9][a-zA-Z0-9._-]*$');
+export const componentCreateRequestSourceOneTsxSourceMax = 8000000;
 
 
 
-export const componentCreateRequestSourceDefinitionMediaBindingsItemNameMax = 128;
+export const componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMaxProjectedWidthRatioExclusiveMin = 0;
+export const componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMaxProjectedWidthRatioMax = 64;
 
-export const componentCreateRequestSourceDefinitionMediaBindingsItemPropPathItemMax = 128;
+export const componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMaxProjectedHeightRatioExclusiveMin = 0;
+export const componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMaxProjectedHeightRatioMax = 64;
 
-export const componentCreateRequestSourceDefinitionMediaBindingsItemPropPathMax = 16;
+export const componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioDefault = 1;
+export const componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin = 0;
+export const componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioMax = 1;
 
-export const componentCreateRequestSourceDefinitionMediaBindingsItemCardinalityMinMin = 0;
-export const componentCreateRequestSourceDefinitionMediaBindingsItemCardinalityMinMax = 9007199254740991;
+export const componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioDefault = 1;
+export const componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin = 0;
+export const componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioMax = 1;
 
-export const componentCreateRequestSourceDefinitionMediaBindingsItemCardinalityMaxExclusiveMin = 0;
-export const componentCreateRequestSourceDefinitionMediaBindingsItemCardinalityMaxMax = 9007199254740991;
+export const componentCreateRequestSourceOneDefinitionBrandBindingsItemPropPathMax = 128;
+
+export const componentCreateRequestSourceOneDefinitionBrandBindingsItemCssVarMax = 128;
+
+export const componentCreateRequestSourceOneDefinitionBrandBindingsItemBrandKitPathMax = 128;
+
+export const componentCreateRequestSourceOneDefinitionTimingDefaultDurationFramesExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionTimingDefaultDurationFramesMax = 9007199254740991;
+
+export const componentCreateRequestSourceOneDefinitionTimingDefaultDurationFpsExclusiveMin = 0;
+
+export const componentCreateRequestSourceOneDefinitionTimingMinDurationSecExclusiveMin = 0;
+
+export const componentCreateRequestSourceOneDefinitionTimingMaxDurationSecExclusiveMin = 0;
+
+export const componentCreateRequestSourceOneDefinitionCapabilitiesItemThreeSlotsItemNameMax = 128;
+
+export const componentCreateRequestSourceOneDefinitionCapabilitiesItemThreeSlotsItemMinMin = 0;
+export const componentCreateRequestSourceOneDefinitionCapabilitiesItemThreeSlotsItemMinMax = 9007199254740991;
+
+export const componentCreateRequestSourceOneDefinitionCapabilitiesItemThreeSlotsItemMaxExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionCapabilitiesItemThreeSlotsItemMaxMax = 9007199254740991;
 
 
 
-export const componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioExclusiveMin = 0;
-export const componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioMax = 64;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemNameMax = 128;
 
-export const componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioExclusiveMin = 0;
-export const componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioMax = 64;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemPropPathItemMax = 128;
 
-export const componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioDefault = 1;
-export const componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin = 0;
-export const componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioMax = 1;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemPropPathMax = 16;
 
-export const componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioDefault = 1;
-export const componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin = 0;
-export const componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioMax = 1;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemCardinalityMinMin = 0;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemCardinalityMinMax = 9007199254740991;
+
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemCardinalityMaxExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemCardinalityMaxMax = 9007199254740991;
 
 
-export const componentCreateRequestSourceDefinitionPreviewAssetsOneUrlRegExp = new RegExp('^https:\\/\\/.*');
-export const componentCreateRequestSourceDefinitionPreviewAssetsOneSha256RegExp = new RegExp('^[a-f0-9]{64}$');
 
-export const componentCreateRequestSourceDefinitionPreviewAssetsOneFrameRateExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioMax = 64;
 
-export const componentCreateRequestSourceDefinitionPreviewAssetsOneDurationSecExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioMax = 64;
 
-export const componentCreateRequestSourceDefinitionPreviewAssetsTwoMediaIdMax = 128;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioDefault = 1;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioMax = 1;
 
-export const componentCreateRequestSourceDefinitionPreviewAssetsTwoSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioDefault = 1;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioMax = 1;
 
-export const componentCreateRequestSourceDefinitionPreviewAssetsTwoFrameRateExclusiveMin = 0;
 
-export const componentCreateRequestSourceDefinitionPreviewAssetsTwoDurationSecExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionPreviewAssetsOneUrlRegExp = new RegExp('^https:\\/\\/.*');
+export const componentCreateRequestSourceOneDefinitionPreviewAssetsOneSha256RegExp = new RegExp('^[a-f0-9]{64}$');
 
-export const componentCreateRequestSourceDefinitionPreviewMediaBindingsItemOneUrlRegExp = new RegExp('^https:\\/\\/.*');
-export const componentCreateRequestSourceDefinitionPreviewMediaBindingsItemOneSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentCreateRequestSourceOneDefinitionPreviewAssetsOneFrameRateExclusiveMin = 0;
 
-export const componentCreateRequestSourceDefinitionPreviewMediaBindingsItemOneFrameRateExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionPreviewAssetsOneDurationSecExclusiveMin = 0;
 
-export const componentCreateRequestSourceDefinitionPreviewMediaBindingsItemOneDurationSecExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionPreviewAssetsTwoMediaIdMax = 128;
 
-export const componentCreateRequestSourceDefinitionPreviewMediaBindingsItemTwoMediaIdMax = 128;
+export const componentCreateRequestSourceOneDefinitionPreviewAssetsTwoSha256RegExp = new RegExp('^[a-f0-9]{64}$');
 
-export const componentCreateRequestSourceDefinitionPreviewMediaBindingsItemTwoSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentCreateRequestSourceOneDefinitionPreviewAssetsTwoFrameRateExclusiveMin = 0;
 
-export const componentCreateRequestSourceDefinitionPreviewMediaBindingsItemTwoFrameRateExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionPreviewAssetsTwoDurationSecExclusiveMin = 0;
 
-export const componentCreateRequestSourceDefinitionPreviewMediaBindingsItemTwoDurationSecExclusiveMin = 0;
+export const componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemOneUrlRegExp = new RegExp('^https:\\/\\/.*');
+export const componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemOneSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+
+export const componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemOneFrameRateExclusiveMin = 0;
+
+export const componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemOneDurationSecExclusiveMin = 0;
+
+export const componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemTwoMediaIdMax = 128;
+
+export const componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemTwoSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+
+export const componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemTwoFrameRateExclusiveMin = 0;
+
+export const componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemTwoDurationSecExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoComponentIdMax = 128;
+
+
+export const componentCreateRequestSourceTwoComponentIdRegExp = new RegExp('^[a-zA-Z0-9][a-zA-Z0-9._-]*$');
+export const componentCreateRequestSourceTwoTemplateMax = 2000000;
+
+
+
+export const componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMaxProjectedWidthRatioExclusiveMin = 0;
+export const componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMaxProjectedWidthRatioMax = 64;
+
+export const componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMaxProjectedHeightRatioExclusiveMin = 0;
+export const componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMaxProjectedHeightRatioMax = 64;
+
+export const componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioDefault = 1;
+export const componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin = 0;
+export const componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioMax = 1;
+
+export const componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioDefault = 1;
+export const componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin = 0;
+export const componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioMax = 1;
+
+export const componentCreateRequestSourceTwoDefinitionBrandBindingsItemPropPathMax = 128;
+
+export const componentCreateRequestSourceTwoDefinitionBrandBindingsItemCssVarMax = 128;
+
+export const componentCreateRequestSourceTwoDefinitionBrandBindingsItemBrandKitPathMax = 128;
+
+export const componentCreateRequestSourceTwoDefinitionTimingDefaultDurationFramesExclusiveMin = 0;
+export const componentCreateRequestSourceTwoDefinitionTimingDefaultDurationFramesMax = 9007199254740991;
+
+export const componentCreateRequestSourceTwoDefinitionTimingDefaultDurationFpsExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoDefinitionTimingMinDurationSecExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoDefinitionTimingMaxDurationSecExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoDefinitionCapabilitiesItemThreeSlotsItemNameMax = 128;
+
+export const componentCreateRequestSourceTwoDefinitionCapabilitiesItemThreeSlotsItemMinMin = 0;
+export const componentCreateRequestSourceTwoDefinitionCapabilitiesItemThreeSlotsItemMinMax = 9007199254740991;
+
+export const componentCreateRequestSourceTwoDefinitionCapabilitiesItemThreeSlotsItemMaxExclusiveMin = 0;
+export const componentCreateRequestSourceTwoDefinitionCapabilitiesItemThreeSlotsItemMaxMax = 9007199254740991;
+
+
+
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemNameMax = 128;
+
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemPropPathItemMax = 128;
+
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemPropPathMax = 16;
+
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemCardinalityMinMin = 0;
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemCardinalityMinMax = 9007199254740991;
+
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemCardinalityMaxExclusiveMin = 0;
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemCardinalityMaxMax = 9007199254740991;
+
+
+
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioExclusiveMin = 0;
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioMax = 64;
+
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioExclusiveMin = 0;
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioMax = 64;
+
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioDefault = 1;
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin = 0;
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioMax = 1;
+
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioDefault = 1;
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin = 0;
+export const componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioMax = 1;
+
+
+export const componentCreateRequestSourceTwoDefinitionPreviewAssetsOneUrlRegExp = new RegExp('^https:\\/\\/.*');
+export const componentCreateRequestSourceTwoDefinitionPreviewAssetsOneSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+
+export const componentCreateRequestSourceTwoDefinitionPreviewAssetsOneFrameRateExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoDefinitionPreviewAssetsOneDurationSecExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoDefinitionPreviewAssetsTwoMediaIdMax = 128;
+
+export const componentCreateRequestSourceTwoDefinitionPreviewAssetsTwoSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+
+export const componentCreateRequestSourceTwoDefinitionPreviewAssetsTwoFrameRateExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoDefinitionPreviewAssetsTwoDurationSecExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemOneUrlRegExp = new RegExp('^https:\\/\\/.*');
+export const componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemOneSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+
+export const componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemOneFrameRateExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemOneDurationSecExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemTwoMediaIdMax = 128;
+
+export const componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemTwoSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+
+export const componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemTwoFrameRateExclusiveMin = 0;
+
+export const componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemTwoDurationSecExclusiveMin = 0;
 
 
 
@@ -138,10 +244,10 @@ export const ComponentCreateRequest = zod.strictObject({
   "tokens": zod.record(zod.string(), zod.unknown()).optional(),
   "examples": zod.array(zod.record(zod.string(), zod.unknown())).optional().describe('Usage examples, as authored. A built-in primitive projects {name, mood?, params?, description?}; an authored component\'s examples are whatever it wrote, which is why the item is open. One shape for both directions: what you write here is what you read back.'),
   "durationInFrames": zod.number().gt(componentCreateRequestDurationInFramesExclusiveMin).optional(),
-  "source": zod.strictObject({
+  "source": zod.union([zod.strictObject({
   "version": zod.literal(3),
-  "componentId": zod.string().min(1).max(componentCreateRequestSourceComponentIdMax).regex(componentCreateRequestSourceComponentIdRegExp),
-  "tsxSource": zod.string().min(1).max(componentCreateRequestSourceTsxSourceMax),
+  "componentId": zod.string().min(1).max(componentCreateRequestSourceOneComponentIdMax).regex(componentCreateRequestSourceOneComponentIdRegExp),
+  "tsxSource": zod.string().min(1).max(componentCreateRequestSourceOneTsxSourceMax),
   "manifest": zod.strictObject({
   "version": zod.literal(2),
   "assets": zod.record(zod.string(), zod.strictObject({
@@ -155,10 +261,10 @@ export const ComponentCreateRequest = zod.strictObject({
   "tier": zod.union([zod.literal(256),zod.literal(512),zod.literal(1024),zod.literal(2048)])
 }),zod.strictObject({
   "mode": zod.literal("auto"),
-  "maxProjectedWidthRatio": zod.number().gt(componentCreateRequestSourceManifestAssetsMediaDemandThreeMaxProjectedWidthRatioExclusiveMin).max(componentCreateRequestSourceManifestAssetsMediaDemandThreeMaxProjectedWidthRatioMax),
-  "maxProjectedHeightRatio": zod.number().gt(componentCreateRequestSourceManifestAssetsMediaDemandThreeMaxProjectedHeightRatioExclusiveMin).max(componentCreateRequestSourceManifestAssetsMediaDemandThreeMaxProjectedHeightRatioMax),
-  "minVisibleSourceWidthRatio": zod.number().gt(componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin).max(componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioMax).default(componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioDefault),
-  "minVisibleSourceHeightRatio": zod.number().gt(componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin).max(componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioMax).default(componentCreateRequestSourceManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioDefault)
+  "maxProjectedWidthRatio": zod.number().gt(componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMaxProjectedWidthRatioExclusiveMin).max(componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMaxProjectedWidthRatioMax),
+  "maxProjectedHeightRatio": zod.number().gt(componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMaxProjectedHeightRatioExclusiveMin).max(componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMaxProjectedHeightRatioMax),
+  "minVisibleSourceWidthRatio": zod.number().gt(componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin).max(componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioMax).default(componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioDefault),
+  "minVisibleSourceHeightRatio": zod.number().gt(componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin).max(componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioMax).default(componentCreateRequestSourceOneManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioDefault)
 })]).optional()
 })),
   "graphics": zod.strictObject({
@@ -178,18 +284,18 @@ export const ComponentCreateRequest = zod.strictObject({
   "inputSchema": zod.record(zod.string(), zod.unknown()),
   "defaults": zod.record(zod.string(), zod.unknown()),
   "brandBindings": zod.array(zod.strictObject({
-  "propPath": zod.string().min(1).max(componentCreateRequestSourceDefinitionBrandBindingsItemPropPathMax),
-  "cssVar": zod.string().min(1).max(componentCreateRequestSourceDefinitionBrandBindingsItemCssVarMax),
+  "propPath": zod.string().min(1).max(componentCreateRequestSourceOneDefinitionBrandBindingsItemPropPathMax),
+  "cssVar": zod.string().min(1).max(componentCreateRequestSourceOneDefinitionBrandBindingsItemCssVarMax),
   "fallback": zod.string().optional(),
-  "brandKitPath": zod.string().min(1).max(componentCreateRequestSourceDefinitionBrandBindingsItemBrandKitPathMax).optional()
+  "brandKitPath": zod.string().min(1).max(componentCreateRequestSourceOneDefinitionBrandBindingsItemBrandKitPathMax).optional()
 })),
   "timing": zod.strictObject({
   "defaultDuration": zod.strictObject({
-  "frames": zod.int().gt(componentCreateRequestSourceDefinitionTimingDefaultDurationFramesExclusiveMin).max(componentCreateRequestSourceDefinitionTimingDefaultDurationFramesMax),
-  "fps": zod.number().gt(componentCreateRequestSourceDefinitionTimingDefaultDurationFpsExclusiveMin)
+  "frames": zod.int().gt(componentCreateRequestSourceOneDefinitionTimingDefaultDurationFramesExclusiveMin).max(componentCreateRequestSourceOneDefinitionTimingDefaultDurationFramesMax),
+  "fps": zod.number().gt(componentCreateRequestSourceOneDefinitionTimingDefaultDurationFpsExclusiveMin)
 }),
-  "minDurationSec": zod.number().gt(componentCreateRequestSourceDefinitionTimingMinDurationSecExclusiveMin).optional(),
-  "maxDurationSec": zod.number().gt(componentCreateRequestSourceDefinitionTimingMaxDurationSecExclusiveMin).optional()
+  "minDurationSec": zod.number().gt(componentCreateRequestSourceOneDefinitionTimingMinDurationSecExclusiveMin).optional(),
+  "maxDurationSec": zod.number().gt(componentCreateRequestSourceOneDefinitionTimingMaxDurationSecExclusiveMin).optional()
 }),
   "capabilities": zod.array(zod.union([zod.strictObject({
   "kind": zod.literal("clip")
@@ -199,9 +305,9 @@ export const ComponentCreateRequest = zod.strictObject({
 }),zod.strictObject({
   "kind": zod.literal("content-slots"),
   "slots": zod.array(zod.strictObject({
-  "name": zod.string().min(1).max(componentCreateRequestSourceDefinitionCapabilitiesItemThreeSlotsItemNameMax),
-  "min": zod.int().min(componentCreateRequestSourceDefinitionCapabilitiesItemThreeSlotsItemMinMin).max(componentCreateRequestSourceDefinitionCapabilitiesItemThreeSlotsItemMinMax),
-  "max": zod.int().gt(componentCreateRequestSourceDefinitionCapabilitiesItemThreeSlotsItemMaxExclusiveMin).max(componentCreateRequestSourceDefinitionCapabilitiesItemThreeSlotsItemMaxMax),
+  "name": zod.string().min(1).max(componentCreateRequestSourceOneDefinitionCapabilitiesItemThreeSlotsItemNameMax),
+  "min": zod.int().min(componentCreateRequestSourceOneDefinitionCapabilitiesItemThreeSlotsItemMinMin).max(componentCreateRequestSourceOneDefinitionCapabilitiesItemThreeSlotsItemMinMax),
+  "max": zod.int().gt(componentCreateRequestSourceOneDefinitionCapabilitiesItemThreeSlotsItemMaxExclusiveMin).max(componentCreateRequestSourceOneDefinitionCapabilitiesItemThreeSlotsItemMaxMax),
   "ownership": zod.enum(['reference', 'exclusive']),
   "sizing": zod.enum(['canvas', 'container'])
 })).min(1)
@@ -216,13 +322,13 @@ export const ComponentCreateRequest = zod.strictObject({
   "acceptsWrappedTargets": zod.boolean()
 })])).min(1),
   "mediaBindings": zod.array(zod.strictObject({
-  "name": zod.string().min(1).max(componentCreateRequestSourceDefinitionMediaBindingsItemNameMax),
-  "propPath": zod.array(zod.string().min(1).max(componentCreateRequestSourceDefinitionMediaBindingsItemPropPathItemMax)).min(1).max(componentCreateRequestSourceDefinitionMediaBindingsItemPropPathMax),
+  "name": zod.string().min(1).max(componentCreateRequestSourceOneDefinitionMediaBindingsItemNameMax),
+  "propPath": zod.array(zod.string().min(1).max(componentCreateRequestSourceOneDefinitionMediaBindingsItemPropPathItemMax)).min(1).max(componentCreateRequestSourceOneDefinitionMediaBindingsItemPropPathMax),
   "kind": zod.enum(['image', 'video', 'visual']),
   "collection": zod.enum(['scalar', 'array']),
   "cardinality": zod.strictObject({
-  "min": zod.int().min(componentCreateRequestSourceDefinitionMediaBindingsItemCardinalityMinMin).max(componentCreateRequestSourceDefinitionMediaBindingsItemCardinalityMinMax),
-  "max": zod.int().gt(componentCreateRequestSourceDefinitionMediaBindingsItemCardinalityMaxExclusiveMin).max(componentCreateRequestSourceDefinitionMediaBindingsItemCardinalityMaxMax).optional()
+  "min": zod.int().min(componentCreateRequestSourceOneDefinitionMediaBindingsItemCardinalityMinMin).max(componentCreateRequestSourceOneDefinitionMediaBindingsItemCardinalityMinMax),
+  "max": zod.int().gt(componentCreateRequestSourceOneDefinitionMediaBindingsItemCardinalityMaxExclusiveMin).max(componentCreateRequestSourceOneDefinitionMediaBindingsItemCardinalityMaxMax).optional()
 }),
   "mimeTypes": zod.array(zod.string().min(1)).min(1).optional(),
   "mediaDemand": zod.union([zod.strictObject({
@@ -232,10 +338,10 @@ export const ComponentCreateRequest = zod.strictObject({
   "tier": zod.union([zod.literal(256),zod.literal(512),zod.literal(1024),zod.literal(2048)])
 }),zod.strictObject({
   "mode": zod.literal("auto"),
-  "maxProjectedWidthRatio": zod.number().gt(componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioExclusiveMin).max(componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioMax),
-  "maxProjectedHeightRatio": zod.number().gt(componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioExclusiveMin).max(componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioMax),
-  "minVisibleSourceWidthRatio": zod.number().gt(componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin).max(componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioMax).default(componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioDefault),
-  "minVisibleSourceHeightRatio": zod.number().gt(componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin).max(componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioMax).default(componentCreateRequestSourceDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioDefault)
+  "maxProjectedWidthRatio": zod.number().gt(componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioExclusiveMin).max(componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioMax),
+  "maxProjectedHeightRatio": zod.number().gt(componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioExclusiveMin).max(componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioMax),
+  "minVisibleSourceWidthRatio": zod.number().gt(componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin).max(componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioMax).default(componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioDefault),
+  "minVisibleSourceHeightRatio": zod.number().gt(componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin).max(componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioMax).default(componentCreateRequestSourceOneDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioDefault)
 })]).optional()
 })).min(1).optional(),
   "preview": zod.strictObject({
@@ -247,34 +353,170 @@ export const ComponentCreateRequest = zod.strictObject({
   "platform": zod.string().optional()
 }).optional(),
   "assets": zod.record(zod.string(), zod.union([zod.strictObject({
-  "url": zod.url().regex(componentCreateRequestSourceDefinitionPreviewAssetsOneUrlRegExp),
-  "sha256": zod.string().regex(componentCreateRequestSourceDefinitionPreviewAssetsOneSha256RegExp),
+  "url": zod.url().regex(componentCreateRequestSourceOneDefinitionPreviewAssetsOneUrlRegExp),
+  "sha256": zod.string().regex(componentCreateRequestSourceOneDefinitionPreviewAssetsOneSha256RegExp),
   "mimeType": zod.string().min(1),
-  "frameRate": zod.number().gt(componentCreateRequestSourceDefinitionPreviewAssetsOneFrameRateExclusiveMin).optional(),
-  "durationSec": zod.number().gt(componentCreateRequestSourceDefinitionPreviewAssetsOneDurationSecExclusiveMin).optional()
+  "frameRate": zod.number().gt(componentCreateRequestSourceOneDefinitionPreviewAssetsOneFrameRateExclusiveMin).optional(),
+  "durationSec": zod.number().gt(componentCreateRequestSourceOneDefinitionPreviewAssetsOneDurationSecExclusiveMin).optional()
 }),zod.strictObject({
-  "mediaId": zod.string().min(1).max(componentCreateRequestSourceDefinitionPreviewAssetsTwoMediaIdMax),
-  "sha256": zod.string().regex(componentCreateRequestSourceDefinitionPreviewAssetsTwoSha256RegExp),
+  "mediaId": zod.string().min(1).max(componentCreateRequestSourceOneDefinitionPreviewAssetsTwoMediaIdMax),
+  "sha256": zod.string().regex(componentCreateRequestSourceOneDefinitionPreviewAssetsTwoSha256RegExp),
   "mimeType": zod.string().min(1),
-  "frameRate": zod.number().gt(componentCreateRequestSourceDefinitionPreviewAssetsTwoFrameRateExclusiveMin).optional(),
-  "durationSec": zod.number().gt(componentCreateRequestSourceDefinitionPreviewAssetsTwoDurationSecExclusiveMin).optional()
+  "frameRate": zod.number().gt(componentCreateRequestSourceOneDefinitionPreviewAssetsTwoFrameRateExclusiveMin).optional(),
+  "durationSec": zod.number().gt(componentCreateRequestSourceOneDefinitionPreviewAssetsTwoDurationSecExclusiveMin).optional()
 })])).optional(),
   "mediaBindings": zod.record(zod.string(), zod.array(zod.union([zod.strictObject({
-  "url": zod.url().regex(componentCreateRequestSourceDefinitionPreviewMediaBindingsItemOneUrlRegExp),
-  "sha256": zod.string().regex(componentCreateRequestSourceDefinitionPreviewMediaBindingsItemOneSha256RegExp),
+  "url": zod.url().regex(componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemOneUrlRegExp),
+  "sha256": zod.string().regex(componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemOneSha256RegExp),
   "mimeType": zod.string().min(1),
-  "frameRate": zod.number().gt(componentCreateRequestSourceDefinitionPreviewMediaBindingsItemOneFrameRateExclusiveMin).optional(),
-  "durationSec": zod.number().gt(componentCreateRequestSourceDefinitionPreviewMediaBindingsItemOneDurationSecExclusiveMin).optional()
+  "frameRate": zod.number().gt(componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemOneFrameRateExclusiveMin).optional(),
+  "durationSec": zod.number().gt(componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemOneDurationSecExclusiveMin).optional()
 }),zod.strictObject({
-  "mediaId": zod.string().min(1).max(componentCreateRequestSourceDefinitionPreviewMediaBindingsItemTwoMediaIdMax),
-  "sha256": zod.string().regex(componentCreateRequestSourceDefinitionPreviewMediaBindingsItemTwoSha256RegExp),
+  "mediaId": zod.string().min(1).max(componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemTwoMediaIdMax),
+  "sha256": zod.string().regex(componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemTwoSha256RegExp),
   "mimeType": zod.string().min(1),
-  "frameRate": zod.number().gt(componentCreateRequestSourceDefinitionPreviewMediaBindingsItemTwoFrameRateExclusiveMin).optional(),
-  "durationSec": zod.number().gt(componentCreateRequestSourceDefinitionPreviewMediaBindingsItemTwoDurationSecExclusiveMin).optional()
+  "frameRate": zod.number().gt(componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemTwoFrameRateExclusiveMin).optional(),
+  "durationSec": zod.number().gt(componentCreateRequestSourceOneDefinitionPreviewMediaBindingsItemTwoDurationSecExclusiveMin).optional()
 })]))).optional()
 }).optional()
 })
+}),zod.strictObject({
+  "version": zod.literal(4),
+  "componentId": zod.string().min(1).max(componentCreateRequestSourceTwoComponentIdMax).regex(componentCreateRequestSourceTwoComponentIdRegExp),
+  "template": zod.string().min(1).max(componentCreateRequestSourceTwoTemplateMax),
+  "manifest": zod.strictObject({
+  "version": zod.literal(4),
+  "runtime": zod.literal("hyperframes"),
+  "hfContract": zod.literal(1),
+  "kind": zod.literal("scene"),
+  "sceneShot": zod.strictObject({
+  "version": zod.literal(2)
+}).optional(),
+  "assets": zod.record(zod.string(), zod.strictObject({
+  "kind": zod.enum(['image', 'video', 'audio', 'data', 'visual']),
+  "required": zod.boolean(),
+  "mimeTypes": zod.array(zod.string().min(1)).min(1).optional(),
+  "mediaDemand": zod.union([zod.strictObject({
+  "mode": zod.literal("original")
+}),zod.strictObject({
+  "mode": zod.literal("tier"),
+  "tier": zod.union([zod.literal(256),zod.literal(512),zod.literal(1024),zod.literal(2048)])
+}),zod.strictObject({
+  "mode": zod.literal("auto"),
+  "maxProjectedWidthRatio": zod.number().gt(componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMaxProjectedWidthRatioExclusiveMin).max(componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMaxProjectedWidthRatioMax),
+  "maxProjectedHeightRatio": zod.number().gt(componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMaxProjectedHeightRatioExclusiveMin).max(componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMaxProjectedHeightRatioMax),
+  "minVisibleSourceWidthRatio": zod.number().gt(componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin).max(componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioMax).default(componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceWidthRatioDefault),
+  "minVisibleSourceHeightRatio": zod.number().gt(componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin).max(componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioMax).default(componentCreateRequestSourceTwoManifestAssetsMediaDemandThreeMinVisibleSourceHeightRatioDefault)
+})]).optional()
+})),
+  "graphics": zod.strictObject({
+  "api": zod.enum(['canvas2d', 'webgl', 'webgl2', 'webgpu']),
+  "required": zod.literal(true),
+  "accelerationPreference": zod.enum(['hardware-preferred', 'software-allowed'])
+}),
+  "alphaPolicy": zod.enum(['requires-transparency', 'allows-opaque'])
+}),
+  "definition": zod.strictObject({
+  "inputSchema": zod.record(zod.string(), zod.unknown()),
+  "defaults": zod.record(zod.string(), zod.unknown()),
+  "brandBindings": zod.array(zod.strictObject({
+  "propPath": zod.string().min(1).max(componentCreateRequestSourceTwoDefinitionBrandBindingsItemPropPathMax),
+  "cssVar": zod.string().min(1).max(componentCreateRequestSourceTwoDefinitionBrandBindingsItemCssVarMax),
+  "fallback": zod.string().optional(),
+  "brandKitPath": zod.string().min(1).max(componentCreateRequestSourceTwoDefinitionBrandBindingsItemBrandKitPathMax).optional()
+})),
+  "timing": zod.strictObject({
+  "defaultDuration": zod.strictObject({
+  "frames": zod.int().gt(componentCreateRequestSourceTwoDefinitionTimingDefaultDurationFramesExclusiveMin).max(componentCreateRequestSourceTwoDefinitionTimingDefaultDurationFramesMax),
+  "fps": zod.number().gt(componentCreateRequestSourceTwoDefinitionTimingDefaultDurationFpsExclusiveMin)
+}),
+  "minDurationSec": zod.number().gt(componentCreateRequestSourceTwoDefinitionTimingMinDurationSecExclusiveMin).optional(),
+  "maxDurationSec": zod.number().gt(componentCreateRequestSourceTwoDefinitionTimingMaxDurationSecExclusiveMin).optional()
+}),
+  "capabilities": zod.array(zod.union([zod.strictObject({
+  "kind": zod.literal("clip")
+}),zod.strictObject({
+  "kind": zod.literal("cut-transition"),
+  "protocol": zod.literal("per-child")
+}),zod.strictObject({
+  "kind": zod.literal("content-slots"),
+  "slots": zod.array(zod.strictObject({
+  "name": zod.string().min(1).max(componentCreateRequestSourceTwoDefinitionCapabilitiesItemThreeSlotsItemNameMax),
+  "min": zod.int().min(componentCreateRequestSourceTwoDefinitionCapabilitiesItemThreeSlotsItemMinMin).max(componentCreateRequestSourceTwoDefinitionCapabilitiesItemThreeSlotsItemMinMax),
+  "max": zod.int().gt(componentCreateRequestSourceTwoDefinitionCapabilitiesItemThreeSlotsItemMaxExclusiveMin).max(componentCreateRequestSourceTwoDefinitionCapabilitiesItemThreeSlotsItemMaxMax),
+  "ownership": zod.enum(['reference', 'exclusive']),
+  "sizing": zod.enum(['canvas', 'container'])
+})).min(1)
+}),zod.strictObject({
+  "kind": zod.literal("clip-wrapper"),
+  "ordering": zod.enum(['any', 'innermost']),
+  "acceptsWrappedTargets": zod.boolean()
+}),zod.strictObject({
+  "kind": zod.literal("global-wrapper"),
+  "scope": zod.literal("media-lanes"),
+  "ordering": zod.enum(['any', 'innermost']),
+  "acceptsWrappedTargets": zod.boolean()
+})])).min(1),
+  "mediaBindings": zod.array(zod.strictObject({
+  "name": zod.string().min(1).max(componentCreateRequestSourceTwoDefinitionMediaBindingsItemNameMax),
+  "propPath": zod.array(zod.string().min(1).max(componentCreateRequestSourceTwoDefinitionMediaBindingsItemPropPathItemMax)).min(1).max(componentCreateRequestSourceTwoDefinitionMediaBindingsItemPropPathMax),
+  "kind": zod.enum(['image', 'video', 'visual']),
+  "collection": zod.enum(['scalar', 'array']),
+  "cardinality": zod.strictObject({
+  "min": zod.int().min(componentCreateRequestSourceTwoDefinitionMediaBindingsItemCardinalityMinMin).max(componentCreateRequestSourceTwoDefinitionMediaBindingsItemCardinalityMinMax),
+  "max": zod.int().gt(componentCreateRequestSourceTwoDefinitionMediaBindingsItemCardinalityMaxExclusiveMin).max(componentCreateRequestSourceTwoDefinitionMediaBindingsItemCardinalityMaxMax).optional()
+}),
+  "mimeTypes": zod.array(zod.string().min(1)).min(1).optional(),
+  "mediaDemand": zod.union([zod.strictObject({
+  "mode": zod.literal("original")
+}),zod.strictObject({
+  "mode": zod.literal("tier"),
+  "tier": zod.union([zod.literal(256),zod.literal(512),zod.literal(1024),zod.literal(2048)])
+}),zod.strictObject({
+  "mode": zod.literal("auto"),
+  "maxProjectedWidthRatio": zod.number().gt(componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioExclusiveMin).max(componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedWidthRatioMax),
+  "maxProjectedHeightRatio": zod.number().gt(componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioExclusiveMin).max(componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMaxProjectedHeightRatioMax),
+  "minVisibleSourceWidthRatio": zod.number().gt(componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioExclusiveMin).max(componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioMax).default(componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceWidthRatioDefault),
+  "minVisibleSourceHeightRatio": zod.number().gt(componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioExclusiveMin).max(componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioMax).default(componentCreateRequestSourceTwoDefinitionMediaBindingsItemMediaDemandThreeMinVisibleSourceHeightRatioDefault)
+})]).optional()
+})).min(1).optional(),
+  "preview": zod.strictObject({
+  "params": zod.record(zod.string(), zod.unknown()).optional(),
+  "format": zod.strictObject({
+  "aspectRatio": zod.enum(['16:9', '9:16', '1:1', '4:5']),
+  "fps": zod.union([zod.literal(24),zod.literal(25),zod.literal(30),zod.literal(60)]).optional(),
+  "resolution": zod.enum(['hd', 'fhd', '4k']).optional(),
+  "platform": zod.string().optional()
+}).optional(),
+  "assets": zod.record(zod.string(), zod.union([zod.strictObject({
+  "url": zod.url().regex(componentCreateRequestSourceTwoDefinitionPreviewAssetsOneUrlRegExp),
+  "sha256": zod.string().regex(componentCreateRequestSourceTwoDefinitionPreviewAssetsOneSha256RegExp),
+  "mimeType": zod.string().min(1),
+  "frameRate": zod.number().gt(componentCreateRequestSourceTwoDefinitionPreviewAssetsOneFrameRateExclusiveMin).optional(),
+  "durationSec": zod.number().gt(componentCreateRequestSourceTwoDefinitionPreviewAssetsOneDurationSecExclusiveMin).optional()
+}),zod.strictObject({
+  "mediaId": zod.string().min(1).max(componentCreateRequestSourceTwoDefinitionPreviewAssetsTwoMediaIdMax),
+  "sha256": zod.string().regex(componentCreateRequestSourceTwoDefinitionPreviewAssetsTwoSha256RegExp),
+  "mimeType": zod.string().min(1),
+  "frameRate": zod.number().gt(componentCreateRequestSourceTwoDefinitionPreviewAssetsTwoFrameRateExclusiveMin).optional(),
+  "durationSec": zod.number().gt(componentCreateRequestSourceTwoDefinitionPreviewAssetsTwoDurationSecExclusiveMin).optional()
+})])).optional(),
+  "mediaBindings": zod.record(zod.string(), zod.array(zod.union([zod.strictObject({
+  "url": zod.url().regex(componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemOneUrlRegExp),
+  "sha256": zod.string().regex(componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemOneSha256RegExp),
+  "mimeType": zod.string().min(1),
+  "frameRate": zod.number().gt(componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemOneFrameRateExclusiveMin).optional(),
+  "durationSec": zod.number().gt(componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemOneDurationSecExclusiveMin).optional()
+}),zod.strictObject({
+  "mediaId": zod.string().min(1).max(componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemTwoMediaIdMax),
+  "sha256": zod.string().regex(componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemTwoSha256RegExp),
+  "mimeType": zod.string().min(1),
+  "frameRate": zod.number().gt(componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemTwoFrameRateExclusiveMin).optional(),
+  "durationSec": zod.number().gt(componentCreateRequestSourceTwoDefinitionPreviewMediaBindingsItemTwoDurationSecExclusiveMin).optional()
+})]))).optional()
+}).optional()
 })
+})])
 }).describe('POST /components body. Org/user are server-resolved; never accepted from the body.');
 
 export type ComponentCreateRequest = zod.input<typeof ComponentCreateRequest>;

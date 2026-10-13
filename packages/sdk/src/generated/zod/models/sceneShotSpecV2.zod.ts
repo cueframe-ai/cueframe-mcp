@@ -8,7 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { SceneShotSpecV2LayerDepth0 } from './sceneShotSpecV2LayerDepth0.zod';
+import { SceneShotSpecV2Schema0 } from './sceneShotSpecV2Schema0.zod';
 
 export const sceneShotSpecV2ReferenceSizeWidthMin = 16;
 export const sceneShotSpecV2ReferenceSizeWidthMax = 8192;
@@ -148,7 +148,7 @@ zod.number().min(sceneShotSpecV2BackdropFourAt1ItemMin).max(sceneShotSpecV2Backd
   "color": zod.union([zod.string().regex(sceneShotSpecV2BackdropFourStopsItemColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])])
 })).min(sceneShotSpecV2BackdropFourStopsMin).max(sceneShotSpecV2BackdropFourStopsMax)
 })]).default(sceneShotSpecV2BackdropDefault),
-  "layers": zod.array(SceneShotSpecV2LayerDepth0).min(1),
+  "layers": zod.array(SceneShotSpecV2Schema0).min(1),
   "animation": zod.array(zod.strictObject({
   "target": zod.union([zod.strictObject({
   "kind": zod.literal("camera")

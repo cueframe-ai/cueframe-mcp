@@ -31,7 +31,8 @@ export const GetCompositionParams = zod.object({
 })
 
 export const GetCompositionQueryParams = zod.object({
-  "componentExecutionVersions": zod.literal("3").optional().describe('Explicit accepted saved component execution protocol. Absent readers accept only the historical protocol.'),
+  "componentExecutionVersions": zod.union([zod.literal("3"),zod.tuple([zod.literal("3"),
+zod.literal("4")])]).optional().describe('The component execution versions this reader accepts, one parameter per version: 3, or 3 and 4 (native placements). Absent readers accept only the historical protocol.'),
   "includeDependencies": zod.enum(['true', 'false']).optional().describe('Return the immutable composition identity, project revision and shared v1 dependency expectations alongside the composition.'),
   "compositionId": zod.string().optional().describe('Read a SPECIFIC composition instead of the project\'s active one. Omit it and the active composition is returned. Pairs with `composition_id` on the apply op: an edit you can make to a second composition is one you can read back.')
 })

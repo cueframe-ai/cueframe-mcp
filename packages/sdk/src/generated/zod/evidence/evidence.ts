@@ -42,7 +42,7 @@ export const PreviewFrameJobBody = PreviewFrameRequest
 export const PreviewFrameJobResponse = JobEnqueueResponse
 
 /**
- * Queue a preview of ONE org-installed component. It returns the SAME content-addressed VP9-alpha motion clip the production render composites. Returns a jobId — wait_job(kind='preview') for the artifact. Compile/runtime failures land on the job terminal with the sanitized author-fixable message.
+ * Queue a preview of ONE org-installed native (version 4) component: a PNG of its middle frame, rendered by the same HyperFrames runtime as the production render. Returns a jobId — wait_job(kind='preview') for the image. Compile/runtime failures land on the job terminal with the sanitized author-fixable message.
  * @summary Render one component preview
  */
 export const PreviewComponentParams = zod.object({

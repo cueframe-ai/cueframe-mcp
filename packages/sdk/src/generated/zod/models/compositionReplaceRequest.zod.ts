@@ -10,8 +10,6 @@
 import * as zod from 'zod';
 import { Composition } from './composition.zod';
 
-export const compositionReplaceRequestOneComponentExecutionVersionsMax = 1;
-
 export const compositionReplaceRequestOneBuiltinSourcesItemScopeCollectionMax = 256;
 
 export const compositionReplaceRequestOneBuiltinSourcesItemComponentIdMax = 256;
@@ -24,7 +22,8 @@ export const compositionReplaceRequestOneExpectedBrandIdentityRegExp = new RegEx
 
 export const CompositionReplaceRequest = zod.union([zod.strictObject({
   "composition": Composition,
-  "componentExecutionVersions": zod.array(zod.literal(3)).min(1).max(compositionReplaceRequestOneComponentExecutionVersionsMax),
+  "componentExecutionVersions": zod.union([zod.tuple([zod.literal(3)]),zod.tuple([zod.literal(3),
+zod.literal(4)])]),
   "builtinSources": zod.array(zod.strictObject({
   "scope": zod.strictObject({
   "kind": zod.literal("builtin"),
@@ -32,7 +31,7 @@ export const CompositionReplaceRequest = zod.union([zod.strictObject({
 }),
   "componentId": zod.string().min(1).max(compositionReplaceRequestOneBuiltinSourcesItemComponentIdMax),
   "sourceVersionId": zod.string().regex(compositionReplaceRequestOneBuiltinSourcesItemSourceVersionIdRegExp),
-  "sourceVersion": zod.literal(3)
+  "sourceVersion": zod.union([zod.literal(3),zod.literal(4)])
 })).min(1).max(compositionReplaceRequestOneBuiltinSourcesMax).optional(),
   "expectedBrandIdentity": zod.string().regex(compositionReplaceRequestOneExpectedBrandIdentityRegExp).optional()
 }),Composition]);

@@ -331,7 +331,7 @@ export const ComponentListResponse = zod.union([LegacyComponentListResponse,zod.
 })]),
   "componentId": zod.string().min(1).max(componentListResponseTwoDataItemOneSourceComponentIdMax),
   "sourceVersionId": zod.string().regex(componentListResponseTwoDataItemOneSourceSourceVersionIdRegExp),
-  "sourceVersion": zod.literal(3)
+  "sourceVersion": zod.union([zod.literal(3),zod.literal(4)])
 }),
   "declaration": zod.strictObject({
   "state": zod.literal("v3"),
@@ -434,7 +434,7 @@ export const ComponentListResponse = zod.union([LegacyComponentListResponse,zod.
 })]),
   "componentId": zod.string().min(1).max(componentListResponseTwoDataItemTwoDefinitionComponentIdMax),
   "sourceVersionId": zod.string().regex(componentListResponseTwoDataItemTwoDefinitionSourceVersionIdRegExp),
-  "sourceVersion": zod.literal(3)
+  "sourceVersion": zod.union([zod.literal(3),zod.literal(4)])
 }),
   "presetVersionId": zod.string().regex(componentListResponseTwoDataItemTwoPresetVersionIdRegExp),
   "historicalDocument": zod.strictObject({
@@ -536,7 +536,7 @@ export const ComponentListResponse = zod.union([LegacyComponentListResponse,zod.
 })]),
   "componentId": zod.string().min(1).max(componentListResponseTwoDataItemThreeMemberSourcesItemComponentIdMax),
   "sourceVersionId": zod.string().regex(componentListResponseTwoDataItemThreeMemberSourcesItemSourceVersionIdRegExp),
-  "sourceVersion": zod.literal(3)
+  "sourceVersion": zod.union([zod.literal(3),zod.literal(4)])
 })).min(1),
   "equivalence": zod.enum(['unproven', 'verified'])
 })])),

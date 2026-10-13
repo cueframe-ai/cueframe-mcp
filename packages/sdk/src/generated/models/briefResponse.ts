@@ -15,8 +15,8 @@ import type { BriefQuote } from './briefQuote';
 import type { BriefResponseCaptions } from './briefResponseCaptions';
 import type { BriefResponseKind } from './briefResponseKind';
 import type { BriefResponseMotionStyle } from './briefResponseMotionStyle';
-import type { BriefResponseSeededGraphicsItem } from './briefResponseSeededGraphicsItem';
-import type { FormatSpec } from './formatSpec';
+import type { Format } from './format';
+import type { TimelineClip } from './timelineClip';
 
 export interface BriefResponse {
   id: string;
@@ -37,7 +37,7 @@ export interface BriefResponse {
   audience?: string;
   /** @maxLength 100 */
   platform?: string;
-  format?: FormatSpec;
+  format?: Format;
   /**
      * Target output duration. HONOR-OR-REFUSE: compose validates it against the beat-source window (±1.5s) and refuses a brief it cannot honor.
      * @maximum 3600
@@ -72,7 +72,7 @@ export interface BriefResponse {
      * Client-authored graphic clips the Director must carry VERBATIM: seeded into the design loop's base composition as LOCKED clips (never re-authored, never discarded).
      * @maxItems 16
      */
-  seededGraphics?: BriefResponseSeededGraphicsItem[];
+  seededGraphics?: TimelineClip[];
   /** @maxItems 8 */
   exclusions?: BriefExclusion[];
   gates?: BriefGates;
