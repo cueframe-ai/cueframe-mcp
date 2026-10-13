@@ -10,11 +10,8 @@
 import * as zod from 'zod';
 
 import {
-  ProjectContextResponse,
   ProjectCreateRequest,
-  ProjectListResponse,
-  ProjectPatchRequest,
-  ProjectResponse
+  ProjectPatchRequest
 } from '../models';
 
 
@@ -31,15 +28,11 @@ export const ListProjectsQueryParams = zod.object({
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.')
 })
 
-export const ListProjectsResponse = ProjectListResponse
-
 /**
  * Create a video project — the container for a composition (the editable timeline), its media, brand kit, and renders. Every other authoring call (import or generate media, apply composition ops, compose, render, export) takes this project's id. Set the output format here (aspectRatio, fps, resolution).
  * @summary Create a project
  */
 export const CreateProjectBody = ProjectCreateRequest
-
-export const CreateProjectResponse = ProjectResponse
 
 /**
  * Required permission: projects:read
@@ -48,8 +41,6 @@ export const CreateProjectResponse = ProjectResponse
 export const GetProjectParams = zod.object({
   "id": zod.string()
 })
-
-export const GetProjectResponse = ProjectResponse
 
 /**
  * Required permission: projects:write
@@ -61,8 +52,6 @@ export const PatchProjectParams = zod.object({
 
 export const PatchProjectBody = ProjectPatchRequest
 
-export const PatchProjectResponse = ProjectResponse
-
 /**
  * Required permission: projects:write
  * @summary Delete a project
@@ -71,8 +60,6 @@ export const DeleteProjectParams = zod.object({
   "id": zod.string()
 })
 
-export const DeleteProjectResponse = zod.void()
-
 /**
  * Everything an authoring agent needs to open a project, in ONE read: the active composition (with its format and markers hoisted), the org's media pool with a `hasTranscript` flag per item, the first transcribed item's word-timed transcript, and the brand kit bound to the project. Replaces the get_composition + get_media_context + get_profile opening sequence. A freshly created project reads back with `composition: null` — that is the empty state, not an error; 404 means the project doesn't exist for your org. Transcript BODIES are never inlined per media item — read another item's with GET /v1/media/{id}/transcript, and its faces/beat/word grids with GET /v1/media/{id}/context.
  * @summary One-call agent context: composition + media + transcript + brand
@@ -80,5 +67,3 @@ export const DeleteProjectResponse = zod.void()
 export const GetProjectContextParams = zod.object({
   "id": zod.string()
 })
-
-export const GetProjectContextResponse = ProjectContextResponse

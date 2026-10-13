@@ -10,10 +10,7 @@
 import * as zod from 'zod';
 
 import {
-  MuxJobResponse,
-  SessionCreateRequest,
-  SessionListResponse,
-  SessionResponse
+  SessionCreateRequest
 } from '../models';
 
 
@@ -30,15 +27,11 @@ export const ListSessionsQueryParams = zod.object({
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.')
 })
 
-export const ListSessionsResponse = SessionListResponse
-
 /**
  * Required permission: sessions:write
  * @summary Create a session
  */
 export const CreateSessionBody = SessionCreateRequest
-
-export const CreateSessionResponse = SessionResponse
 
 /**
  * Required permission: sessions:read
@@ -48,8 +41,6 @@ export const GetSessionParams = zod.object({
   "id": zod.string()
 })
 
-export const GetSessionResponse = SessionResponse
-
 /**
  * Required permission: sessions:write
  * @summary Delete a session
@@ -57,8 +48,6 @@ export const GetSessionResponse = SessionResponse
 export const DeleteSessionParams = zod.object({
   "id": zod.string()
 })
-
-export const DeleteSessionResponse = zod.void()
 
 /**
  * Required permission: sessions:write
@@ -68,8 +57,6 @@ export const TriggerMuxJobParams = zod.object({
   "id": zod.string()
 })
 
-export const TriggerMuxJobResponse = MuxJobResponse
-
 /**
  * Required permission: sessions:read
  * @summary Poll mux job status
@@ -77,5 +64,3 @@ export const TriggerMuxJobResponse = MuxJobResponse
 export const GetMuxJobParams = zod.object({
   "id": zod.string()
 })
-
-export const GetMuxJobResponse = MuxJobResponse

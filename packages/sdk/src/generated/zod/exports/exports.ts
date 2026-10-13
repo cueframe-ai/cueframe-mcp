@@ -10,8 +10,7 @@
 import * as zod from 'zod';
 
 import {
-  ExportCreateRequest,
-  ExportResponse
+  ExportCreateRequest
 } from '../models';
 
 
@@ -25,8 +24,6 @@ export const CreateFcpxmlExportParams = zod.object({
 
 export const CreateFcpxmlExportBody = ExportCreateRequest
 
-export const CreateFcpxmlExportResponse = ExportResponse
-
 /**
  * Export the project to Adobe Premiere Pro — eject the agent-authored edit into a professional NLE for human finishing, preserving clips, trims, and timeline structure. Async: poll GET /projects/:id/exports/:exportId for the download URL.
  * @summary Create a Premiere Pro export
@@ -37,8 +34,6 @@ export const CreatePremiereExportParams = zod.object({
 
 export const CreatePremiereExportBody = ExportCreateRequest
 
-export const CreatePremiereExportResponse = ExportResponse
-
 /**
  * Required permission: renders:read
  * @summary Get an export job
@@ -48,8 +43,6 @@ export const GetExportParams = zod.object({
   "exportId": zod.string()
 })
 
-export const GetExportResponse = ExportResponse
-
 /**
  * Required permission: renders:write
  * @summary Cancel an in-flight export
@@ -58,5 +51,3 @@ export const CancelExportParams = zod.object({
   "id": zod.string(),
   "exportId": zod.string()
 })
-
-export const CancelExportResponse = ExportResponse

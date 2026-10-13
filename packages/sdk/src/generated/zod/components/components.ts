@@ -10,16 +10,10 @@
 import * as zod from 'zod';
 
 import {
-  BuiltinComponentResolveResponse,
   ComponentCreateRequest,
-  ComponentListResponse,
   ComponentPatchRequest,
-  ComponentResponse,
-  ComponentSourceResponse,
   ComponentUpdateRequest,
-  ComponentUpdateResponse,
-  NativeUpgradeRequest,
-  NativeUpgradeResponse
+  NativeUpgradeRequest
 } from '../models';
 
 
@@ -32,8 +26,6 @@ export const RepinComponentParams = zod.object({
 })
 
 export const RepinComponentBody = NativeUpgradeRequest
-
-export const RepinComponentResponse = NativeUpgradeResponse
 
 /**
  * Required permission: projects:read
@@ -49,8 +41,6 @@ export const ResolveBuiltinComponentQueryParams = zod.object({
   "id": zod.string().min(1),
   "revision": zod.string().regex(resolveBuiltinComponentQueryRevisionRegExp)
 })
-
-export const ResolveBuiltinComponentResponse = BuiltinComponentResolveResponse
 
 /**
  * Discover the built-in primitive catalog (87 primitives + 7 scenes) plus your installed components. Narrow with facet filters (category, kind, tier, useCase, mood) or free-text (q / intent); when ANY filter is set, results are ordered recommended-tier-first. With NO `limit` the WHOLE (filtered) catalog returns in one page — pass `limit` only to page. Each entry carries a `placement` hint telling you exactly how to author it on the timeline.
@@ -75,15 +65,11 @@ export const ListCatalogQueryParams = zod.object({
   "after": zod.string().optional().describe('Opaque cursor from a previous page\'s nextCursor (forward-only).')
 })
 
-export const ListCatalogResponse = ComponentListResponse
-
 /**
  * Required permission: projects:write
  * @summary Author (create) a component
  */
 export const CreateComponentBody = ComponentCreateRequest
-
-export const CreateComponentResponse = ComponentResponse
 
 /**
  * Every placed clip renders the exact version it pins. Send `projectId`, `compositionId` and caller-observed `concurrency` to move that composition's placements to the new version in the same write; `repinned` reports them. Other placements keep rendering the previous version, and `placementsPinnedToPrevious` counts them across the org. For a single placement, update the library without projectId, then use apply_composition clip.update to install that exact immutable source pin on the chosen clip under observed dependency guards. Atomic all-use repin requires exact revision admission; unsupported guarded mode and no matching placements refuse the whole write.
@@ -95,8 +81,6 @@ export const UpdateComponentParams = zod.object({
 
 export const UpdateComponentBody = ComponentUpdateRequest
 
-export const UpdateComponentResponse = ComponentUpdateResponse
-
 /**
  * RFC 7396 merge patch: send only the fields you are changing. Every field you omit keeps the value it already had. Identical in effect to PUT, which merges the same way. Every placed clip renders the exact version it pins. Send `projectId`, `compositionId` and caller-observed `concurrency` to move that composition's placements to the new version in the same write; `repinned` reports them. Other placements keep rendering the previous version, and `placementsPinnedToPrevious` counts them across the org. For a single placement, update the library without projectId, then use apply_composition clip.update to install that exact immutable source pin on the chosen clip under observed dependency guards. Atomic all-use repin requires exact revision admission; unsupported guarded mode and no matching placements refuse the whole write.
  * @summary Patch an authored component
@@ -107,8 +91,6 @@ export const PatchComponentParams = zod.object({
 
 export const PatchComponentBody = ComponentPatchRequest
 
-export const PatchComponentResponse = ComponentUpdateResponse
-
 /**
  * Required permission: projects:read
  * @summary Get a component entry
@@ -116,8 +98,6 @@ export const PatchComponentResponse = ComponentUpdateResponse
 export const GetComponentParams = zod.object({
   "id": zod.string()
 })
-
-export const GetComponentResponse = ComponentResponse
 
 /**
  * Required permission: projects:read
@@ -134,5 +114,3 @@ export const GetComponentSourceQueryParams = zod.object({
   "builtinCollection": zod.enum(['native', 'curated-definitions']).optional(),
   "sourceVersionId": zod.string().regex(getComponentSourceQuerySourceVersionIdRegExp).optional()
 })
-
-export const GetComponentSourceResponse = ComponentSourceResponse

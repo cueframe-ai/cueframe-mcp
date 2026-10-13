@@ -11,10 +11,7 @@ import * as zod from 'zod';
 
 import {
   PreviewClipRequest,
-  RenderCreateRequest,
-  RenderListResponse,
-  RenderRefreshUrlResponse,
-  RenderResponse
+  RenderCreateRequest
 } from '../models';
 
 
@@ -27,8 +24,6 @@ export const CreateRenderParams = zod.object({
 })
 
 export const CreateRenderBody = RenderCreateRequest
-
-export const CreateRenderResponse = RenderResponse
 
 /**
  * Required permission: renders:read
@@ -48,8 +43,6 @@ export const ListProjectRendersQueryParams = zod.object({
   "status": zod.string().optional().describe('Comma-separated render statuses to include (e.g. `error,cancelled`). Omit for every status.')
 })
 
-export const ListProjectRendersResponse = RenderListResponse
-
 /**
  * A cheap, watchable MP4 of ONLY [fromSec, toSec) of the composition at preview quality (capped resolution, lighter encode). The way to judge motion — a cut, a transition, a component's animation — with real fidelity BEFORE paying for a full render. Async: returns a render job; wait_job(kind='render') or webhook render.completed for the URL. Meters the capture feature, never an exports credit.
  * @summary Render a scoped motion preview of the composition
@@ -60,8 +53,6 @@ export const PreviewClipParams = zod.object({
 
 export const PreviewClipBody = PreviewClipRequest
 
-export const PreviewClipResponse = RenderResponse
-
 /**
  * Required permission: renders:read
  * @summary Get a render job
@@ -70,8 +61,6 @@ export const GetRenderParams = zod.object({
   "id": zod.string(),
   "renderId": zod.string()
 })
-
-export const GetRenderResponse = RenderResponse
 
 /**
  * Required permission: renders:write
@@ -82,8 +71,6 @@ export const CancelRenderParams = zod.object({
   "renderId": zod.string()
 })
 
-export const CancelRenderResponse = RenderResponse
-
 /**
  * Required permission: renders:write
  * @summary Re-render against an existing renderJob's snapshot
@@ -92,8 +79,6 @@ export const RetryRenderParams = zod.object({
   "id": zod.string(),
   "renderId": zod.string()
 })
-
-export const RetryRenderResponse = RenderResponse
 
 /**
  * Required permission: renders:write
@@ -104,8 +89,6 @@ export const RefreshRenderUrlParams = zod.object({
   "renderId": zod.string()
 })
 
-export const RefreshRenderUrlResponse = RenderRefreshUrlResponse
-
 /**
  * Server-Sent Events stream emitting `progress`, `complete`, and `error` frames until the render reaches a terminal state. Required scope: renders:read
  * @summary Stream render status (SSE)
@@ -114,5 +97,3 @@ export const StreamRenderParams = zod.object({
   "id": zod.string(),
   "renderId": zod.string()
 })
-
-export const StreamRenderResponse = zod.unknown()

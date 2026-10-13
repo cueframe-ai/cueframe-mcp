@@ -10,9 +10,7 @@
 import * as zod from 'zod';
 
 import {
-  CriticCreateRequest,
-  CriticListResponse,
-  CriticResponse
+  CriticCreateRequest
 } from '../models';
 
 
@@ -22,14 +20,6 @@ import {
  */
 export const CreateCriticBody = CriticCreateRequest
 
-export const CreateCriticResponse = CriticResponse
-
-/**
- * Every enabled critic: id, label, tier, phase, floor, and reference media. Rubric text, rules, and evaluator URLs are write-only — registration config comes back, payloads don't.
- * @summary List registered critics (Profile family)
- */
-export const ListCriticsResponse = CriticListResponse
-
 /**
  * Required permission: projects:write
  * @summary Delete a registered critic
@@ -37,5 +27,3 @@ export const ListCriticsResponse = CriticListResponse
 export const DeleteCriticParams = zod.object({
   "criticId": zod.string()
 })
-
-export const DeleteCriticResponse = zod.void()

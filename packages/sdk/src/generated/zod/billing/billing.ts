@@ -10,10 +10,7 @@
 import * as zod from 'zod';
 
 import {
-  BillingPlansResponse,
-  CheckoutRequest,
-  CheckoutResponse,
-  UsageListResponse
+  CheckoutRequest
 } from '../models';
 
 
@@ -40,18 +37,8 @@ export const GetUsageQueryParams = zod.object({
   "to": zod.int().min(getUsageQueryToMin).max(getUsageQueryToMax).optional().describe('Period end, epoch milliseconds, EXCLUSIVE.')
 })
 
-export const GetUsageResponse = UsageListResponse
-
-/**
- * Returns every purchasable {tier, interval} and its billing catalog product id — discovery to read BEFORE POST /v1/billing/checkout so an agent requests a real plan/interval instead of guessing. `priceUsd` is best-effort (null if unavailable); `billingConfigured:false` flags an env without billing.
- * @summary List the plan catalog: tiers, intervals, product ids, prices
- */
-export const GetBillingPlansResponse = BillingPlansResponse
-
 /**
  * Body `{ plan, interval }` → returns a hosted Stripe checkout `url` to open in a browser to complete payment. Upgrades the CURRENT org (server-resolved from your key/identity, NEVER the body). Always a hosted URL — an existing saved card is NEVER charged without the human confirming on Stripe. `interval:"year"` selects the annual plan. Discover valid combos with GET /v1/billing/plans. Requires `billing:write`.
  * @summary Start a hosted Stripe checkout for a plan/interval
  */
 export const CreateCheckoutBody = CheckoutRequest
-
-export const CreateCheckoutResponse = CheckoutResponse

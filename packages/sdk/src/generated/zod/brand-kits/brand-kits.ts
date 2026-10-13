@@ -12,13 +12,8 @@ import * as zod from 'zod';
 import {
   BrandKitCreateRequest,
   BrandKitExemplarsRequest,
-  BrandKitExemplarsResponse,
-  BrandKitListResponse,
-  BrandKitResponse,
   ExemplarUploadsRequest,
-  ExemplarUploadsResponse,
-  ExtractBrandKitRequest,
-  JobEnqueueResponse
+  ExtractBrandKitRequest
 } from '../models';
 
 
@@ -35,23 +30,17 @@ export const ListBrandKitsQueryParams = zod.object({
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.')
 })
 
-export const ListBrandKitsResponse = BrandKitListResponse
-
 /**
  * Create or upsert a brand kit. Gated on the `brand_kits` boolean entitlement, which the FREE plan grants — brand-first authoring is deliberately never paywalled — so this is available to every account and costs no credits. A plan without it returns 402 billing_required (`details.featureId: "brand_kits"`). Discover the gate WITHOUT a failed round-trip via GET /v1/me — its `entitlements.brand_kits.included` tells you up front.
  * @summary Create (or upsert) a brand kit
  */
 export const CreateBrandKitBody = BrandKitCreateRequest
 
-export const CreateBrandKitResponse = BrandKitResponse
-
 /**
  * Queue brand-token extraction from a website URL — ASYNC: returns a 202 job receipt; poll GET /v1/jobs/{jobId} (or MCP wait_job kind=brand_kit_extract) for the tokens (colors, fonts, title, description) on the succeeded result. The service inspects the site under a 20-second limit and does NOT persist a kit (pass the result to POST /brand-kits). A blocked (private-network), non-2xx, non-HTML, or slow URL degrades to EMPTY token arrays on a SUCCEEDED terminal rather than erroring; succeeded extractions are reused for 5 minutes per URL.
  * @summary Extract brand tokens from a website URL
  */
 export const ExtractBrandKitBody = ExtractBrandKitRequest
-
-export const ExtractBrandKitResponse = JobEnqueueResponse
 
 /**
  * Required permission: projects:read
@@ -60,8 +49,6 @@ export const ExtractBrandKitResponse = JobEnqueueResponse
 export const GetBrandKitParams = zod.object({
   "id": zod.string()
 })
-
-export const GetBrandKitResponse = BrandKitResponse
 
 /**
  * Returns short-lived URLs for the kit's exemplar frames (the pixels the maker and judge condition on). Filter to one motif's evidence frames with `motifId`. Vision-budget-bounded consumers should keep `limit` small (default 6).
@@ -73,12 +60,8 @@ export const GetBrandKitExemplarsParams = zod.object({
 
 export const GetBrandKitExemplarsBody = BrandKitExemplarsRequest
 
-export const GetBrandKitExemplarsResponse = BrandKitExemplarsResponse
-
 /**
  * Returns presigned PUT URLs under this org's `brand-inspiration/…` prefix — the only namespace the brand-kit upsert accepts `exemplarKeys` from. PUT each curated reference frame (≤720px jpeg recommended — the frames become vision input downstream), then upsert the kit with the returned keys. This is the ingest door for agent-driven kit extraction (the `extracting-brand-kits` skill on GET /skills).
  * @summary Reserve presigned PUT slots for inspiration exemplar frames
  */
 export const CreateExemplarUploadsBody = ExemplarUploadsRequest
-
-export const CreateExemplarUploadsResponse = ExemplarUploadsResponse

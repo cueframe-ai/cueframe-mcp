@@ -24,10 +24,6 @@ export const OpenComposeSessionParams = zod.object({
 
 export const OpenComposeSessionBody = ComposeSessionOpenRequest
 
-export const OpenComposeSessionResponse = zod.object({
-  "sessionId": zod.string()
-})
-
 /**
  * Pure read: returns the composition currently held in the session's SCRATCH (what the author LLM has been editing over this session), NOT the project's active composition. The Director ensemble reads this back per candidate and returns it as the authored composition — the winner is saved downstream, so a candidate never commits its scratch to active. 404 when the session is unknown/foreign or has never written a scratch.
  * @summary Read the session's scratch composition
@@ -35,10 +31,6 @@ export const OpenComposeSessionResponse = zod.object({
 export const GetComposeSessionCompositionParams = zod.object({
   "id": zod.string(),
   "sessionId": zod.string()
-})
-
-export const GetComposeSessionCompositionResponse = zod.object({
-  "composition": zod.unknown()
 })
 
 /**
@@ -50,10 +42,6 @@ export const CloseComposeSessionParams = zod.object({
   "sessionId": zod.string()
 })
 
-export const CloseComposeSessionResponse = zod.object({
-  "ok": zod.boolean()
-})
-
 /**
  * Required permission: projects:write
  * @summary Commit the session scratch onto the project's active composition
@@ -61,8 +49,4 @@ export const CloseComposeSessionResponse = zod.object({
 export const CommitComposeSessionParams = zod.object({
   "id": zod.string(),
   "sessionId": zod.string()
-})
-
-export const CommitComposeSessionResponse = zod.object({
-  "etag": zod.string()
 })

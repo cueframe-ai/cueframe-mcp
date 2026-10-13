@@ -8,9 +8,7 @@
  * OpenAPI spec version: v1
  */
 import {
-  FontSearchRequest,
-  FontSearchResponse,
-  RenderFontsResponse
+  FontSearchRequest
 } from '../models';
 
 
@@ -19,11 +17,3 @@ import {
  * @summary Search web font families by name/style
  */
 export const SearchFontsBody = FontSearchRequest
-
-export const SearchFontsResponse = FontSearchResponse
-
-/**
- * The renderer's admitted font set: per family the exact name authoring accepts, the weight ranges a shipped file declares, the styles bytes exist for, the caption default weights, and whether the bytes are bundled or an aliased metric-compatible stand-in. Choose from here and validate_composition will not refuse the face. Unlike POST /fonts/search (which searches the GOOGLE catalog) this is what the render page can rasterize. `manifestVersion` identifies the exact table and moves only when the admitted set does. Covers the BUNDLED set only — a brand kit's sealed faces are per-org and per-render.
- * @summary List the font faces the renderer can actually draw
- */
-export const ListRenderFontsResponse = RenderFontsResponse

@@ -9,16 +9,6 @@
  */
 import * as zod from 'zod';
 
-import {
-  SkillListResponse
-} from '../models';
-
-
-/**
- * Returns the agent skills CueFrame publishes (e.g. `cueframe-cli`). Metadata only — fetch the markdown body from GET /skills/{name}. Unauthenticated, like /openapi.json.
- * @summary List available CueFrame agent skills
- */
-export const ListSkillsResponse = SkillListResponse
 
 /**
  * Returns the raw SKILL.md for the named skill as `text/markdown`, ready to load into an agent. 404 if the skill name is unknown. Unauthenticated.
@@ -27,5 +17,3 @@ export const ListSkillsResponse = SkillListResponse
 export const GetSkillParams = zod.object({
   "name": zod.string()
 })
-
-export const GetSkillResponse = zod.unknown()

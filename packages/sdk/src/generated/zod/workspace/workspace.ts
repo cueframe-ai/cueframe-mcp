@@ -7,8 +7,6 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import * as zod from 'zod';
-
 import {
   WorkspaceCreateRequest
 } from '../models';
@@ -19,8 +17,3 @@ import {
  * @summary Mint a workspace (project + imported source) in one call
  */
 export const CreateWorkspaceBody = WorkspaceCreateRequest
-
-export const CreateWorkspaceResponse = zod.object({
-  "projectId": zod.string(),
-  "mediaId": zod.string()
-})

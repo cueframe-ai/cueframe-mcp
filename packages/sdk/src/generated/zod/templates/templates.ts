@@ -11,15 +11,9 @@ import * as zod from 'zod';
 
 import {
   TemplateApplyRequest,
-  TemplateApplyResponse,
   TemplateInstantiateRequest,
-  TemplateInstantiationJobResponse,
-  TemplateListResponse,
   TemplatePublishRequest,
-  TemplateRenderCreateRequest,
-  TemplateRenderResponse,
-  TemplateResponse,
-  TemplateValidateResponse
+  TemplateRenderCreateRequest
 } from '../models';
 
 
@@ -28,8 +22,6 @@ import {
  * @summary Publish a template document, or import a public catalog slug
  */
 export const PublishTemplateBody = TemplatePublishRequest
-
-export const PublishTemplateResponse = TemplateValidateResponse
 
 /**
  * Required permission: projects:read
@@ -44,8 +36,6 @@ export const ListTemplatesQueryParams = zod.object({
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.')
 })
 
-export const ListTemplatesResponse = TemplateListResponse
-
 /**
  * By org template id or public slug. A public slug this org never used is read from the catalog and stored nowhere.
  * @summary Read a template document
@@ -54,8 +44,6 @@ export const GetTemplateParams = zod.object({
   "id": zod.string()
 })
 
-export const GetTemplateResponse = TemplateResponse
-
 /**
  * Existing renders keep their snapshots and share links; new renders and applies of this id answer 404.
  * @summary Delete a template
@@ -63,8 +51,6 @@ export const GetTemplateResponse = TemplateResponse
 export const DeleteTemplateParams = zod.object({
   "id": zod.string()
 })
-
-export const DeleteTemplateResponse = zod.void()
 
 /**
  * Required permission: projects:write
@@ -76,8 +62,6 @@ export const InstantiateTemplateParams = zod.object({
 
 export const InstantiateTemplateBody = TemplateInstantiateRequest
 
-export const InstantiateTemplateResponse = TemplateInstantiationJobResponse
-
 /**
  * Required permission: projects:read
  * @summary Read template preparation status
@@ -85,8 +69,6 @@ export const InstantiateTemplateResponse = TemplateInstantiationJobResponse
 export const GetTemplateJobParams = zod.object({
   "jobId": zod.string()
 })
-
-export const GetTemplateJobResponse = TemplateInstantiationJobResponse
 
 /**
  * Required permission: projects:write
@@ -96,8 +78,6 @@ export const RetryTemplateJobParams = zod.object({
   "jobId": zod.string()
 })
 
-export const RetryTemplateJobResponse = TemplateInstantiationJobResponse
-
 /**
  * Required permission: projects:write
  * @summary Cancel template preparation
@@ -105,8 +85,6 @@ export const RetryTemplateJobResponse = TemplateInstantiationJobResponse
 export const CancelTemplateJobParams = zod.object({
   "jobId": zod.string()
 })
-
-export const CancelTemplateJobResponse = TemplateInstantiationJobResponse
 
 /**
  * Bind the template's parameters and write the result as the project's timeline, in one Studio command: the server installs the template's components, writes its brand kit (or the preset's, or `brandKitId`'s) onto the project and saves the bound composition. Media values are `{ mediaId }` (must be complete), `{ url }` (an https URL imported once per org) or `{ sample: true }` (the parameter's pinned sample). While an import runs the answer is 202 with `pendingMediaIds`; call again once they are complete. A public slug is imported into this org on first use. Builtin packages require the documentSha256 returned by resolveBuiltinComponent and insert with startTime/idPrefix, expectedRevision and commandId; insertion preserves existing tracks.
@@ -118,8 +96,6 @@ export const ApplyTemplateParams = zod.object({
 
 export const ApplyTemplateBody = TemplateApplyRequest
 
-export const ApplyTemplateResponse = TemplateApplyResponse
-
 /**
  * Bind the template's parameters and render the result under the org's system project, without touching any project of yours: one row per request, rendered through the render pipeline and reachable at `shareUrl` (302 to the MP4 while it is complete) and `posterUrl`. Media values are `{ mediaId }` (must be complete), `{ url }` (https, imported once per org) or `{ sample: true }`; imports are awaited by the render. Priced as a render; an x402 caller's render expires with their workspace. Send an Idempotency-Key per row to make retries safe.
  * @summary Render a template to an MP4 with a share link
@@ -130,8 +106,6 @@ export const CreateTemplateRenderParams = zod.object({
 
 export const CreateTemplateRenderBody = TemplateRenderCreateRequest
 
-export const CreateTemplateRenderResponse = TemplateRenderResponse
-
 /**
  * Required permission: renders:read
  * @summary Read a template render
@@ -140,8 +114,6 @@ export const GetTemplateRenderParams = zod.object({
   "id": zod.string(),
   "renderId": zod.string()
 })
-
-export const GetTemplateRenderResponse = TemplateRenderResponse
 
 /**
  * Before the render job exists the workflow is cancelled and the row closed; after, the render job's own cancel runs and the row mirrors it.
@@ -152,8 +124,6 @@ export const CancelTemplateRenderParams = zod.object({
   "renderId": zod.string()
 })
 
-export const CancelTemplateRenderResponse = TemplateRenderResponse
-
 /**
  * The share link and poster answer 404 from now on; the render's output is kept. A render still in flight is cancelled first.
  * @summary Revoke a template render's share link
@@ -162,5 +132,3 @@ export const RevokeTemplateRenderParams = zod.object({
   "id": zod.string(),
   "renderId": zod.string()
 })
-
-export const RevokeTemplateRenderResponse = TemplateRenderResponse

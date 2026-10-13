@@ -9,11 +9,6 @@
  */
 import * as zod from 'zod';
 
-import {
-  HealthResponse,
-  WhoamiResponse
-} from '../models';
-
 
 /**
  * Shallow (default) returns 200 with a minimal liveness payload for load balancers. Append `?deep=1` to exercise component bindings (rate-limiter). Unauthenticated.
@@ -21,20 +16,4 @@ import {
  */
 export const HealthQueryParams = zod.object({
   "deep": zod.literal("1").optional().describe('Pass `1` to run the deep dependency checks instead of the shallow liveness probe.')
-})
-
-export const HealthResponseSchema = HealthResponse
-
-/**
- * Echoes the `orgId`, `permissions`, and key metadata derived from the Authorization header (or x402 payment). Useful for SDKs to confirm which org a key is bound to and what permissions it carries.
- * @summary Return the caller identity + permissions
- */
-export const WhoamiResponseSchema = WhoamiResponse
-
-/**
- * Returns the generated OpenAPI 3.1 document. Unauthenticated so SDK tooling (Orval, Postman, redocly) can fetch without a key. Cacheable for 5 minutes.
- * @summary OpenAPI 3.1 document for the v1 API
- */
-export const GetOpenAPISpecResponse = zod.looseObject({
-
 })
