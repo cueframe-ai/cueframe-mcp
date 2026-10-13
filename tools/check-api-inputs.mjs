@@ -1,19 +1,13 @@
 #!/usr/bin/env node
 // Proves api/{openapi,scene-schema,scene-examples}.json came from ONE private sync before any generator touches them.
 //
-// Vendoring rewrites api/openapi.json's scene components FROM api/scene-schema.json, so comparing the two
-// afterwards proves nothing. The sync manifest is the independent witness: it records the sha256 of each
-// file as the sync wrote it — openapi.json BEFORE the toolkit vendors the scene schema into it.
-//
-// Scope: the three api inputs against the manifest, nothing more. The vendored SceneShotSpecV2LayerDepth* /
-// SceneShotSpecV2JsonValue components in openapi.json are vendoring OUTPUT, regenerated from scene-schema.json by
-// the next step of generate:api-consumers and gated by check:api-consumer-drift; this check discards them and
-// proves only the sync's un-vendored content.
+// The sync manifest is the independent witness: it records the sha256 of each file as the sync wrote it, and
+// the toolkit ships those files as written (openapi.json carries the kernel's own scene components, which
+// resolve as they are).
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { isVendoredSceneSpec, unvendoredSerializations } from './vendor-scene-schema.mjs';
 
 export const SYNCED_FILES = ['openapi.json', 'scene-schema.json', 'scene-examples.json'];
 
@@ -48,28 +42,6 @@ export function checkApiInputs(root) {
     if (!expected) { problems.push(`${name}: not in the sync manifest`); continue; }
     let text;
     try { text = readFileSync(resolve(root, 'api', name), 'utf8'); } catch { problems.push(`${name}: missing`); continue; }
-    if (name === 'openapi.json') {
-      // The sync records openapi.json BEFORE vendoring. A freshly synced file hashes as is; a vendored one is
-      // compared through its un-vendored serializations (vendoring re-appends SceneShotSpecV2, so the
-      // sync's position for it has to be recovered by trial — see tools/vendor-scene-schema.mjs).
-      const spec = JSON.parse(text);
-      let matched = !isVendoredSceneSpec(spec) && sha(text) === expected;
-      if (!matched && isVendoredSceneSpec(spec)) {
-        try {
-          for (const { text: candidate } of unvendoredSerializations(spec)) {
-            if (sha(candidate) === expected) { matched = true; break; }
-          }
-        } catch (error) {
-          // A half-vendored document (the chain present, the root gone) is a problem to report, not a crash.
-          problems.push(`${name}: ${error.message}`);
-          continue;
-        }
-      }
-      if (!matched) {
-        problems.push(`${name}: sha256 of the un-vendored document does not match the sync manifest (${expected.slice(0, 12)}…). The three api/*.json files must come from one run of the private sync (${provenance}).`);
-      }
-      continue;
-    }
     if (sha(text) !== expected) {
       problems.push(`${name}: sha256 ${sha(text).slice(0, 12)}… does not match the sync manifest (${expected.slice(0, 12)}…). The three api/*.json files must come from one run of the private sync (${provenance}).`);
     }

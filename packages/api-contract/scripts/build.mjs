@@ -6,7 +6,6 @@ import { fileURLToPath } from "node:url";
 
 import { checkApiInputs } from "../../../tools/check-api-inputs.mjs";
 import { checkPublicOpenAPI } from "../../../tools/check-openapi-public.mjs";
-import { isVendoredSceneSpec } from "../../../tools/vendor-scene-schema.mjs";
 
 const packageRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const repositoryRoot = join(packageRoot, "..", "..");
@@ -24,14 +23,6 @@ const sync = JSON.parse(api("contract-manifest.json"));
 const spec = JSON.parse(specBytes);
 const surface = JSON.parse(surfaceBytes);
 
-// Consumers get the VENDORED document: the sync's form carries SceneShotSpecV2 with $refs to recursion
-// carriers it deleted, which orval (and any other resolver) cannot follow. generate:api-consumers
-// vendors api/openapi.json in place; a tree where the sync ran but the generators did not must not ship.
-if (!isVendoredSceneSpec(spec)) {
-  throw new Error(
-    "api/openapi.json is the sync's un-vendored form; run `pnpm generate:api-consumers` before building the contract package.",
-  );
-}
 // The package version IS the contract version. The private sync may stamp the version it was run against
 // into the manifest (one contract chain, 2026-10-07); when it does, the two must agree.
 if (sync.contractVersion !== undefined && sync.contractVersion !== contractVersion) {
@@ -57,7 +48,7 @@ const manifest = {
   privateCommit: sync.privateCommit,
   ...(sync.privateSource ? { privateSource: sync.privateSource } : {}),
   ...(sync.kernelArtifact ? { kernelArtifact: sync.kernelArtifact } : {}),
-  // As the sync recorded them: openapi.json BEFORE the toolkit vendored the scene schema into it.
+  // As the sync recorded them.
   syncedFiles,
 };
 // The sync manifest as written, plus the version this package publishes it under.

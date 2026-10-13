@@ -35,15 +35,14 @@ private CueFrame API ──sync──▶ cueframe-ai/cueframe-mcp: api/*.json �
    `api/contract-manifest.json` into this repository, from one kernel build.
    The manifest records the kernel version, the private commit and the sha256
    of each file as written.
-2. This repository vendors the scene schema into `openapi.json` as named,
-   depth-capped components (the sync's form carries `$ref`s a resolver cannot
-   follow), regenerates the SDK from the result, and commits all of it.
+2. `openapi.json` carries the kernel's own OpenAPI components (`Composition`,
+   `CompositionOp`, `SceneShotSpecV2` and its recursive parts, ...) verbatim.
+   This repository regenerates the SDK from it and commits both.
    `api/public-surface.json`, the reviewed operation inventory, is maintained
    here.
 3. `pnpm --filter @cueframe/api-contract build` copies the five `api/*.json`
-   files into `dist/` as they are committed (so the vendored document; the
-   build refuses the un-vendored form) and writes `manifest.json`, `index.js`
-   and `index.d.ts`.
+   files into `dist/` as they are committed and writes `manifest.json`,
+   `index.js` and `index.d.ts`.
 4. Everything else reads the npm package: the application repository's MCP
    tool, composition-op and scene-contract generators and their tests, and any
    third party. Nothing reads `api/` out of a second checkout.

@@ -4,14 +4,7 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:f
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createHash } from 'node:crypto';
 import { checkApiInputs } from './check-api-inputs.mjs';
-import {
-  CANONICAL_SCENE_SCHEMA,
-  loadCanonicalSceneSchema,
-  unvendoredSerializations,
-  vendorSceneSchema,
-} from './vendor-scene-schema.mjs';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -35,22 +28,6 @@ test('the committed inputs pass as one sync', () => {
   assert.deepEqual(result.problems, []);
   assert.equal(result.ok, true);
   assert.match(result.manifest.kernelVersion, /^\d+\.\d+\.\d+/);
-});
-
-test('a freshly synced (un-vendored) openapi.json passes too, before the toolkit vendors it', () => {
-  const result = withApiCopy(({ path, readJson }) => {
-    // Rebuild the sync's form from the committed, vendored document: the check is what runs first
-    // in generate:api-consumers, i.e. on exactly this file.
-    const expected = readJson('contract-manifest.json').files['openapi.json'];
-    for (const { text } of unvendoredSerializations(readJson('openapi.json'))) {
-      if (createHash('sha256').update(text).digest('hex') === expected) {
-        writeFileSync(path('openapi.json'), text);
-        return;
-      }
-    }
-    assert.fail('no un-vendoring reproduced the manifest hash');
-  });
-  assert.deepEqual(result.problems, []);
 });
 
 test('scene-schema.json with one description changed fails, naming scene-schema.json', () => {
@@ -113,7 +90,7 @@ test('source snapshot base must match the private commit', () => {
   assert.equal(result.ok, false);
 });
 
-test('openapi.json edited outside the scene components fails, naming openapi.json', () => {
+test('openapi.json with one edit fails, naming openapi.json', () => {
   const result = withApiCopy(({ readJson, writeJson }) => {
     const spec = readJson('openapi.json');
     spec.info.description = `${spec.info.description ?? ''} (tampered)`;
@@ -121,22 +98,5 @@ test('openapi.json edited outside the scene components fails, naming openapi.jso
   });
   assert.equal(result.ok, false);
   assert.equal(result.problems.length, 1);
-  assert.match(result.problems[0], /^openapi\.json: sha256 of the un-vendored document does not match the sync manifest/);
-});
-
-test('re-vendoring the committed openapi.json from api/scene-schema.json is a no-op', () => {
-  const spec = JSON.parse(readFileSync(resolve(REPO_ROOT, 'api/openapi.json'), 'utf8'));
-  const canonical = loadCanonicalSceneSchema(resolve(REPO_ROOT, CANONICAL_SCENE_SCHEMA));
-  assert.deepEqual(vendorSceneSchema(spec, canonical), spec);
-});
-
-test('openapi.json with the vendored chain but no SceneShotSpecV2 root reports a problem, not a stack trace', () => {
-  const result = withApiCopy(({ readJson, writeJson }) => {
-    const spec = readJson('openapi.json');
-    delete spec.components.schemas.SceneShotSpecV2;
-    writeJson('openapi.json', spec);
-  });
-  assert.equal(result.ok, false);
-  assert.equal(result.problems.length, 1);
-  assert.match(result.problems[0], /^openapi\.json: The spec does not carry the vendored scene components/);
+  assert.match(result.problems[0], /^openapi\.json: sha256 .* does not match the sync manifest/);
 });
