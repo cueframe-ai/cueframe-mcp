@@ -236,6 +236,54 @@
           "aspectRatio"
         ]
       },
+      "BlankComponentSourceV4": {
+        "description": "The blank native (version 4) component source every scaffold starts from. Rename it by setting componentId and the template root's data-composition-id together.",
+        "const": {
+          "version": 4,
+          "componentId": "blank-component",
+          "template": "<template><div id=\"root\" data-composition-id=\"blank-component\" data-width=\"1920\" data-height=\"1080\" data-no-timeline data-composition-variables='[{\"id\":\"background\",\"type\":\"color\",\"label\":\"Background\",\"default\":\"#101014\"}]'><div data-cf-scene></div></div><script>\nconst { h, MediaTileScene } = __cfScene;\nfunction Blank({ params }) {\n  return h(MediaTileScene, { streams: {}, tiles: [], background: params.background ?? '#101014' });\n}\n__cfScene.mount({ root: document.getElementById('root'), component: Blank, variables: __hyperframes.getVariables() });\n</script></template>",
+          "manifest": {
+            "version": 4,
+            "runtime": "hyperframes",
+            "hfContract": 1,
+            "kind": "scene",
+            "assets": {},
+            "graphics": {
+              "api": "webgl2",
+              "required": true,
+              "accelerationPreference": "software-allowed"
+            },
+            "alphaPolicy": "allows-opaque"
+          },
+          "definition": {
+            "inputSchema": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "background": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "default": "#101014",
+                  "title": "Background"
+                }
+              }
+            },
+            "defaults": {},
+            "brandBindings": [],
+            "timing": {
+              "defaultDuration": {
+                "frames": 90,
+                "fps": 30
+              }
+            },
+            "capabilities": [
+              {
+                "kind": "clip"
+              }
+            ]
+          }
+        }
+      },
       "CompositionReplaceRequest": {
         "anyOf": [
           {
@@ -3520,7 +3568,7 @@
               "effects"
             ],
             "additionalProperties": false,
-            "description": "Set (or CLEAR, with `effects: []`) a clip's EFFECT channel — the registered effect primitives stacked onto that clip, each `{ primitiveId, params? }`. WHOLESALE: the array REPLACES the clip's current effects, so send the full stack (read the clip first to add one). This is the ONLY way to change effects on an existing clip — do NOT reach for a `clip.update` patch, whose top-level merge is the source-clobbering footgun documented above."
+            "description": "Set (or CLEAR, with `effects: []`) a clip's EFFECT channel — the pinned component clip wrappers stacked onto that clip, each `{id, component, window}`: a unique `id`, the wrapper component's execution pin as `component`, and `window: {startTime, duration}` in seconds. The built-in primitive effects were removed: a stored one reads, and save and render refuse it (`effect_retired`), so clear it with `effects: []`. WHOLESALE: the array REPLACES the clip's current effects, so send the full stack (read the clip first to add one). This is the ONLY way to change effects on an existing clip — do NOT reach for a `clip.update` patch, whose top-level merge is the source-clobbering footgun documented above."
           },
           {
             "type": "object",
@@ -11202,22 +11250,1763 @@
           "sourceSnapshot": {
             "anyOf": [
               {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "number",
+                        "const": 3
+                      },
+                      "componentId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+                      },
+                      "tsxSource": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 8000000
+                      },
+                      "manifest": {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "number",
+                            "const": 2
+                          },
+                          "assets": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "image",
+                                    "video",
+                                    "audio",
+                                    "data",
+                                    "visual"
+                                  ]
+                                },
+                                "required": {
+                                  "type": "boolean"
+                                },
+                                "mimeTypes": {
+                                  "minItems": 1,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                },
+                                "mediaDemand": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "original"
+                                        }
+                                      },
+                                      "required": [
+                                        "mode"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "tier"
+                                        },
+                                        "tier": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "const": 256
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 512
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 1024
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 2048
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "mode",
+                                        "tier"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "auto"
+                                        },
+                                        "maxProjectedWidthRatio": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 64
+                                        },
+                                        "maxProjectedHeightRatio": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 64
+                                        },
+                                        "minVisibleSourceWidthRatio": {
+                                          "default": 1,
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 1
+                                        },
+                                        "minVisibleSourceHeightRatio": {
+                                          "default": 1,
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 1
+                                        }
+                                      },
+                                      "required": [
+                                        "mode",
+                                        "maxProjectedWidthRatio",
+                                        "maxProjectedHeightRatio",
+                                        "minVisibleSourceWidthRatio",
+                                        "minVisibleSourceHeightRatio"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ],
+                                  "type": "object"
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "required"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "graphics": {
+                            "type": "object",
+                            "properties": {
+                              "api": {
+                                "type": "string",
+                                "enum": [
+                                  "canvas2d",
+                                  "webgl",
+                                  "webgl2",
+                                  "webgpu"
+                                ]
+                              },
+                              "required": {
+                                "type": "boolean",
+                                "const": true
+                              },
+                              "accelerationPreference": {
+                                "type": "string",
+                                "enum": [
+                                  "hardware-preferred",
+                                  "software-allowed"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "api",
+                              "required",
+                              "accelerationPreference"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "alphaPolicy": {
+                            "type": "string",
+                            "enum": [
+                              "requires-transparency",
+                              "allows-opaque"
+                            ]
+                          },
+                          "sceneShot": {
+                            "type": "object",
+                            "properties": {
+                              "version": {
+                                "type": "number",
+                                "const": 2
+                              }
+                            },
+                            "required": [
+                              "version"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "visualMedia": {
+                            "type": "object",
+                            "properties": {
+                              "version": {
+                                "type": "number",
+                                "const": 1
+                              }
+                            },
+                            "required": [
+                              "version"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "version",
+                          "assets",
+                          "graphics",
+                          "alphaPolicy"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "definition": {
+                        "type": "object",
+                        "properties": {
+                          "inputSchema": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "defaults": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "brandBindings": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "propPath": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                },
+                                "cssVar": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                },
+                                "fallback": {
+                                  "type": "string"
+                                },
+                                "brandKitPath": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                }
+                              },
+                              "required": [
+                                "propPath",
+                                "cssVar"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "timing": {
+                            "type": "object",
+                            "properties": {
+                              "defaultDuration": {
+                                "type": "object",
+                                "properties": {
+                                  "frames": {
+                                    "type": "integer",
+                                    "exclusiveMinimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "fps": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "frames",
+                                  "fps"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minDurationSec": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                              },
+                              "maxDurationSec": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                              }
+                            },
+                            "required": [
+                              "defaultDuration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "capabilities": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "clip"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "cut-transition"
+                                    },
+                                    "protocol": {
+                                      "type": "string",
+                                      "const": "per-child"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "protocol"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "content-slots"
+                                    },
+                                    "slots": {
+                                      "minItems": 1,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "name": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 128
+                                          },
+                                          "min": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 9007199254740991
+                                          },
+                                          "max": {
+                                            "type": "integer",
+                                            "exclusiveMinimum": 0,
+                                            "maximum": 9007199254740991
+                                          },
+                                          "ownership": {
+                                            "type": "string",
+                                            "enum": [
+                                              "reference",
+                                              "exclusive"
+                                            ]
+                                          },
+                                          "sizing": {
+                                            "type": "string",
+                                            "enum": [
+                                              "canvas",
+                                              "container"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "name",
+                                          "min",
+                                          "max",
+                                          "ownership",
+                                          "sizing"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "slots"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "clip-wrapper"
+                                    },
+                                    "ordering": {
+                                      "type": "string",
+                                      "enum": [
+                                        "any",
+                                        "innermost"
+                                      ]
+                                    },
+                                    "acceptsWrappedTargets": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "ordering",
+                                    "acceptsWrappedTargets"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "global-wrapper"
+                                    },
+                                    "scope": {
+                                      "type": "string",
+                                      "const": "media-lanes"
+                                    },
+                                    "ordering": {
+                                      "type": "string",
+                                      "enum": [
+                                        "any",
+                                        "innermost"
+                                      ]
+                                    },
+                                    "acceptsWrappedTargets": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "scope",
+                                    "ordering",
+                                    "acceptsWrappedTargets"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "mediaBindings": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                },
+                                "propPath": {
+                                  "minItems": 1,
+                                  "maxItems": 16,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 128
+                                  }
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "image",
+                                    "video",
+                                    "visual"
+                                  ]
+                                },
+                                "collection": {
+                                  "type": "string",
+                                  "enum": [
+                                    "scalar",
+                                    "array"
+                                  ]
+                                },
+                                "cardinality": {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "max": {
+                                      "type": "integer",
+                                      "exclusiveMinimum": 0,
+                                      "maximum": 9007199254740991
+                                    }
+                                  },
+                                  "required": [
+                                    "min"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "mimeTypes": {
+                                  "minItems": 1,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                },
+                                "mediaDemand": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "original"
+                                        }
+                                      },
+                                      "required": [
+                                        "mode"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "tier"
+                                        },
+                                        "tier": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "const": 256
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 512
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 1024
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 2048
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "mode",
+                                        "tier"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "auto"
+                                        },
+                                        "maxProjectedWidthRatio": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 64
+                                        },
+                                        "maxProjectedHeightRatio": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 64
+                                        },
+                                        "minVisibleSourceWidthRatio": {
+                                          "default": 1,
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 1
+                                        },
+                                        "minVisibleSourceHeightRatio": {
+                                          "default": 1,
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 1
+                                        }
+                                      },
+                                      "required": [
+                                        "mode",
+                                        "maxProjectedWidthRatio",
+                                        "maxProjectedHeightRatio",
+                                        "minVisibleSourceWidthRatio",
+                                        "minVisibleSourceHeightRatio"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ],
+                                  "type": "object"
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "propPath",
+                                "kind",
+                                "collection",
+                                "cardinality"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "preview": {
+                            "type": "object",
+                            "properties": {
+                              "params": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string"
+                                },
+                                "additionalProperties": {}
+                              },
+                              "format": {
+                                "type": "object",
+                                "properties": {
+                                  "aspectRatio": {
+                                    "type": "string",
+                                    "enum": [
+                                      "16:9",
+                                      "9:16",
+                                      "1:1",
+                                      "4:5"
+                                    ]
+                                  },
+                                  "fps": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "const": 24
+                                      },
+                                      {
+                                        "type": "number",
+                                        "const": 25
+                                      },
+                                      {
+                                        "type": "number",
+                                        "const": 30
+                                      },
+                                      {
+                                        "type": "number",
+                                        "const": 60
+                                      }
+                                    ]
+                                  },
+                                  "resolution": {
+                                    "type": "string",
+                                    "enum": [
+                                      "hd",
+                                      "fhd",
+                                      "4k"
+                                    ]
+                                  },
+                                  "platform": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "aspectRatio"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "assets": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                },
+                                "additionalProperties": {
+                                  "anyOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "url": {
+                                          "type": "string",
+                                          "format": "uri",
+                                          "pattern": "^https:\\/\\/.*"
+                                        },
+                                        "sha256": {
+                                          "type": "string",
+                                          "pattern": "^[a-f0-9]{64}$"
+                                        },
+                                        "mimeType": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        },
+                                        "frameRate": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0
+                                        },
+                                        "durationSec": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "url",
+                                        "sha256",
+                                        "mimeType"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mediaId": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 128
+                                        },
+                                        "sha256": {
+                                          "type": "string",
+                                          "pattern": "^[a-f0-9]{64}$"
+                                        },
+                                        "mimeType": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        },
+                                        "frameRate": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0
+                                        },
+                                        "durationSec": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "mediaId",
+                                        "sha256",
+                                        "mimeType"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ]
+                                }
+                              },
+                              "mediaBindings": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                },
+                                "additionalProperties": {
+                                  "type": "array",
+                                  "items": {
+                                    "anyOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "url": {
+                                            "type": "string",
+                                            "format": "uri",
+                                            "pattern": "^https:\\/\\/.*"
+                                          },
+                                          "sha256": {
+                                            "type": "string",
+                                            "pattern": "^[a-f0-9]{64}$"
+                                          },
+                                          "mimeType": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          },
+                                          "frameRate": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                          },
+                                          "durationSec": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                          }
+                                        },
+                                        "required": [
+                                          "url",
+                                          "sha256",
+                                          "mimeType"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "mediaId": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 128
+                                          },
+                                          "sha256": {
+                                            "type": "string",
+                                            "pattern": "^[a-f0-9]{64}$"
+                                          },
+                                          "mimeType": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          },
+                                          "frameRate": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                          },
+                                          "durationSec": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                          }
+                                        },
+                                        "required": [
+                                          "mediaId",
+                                          "sha256",
+                                          "mimeType"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "inputSchema",
+                          "defaults",
+                          "brandBindings",
+                          "timing",
+                          "capabilities"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "componentId",
+                      "tsxSource",
+                      "manifest",
+                      "definition"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "number",
+                        "const": 4
+                      },
+                      "componentId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+                      },
+                      "template": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 2000000
+                      },
+                      "manifest": {
+                        "type": "object",
+                        "properties": {
+                          "version": {
+                            "type": "number",
+                            "const": 4
+                          },
+                          "runtime": {
+                            "type": "string",
+                            "const": "hyperframes"
+                          },
+                          "hfContract": {
+                            "type": "number",
+                            "const": 1
+                          },
+                          "kind": {
+                            "type": "string",
+                            "const": "scene"
+                          },
+                          "sceneShot": {
+                            "type": "object",
+                            "properties": {
+                              "version": {
+                                "type": "number",
+                                "const": 2
+                              }
+                            },
+                            "required": [
+                              "version"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "assets": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "image",
+                                    "video",
+                                    "audio",
+                                    "data",
+                                    "visual"
+                                  ]
+                                },
+                                "required": {
+                                  "type": "boolean"
+                                },
+                                "mimeTypes": {
+                                  "minItems": 1,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                },
+                                "mediaDemand": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "original"
+                                        }
+                                      },
+                                      "required": [
+                                        "mode"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "tier"
+                                        },
+                                        "tier": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "const": 256
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 512
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 1024
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 2048
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "mode",
+                                        "tier"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "auto"
+                                        },
+                                        "maxProjectedWidthRatio": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 64
+                                        },
+                                        "maxProjectedHeightRatio": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 64
+                                        },
+                                        "minVisibleSourceWidthRatio": {
+                                          "default": 1,
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 1
+                                        },
+                                        "minVisibleSourceHeightRatio": {
+                                          "default": 1,
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 1
+                                        }
+                                      },
+                                      "required": [
+                                        "mode",
+                                        "maxProjectedWidthRatio",
+                                        "maxProjectedHeightRatio",
+                                        "minVisibleSourceWidthRatio",
+                                        "minVisibleSourceHeightRatio"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ],
+                                  "type": "object"
+                                }
+                              },
+                              "required": [
+                                "kind",
+                                "required"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "graphics": {
+                            "type": "object",
+                            "properties": {
+                              "api": {
+                                "type": "string",
+                                "enum": [
+                                  "canvas2d",
+                                  "webgl",
+                                  "webgl2",
+                                  "webgpu"
+                                ]
+                              },
+                              "required": {
+                                "type": "boolean",
+                                "const": true
+                              },
+                              "accelerationPreference": {
+                                "type": "string",
+                                "enum": [
+                                  "hardware-preferred",
+                                  "software-allowed"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "api",
+                              "required",
+                              "accelerationPreference"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "alphaPolicy": {
+                            "type": "string",
+                            "enum": [
+                              "requires-transparency",
+                              "allows-opaque"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "version",
+                          "runtime",
+                          "hfContract",
+                          "kind",
+                          "assets",
+                          "graphics",
+                          "alphaPolicy"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "definition": {
+                        "type": "object",
+                        "properties": {
+                          "inputSchema": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "defaults": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "brandBindings": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "propPath": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                },
+                                "cssVar": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                },
+                                "fallback": {
+                                  "type": "string"
+                                },
+                                "brandKitPath": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                }
+                              },
+                              "required": [
+                                "propPath",
+                                "cssVar"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "timing": {
+                            "type": "object",
+                            "properties": {
+                              "defaultDuration": {
+                                "type": "object",
+                                "properties": {
+                                  "frames": {
+                                    "type": "integer",
+                                    "exclusiveMinimum": 0,
+                                    "maximum": 9007199254740991
+                                  },
+                                  "fps": {
+                                    "type": "number",
+                                    "exclusiveMinimum": 0
+                                  }
+                                },
+                                "required": [
+                                  "frames",
+                                  "fps"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "minDurationSec": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                              },
+                              "maxDurationSec": {
+                                "type": "number",
+                                "exclusiveMinimum": 0
+                              }
+                            },
+                            "required": [
+                              "defaultDuration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "capabilities": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "oneOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "clip"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "cut-transition"
+                                    },
+                                    "protocol": {
+                                      "type": "string",
+                                      "const": "per-child"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "protocol"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "content-slots"
+                                    },
+                                    "slots": {
+                                      "minItems": 1,
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "name": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 128
+                                          },
+                                          "min": {
+                                            "type": "integer",
+                                            "minimum": 0,
+                                            "maximum": 9007199254740991
+                                          },
+                                          "max": {
+                                            "type": "integer",
+                                            "exclusiveMinimum": 0,
+                                            "maximum": 9007199254740991
+                                          },
+                                          "ownership": {
+                                            "type": "string",
+                                            "enum": [
+                                              "reference",
+                                              "exclusive"
+                                            ]
+                                          },
+                                          "sizing": {
+                                            "type": "string",
+                                            "enum": [
+                                              "canvas",
+                                              "container"
+                                            ]
+                                          }
+                                        },
+                                        "required": [
+                                          "name",
+                                          "min",
+                                          "max",
+                                          "ownership",
+                                          "sizing"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "slots"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "clip-wrapper"
+                                    },
+                                    "ordering": {
+                                      "type": "string",
+                                      "enum": [
+                                        "any",
+                                        "innermost"
+                                      ]
+                                    },
+                                    "acceptsWrappedTargets": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "ordering",
+                                    "acceptsWrappedTargets"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "kind": {
+                                      "type": "string",
+                                      "const": "global-wrapper"
+                                    },
+                                    "scope": {
+                                      "type": "string",
+                                      "const": "media-lanes"
+                                    },
+                                    "ordering": {
+                                      "type": "string",
+                                      "enum": [
+                                        "any",
+                                        "innermost"
+                                      ]
+                                    },
+                                    "acceptsWrappedTargets": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "kind",
+                                    "scope",
+                                    "ordering",
+                                    "acceptsWrappedTargets"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              ],
+                              "type": "object"
+                            }
+                          },
+                          "mediaBindings": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                },
+                                "propPath": {
+                                  "minItems": 1,
+                                  "maxItems": 16,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 128
+                                  }
+                                },
+                                "kind": {
+                                  "type": "string",
+                                  "enum": [
+                                    "image",
+                                    "video",
+                                    "visual"
+                                  ]
+                                },
+                                "collection": {
+                                  "type": "string",
+                                  "enum": [
+                                    "scalar",
+                                    "array"
+                                  ]
+                                },
+                                "cardinality": {
+                                  "type": "object",
+                                  "properties": {
+                                    "min": {
+                                      "type": "integer",
+                                      "minimum": 0,
+                                      "maximum": 9007199254740991
+                                    },
+                                    "max": {
+                                      "type": "integer",
+                                      "exclusiveMinimum": 0,
+                                      "maximum": 9007199254740991
+                                    }
+                                  },
+                                  "required": [
+                                    "min"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                "mimeTypes": {
+                                  "minItems": 1,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                },
+                                "mediaDemand": {
+                                  "oneOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "original"
+                                        }
+                                      },
+                                      "required": [
+                                        "mode"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "tier"
+                                        },
+                                        "tier": {
+                                          "anyOf": [
+                                            {
+                                              "type": "number",
+                                              "const": 256
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 512
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 1024
+                                            },
+                                            {
+                                              "type": "number",
+                                              "const": 2048
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "required": [
+                                        "mode",
+                                        "tier"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mode": {
+                                          "type": "string",
+                                          "const": "auto"
+                                        },
+                                        "maxProjectedWidthRatio": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 64
+                                        },
+                                        "maxProjectedHeightRatio": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 64
+                                        },
+                                        "minVisibleSourceWidthRatio": {
+                                          "default": 1,
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 1
+                                        },
+                                        "minVisibleSourceHeightRatio": {
+                                          "default": 1,
+                                          "type": "number",
+                                          "exclusiveMinimum": 0,
+                                          "maximum": 1
+                                        }
+                                      },
+                                      "required": [
+                                        "mode",
+                                        "maxProjectedWidthRatio",
+                                        "maxProjectedHeightRatio",
+                                        "minVisibleSourceWidthRatio",
+                                        "minVisibleSourceHeightRatio"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ],
+                                  "type": "object"
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "propPath",
+                                "kind",
+                                "collection",
+                                "cardinality"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "preview": {
+                            "type": "object",
+                            "properties": {
+                              "params": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string"
+                                },
+                                "additionalProperties": {}
+                              },
+                              "format": {
+                                "type": "object",
+                                "properties": {
+                                  "aspectRatio": {
+                                    "type": "string",
+                                    "enum": [
+                                      "16:9",
+                                      "9:16",
+                                      "1:1",
+                                      "4:5"
+                                    ]
+                                  },
+                                  "fps": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number",
+                                        "const": 24
+                                      },
+                                      {
+                                        "type": "number",
+                                        "const": 25
+                                      },
+                                      {
+                                        "type": "number",
+                                        "const": 30
+                                      },
+                                      {
+                                        "type": "number",
+                                        "const": 60
+                                      }
+                                    ]
+                                  },
+                                  "resolution": {
+                                    "type": "string",
+                                    "enum": [
+                                      "hd",
+                                      "fhd",
+                                      "4k"
+                                    ]
+                                  },
+                                  "platform": {
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "aspectRatio"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "assets": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                },
+                                "additionalProperties": {
+                                  "anyOf": [
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "url": {
+                                          "type": "string",
+                                          "format": "uri",
+                                          "pattern": "^https:\\/\\/.*"
+                                        },
+                                        "sha256": {
+                                          "type": "string",
+                                          "pattern": "^[a-f0-9]{64}$"
+                                        },
+                                        "mimeType": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        },
+                                        "frameRate": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0
+                                        },
+                                        "durationSec": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "url",
+                                        "sha256",
+                                        "mimeType"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "object",
+                                      "properties": {
+                                        "mediaId": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 128
+                                        },
+                                        "sha256": {
+                                          "type": "string",
+                                          "pattern": "^[a-f0-9]{64}$"
+                                        },
+                                        "mimeType": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        },
+                                        "frameRate": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0
+                                        },
+                                        "durationSec": {
+                                          "type": "number",
+                                          "exclusiveMinimum": 0
+                                        }
+                                      },
+                                      "required": [
+                                        "mediaId",
+                                        "sha256",
+                                        "mimeType"
+                                      ],
+                                      "additionalProperties": false
+                                    }
+                                  ]
+                                }
+                              },
+                              "mediaBindings": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 128
+                                },
+                                "additionalProperties": {
+                                  "type": "array",
+                                  "items": {
+                                    "anyOf": [
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "url": {
+                                            "type": "string",
+                                            "format": "uri",
+                                            "pattern": "^https:\\/\\/.*"
+                                          },
+                                          "sha256": {
+                                            "type": "string",
+                                            "pattern": "^[a-f0-9]{64}$"
+                                          },
+                                          "mimeType": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          },
+                                          "frameRate": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                          },
+                                          "durationSec": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                          }
+                                        },
+                                        "required": [
+                                          "url",
+                                          "sha256",
+                                          "mimeType"
+                                        ],
+                                        "additionalProperties": false
+                                      },
+                                      {
+                                        "type": "object",
+                                        "properties": {
+                                          "mediaId": {
+                                            "type": "string",
+                                            "minLength": 1,
+                                            "maxLength": 128
+                                          },
+                                          "sha256": {
+                                            "type": "string",
+                                            "pattern": "^[a-f0-9]{64}$"
+                                          },
+                                          "mimeType": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          },
+                                          "frameRate": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                          },
+                                          "durationSec": {
+                                            "type": "number",
+                                            "exclusiveMinimum": 0
+                                          }
+                                        },
+                                        "required": [
+                                          "mediaId",
+                                          "sha256",
+                                          "mimeType"
+                                        ],
+                                        "additionalProperties": false
+                                      }
+                                    ]
+                                  }
+                                }
+                              }
+                            },
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "inputSchema",
+                          "defaults",
+                          "brandBindings",
+                          "timing",
+                          "capabilities"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "componentId",
+                      "template",
+                      "manifest",
+                      "definition"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              {
                 "type": "object",
                 "properties": {
                   "version": {
                     "type": "number",
-                    "const": 3
+                    "const": 2
                   },
                   "componentId": {
                     "type": "string",
                     "minLength": 1,
                     "maxLength": 128,
-                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
+                    "pattern": "^[a-z0-9][a-z0-9._-]*$"
                   },
                   "tsxSource": {
                     "type": "string",
-                    "minLength": 1,
-                    "maxLength": 8000000
+                    "minLength": 1
                   },
                   "manifest": {
                     "type": "object",
@@ -11427,1520 +13216,18 @@
                       "alphaPolicy"
                     ],
                     "additionalProperties": false
-                  },
-                  "definition": {
-                    "type": "object",
-                    "properties": {
-                      "inputSchema": {
-                        "type": "object",
-                        "propertyNames": {
-                          "type": "string"
-                        },
-                        "additionalProperties": {}
-                      },
-                      "defaults": {
-                        "type": "object",
-                        "propertyNames": {
-                          "type": "string"
-                        },
-                        "additionalProperties": {}
-                      },
-                      "brandBindings": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "propPath": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            },
-                            "cssVar": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            },
-                            "fallback": {
-                              "type": "string"
-                            },
-                            "brandKitPath": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            }
-                          },
-                          "required": [
-                            "propPath",
-                            "cssVar"
-                          ],
-                          "additionalProperties": false
-                        }
-                      },
-                      "timing": {
-                        "type": "object",
-                        "properties": {
-                          "defaultDuration": {
-                            "type": "object",
-                            "properties": {
-                              "frames": {
-                                "type": "integer",
-                                "exclusiveMinimum": 0,
-                                "maximum": 9007199254740991
-                              },
-                              "fps": {
-                                "type": "number",
-                                "exclusiveMinimum": 0
-                              }
-                            },
-                            "required": [
-                              "frames",
-                              "fps"
-                            ],
-                            "additionalProperties": false
-                          },
-                          "minDurationSec": {
-                            "type": "number",
-                            "exclusiveMinimum": 0
-                          },
-                          "maxDurationSec": {
-                            "type": "number",
-                            "exclusiveMinimum": 0
-                          }
-                        },
-                        "required": [
-                          "defaultDuration"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "capabilities": {
-                        "minItems": 1,
-                        "type": "array",
-                        "items": {
-                          "oneOf": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "const": "clip"
-                                }
-                              },
-                              "required": [
-                                "kind"
-                              ],
-                              "additionalProperties": false
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "const": "cut-transition"
-                                },
-                                "protocol": {
-                                  "type": "string",
-                                  "const": "per-child"
-                                }
-                              },
-                              "required": [
-                                "kind",
-                                "protocol"
-                              ],
-                              "additionalProperties": false
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "const": "content-slots"
-                                },
-                                "slots": {
-                                  "minItems": 1,
-                                  "type": "array",
-                                  "items": {
-                                    "type": "object",
-                                    "properties": {
-                                      "name": {
-                                        "type": "string",
-                                        "minLength": 1,
-                                        "maxLength": 128
-                                      },
-                                      "min": {
-                                        "type": "integer",
-                                        "minimum": 0,
-                                        "maximum": 9007199254740991
-                                      },
-                                      "max": {
-                                        "type": "integer",
-                                        "exclusiveMinimum": 0,
-                                        "maximum": 9007199254740991
-                                      },
-                                      "ownership": {
-                                        "type": "string",
-                                        "enum": [
-                                          "reference",
-                                          "exclusive"
-                                        ]
-                                      },
-                                      "sizing": {
-                                        "type": "string",
-                                        "enum": [
-                                          "canvas",
-                                          "container"
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "name",
-                                      "min",
-                                      "max",
-                                      "ownership",
-                                      "sizing"
-                                    ],
-                                    "additionalProperties": false
-                                  }
-                                }
-                              },
-                              "required": [
-                                "kind",
-                                "slots"
-                              ],
-                              "additionalProperties": false
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "const": "clip-wrapper"
-                                },
-                                "ordering": {
-                                  "type": "string",
-                                  "enum": [
-                                    "any",
-                                    "innermost"
-                                  ]
-                                },
-                                "acceptsWrappedTargets": {
-                                  "type": "boolean"
-                                }
-                              },
-                              "required": [
-                                "kind",
-                                "ordering",
-                                "acceptsWrappedTargets"
-                              ],
-                              "additionalProperties": false
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "const": "global-wrapper"
-                                },
-                                "scope": {
-                                  "type": "string",
-                                  "const": "media-lanes"
-                                },
-                                "ordering": {
-                                  "type": "string",
-                                  "enum": [
-                                    "any",
-                                    "innermost"
-                                  ]
-                                },
-                                "acceptsWrappedTargets": {
-                                  "type": "boolean"
-                                }
-                              },
-                              "required": [
-                                "kind",
-                                "scope",
-                                "ordering",
-                                "acceptsWrappedTargets"
-                              ],
-                              "additionalProperties": false
-                            }
-                          ],
-                          "type": "object"
-                        }
-                      },
-                      "mediaBindings": {
-                        "minItems": 1,
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "name": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            },
-                            "propPath": {
-                              "minItems": 1,
-                              "maxItems": 16,
-                              "type": "array",
-                              "items": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 128
-                              }
-                            },
-                            "kind": {
-                              "type": "string",
-                              "enum": [
-                                "image",
-                                "video",
-                                "visual"
-                              ]
-                            },
-                            "collection": {
-                              "type": "string",
-                              "enum": [
-                                "scalar",
-                                "array"
-                              ]
-                            },
-                            "cardinality": {
-                              "type": "object",
-                              "properties": {
-                                "min": {
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 9007199254740991
-                                },
-                                "max": {
-                                  "type": "integer",
-                                  "exclusiveMinimum": 0,
-                                  "maximum": 9007199254740991
-                                }
-                              },
-                              "required": [
-                                "min"
-                              ],
-                              "additionalProperties": false
-                            },
-                            "mimeTypes": {
-                              "minItems": 1,
-                              "type": "array",
-                              "items": {
-                                "type": "string",
-                                "minLength": 1
-                              }
-                            },
-                            "mediaDemand": {
-                              "oneOf": [
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mode": {
-                                      "type": "string",
-                                      "const": "original"
-                                    }
-                                  },
-                                  "required": [
-                                    "mode"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mode": {
-                                      "type": "string",
-                                      "const": "tier"
-                                    },
-                                    "tier": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "const": 256
-                                        },
-                                        {
-                                          "type": "number",
-                                          "const": 512
-                                        },
-                                        {
-                                          "type": "number",
-                                          "const": 1024
-                                        },
-                                        {
-                                          "type": "number",
-                                          "const": 2048
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "mode",
-                                    "tier"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mode": {
-                                      "type": "string",
-                                      "const": "auto"
-                                    },
-                                    "maxProjectedWidthRatio": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 64
-                                    },
-                                    "maxProjectedHeightRatio": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 64
-                                    },
-                                    "minVisibleSourceWidthRatio": {
-                                      "default": 1,
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 1
-                                    },
-                                    "minVisibleSourceHeightRatio": {
-                                      "default": 1,
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 1
-                                    }
-                                  },
-                                  "required": [
-                                    "mode",
-                                    "maxProjectedWidthRatio",
-                                    "maxProjectedHeightRatio",
-                                    "minVisibleSourceWidthRatio",
-                                    "minVisibleSourceHeightRatio"
-                                  ],
-                                  "additionalProperties": false
-                                }
-                              ],
-                              "type": "object"
-                            }
-                          },
-                          "required": [
-                            "name",
-                            "propPath",
-                            "kind",
-                            "collection",
-                            "cardinality"
-                          ],
-                          "additionalProperties": false
-                        }
-                      },
-                      "preview": {
-                        "type": "object",
-                        "properties": {
-                          "params": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string"
-                            },
-                            "additionalProperties": {}
-                          },
-                          "format": {
-                            "type": "object",
-                            "properties": {
-                              "aspectRatio": {
-                                "type": "string",
-                                "enum": [
-                                  "16:9",
-                                  "9:16",
-                                  "1:1",
-                                  "4:5"
-                                ]
-                              },
-                              "fps": {
-                                "anyOf": [
-                                  {
-                                    "type": "number",
-                                    "const": 24
-                                  },
-                                  {
-                                    "type": "number",
-                                    "const": 25
-                                  },
-                                  {
-                                    "type": "number",
-                                    "const": 30
-                                  },
-                                  {
-                                    "type": "number",
-                                    "const": 60
-                                  }
-                                ]
-                              },
-                              "resolution": {
-                                "type": "string",
-                                "enum": [
-                                  "hd",
-                                  "fhd",
-                                  "4k"
-                                ]
-                              },
-                              "platform": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "aspectRatio"
-                            ],
-                            "additionalProperties": false
-                          },
-                          "assets": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            },
-                            "additionalProperties": {
-                              "anyOf": [
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "url": {
-                                      "type": "string",
-                                      "format": "uri",
-                                      "pattern": "^https:\\/\\/.*"
-                                    },
-                                    "sha256": {
-                                      "type": "string",
-                                      "pattern": "^[a-f0-9]{64}$"
-                                    },
-                                    "mimeType": {
-                                      "type": "string",
-                                      "minLength": 1
-                                    },
-                                    "frameRate": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0
-                                    },
-                                    "durationSec": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0
-                                    }
-                                  },
-                                  "required": [
-                                    "url",
-                                    "sha256",
-                                    "mimeType"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mediaId": {
-                                      "type": "string",
-                                      "minLength": 1,
-                                      "maxLength": 128
-                                    },
-                                    "sha256": {
-                                      "type": "string",
-                                      "pattern": "^[a-f0-9]{64}$"
-                                    },
-                                    "mimeType": {
-                                      "type": "string",
-                                      "minLength": 1
-                                    },
-                                    "frameRate": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0
-                                    },
-                                    "durationSec": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0
-                                    }
-                                  },
-                                  "required": [
-                                    "mediaId",
-                                    "sha256",
-                                    "mimeType"
-                                  ],
-                                  "additionalProperties": false
-                                }
-                              ]
-                            }
-                          },
-                          "mediaBindings": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            },
-                            "additionalProperties": {
-                              "type": "array",
-                              "items": {
-                                "anyOf": [
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "url": {
-                                        "type": "string",
-                                        "format": "uri",
-                                        "pattern": "^https:\\/\\/.*"
-                                      },
-                                      "sha256": {
-                                        "type": "string",
-                                        "pattern": "^[a-f0-9]{64}$"
-                                      },
-                                      "mimeType": {
-                                        "type": "string",
-                                        "minLength": 1
-                                      },
-                                      "frameRate": {
-                                        "type": "number",
-                                        "exclusiveMinimum": 0
-                                      },
-                                      "durationSec": {
-                                        "type": "number",
-                                        "exclusiveMinimum": 0
-                                      }
-                                    },
-                                    "required": [
-                                      "url",
-                                      "sha256",
-                                      "mimeType"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "mediaId": {
-                                        "type": "string",
-                                        "minLength": 1,
-                                        "maxLength": 128
-                                      },
-                                      "sha256": {
-                                        "type": "string",
-                                        "pattern": "^[a-f0-9]{64}$"
-                                      },
-                                      "mimeType": {
-                                        "type": "string",
-                                        "minLength": 1
-                                      },
-                                      "frameRate": {
-                                        "type": "number",
-                                        "exclusiveMinimum": 0
-                                      },
-                                      "durationSec": {
-                                        "type": "number",
-                                        "exclusiveMinimum": 0
-                                      }
-                                    },
-                                    "required": [
-                                      "mediaId",
-                                      "sha256",
-                                      "mimeType"
-                                    ],
-                                    "additionalProperties": false
-                                  }
-                                ]
-                              }
-                            }
-                          }
-                        },
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "inputSchema",
-                      "defaults",
-                      "brandBindings",
-                      "timing",
-                      "capabilities"
-                    ],
-                    "additionalProperties": false
                   }
                 },
                 "required": [
                   "version",
                   "componentId",
                   "tsxSource",
-                  "manifest",
-                  "definition"
-                ],
-                "additionalProperties": false
-              },
-              {
-                "type": "object",
-                "properties": {
-                  "version": {
-                    "type": "number",
-                    "const": 4
-                  },
-                  "componentId": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 128,
-                    "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]*$"
-                  },
-                  "template": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 2000000
-                  },
-                  "manifest": {
-                    "type": "object",
-                    "properties": {
-                      "version": {
-                        "type": "number",
-                        "const": 4
-                      },
-                      "runtime": {
-                        "type": "string",
-                        "const": "hyperframes"
-                      },
-                      "hfContract": {
-                        "type": "number",
-                        "const": 1
-                      },
-                      "kind": {
-                        "type": "string",
-                        "const": "scene"
-                      },
-                      "sceneShot": {
-                        "type": "object",
-                        "properties": {
-                          "version": {
-                            "type": "number",
-                            "const": 2
-                          }
-                        },
-                        "required": [
-                          "version"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "assets": {
-                        "type": "object",
-                        "propertyNames": {
-                          "type": "string",
-                          "minLength": 1
-                        },
-                        "additionalProperties": {
-                          "type": "object",
-                          "properties": {
-                            "kind": {
-                              "type": "string",
-                              "enum": [
-                                "image",
-                                "video",
-                                "audio",
-                                "data",
-                                "visual"
-                              ]
-                            },
-                            "required": {
-                              "type": "boolean"
-                            },
-                            "mimeTypes": {
-                              "minItems": 1,
-                              "type": "array",
-                              "items": {
-                                "type": "string",
-                                "minLength": 1
-                              }
-                            },
-                            "mediaDemand": {
-                              "oneOf": [
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mode": {
-                                      "type": "string",
-                                      "const": "original"
-                                    }
-                                  },
-                                  "required": [
-                                    "mode"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mode": {
-                                      "type": "string",
-                                      "const": "tier"
-                                    },
-                                    "tier": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "const": 256
-                                        },
-                                        {
-                                          "type": "number",
-                                          "const": 512
-                                        },
-                                        {
-                                          "type": "number",
-                                          "const": 1024
-                                        },
-                                        {
-                                          "type": "number",
-                                          "const": 2048
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "mode",
-                                    "tier"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mode": {
-                                      "type": "string",
-                                      "const": "auto"
-                                    },
-                                    "maxProjectedWidthRatio": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 64
-                                    },
-                                    "maxProjectedHeightRatio": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 64
-                                    },
-                                    "minVisibleSourceWidthRatio": {
-                                      "default": 1,
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 1
-                                    },
-                                    "minVisibleSourceHeightRatio": {
-                                      "default": 1,
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 1
-                                    }
-                                  },
-                                  "required": [
-                                    "mode",
-                                    "maxProjectedWidthRatio",
-                                    "maxProjectedHeightRatio",
-                                    "minVisibleSourceWidthRatio",
-                                    "minVisibleSourceHeightRatio"
-                                  ],
-                                  "additionalProperties": false
-                                }
-                              ],
-                              "type": "object"
-                            }
-                          },
-                          "required": [
-                            "kind",
-                            "required"
-                          ],
-                          "additionalProperties": false
-                        }
-                      },
-                      "graphics": {
-                        "type": "object",
-                        "properties": {
-                          "api": {
-                            "type": "string",
-                            "enum": [
-                              "canvas2d",
-                              "webgl",
-                              "webgl2",
-                              "webgpu"
-                            ]
-                          },
-                          "required": {
-                            "type": "boolean",
-                            "const": true
-                          },
-                          "accelerationPreference": {
-                            "type": "string",
-                            "enum": [
-                              "hardware-preferred",
-                              "software-allowed"
-                            ]
-                          }
-                        },
-                        "required": [
-                          "api",
-                          "required",
-                          "accelerationPreference"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "alphaPolicy": {
-                        "type": "string",
-                        "enum": [
-                          "requires-transparency",
-                          "allows-opaque"
-                        ]
-                      }
-                    },
-                    "required": [
-                      "version",
-                      "runtime",
-                      "hfContract",
-                      "kind",
-                      "assets",
-                      "graphics",
-                      "alphaPolicy"
-                    ],
-                    "additionalProperties": false
-                  },
-                  "definition": {
-                    "type": "object",
-                    "properties": {
-                      "inputSchema": {
-                        "type": "object",
-                        "propertyNames": {
-                          "type": "string"
-                        },
-                        "additionalProperties": {}
-                      },
-                      "defaults": {
-                        "type": "object",
-                        "propertyNames": {
-                          "type": "string"
-                        },
-                        "additionalProperties": {}
-                      },
-                      "brandBindings": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "propPath": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            },
-                            "cssVar": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            },
-                            "fallback": {
-                              "type": "string"
-                            },
-                            "brandKitPath": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            }
-                          },
-                          "required": [
-                            "propPath",
-                            "cssVar"
-                          ],
-                          "additionalProperties": false
-                        }
-                      },
-                      "timing": {
-                        "type": "object",
-                        "properties": {
-                          "defaultDuration": {
-                            "type": "object",
-                            "properties": {
-                              "frames": {
-                                "type": "integer",
-                                "exclusiveMinimum": 0,
-                                "maximum": 9007199254740991
-                              },
-                              "fps": {
-                                "type": "number",
-                                "exclusiveMinimum": 0
-                              }
-                            },
-                            "required": [
-                              "frames",
-                              "fps"
-                            ],
-                            "additionalProperties": false
-                          },
-                          "minDurationSec": {
-                            "type": "number",
-                            "exclusiveMinimum": 0
-                          },
-                          "maxDurationSec": {
-                            "type": "number",
-                            "exclusiveMinimum": 0
-                          }
-                        },
-                        "required": [
-                          "defaultDuration"
-                        ],
-                        "additionalProperties": false
-                      },
-                      "capabilities": {
-                        "minItems": 1,
-                        "type": "array",
-                        "items": {
-                          "oneOf": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "const": "clip"
-                                }
-                              },
-                              "required": [
-                                "kind"
-                              ],
-                              "additionalProperties": false
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "const": "cut-transition"
-                                },
-                                "protocol": {
-                                  "type": "string",
-                                  "const": "per-child"
-                                }
-                              },
-                              "required": [
-                                "kind",
-                                "protocol"
-                              ],
-                              "additionalProperties": false
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "const": "content-slots"
-                                },
-                                "slots": {
-                                  "minItems": 1,
-                                  "type": "array",
-                                  "items": {
-                                    "type": "object",
-                                    "properties": {
-                                      "name": {
-                                        "type": "string",
-                                        "minLength": 1,
-                                        "maxLength": 128
-                                      },
-                                      "min": {
-                                        "type": "integer",
-                                        "minimum": 0,
-                                        "maximum": 9007199254740991
-                                      },
-                                      "max": {
-                                        "type": "integer",
-                                        "exclusiveMinimum": 0,
-                                        "maximum": 9007199254740991
-                                      },
-                                      "ownership": {
-                                        "type": "string",
-                                        "enum": [
-                                          "reference",
-                                          "exclusive"
-                                        ]
-                                      },
-                                      "sizing": {
-                                        "type": "string",
-                                        "enum": [
-                                          "canvas",
-                                          "container"
-                                        ]
-                                      }
-                                    },
-                                    "required": [
-                                      "name",
-                                      "min",
-                                      "max",
-                                      "ownership",
-                                      "sizing"
-                                    ],
-                                    "additionalProperties": false
-                                  }
-                                }
-                              },
-                              "required": [
-                                "kind",
-                                "slots"
-                              ],
-                              "additionalProperties": false
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "const": "clip-wrapper"
-                                },
-                                "ordering": {
-                                  "type": "string",
-                                  "enum": [
-                                    "any",
-                                    "innermost"
-                                  ]
-                                },
-                                "acceptsWrappedTargets": {
-                                  "type": "boolean"
-                                }
-                              },
-                              "required": [
-                                "kind",
-                                "ordering",
-                                "acceptsWrappedTargets"
-                              ],
-                              "additionalProperties": false
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "kind": {
-                                  "type": "string",
-                                  "const": "global-wrapper"
-                                },
-                                "scope": {
-                                  "type": "string",
-                                  "const": "media-lanes"
-                                },
-                                "ordering": {
-                                  "type": "string",
-                                  "enum": [
-                                    "any",
-                                    "innermost"
-                                  ]
-                                },
-                                "acceptsWrappedTargets": {
-                                  "type": "boolean"
-                                }
-                              },
-                              "required": [
-                                "kind",
-                                "scope",
-                                "ordering",
-                                "acceptsWrappedTargets"
-                              ],
-                              "additionalProperties": false
-                            }
-                          ],
-                          "type": "object"
-                        }
-                      },
-                      "mediaBindings": {
-                        "minItems": 1,
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "name": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            },
-                            "propPath": {
-                              "minItems": 1,
-                              "maxItems": 16,
-                              "type": "array",
-                              "items": {
-                                "type": "string",
-                                "minLength": 1,
-                                "maxLength": 128
-                              }
-                            },
-                            "kind": {
-                              "type": "string",
-                              "enum": [
-                                "image",
-                                "video",
-                                "visual"
-                              ]
-                            },
-                            "collection": {
-                              "type": "string",
-                              "enum": [
-                                "scalar",
-                                "array"
-                              ]
-                            },
-                            "cardinality": {
-                              "type": "object",
-                              "properties": {
-                                "min": {
-                                  "type": "integer",
-                                  "minimum": 0,
-                                  "maximum": 9007199254740991
-                                },
-                                "max": {
-                                  "type": "integer",
-                                  "exclusiveMinimum": 0,
-                                  "maximum": 9007199254740991
-                                }
-                              },
-                              "required": [
-                                "min"
-                              ],
-                              "additionalProperties": false
-                            },
-                            "mimeTypes": {
-                              "minItems": 1,
-                              "type": "array",
-                              "items": {
-                                "type": "string",
-                                "minLength": 1
-                              }
-                            },
-                            "mediaDemand": {
-                              "oneOf": [
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mode": {
-                                      "type": "string",
-                                      "const": "original"
-                                    }
-                                  },
-                                  "required": [
-                                    "mode"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mode": {
-                                      "type": "string",
-                                      "const": "tier"
-                                    },
-                                    "tier": {
-                                      "anyOf": [
-                                        {
-                                          "type": "number",
-                                          "const": 256
-                                        },
-                                        {
-                                          "type": "number",
-                                          "const": 512
-                                        },
-                                        {
-                                          "type": "number",
-                                          "const": 1024
-                                        },
-                                        {
-                                          "type": "number",
-                                          "const": 2048
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  "required": [
-                                    "mode",
-                                    "tier"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mode": {
-                                      "type": "string",
-                                      "const": "auto"
-                                    },
-                                    "maxProjectedWidthRatio": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 64
-                                    },
-                                    "maxProjectedHeightRatio": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 64
-                                    },
-                                    "minVisibleSourceWidthRatio": {
-                                      "default": 1,
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 1
-                                    },
-                                    "minVisibleSourceHeightRatio": {
-                                      "default": 1,
-                                      "type": "number",
-                                      "exclusiveMinimum": 0,
-                                      "maximum": 1
-                                    }
-                                  },
-                                  "required": [
-                                    "mode",
-                                    "maxProjectedWidthRatio",
-                                    "maxProjectedHeightRatio",
-                                    "minVisibleSourceWidthRatio",
-                                    "minVisibleSourceHeightRatio"
-                                  ],
-                                  "additionalProperties": false
-                                }
-                              ],
-                              "type": "object"
-                            }
-                          },
-                          "required": [
-                            "name",
-                            "propPath",
-                            "kind",
-                            "collection",
-                            "cardinality"
-                          ],
-                          "additionalProperties": false
-                        }
-                      },
-                      "preview": {
-                        "type": "object",
-                        "properties": {
-                          "params": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string"
-                            },
-                            "additionalProperties": {}
-                          },
-                          "format": {
-                            "type": "object",
-                            "properties": {
-                              "aspectRatio": {
-                                "type": "string",
-                                "enum": [
-                                  "16:9",
-                                  "9:16",
-                                  "1:1",
-                                  "4:5"
-                                ]
-                              },
-                              "fps": {
-                                "anyOf": [
-                                  {
-                                    "type": "number",
-                                    "const": 24
-                                  },
-                                  {
-                                    "type": "number",
-                                    "const": 25
-                                  },
-                                  {
-                                    "type": "number",
-                                    "const": 30
-                                  },
-                                  {
-                                    "type": "number",
-                                    "const": 60
-                                  }
-                                ]
-                              },
-                              "resolution": {
-                                "type": "string",
-                                "enum": [
-                                  "hd",
-                                  "fhd",
-                                  "4k"
-                                ]
-                              },
-                              "platform": {
-                                "type": "string"
-                              }
-                            },
-                            "required": [
-                              "aspectRatio"
-                            ],
-                            "additionalProperties": false
-                          },
-                          "assets": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            },
-                            "additionalProperties": {
-                              "anyOf": [
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "url": {
-                                      "type": "string",
-                                      "format": "uri",
-                                      "pattern": "^https:\\/\\/.*"
-                                    },
-                                    "sha256": {
-                                      "type": "string",
-                                      "pattern": "^[a-f0-9]{64}$"
-                                    },
-                                    "mimeType": {
-                                      "type": "string",
-                                      "minLength": 1
-                                    },
-                                    "frameRate": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0
-                                    },
-                                    "durationSec": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0
-                                    }
-                                  },
-                                  "required": [
-                                    "url",
-                                    "sha256",
-                                    "mimeType"
-                                  ],
-                                  "additionalProperties": false
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "mediaId": {
-                                      "type": "string",
-                                      "minLength": 1,
-                                      "maxLength": 128
-                                    },
-                                    "sha256": {
-                                      "type": "string",
-                                      "pattern": "^[a-f0-9]{64}$"
-                                    },
-                                    "mimeType": {
-                                      "type": "string",
-                                      "minLength": 1
-                                    },
-                                    "frameRate": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0
-                                    },
-                                    "durationSec": {
-                                      "type": "number",
-                                      "exclusiveMinimum": 0
-                                    }
-                                  },
-                                  "required": [
-                                    "mediaId",
-                                    "sha256",
-                                    "mimeType"
-                                  ],
-                                  "additionalProperties": false
-                                }
-                              ]
-                            }
-                          },
-                          "mediaBindings": {
-                            "type": "object",
-                            "propertyNames": {
-                              "type": "string",
-                              "minLength": 1,
-                              "maxLength": 128
-                            },
-                            "additionalProperties": {
-                              "type": "array",
-                              "items": {
-                                "anyOf": [
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "url": {
-                                        "type": "string",
-                                        "format": "uri",
-                                        "pattern": "^https:\\/\\/.*"
-                                      },
-                                      "sha256": {
-                                        "type": "string",
-                                        "pattern": "^[a-f0-9]{64}$"
-                                      },
-                                      "mimeType": {
-                                        "type": "string",
-                                        "minLength": 1
-                                      },
-                                      "frameRate": {
-                                        "type": "number",
-                                        "exclusiveMinimum": 0
-                                      },
-                                      "durationSec": {
-                                        "type": "number",
-                                        "exclusiveMinimum": 0
-                                      }
-                                    },
-                                    "required": [
-                                      "url",
-                                      "sha256",
-                                      "mimeType"
-                                    ],
-                                    "additionalProperties": false
-                                  },
-                                  {
-                                    "type": "object",
-                                    "properties": {
-                                      "mediaId": {
-                                        "type": "string",
-                                        "minLength": 1,
-                                        "maxLength": 128
-                                      },
-                                      "sha256": {
-                                        "type": "string",
-                                        "pattern": "^[a-f0-9]{64}$"
-                                      },
-                                      "mimeType": {
-                                        "type": "string",
-                                        "minLength": 1
-                                      },
-                                      "frameRate": {
-                                        "type": "number",
-                                        "exclusiveMinimum": 0
-                                      },
-                                      "durationSec": {
-                                        "type": "number",
-                                        "exclusiveMinimum": 0
-                                      }
-                                    },
-                                    "required": [
-                                      "mediaId",
-                                      "sha256",
-                                      "mimeType"
-                                    ],
-                                    "additionalProperties": false
-                                  }
-                                ]
-                              }
-                            }
-                          }
-                        },
-                        "additionalProperties": false
-                      }
-                    },
-                    "required": [
-                      "inputSchema",
-                      "defaults",
-                      "brandBindings",
-                      "timing",
-                      "capabilities"
-                    ],
-                    "additionalProperties": false
-                  }
-                },
-                "required": [
-                  "version",
-                  "componentId",
-                  "template",
-                  "manifest",
-                  "definition"
+                  "manifest"
                 ],
                 "additionalProperties": false
               }
             ],
-            "description": "Canonical immutable source snapshot (version 4 template, or a retired version 3 TSX module); source remains provenance."
+            "description": "Immutable source snapshot: a version 4 template, a retired version 3 TSX module, or the historical version 2 source of a component stored before versioned sources (read-only; it never executes). source remains provenance."
           }
         },
         "required": [
@@ -12952,7 +13239,7 @@
           "sourceSnapshot"
         ],
         "additionalProperties": false,
-        "description": "Installed component SOURCE snapshot + ownership provenance per §Components. tsxSource is present only for a retired TSX (version 3) snapshot."
+        "description": "Installed component SOURCE snapshot + ownership provenance per §Components. tsxSource is present for a retired TSX (version 3) snapshot and a historical version 2 source."
       },
       "ComponentCreateRequest": {
         "type": "object",
@@ -41809,6 +42096,96 @@
             "required": true
           }
         ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USDC",
+            "amount": "10000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      }
+    },
+    "/v1/components/blank-source": {
+      "get": {
+        "operationId": "getBlankComponentSource",
+        "tags": [
+          "components"
+        ],
+        "summary": "The blank native component source",
+        "description": "The blank native (version 4) component source every new component starts from. Rename it by setting componentId and the template root's data-composition-id together, then create it with create_component.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:read"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "read"
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "The kernel's blank native source.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BlankComponentSourceV4"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
+            "headers": {
+              "Payment-Required": {
+                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
         "x-payment-info": {
           "price": {
             "mode": "fixed",

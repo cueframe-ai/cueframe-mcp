@@ -96,9 +96,10 @@ export async function main() {
     .command('component')
     .description('Scaffold a blank custom component in cueframe/components/<name>')
     .argument('<name>', 'Component id (e.g. my-badge)')
+    .requiredOption('-c, --category <category>', 'Catalog category: text, effects, transitions, layouts, backgrounds, ui-blocks or scenes')
     .option('-f, --force', 'Overwrite an existing non-empty component dir')
-    .action((name: string, opts: { force?: boolean }) =>
-      newComponentCommand(name, { json: globals().json, dryRun: globals().dryRun, force: opts.force }),
+    .action((name: string, opts: { category: string; force?: boolean }) =>
+      newComponentCommand(name, { json: globals().json, dryRun: globals().dryRun, force: opts.force, category: opts.category }),
     );
 
 

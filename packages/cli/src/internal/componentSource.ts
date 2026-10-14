@@ -1,7 +1,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { createComponentBody } from '@cueframe/sdk/zod';
-import type { ComponentCreateRequestSource } from '@cueframe/sdk';
+import { BLANK_COMPONENT_SOURCE_V4, type ComponentCreateRequestSource } from '@cueframe/sdk';
 import { componentDir, type Workspace } from './workspace.js';
 import { readComponentManifest } from './componentManifest.js';
 
@@ -9,31 +9,17 @@ import { readComponentManifest } from './componentManifest.js';
 const retired = (message: string) => Object.assign(new Error(message), { code: 'component_source_retired' });
 const invalid = (message: string) => Object.assign(new Error(message), { code: 'invalid_component_definition' });
 
-/** An explicit declaration for the blank scaffold only, never a migration default. */
-export function scaffoldDefinition(): ComponentCreateRequestSource['definition'] {
-  return {
-    inputSchema: { type: 'object' },
-    defaults: {},
-    timing: { defaultDuration: { frames: 90, fps: 30 } },
-    brandBindings: [],
-    capabilities: [{ kind: 'clip' }],
-  };
-}
-
 /**
- * The blank native template: one HyperFrames sub-composition whose script ends in one
- * `__cfScene.mount(...)`. `data-composition-variables` projects the definition's scalar
- * inputs and the manifest's slots; the scaffold declares neither, so it is `[]`.
+ * The contract's blank native source (BlankComponentSourceV4), renamed to `id`: its componentId and
+ * its template root's data-composition-id change together, as the contract describes.
  */
-export function scaffoldTemplate(id: string): string {
-  return [
-    `<template><div id="root" data-composition-id="${id}" data-width="1920" data-height="1080" data-no-timeline data-composition-variables='[]'><div data-cf-scene></div></div><script>`,
-    'const { h, MediaTileScene } = __cfScene;',
-    'function Component() { return h(MediaTileScene, { streams: {}, tiles: [] }); }',
-    `__cfScene.mount({ root: document.getElementById('root'), component: Component, variables: __hyperframes.getVariables() });`,
-    '</script></template>',
-    '',
-  ].join('\n');
+export function blankComponentSource(id: string): ComponentCreateRequestSource {
+  const root = `data-composition-id="${BLANK_COMPONENT_SOURCE_V4.componentId}"`;
+  if (BLANK_COMPONENT_SOURCE_V4.template.split(root).length !== 2) {
+    throw invalid(`The contract's blank component template does not carry exactly one ${root}.`);
+  }
+  const blank = structuredClone(BLANK_COMPONENT_SOURCE_V4);
+  return { ...blank, componentId: id, template: blank.template.replace(root, `data-composition-id="${id}"`) };
 }
 
 /**

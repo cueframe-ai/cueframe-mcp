@@ -679,7 +679,7 @@ export const CompositionOp = zod.union([zod.strictObject({
   "primitiveId": zod.string().min(1).optional(),
   "params": zod.record(zod.string(), zod.unknown()).optional()
 }))
-}).describe('Set (or CLEAR, with `effects: []`) a clip\'s EFFECT channel — the registered effect primitives stacked onto that clip, each `{ primitiveId, params? }`. WHOLESALE: the array REPLACES the clip\'s current effects, so send the full stack (read the clip first to add one). This is the ONLY way to change effects on an existing clip — do NOT reach for a `clip.update` patch, whose top-level merge is the source-clobbering footgun documented above.'),zod.strictObject({
+}).describe('Set (or CLEAR, with `effects: []`) a clip\'s EFFECT channel — the pinned component clip wrappers stacked onto that clip, each `{id, component, window}`: a unique `id`, the wrapper component\'s execution pin as `component`, and `window: {startTime, duration}` in seconds. The built-in primitive effects were removed: a stored one reads, and save and render refuse it (`effect_retired`), so clear it with `effects: []`. WHOLESALE: the array REPLACES the clip\'s current effects, so send the full stack (read the clip first to add one). This is the ONLY way to change effects on an existing clip — do NOT reach for a `clip.update` patch, whose top-level merge is the source-clobbering footgun documented above.'),zod.strictObject({
   "type": zod.literal("setCaptionStyle"),
   "style": zod.strictObject({
   "fontFamily": zod.string().min(1).optional(),

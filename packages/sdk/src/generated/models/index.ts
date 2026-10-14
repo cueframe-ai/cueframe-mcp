@@ -25,6 +25,7 @@ export * from './audioPaletteEntryRole';
 export * from './audioPaletteEntrySource';
 export * from './billingPlanEntry';
 export * from './billingPlansResponse';
+export * from './blankComponentSourceV4';
 export * from './brandKitCreateRequest';
 export * from './brandKitCreateRequestAudio';
 export * from './brandKitCreateRequestAudioAmbiencePreference';

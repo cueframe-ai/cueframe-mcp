@@ -20,6 +20,7 @@
     "GET /v1/checkpoints listCheckpoints",
     "GET /v1/checkpoints/{id} getCheckpoint",
     "GET /v1/components listCatalog",
+    "GET /v1/components/blank-source getBlankComponentSource",
     "GET /v1/components/builtin/resolve resolveBuiltinComponent",
     "GET /v1/components/{id} getComponent",
     "GET /v1/components/{id}/source getComponentSource",
