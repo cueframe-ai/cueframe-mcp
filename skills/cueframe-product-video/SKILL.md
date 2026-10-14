@@ -82,12 +82,11 @@ product demo:
 | device/browser frame | `device-mockup-zoom` / `browser-flow` | overlay |
 | captions (if narrated) | the top-level `captions` field | — |
 | finish/look | `color-grade` + `vignette` | effect |
-| several cells sharing space that should reflow (feature grid, rail + fluid content) | author a component on `FlexLayout` from `@cueframe/animate` (see `cueframe-component-authoring`) | overlay (authored) |
+| several cells sharing space that should reflow (feature grid, rail + fluid content) | author one card or native component laid out with CSS flex/grid (see `cueframe-component-authoring`) | overlay (authored) |
 
 Static PiP / split-screen is `region` + `fit` on the clips (EX3 / EX4). Cells that must
-**reflow together** or hold mixed content are one authored component built on `FlexLayout`;
-the catalog `flex-layout` primitive is that same layout, but a bare composition overlay has
-no children, so on its own it draws only the rig outlines.
+**reflow together** or hold mixed content are one authored card or native component laid out
+with CSS flex/grid.
 
 A primitive is the `source` of a clip; the clip wraps it with `id`/`startTime`/`duration`:
 - Overlay clip (on a `kind:"overlay"` track): `{ "id":"t1", "startTime":1, "duration":3, "source":{ "kind":"overlay", "primitiveId":"lower-third", "params":{…}, "zPlane":"front" } }`.

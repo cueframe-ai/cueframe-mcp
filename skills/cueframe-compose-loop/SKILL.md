@@ -107,9 +107,9 @@ Read `critique` — it names the lowest criterion first and says why. Fix **that
 thing** (re-author the relevant ops), then score again. One criterion per pass:
 chasing all four at once thrashes. Example: editorial 4 "two subjects off-center
 vs centered intent" → tighten the reframe onto face-0 → re-score. A layout critique
-("cramped", "unbalanced", "text crowds the art") on a component built with
-`FlexLayout` is a `tracks` weight or `fits` change — re-author those and re-solve; never
-nudge pixels (see `cueframe-component-authoring`).
+("cramped", "unbalanced", "text crowds the art") on a laid-out card or component is a
+change to its CSS grid tracks or flex basis. Re-author those; never nudge pixels (see
+`cueframe-component-authoring`).
 
 ## 5. Stop — then render
 

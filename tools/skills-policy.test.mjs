@@ -76,3 +76,13 @@ test('skills teach no retired version-3 component authoring', () => {
   const found = skills.filter((skill) => retired.test(read(`skills/${skill}/SKILL.md`)));
   assert.deepEqual(found, []);
 });
+
+test('skill code blocks hold no version-3 component code', () => {
+  // A fenced block is code an agent copies: TSX modules, React components and @cueframe/animate imports are refused.
+  const retired = /@cueframe\/animate|\.tsx\b|import React\b|export default function\b/;
+  const found = [];
+  for (const skill of skills) {
+    for (const [block] of read(`skills/${skill}/SKILL.md`).matchAll(/```[\s\S]*?```/g)) if (retired.test(block)) found.push(`${skill}: ${block.split('\n')[0]}`);
+  }
+  assert.deepEqual(found, []);
+});

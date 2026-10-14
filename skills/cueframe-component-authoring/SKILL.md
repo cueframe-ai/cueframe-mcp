@@ -159,37 +159,24 @@ capabilities, then fetch its exact scoped source as described in Path A. Presets
 are different card kinds: follow their exact definition/document references rather than treating
 those IDs as source IDs. Inspect appropriate previews before judging visual behavior.
 
-## Layout inside a component — `FlexLayout` / `solveFlex`
-When a graphic has several cells that must share space — a feature grid, a fixed rail beside
-fluid content, a cast of objects next to type — don't hand-place pixels. The layout helpers
-are in `@cueframe/animate` (on the import allowlist):
+## Layout inside a component — CSS flex/grid
 
-```tsx
-import { FlexLayout } from '@cueframe/animate';
-const R = params.region ?? { x: 0, y: 0, w: 1, h: 1 };
-<FlexLayout
-  tracks={[{ weight: 0, basis: 520 }, 1, { weight: 3, split: [1, 1] }]}
-  tracksEnd={[{ weight: 0, basis: 520 }, 1, { weight: 1, split: [2, 1] }]}
-  fits={[{ mode: 'stretch' }, { mode: 'position' }, { mode: 'matte', aspect: 1 }, { mode: 'stretch' }]}
-  gap={16} width={R.w * width} height={R.h * height}>
-  <Rail /> <Type /> <Art /> <Block />
-</FlexLayout>
+When several cells must share space (a feature grid, a fixed rail beside fluid content, a cast of
+objects next to type), lay them out with CSS flex or grid in the HTML, not hand-placed pixels.
+Use the template of a native component, or a `card`:
+
+```html
+<div style="display:grid; grid-template-columns: 520px 1fr 3fr; gap:16px; width:100%; height:100%">
+  <div class="rail"></div><div class="type"></div><div class="art"></div>
+</div>
 ```
 
-- Tracks are **weights, not pixels**; `{ weight: 0, basis: 520 }` is content-sized and pushes its
-  neighbours. Children fill the leaves depth-first (a `split` nests cells on the other axis).
-- `tracksEnd` animates: weights ease across the clip and **every cell re-solves per frame**. A cell
-  present on only one side enters from / exits to zero. Layout is the motion — no keyframed positions.
-- `fits`, one per leaf: `stretch | contain | cover | position | scale | matte`. `position` keeps type at
-  its natural size; `matte` clips a window instead of resizing the art.
-- Inside a `params.region` container pass `width`/`height` = the region's pixel size so nested splits and
-  aspect fits solve against the region, not the frame. **Never CSS-`scale()` the layout** — it resamples;
-  size the container instead.
-- 3D in the same rig: `solveFlex(tree, size, weights)` returns the boxes; `flexBoxToThree(box, size)`
-  centres a mesh under `<ThreeCanvas orthographic>` (frustum pinned 1:1 to pixels), so one canvas holds
-  every object exactly on its cell.
-- Same inputs, same boxes everywhere: the solve is pure and yoga-backed; nothing is measured from the DOM.
-  Text is placed, not measured — declare sizes with `basis` when a cell must fit its content.
+- Fixed tracks (`520px`) hold content-sized cells. Fractions (`1fr`, `3fr`) share what is left.
+- Animate a reflow from the frame, never from time: in a card, drive `grid-template-columns`
+  or `flex-basis` from `var(--cf-progress)` (or `--cf-enter`/`--cf-exit`); in a native template,
+  derive it from `render.frame`.
+- Size the container to its region instead of CSS-`scale()`-ing the layout, which resamples.
+  Use `object-fit` for media in a cell.
 
 ## Don't
 - Don't expect a forked primitive to use rich named props — read `params` inside and use the explicit
