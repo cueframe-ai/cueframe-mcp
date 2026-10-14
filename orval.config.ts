@@ -40,7 +40,16 @@ export default defineConfig({
       schemas: join(SDK_GENERATED, "zod", "models"),
       packageJson: join(ROOT, "packages", "sdk", "package.json"),
       client: "zod",
-      override: { zod: { version: 4, generateReusableSchemas: true, strict: { body: true } } },
+      override: {
+        zod: {
+          version: 4,
+          generateReusableSchemas: true,
+          strict: { body: true },
+          // Response validators are not generated: no consumer parses responses through them, and building
+          // them at import was a third of the module's retained heap. The component models stay.
+          generate: { param: true, query: true, header: true, body: true, response: false },
+        },
+      },
       clean: true,
       prettier: false,
       indexFiles: true,

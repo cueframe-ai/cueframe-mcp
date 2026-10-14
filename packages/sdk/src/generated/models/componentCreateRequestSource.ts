@@ -11,7 +11,7 @@ import type { ComponentCreateRequestSourceDefinition } from './componentCreateRe
 import type { ComponentCreateRequestSourceManifest } from './componentCreateRequestSourceManifest';
 
 export type ComponentCreateRequestSource = {
-  version: 3;
+  version: 4;
   /**
      * @minLength 1
      * @maxLength 128
@@ -20,9 +20,9 @@ export type ComponentCreateRequestSource = {
   componentId: string;
   /**
      * @minLength 1
-     * @maxLength 8000000
+     * @maxLength 2000000
      */
-  tsxSource: string;
+  template: string;
   manifest: ComponentCreateRequestSourceManifest;
   definition: ComponentCreateRequestSourceDefinition;
 };

@@ -232,7 +232,7 @@ private API ──sync──▶ api/openapi.json (+ scene-schema.json, scene-exa
                           └──▶ packages/sdk/src/generated        (Orval: operations, models, zod)
 ```
 
-The private API publishes its OpenAPI projection into `api/`; `pnpm generate:api-consumers` vendors the scene schema into the contract and regenerates the SDK from it. This is the one copy of the contract: the MCP server's generators in the application repository and every other consumer read it from the `@cueframe/api-contract` npm package, whose version moves with the contract (`pnpm check:contract-version` fails an `api/*.json` change without a bump), so the tool surface and the SDK always describe one contract. Nothing under `api/` or a `generated/` directory is hand-edited: `pnpm check:api-inputs` proves the three `api/*.json` inputs came from one sync, and `pnpm check:api-consumer-drift` proves the generated trees match them byte for byte.
+The private API publishes its OpenAPI projection into `api/`; `pnpm generate:api-consumers` regenerates the SDK from it. This is the one copy of the contract: the MCP server's generators in the application repository and every other consumer read it from the `@cueframe/api-contract` npm package, whose version moves with the contract (`pnpm check:contract-version` fails an `api/*.json` change without a bump), so the tool surface and the SDK always describe one contract. Nothing under `api/` or a `generated/` directory is hand-edited: `pnpm check:api-inputs` proves the three `api/*.json` inputs came from one sync, and `pnpm check:api-consumer-drift` proves the generated trees match them byte for byte.
 
 ### How the skills flow
 

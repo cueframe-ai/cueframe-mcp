@@ -18,7 +18,7 @@
 //      test is the one not yet committed. A root commit with no parent passes vacuously.
 //
 // "Changed" means any byte of api/*.json differs between the baseline and the working tree; the manifest's
-// sha256s are a subset of that (public-surface.json and the vendoring step are not in the manifest), and the
+// sha256s are a subset of that (public-surface.json is not in the manifest), and the
 // package ships bytes, not digests.
 //
 // Also enforced here, so `pnpm check` catches it before the build does: when the sync manifest carries a

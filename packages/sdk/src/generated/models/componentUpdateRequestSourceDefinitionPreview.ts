@@ -8,13 +8,13 @@
  * OpenAPI spec version: v1
  */
 import type { ComponentUpdateRequestSourceDefinitionPreviewAssets } from './componentUpdateRequestSourceDefinitionPreviewAssets';
-import type { ComponentUpdateRequestSourceDefinitionPreviewFormat } from './componentUpdateRequestSourceDefinitionPreviewFormat';
 import type { ComponentUpdateRequestSourceDefinitionPreviewMediaBindings } from './componentUpdateRequestSourceDefinitionPreviewMediaBindings';
 import type { ComponentUpdateRequestSourceDefinitionPreviewParams } from './componentUpdateRequestSourceDefinitionPreviewParams';
+import type { Format } from './format';
 
 export type ComponentUpdateRequestSourceDefinitionPreview = {
   params?: ComponentUpdateRequestSourceDefinitionPreviewParams;
-  format?: ComponentUpdateRequestSourceDefinitionPreviewFormat;
+  format?: Format;
   assets?: ComponentUpdateRequestSourceDefinitionPreviewAssets;
   mediaBindings?: ComponentUpdateRequestSourceDefinitionPreviewMediaBindings;
 };

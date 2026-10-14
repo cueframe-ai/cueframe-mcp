@@ -9,9 +9,7 @@
  */
 import {
   ResourceImportRequest,
-  ResourceImportResponse,
-  ResourceSearchRequest,
-  ResourceSearchResponse
+  ResourceSearchRequest
 } from '../models';
 
 
@@ -21,12 +19,8 @@ import {
  */
 export const SearchResourcesBody = ResourceSearchRequest
 
-export const SearchResourcesResponse = ResourceSearchResponse
-
 /**
  * Two lanes. STOCK { projectId, candidateId }: import a candidate returned by search_resources into a project as an org-owned media item (preserving provider/externalId/license provenance; bytes deduped across orgs). Async: returns { id, status:'importing' }; status flips to complete when the import finishes (poll GET /media/:id). A candidate whose 7-day search cache has expired returns 422 — re-search. PACK { kind:"sfx-pack", id:<soundId> }: mint/return the org media item for a curated CC0 SFX-pack sound (soundId from list_catalog's sfx[]) — returns { id, status:'ready' } immediately to place as a normal sfx clip. Idempotent per (org, soundId); an unknown soundId is a 422. Pack imports are FREE: no plan feature required, and an x402 payment is released unsettled (no charge). PRICE of a stock import for a keyed (API-key / session) caller: 0 credits — the resource_import entitlement is a plan grant, not a meter (get_account reports `entitlements.resource_import.listUsdPerUnit: 0`); the imported bytes count toward the `storage` gauge. Only an unkeyed x402 caller pays the $0.01 import tier.
  * @summary Import a stock candidate or a curated SFX-pack sound
  */
 export const ImportResourceBody = ResourceImportRequest
-
-export const ImportResourceResponse = ResourceImportResponse

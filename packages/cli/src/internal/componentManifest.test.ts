@@ -3,7 +3,8 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { defaultManifest, type Workspace } from './workspace.js';
-import { DEFAULT_COMPONENT_MANIFEST_V2, readComponentManifestV2 } from './componentManifest.js';
+import { readComponentManifest } from './componentManifest.js';
+import { SCAFFOLD_COMPONENT_MANIFEST_V4 } from './scaffoldManifest.js';
 
 /**
  * Every field the component-source response can carry in one manifest: named
@@ -13,7 +14,10 @@ import { DEFAULT_COMPONENT_MANIFEST_V2, readComponentManifestV2 } from './compon
  * untouched; the server validates it on push.
  */
 const API_MANIFEST = {
-  version: 2,
+  version: 4,
+  runtime: 'hyperframes',
+  hfContract: 1,
+  kind: 'scene',
   assets: {
     backdrop: {
       kind: 'image',
@@ -40,7 +44,7 @@ const API_MANIFEST = {
     },
     vo: { kind: 'audio', required: false },
   },
-  graphics: { api: 'webgl', required: true, accelerationPreference: 'hardware-preferred' },
+  graphics: { api: 'webgl2', required: true, accelerationPreference: 'hardware-preferred' },
   alphaPolicy: 'allows-opaque',
   sceneShot: { version: 2 },
 };
@@ -61,28 +65,28 @@ afterEach(() => {
   for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true });
 });
 
-describe('readComponentManifestV2 reads the manifest the server validates on push', () => {
+describe('readComponentManifest reads the manifest the server validates on push', () => {
   it('returns a manifest exactly as the API returns one', () => {
     const ws = workspaceWith(API_MANIFEST);
-    expect(readComponentManifestV2(ws, 'badge')).toEqual(API_MANIFEST);
+    expect(readComponentManifest(ws, 'badge')).toEqual(API_MANIFEST);
   });
 
   it('returns the manifest the CLI itself stamps', () => {
-    const ws = workspaceWith(DEFAULT_COMPONENT_MANIFEST_V2);
-    expect(readComponentManifestV2(ws, 'badge')).toEqual(DEFAULT_COMPONENT_MANIFEST_V2);
+    const ws = workspaceWith(SCAFFOLD_COMPONENT_MANIFEST_V4);
+    expect(readComponentManifest(ws, 'badge')).toEqual(SCAFFOLD_COMPONENT_MANIFEST_V4);
   });
 
   it('passes a manifest the server would refuse through unchanged; the server is the judge', () => {
     const manifest = { ...API_MANIFEST, assets: { '': { kind: 'image', required: true } } };
     const ws = workspaceWith(manifest);
-    expect(readComponentManifestV2(ws, 'badge')).toEqual(manifest);
+    expect(readComponentManifest(ws, 'badge')).toEqual(manifest);
   });
 
   it('refuses a component with no manifest at all', () => {
     const ws = workspaceWith(undefined);
-    expect(() => readComponentManifestV2(ws, 'badge')).toThrow(/contract-v2 manifest/);
+    expect(() => readComponentManifest(ws, 'badge')).toThrow(/native \(version 4\) manifest/);
     try {
-      readComponentManifestV2(ws, 'badge');
+      readComponentManifest(ws, 'badge');
     } catch (error) {
       expect((error as { code?: string }).code).toBe('no_component_manifest');
     }

@@ -9,6 +9,7 @@
  */
 import * as zod from 'zod';
 import { CompositionConcurrency } from './compositionConcurrency.zod';
+import { Format } from './format.zod';
 
 export const componentUpdateRequestComponentIdMax = 200;
 
@@ -24,7 +25,7 @@ export const componentUpdateRequestSourceComponentIdMax = 128;
 
 
 export const componentUpdateRequestSourceComponentIdRegExp = new RegExp('^[a-zA-Z0-9][a-zA-Z0-9._-]*$');
-export const componentUpdateRequestSourceTsxSourceMax = 8000000;
+export const componentUpdateRequestSourceTemplateMax = 2000000;
 
 
 
@@ -142,11 +143,17 @@ export const ComponentUpdateRequest = zod.strictObject({
   "examples": zod.array(zod.record(zod.string(), zod.unknown())).optional().describe('Usage examples, as authored. A built-in primitive projects {name, mood?, params?, description?}; an authored component\'s examples are whatever it wrote, which is why the item is open. One shape for both directions: what you write here is what you read back.'),
   "durationInFrames": zod.number().gt(componentUpdateRequestDurationInFramesExclusiveMin).optional(),
   "source": zod.strictObject({
-  "version": zod.literal(3),
+  "version": zod.literal(4),
   "componentId": zod.string().min(1).max(componentUpdateRequestSourceComponentIdMax).regex(componentUpdateRequestSourceComponentIdRegExp),
-  "tsxSource": zod.string().min(1).max(componentUpdateRequestSourceTsxSourceMax),
+  "template": zod.string().min(1).max(componentUpdateRequestSourceTemplateMax),
   "manifest": zod.strictObject({
-  "version": zod.literal(2),
+  "version": zod.literal(4),
+  "runtime": zod.literal("hyperframes"),
+  "hfContract": zod.literal(1),
+  "kind": zod.literal("scene"),
+  "sceneShot": zod.strictObject({
+  "version": zod.literal(2)
+}).optional(),
   "assets": zod.record(zod.string(), zod.strictObject({
   "kind": zod.enum(['image', 'video', 'audio', 'data', 'visual']),
   "required": zod.boolean(),
@@ -169,13 +176,7 @@ export const ComponentUpdateRequest = zod.strictObject({
   "required": zod.literal(true),
   "accelerationPreference": zod.enum(['hardware-preferred', 'software-allowed'])
 }),
-  "alphaPolicy": zod.enum(['requires-transparency', 'allows-opaque']),
-  "sceneShot": zod.strictObject({
-  "version": zod.literal(2)
-}).optional(),
-  "visualMedia": zod.strictObject({
-  "version": zod.literal(1)
-}).optional()
+  "alphaPolicy": zod.enum(['requires-transparency', 'allows-opaque'])
 }),
   "definition": zod.strictObject({
   "inputSchema": zod.record(zod.string(), zod.unknown()),
@@ -243,12 +244,7 @@ export const ComponentUpdateRequest = zod.strictObject({
 })).min(1).optional(),
   "preview": zod.strictObject({
   "params": zod.record(zod.string(), zod.unknown()).optional(),
-  "format": zod.strictObject({
-  "aspectRatio": zod.enum(['16:9', '9:16', '1:1', '4:5']),
-  "fps": zod.union([zod.literal(24),zod.literal(25),zod.literal(30),zod.literal(60)]).optional(),
-  "resolution": zod.enum(['hd', 'fhd', '4k']).optional(),
-  "platform": zod.string().optional()
-}).optional(),
+  "format": Format.optional(),
   "assets": zod.record(zod.string(), zod.union([zod.strictObject({
   "url": zod.url().regex(componentUpdateRequestSourceDefinitionPreviewAssetsOneUrlRegExp),
   "sha256": zod.string().regex(componentUpdateRequestSourceDefinitionPreviewAssetsOneSha256RegExp),

@@ -12,8 +12,6 @@ import { CompositionConcurrency } from './compositionConcurrency.zod';
 import { CompositionOp } from './compositionOp.zod';
 
 
-export const compositionApplyRequestComponentExecutionVersionsMax = 1;
-
 export const compositionApplyRequestBuiltinSourcesItemScopeCollectionMax = 256;
 
 export const compositionApplyRequestBuiltinSourcesItemComponentIdMax = 256;
@@ -26,7 +24,8 @@ export const compositionApplyRequestExpectedBrandIdentityRegExp = new RegExp('^[
 
 export const CompositionApplyRequest = zod.strictObject({
   "ops": zod.array(CompositionOp).min(1),
-  "componentExecutionVersions": zod.array(zod.literal(3)).min(1).max(compositionApplyRequestComponentExecutionVersionsMax).optional(),
+  "componentExecutionVersions": zod.union([zod.tuple([zod.literal(3)]),zod.tuple([zod.literal(3),
+zod.literal(4)])]).optional(),
   "builtinSources": zod.array(zod.strictObject({
   "scope": zod.strictObject({
   "kind": zod.literal("builtin"),
@@ -34,7 +33,7 @@ export const CompositionApplyRequest = zod.strictObject({
 }),
   "componentId": zod.string().min(1).max(compositionApplyRequestBuiltinSourcesItemComponentIdMax),
   "sourceVersionId": zod.string().regex(compositionApplyRequestBuiltinSourcesItemSourceVersionIdRegExp),
-  "sourceVersion": zod.literal(3)
+  "sourceVersion": zod.union([zod.literal(3),zod.literal(4)])
 })).min(1).max(compositionApplyRequestBuiltinSourcesMax).optional(),
   "expectedBrandIdentity": zod.string().regex(compositionApplyRequestExpectedBrandIdentityRegExp).optional(),
   "concurrency": CompositionConcurrency.optional().describe('Version 1 shared dependency admission. Guarded requests must name the observed immutable composition with composition_id or concurrency.compositionId; changed or missing dependencies refuse the entire batch.'),

@@ -11,7 +11,7 @@ import type { ComponentPatchRequestSourceDefinition } from './componentPatchRequ
 import type { ComponentPatchRequestSourceManifest } from './componentPatchRequestSourceManifest';
 
 export type ComponentPatchRequestSource = {
-  version: 3;
+  version: 4;
   /**
      * @minLength 1
      * @maxLength 128
@@ -20,9 +20,9 @@ export type ComponentPatchRequestSource = {
   componentId: string;
   /**
      * @minLength 1
-     * @maxLength 8000000
+     * @maxLength 2000000
      */
-  tsxSource: string;
+  template: string;
   manifest: ComponentPatchRequestSourceManifest;
   definition: ComponentPatchRequestSourceDefinition;
 };

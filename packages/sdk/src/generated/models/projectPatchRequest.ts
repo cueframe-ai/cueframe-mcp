@@ -7,7 +7,7 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { FormatSpec } from './formatSpec';
+import type { Format } from './format';
 
 /**
  * PATCH /projects/:id body.
@@ -19,7 +19,7 @@ export interface ProjectPatchRequest {
      */
   name?: string;
   description?: string;
-  format?: FormatSpec;
+  format?: Format;
   /** @minLength 1 */
   brandKitId?: string;
 }

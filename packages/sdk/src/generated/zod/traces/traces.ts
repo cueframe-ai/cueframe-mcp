@@ -10,8 +10,7 @@
 import * as zod from 'zod';
 
 import {
-  TraceScoresRequest,
-  TraceScoresResponse
+  TraceScoresRequest
 } from '../models';
 
 
@@ -24,5 +23,3 @@ export const ScoreTraceParams = zod.object({
 })
 
 export const ScoreTraceBody = TraceScoresRequest
-
-export const ScoreTraceResponse = TraceScoresResponse

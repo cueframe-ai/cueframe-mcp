@@ -8,7 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { FormatSpec } from './formatSpec.zod';
+import { Format } from './format.zod';
 
 export const compositionCreateRequestNameMax = 200;
 
@@ -16,7 +16,7 @@ export const compositionCreateRequestNameMax = 200;
 
 export const CompositionCreateRequest = zod.strictObject({
   "name": zod.string().min(1).max(compositionCreateRequestNameMax).optional(),
-  "format": FormatSpec.optional()
+  "format": Format.optional()
 }).describe('POST /projects/:id/compositions body — create a new video (composition) in the project. `format` defaults to the project\'s compositionFormat when omitted.');
 
 export type CompositionCreateRequest = zod.input<typeof CompositionCreateRequest>;

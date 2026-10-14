@@ -2,6 +2,49 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 4.0.0
+
+Breaking schema release, synced from private 0a430db with kernel 0.6.0. The contract now embeds the kernel's own OpenAPI components verbatim, and the build ships `openapi.json` exactly as synced. The toolkit's scene-schema vendoring step is retired.
+
+- `Composition` is the full kernel shape and is strict: unknown top-level keys are refused. `ownerOrgId`, `acl`, `licenseVerification` and `sourceSuggestionId` are `readOnly`. Only the server sets them.
+- `FormatSpec` is renamed `Format`. The `SceneFormat` and `TransitionSpec` components are removed, and every format references `Format`.
+- Kernel-owned components, now published as the kernel defines them: `CompositionOp` (with `clip.setKeyframes`; `applyMotionPreset` is retired), `TimelineClip` (a track entry is a `TimelineClip` or a gap), `ComponentExecutionRef` (execution versions 3 and 4), `ComponentParameterValue`, `CompositionConcurrency` and `ErrorEnvelope`.
+- `SceneShotSpecV2` is the kernel's recursive schema with `SceneShotSpecV2Schema0`/`SceneShotSpecV2Schema1`. The depth-capped `SceneShotSpecV2LayerDepth0`–`4` and `SceneShotSpecV2JsonValue` are removed. The API still enforces the group-depth limit of 4.
+- Component create, update and patch take native (version 4) sources only: `{version: 4, componentId, template, manifest, definition}`. Version-3 TSX sources can no longer be written. Component source reads (snapshots) still return version 3 or version 4.
+- A component clip source may be retired: `execution` and `placement` are optional there, and an open `retired` record marks a clip from before the native cutover, with its props kept. Saves and renders refuse such clips with `component_source_retired`.
+- The composition read (`getComposition`) answers `needsUpgrade: CompositionUpgradeNeed[]` (`{clipId, kind: 'unpinned-component' | 'v3-component' | 'retired-primitive', componentId?, sourceVersionId?, primitiveId?, successorComponentId?, successorSourceVersionId?}`) only when such clips remain.
+- New operation `repinComponent` (`POST /v1/projects/{id}/components/native-upgrade`) moves retired TSX component clips to their native successors.
+- `POST /v1/projects/{id}/composition/from-suggestion` (`composeFromSuggestion`) documents its 200 body as the new `CompositionFromSuggestionResponse`. Its `notes` (`BriefNote[]`) name what the brief asked for that the composition does not carry.
+
+## @cueframe/sdk 0.7.0
+
+Generated from contract 4.0.0. Breaking:
+
+- `FormatSpec`, `FormatSpecFps` and `FormatSpecResolution` are removed with no alias: use `Format`, `FormatFps` and `FormatResolution`. The `SceneFormat*`, `CompositionFormat*`, `TransitionSpec*`, `SceneShotSpecV2LayerDepth*` and `SceneShotSpecV2JsonValue` models are removed. The new models include `TimelineClip*`, `ComponentExecutionRef`, `ComponentManifestV4*`, `SceneShotSpecV2Schema0/1` and `NativeUpgrade*`.
+- Component create, update and patch source types and validators are native (version 4) only. Source read models remain a version-3 | version-4 union.
+- `@cueframe/sdk/zod` no longer exports response validators. All 274 response exports are gone: every `<OperationId>Response`/`<operationId>Response`, their `*ResponseItem` companions, and the `consult`/`deriveComposition`/`health`/`whoami` `*ResponseSchema` aliases. The 56 `<operationId>Body` schemas are unchanged. Importing the module now retains about 10.5 MiB instead of 15.5 MiB. The TypeScript response types are unchanged.
+- The scene body schema now accepts any group nesting depth on the client. The API refuses nesting deeper than 4.
+- New `components.repinComponent` client function.
+- `clips.composeFromSuggestion` resolves to the new `CompositionFromSuggestionResponse` (with `BriefNote` notes) instead of `void`.
+
+## cueframe 0.8.2
+
+- `cueframe new component` scaffolds a native (version 4) source: `template.html` and `definition.json`, with a version-4 manifest in `cueframe.json`. It no longer writes `index.tsx` and `config.ts`.
+- `cueframe push` and `cueframe sync` send that native source, checked against the contract's source schema. A workspace component that still has only a version-3 `index.tsx` is refused as `component_source_retired` before any API call. The server already refuses version-3 authoring.
+- Builds against `@cueframe/sdk` 0.7.0, with `FormatFps`/`FormatResolution` replacing the removed `FormatSpec*` types.
+
+## @cueframe/skills 0.3.0
+
+The skills now match contract 4.0.0. The plugin manifests carry the same version.
+
+- The retired `applyMotionPreset` op is gone from every skill. Cards animate in their CSS (`--cf-enter`/`--cf-exit`) or with `clip.setKeyframes`, and anything beyond one channel is a native component (`create_component`). A policy test fails any skill that names an op missing from the contract's `CompositionOp`.
+- `cueframe-component-authoring` and `cueframe-cli` teach native (version 4) component sources: a template, a definition and a version-4 manifest. Version-3 TSX sources are retired.
+- `cueframe-component-authoring` gains "Upgrading an old project": read `get_composition`'s `needsUpgrade`, repin entries that have a successor with `repin_component`, and re-author the rest in place.
+
+## @cueframe/api-contract 3.0.1
+
+- Regenerated against kernel 0.5.2 (private 670cac8). `TemplateMediaValue`'s URL arm declares `format: "uri"` instead of the invalid `starts_with`. Operations are unchanged.
+
 ## @cueframe/api-contract 2.0.1
 
 - Preserve the current hosted API's payment metadata and 402 responses on the four template-job operations while retaining the reviewed component V3 schemas and full operation inventory. Regenerate from the reviewed canonical private source with clean commit provenance.

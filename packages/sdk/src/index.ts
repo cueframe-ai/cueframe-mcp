@@ -18,9 +18,10 @@ export * from "./generated/operations";
 
 
 export * from "./generated/models";
+export { COMPONENT_EXECUTION_VERSIONS } from "./generated/executionVersions";
 
 // Orval inlines single-property numeric unions into the parent model instead
 // of emitting a named model. Keep the SDK's public convenience type stable.
-export type FormatSpecFps = NonNullable<
-  import("./generated/models").FormatSpec["fps"]
+export type FormatFps = NonNullable<
+  import("./generated/models").Format["fps"]
 >;

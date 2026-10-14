@@ -10,7 +10,8 @@
 import * as zod from 'zod';
 
 export const GetCompositionParams = zod.strictObject({
-  "componentExecutionVersions": zod.literal("3").optional(),
+  "componentExecutionVersions": zod.union([zod.literal("3"),zod.tuple([zod.literal("3"),
+zod.literal("4")])]).optional(),
   "includeDependencies": zod.enum(['true', 'false']).optional(),
   "compositionId": zod.string().optional()
 })

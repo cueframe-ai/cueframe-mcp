@@ -8,14 +8,14 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { FormatSpec } from './formatSpec.zod';
+import { Format } from './format.zod';
 
 
 
 
 export const DeriveCompositionRequest = zod.strictObject({
   "fromCompositionId": zod.string().min(1).describe('Source composition to reframe a sibling from.'),
-  "targetFormat": FormatSpec.describe('The target output format (aspectRatio + optional fps/resolution) for the new sibling.')
+  "targetFormat": Format.describe('The target output format (aspectRatio + optional fps/resolution) for the new sibling.')
 }).describe('Derive a reframed sibling composition for a new aspect (Auto-Reframe / Magic-Resize, agent-native).');
 
 export type DeriveCompositionRequest = zod.input<typeof DeriveCompositionRequest>;

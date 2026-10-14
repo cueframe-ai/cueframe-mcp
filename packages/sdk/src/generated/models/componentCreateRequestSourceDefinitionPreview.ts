@@ -8,13 +8,13 @@
  * OpenAPI spec version: v1
  */
 import type { ComponentCreateRequestSourceDefinitionPreviewAssets } from './componentCreateRequestSourceDefinitionPreviewAssets';
-import type { ComponentCreateRequestSourceDefinitionPreviewFormat } from './componentCreateRequestSourceDefinitionPreviewFormat';
 import type { ComponentCreateRequestSourceDefinitionPreviewMediaBindings } from './componentCreateRequestSourceDefinitionPreviewMediaBindings';
 import type { ComponentCreateRequestSourceDefinitionPreviewParams } from './componentCreateRequestSourceDefinitionPreviewParams';
+import type { Format } from './format';
 
 export type ComponentCreateRequestSourceDefinitionPreview = {
   params?: ComponentCreateRequestSourceDefinitionPreviewParams;
-  format?: ComponentCreateRequestSourceDefinitionPreviewFormat;
+  format?: Format;
   assets?: ComponentCreateRequestSourceDefinitionPreviewAssets;
   mediaBindings?: ComponentCreateRequestSourceDefinitionPreviewMediaBindings;
 };

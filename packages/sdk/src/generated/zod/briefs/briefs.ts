@@ -11,9 +11,7 @@ import * as zod from 'zod';
 
 import {
   BriefCreateRequest,
-  BriefListResponse,
-  BriefPatchRequest,
-  BriefResponse
+  BriefPatchRequest
 } from '../models';
 
 
@@ -22,8 +20,6 @@ import {
  * @summary Create a brief (the persisted intent the Director composes from)
  */
 export const CreateBriefBody = BriefCreateRequest
-
-export const CreateBriefResponse = BriefResponse
 
 /**
  * DEFAULT lists human-authored briefs only. Machine-minted clip briefs (suggest_briefs output) are opt-in: ?kind=clip lists just them, ?kind=all lists everything. Any other kind value is a 400, never silently empty.
@@ -40,8 +36,6 @@ export const ListBriefsQueryParams = zod.object({
   "kind": zod.enum(['authored', 'clip', 'all']).optional().describe('Which briefs to list. `authored` (default) = human-authored only; `clip` = the machine-minted clip briefs from suggest_briefs; `all` = both.')
 })
 
-export const ListBriefsResponse = BriefListResponse
-
 /**
  * Required permission: projects:read
  * @summary Get a brief by id
@@ -49,8 +43,6 @@ export const ListBriefsResponse = BriefListResponse
 export const GetBriefParams = zod.object({
   "id": zod.string()
 })
-
-export const GetBriefResponse = BriefResponse
 
 /**
  * Partial update. While an ACTIVE compose job references this brief the edit is refused (409 conflict) — finish, resume, or abandon the job first; the Director never has its input edited out from under it.
@@ -62,8 +54,6 @@ export const UpdateBriefParams = zod.object({
 
 export const UpdateBriefBody = BriefPatchRequest
 
-export const UpdateBriefResponse = BriefResponse
-
 /**
  * Required permission: projects:write
  * @summary Delete a brief
@@ -71,5 +61,3 @@ export const UpdateBriefResponse = BriefResponse
 export const DeleteBriefParams = zod.object({
   "id": zod.string()
 })
-
-export const DeleteBriefResponse = zod.void()

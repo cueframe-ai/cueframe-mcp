@@ -8,22 +8,24 @@
  * OpenAPI spec version: v1
  */
 import type { CompositionAccessibility } from './compositionAccessibility';
+import type { CompositionAcl } from './compositionAcl';
 import type { CompositionCaptions } from './compositionCaptions';
-import type { CompositionFormat } from './compositionFormat';
 import type { CompositionLicense } from './compositionLicense';
+import type { CompositionLicenseVerification } from './compositionLicenseVerification';
 import type { CompositionMarkersItem } from './compositionMarkersItem';
 import type { CompositionTracksItem } from './compositionTracksItem';
+import type { Format } from './format';
 
-/**
- * Canonical composition wire shape (multi-track; carries reframe, captions, markers).
- */
 export interface Composition {
   v: 1;
-  format: CompositionFormat;
+  format: Format;
   tracks: CompositionTracksItem[];
   markers?: CompositionMarkersItem[];
   captions?: CompositionCaptions;
+  readonly sourceSuggestionId?: string;
   license?: CompositionLicense;
+  readonly licenseVerification?: CompositionLicenseVerification;
   accessibility?: CompositionAccessibility;
-  [key: string]: unknown;
+  readonly ownerOrgId?: string;
+  readonly acl?: CompositionAcl;
 }

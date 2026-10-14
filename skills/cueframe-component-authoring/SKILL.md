@@ -27,12 +27,12 @@ See the `cueframe-scene-shot` skill and `cueframe://scene-shot`. Author a compon
 you need behaviour the scene contract does not express.
 
 **Source format matters:**
-- Every executable component uses source v3: keep the complete `sourceSnapshot`, including `definition`,
-  `manifest`, and `tsxSource`. Its definition declares input schema, defaults, timing,
-  brand/media bindings and capabilities. Do not infer these from the source code or flatten
-  a v3 source into a v2 module. The nested asset manifest can still have `version: 2`.
-- The mount signature is `({ durationInFrames, params, assets, render }) => JSX`.
-  Source2 inputs require explicit migration; they are not accepted for editing or rendering.
+- New and changed components are native (source version 4): `{version:4, componentId, template,
+  manifest, definition}`. `template` is one HyperFrames sub-composition whose script ends in one
+  `__cfScene.mount(...)`; the manifest is `{version:4, runtime:'hyperframes', hfContract:1,
+  kind:'scene', assets, graphics, alphaPolicy}`. The definition declares input schema, defaults,
+  timing, brand/media bindings and capabilities. The server instructions' Component Contract has
+  the full rules. Version-3 TSX sources are retired and refused as `component_source_retired`.
 - Neither renderer runs authored source in the editor process. Local and hosted execution
   use isolated render processes and exact immutable source revisions.
 
@@ -40,14 +40,14 @@ you need behaviour the scene contract does not express.
 
 Use the live tool schema for request envelopes; hosted write fields are normally under `body`.
 
-1. **Discover and read a built-in:** call `list_components` with
+1. **Discover and read a built-in:** call `list_catalog` with
    `projection: "component-library", origin: "builtin", libraryKind: "definition"`.
    Select the intended card and preserve its complete scoped source reference. Call
    `get_component_source` with that reference's `componentId`, `sourceVersionId`,
    `builtinCollection` (its scope collection).
    ID-only builtin reads are unsupported. An unavailable exact pin is a refusal; never
    retry another scope or an unpinned head.
-2. **Author/own it:** edit the complete v3 `sourceSnapshot`; use your chosen owned ID
+2. **Author/own it:** edit the complete native `sourceSnapshot`; use your chosen owned ID
    consistently in its `componentId` and the request. Send it as `body.source` to
    `create_component`, with required metadata. Preserve its definition, capability
    declarations, manifest and source format. For an existing component, keep its ID and
@@ -69,96 +69,89 @@ Use the live tool schema for request envelopes; hosted write fields are normally
    Set preview duration deliberately: `durationInFrames` is not a trim window and can retime
    duration-dependent motion. Preserve production timing; inspect the live tool's request shape.
 4. **Check integration:** add it as a `{kind:'component', componentId, props:{},
-   execution:{version:3,componentId,sourceVersionId,params,seed}, placement:{version:3,kind:'clip'}}` clip
+   execution:{version:4,componentId,sourceVersionId,params,seed,assets}, placement:{version:3,kind:'clip'}}` clip
    (`apply_composition`), then inspect saved-composition stills or a scoped `preview_clip` for
    placement and motion. Use `create_render` → `wait_job kind:"render"` when delivering a
    finished MP4, not per tweak.
 
 ## Path B — CLI / coding agent (customer-owned source under git)
 
-Source lives in `cueframe/components/<id>/` (the `cueframe.json` workspace); edit locally as
-standard Remotion, push to render.
+Source lives in `cueframe/components/<id>/` (the `cueframe.json` workspace); edit the native
+template locally, push to render.
 
 ```bash
 npx -y cueframe@0.8 init --json                       # scaffold cueframe.json + cueframe/components/
 npx -y cueframe@0.8 new component my-badge --json     # scaffold a component in the workspace
-#   New scaffolds contain index.tsx, config.ts and definition.json (source v3).
-#   For a builtin fork, retain its TSX, complete definition and asset manifest together.
-# …edit cueframe/components/<id>/ in your editor (standard Remotion)…
-npx -y cueframe@0.8 push my-badge --json              # upload index.tsx as the component tsxSource
+#   New scaffolds contain template.html and definition.json (native source, version 4).
+# …edit cueframe/components/<id>/template.html and definition.json in your editor…
+npx -y cueframe@0.8 push my-badge --json              # send the native source; the server admits it
 #   or: npx -y cueframe@0.8 sync --json               # push every component in the workspace
 # reference the component id in your composition, then render:
 npx -y cueframe@0.8 render <projectId> -o ./out.mp4 --json
 ```
 
-The CLI writes `index.tsx` (module), `config.ts` (metadata) and `definition.json` (complete v3
-input schema, defaults, timing and capabilities). Its asset manifest lives at
-`cueframe.json` → `components.<id>.manifest`; that nested manifest retains version 2.
-`push`/`sync` send these as one v3 `source` snapshot. For a builtin fork, copy **all three source
-parts** from the selected `sourceSnapshot`: TSX, definition and manifest; choose the owned ID
-consistently. Never replace a definition with the blank scaffold's defaults.
-Older workspaces without `definition.json` are refused before API calls: review and declare
-their real behavior instead of running `new --force` over existing source. To preview before
+The CLI writes `template.html` and `definition.json` (input schema, defaults, timing and
+capabilities). The version-4 manifest lives at `cueframe.json` → `components.<id>.manifest`.
+`push`/`sync` send these as one native `source`, checked against the contract's source schema;
+the server's admission (template lint, determinism, declarations) refuses with a named rule.
+For a builtin fork, copy **all three parts** from the selected `sourceSnapshot`: template,
+definition and manifest. A workspace component that still has a version-3 `index.tsx` is
+refused as `component_source_retired` before any API call; author it again as a native template. To preview before
 a full render, push it and use the appropriate component preview loop.
 
 ## Path C — Director editing a local desktop project (project-embedded source)
 
-When `get_context` reports the project lane as local, motion does not require an account or an org
-component. When exposed, use `open_component_preview` to compile an isolated preview (new source,
-with an explicit `component_definition`, or `component_id` to preserve an existing library source), `update_component_preview`
-with exact-text edits (`{oldText, newText, replaceAll?}`, each `oldText` matching once), and
-`render_component_preview_frame` for exact frame evidence. Inspect playback for motion;
+When `get_context` reports the project lane as local, motion does not need an account or an org
+component. Components here are native (source version 4) too:
+- **New component:** open a draft with `open_component_preview`, passing `template`,
+  `component_manifest` (`{version:4, runtime:'hyperframes', hfContract:1, kind:'scene', assets,
+  graphics, alphaPolicy}`) and `component_definition`.
+- **Existing component:** pass `component_id` instead, to start from the clip's pinned version or
+  the library version.
+
+The draft is admitted in full: template lint, determinism and the variable declaration.
+`data-composition-variables` must equal the definition's projection (its scalar inputSchema
+properties, then the manifest's slots).
+
+Edit the draft with `update_component_preview` (exact-text `{oldText, newText, replaceAll?}`
+edits). Check exact frames with `render_component_preview_frame`, and inspect playback for motion.
 `commit_component_preview` publishes the checked source to the library and pins the clip, with a
-fresh ETag. `read_component` and `edit_component` read and edit the library directly. Close the preview when finished. This loop does not bake a timeline video and
-does not imply HMR: source updates still compile.
+fresh ETag. `read_component` and `edit_component` read and edit the library directly. Close the
+preview when finished.
 
-If those tools are unavailable, add/update through `apply_composition` and inspect the local
-timeline. An inline custom overlay has this shape:
+Media slots are image or video, declared in `component_manifest.assets` and bound to project
+media ids in `component_assets`. The template passes them to `MediaTileScene` as
+`streams: { hero: { asset: assets.hero } }`. Declare `alphaPolicy` explicitly:
+`requires-transparency` for overlays, `allows-opaque` for full-frame plates.
 
-```json
-{
-  "type": "clip.add",
-  "clip": {
-    "id": "local-motion",
-    "kind": "overlay",
-    "startTime": 0,
-    "duration": 3,
-    "source": {
-      "kind": "overlay",
-      "primitiveId": "custom",
-      "params": {
-        "jsxSource": "export default function Graphic({ durationInFrames, params, assets, render }) { ... }",
-        "componentManifest": { "version": 2, "assets": {}, "graphics": { "api": "canvas2d", "required": true, "accelerationPreference": "software-allowed" }, "alphaPolicy": "requires-transparency" },
-        "componentDefinition": { "inputSchema": { "type": "object", "properties": {}, "additionalProperties": false }, "defaults": {}, "timing": { "defaultDuration": { "frames": 90, "fps": 30 } }, "brandBindings": [], "capabilities": [{ "kind": "clip" }] },
-        "componentAssets": {}
-      }
-    }
-  },
-  "newTrack": true
-}
-```
+Every frame must be a pure function of `render.frame`, params and `render.seed`. Timers, `Date`,
+network, imports, other globals and CSS animation are refused at admission. The timeline and final
+export render the exact committed version. Use `create_component` only for a reusable org-catalog
+component on a reachable cloud lane.
 
-The desktop compiles the module in an isolated child process and creates it in the desktop's component
-library as a complete v3 source. Declare the actual parameter schema and defaults in
-`componentDefinition`; the empty schema above is for a graphic with no custom parameters.
-Keep a fork's existing definition and nested manifest together with its source. Inline source creates a component only: a clip whose component already exists with other
-source is refused as `component_exists`, and that component changes through edits.
-The timeline and final export render that exact version; no preview media is baked. A compile failure
-refuses the whole batch and leaves the composition untouched. Use `create_component` only for a reusable
-org-catalog component on a reachable cloud lane.
+## Upgrading an old project
 
-For media-backed graphics, declare each slot in `componentManifest.assets`, bind the slot to a
-project media id in `componentAssets`, and read its request-scoped handle from `assets`. The renderer
-localizes and hashes the file before execution. Remote URLs, undeclared assets, arbitrary filesystem
-paths, WebGL substitution, and static/card substitution are not fallback paths.
+`get_composition` returns `needsUpgrade` only when clips from before the native cutover remain:
+`[{clipId, kind, componentId?, sourceVersionId?, primitiveId?, successorComponentId?,
+successorSourceVersionId?}]`. Saves and renders refuse those clips. A retired component is
+refused with `component_source_retired`, and a retired
+primitive with `render_unknown_primitive`. Upgrade only the listed clips. Keep every other clip,
+timing, track and brand-kit binding as it is.
 
-Declare `componentManifest.alphaPolicy` explicitly: `requires-transparency` for overlays and
-`allows-opaque` for intentional full-frame plates. Both adapters verify the same field.
+- **Any entry with a `successorSourceVersionId`:** call `repin_component` with its clip ids. It
+  moves them to the native successor and keeps their saved inputs.
+- **`v3-component` with no successor** (a custom pre-cutover component): read its source, params,
+  timing and placement, and author a native replacement with `create_component` as a version-4
+  template following the server instructions' Component Contract.
+- **`unpinned-component`:** the clip carries a `retired` record (what was stored before the cutover), with its
+  props preserved. Re-author it from those props the same way.
+- **`retired-primitive`:** rebuild what `primitiveId` drew from the clip's params, as a card or
+  a native component.
 
-Normal static imports are supported only from the runtime allowlist: React, Remotion, Three.js
-WebGPU/TSL, React Three Fiber/Drei, Remotion Three, and CueFrame animation helpers. Use ordinary hooks,
-loops, refs, constructors, typed arrays, canvas, and WebGPU when needed. Drive visible animation from
-`render.frame`/`render.fps` and seed variation from `render.seed`; ambient time/randomness is refused.
+For each replacement, use `apply_composition` to replace only that clip at the same start,
+duration, track and placement, pinned to the new exact `sourceVersionId`. Map the old params
+onto the new inputs; do not invent new content. Verify each clip with `preview_frame` at a time
+inside its window and confirm `needsUpgrade` is gone. Only then render (`create_render`).
 
 ## Choosing what to fork
 Use the `component-library` projection to choose a definition, inspect its input schema and
@@ -166,41 +159,28 @@ capabilities, then fetch its exact scoped source as described in Path A. Presets
 are different card kinds: follow their exact definition/document references rather than treating
 those IDs as source IDs. Inspect appropriate previews before judging visual behavior.
 
-## Layout inside a component — `FlexLayout` / `solveFlex`
-When a graphic has several cells that must share space — a feature grid, a fixed rail beside
-fluid content, a cast of objects next to type — don't hand-place pixels. The layout helpers
-are in `@cueframe/animate` (on the import allowlist):
+## Layout inside a component — CSS flex/grid
 
-```tsx
-import { FlexLayout } from '@cueframe/animate';
-const R = params.region ?? { x: 0, y: 0, w: 1, h: 1 };
-<FlexLayout
-  tracks={[{ weight: 0, basis: 520 }, 1, { weight: 3, split: [1, 1] }]}
-  tracksEnd={[{ weight: 0, basis: 520 }, 1, { weight: 1, split: [2, 1] }]}
-  fits={[{ mode: 'stretch' }, { mode: 'position' }, { mode: 'matte', aspect: 1 }, { mode: 'stretch' }]}
-  gap={16} width={R.w * width} height={R.h * height}>
-  <Rail /> <Type /> <Art /> <Block />
-</FlexLayout>
+When several cells must share space (a feature grid, a fixed rail beside fluid content, a cast of
+objects next to type), lay them out with CSS flex or grid in the HTML, not hand-placed pixels.
+Use the template of a native component, or a `card`:
+
+```html
+<div style="display:grid; grid-template-columns: 520px 1fr 3fr; gap:16px; width:100%; height:100%">
+  <div class="rail"></div><div class="type"></div><div class="art"></div>
+</div>
 ```
 
-- Tracks are **weights, not pixels**; `{ weight: 0, basis: 520 }` is content-sized and pushes its
-  neighbours. Children fill the leaves depth-first (a `split` nests cells on the other axis).
-- `tracksEnd` animates: weights ease across the clip and **every cell re-solves per frame**. A cell
-  present on only one side enters from / exits to zero. Layout is the motion — no keyframed positions.
-- `fits`, one per leaf: `stretch | contain | cover | position | scale | matte`. `position` keeps type at
-  its natural size; `matte` clips a window instead of resizing the art.
-- Inside a `params.region` container pass `width`/`height` = the region's pixel size so nested splits and
-  aspect fits solve against the region, not the frame. **Never CSS-`scale()` the layout** — it resamples;
-  size the container instead.
-- 3D in the same rig: `solveFlex(tree, size, weights)` returns the boxes; `flexBoxToThree(box, size)`
-  centres a mesh under `<ThreeCanvas orthographic>` (frustum pinned 1:1 to pixels), so one canvas holds
-  every object exactly on its cell.
-- Same inputs, same boxes everywhere: the solve is pure and yoga-backed; nothing is measured from the DOM.
-  Text is placed, not measured — declare sizes with `basis` when a cell must fit its content.
+- Fixed tracks (`520px`) hold content-sized cells. Fractions (`1fr`, `3fr`) share what is left.
+- Animate a reflow from the frame, never from time: in a card, drive `grid-template-columns`
+  or `flex-basis` from `var(--cf-progress)` (or `--cf-enter`/`--cf-exit`); in a native template,
+  derive it from `render.frame`.
+- Size the container to its region instead of CSS-`scale()`-ing the layout, which resamples.
+  Use `object-fit` for media in a cell.
 
 ## Don't
 - Don't expect a forked primitive to use rich named props — read `params` inside and use the explicit
   `assets` and `render` bags for media and frame state.
-- When a built-in fits the request, fork its exact v3 snapshot using Path A. Never discard its
-  definition by copying only its TSX; preserve the definition and manifest too.
+- When a built-in fits the request, fork its exact snapshot using Path A. Never discard its
+  definition by copying only its template; preserve the definition and manifest too.
 - Don't `create_component` a fresh id each fix iteration — `update_component` (same id) is the loop.

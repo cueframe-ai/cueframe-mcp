@@ -11,7 +11,7 @@ import type { ComponentUpdateRequestSourceDefinition } from './componentUpdateRe
 import type { ComponentUpdateRequestSourceManifest } from './componentUpdateRequestSourceManifest';
 
 export type ComponentUpdateRequestSource = {
-  version: 3;
+  version: 4;
   /**
      * @minLength 1
      * @maxLength 128
@@ -20,9 +20,9 @@ export type ComponentUpdateRequestSource = {
   componentId: string;
   /**
      * @minLength 1
-     * @maxLength 8000000
+     * @maxLength 2000000
      */
-  tsxSource: string;
+  template: string;
   manifest: ComponentUpdateRequestSourceManifest;
   definition: ComponentUpdateRequestSourceDefinition;
 };

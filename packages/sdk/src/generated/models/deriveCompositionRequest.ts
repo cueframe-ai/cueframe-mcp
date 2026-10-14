@@ -7,7 +7,7 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { FormatSpec } from './formatSpec';
+import type { Format } from './format';
 
 /**
  * Derive a reframed sibling composition for a new aspect (Auto-Reframe / Magic-Resize, agent-native).
@@ -19,5 +19,5 @@ export interface DeriveCompositionRequest {
      */
   fromCompositionId: string;
   /** The target output format (aspectRatio + optional fps/resolution) for the new sibling. */
-  targetFormat: FormatSpec;
+  targetFormat: Format;
 }

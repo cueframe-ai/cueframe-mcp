@@ -58,3 +58,51 @@ test('evaluation fixtures cover creative intent, scope and capability routes wit
     for (const skill of scenario.skills) assert.ok(existsSync(new URL(`skills/${skill}/SKILL.md`, root)), `${scenario.id}: unknown skill ${skill}`);
   }
 });
+
+test('skills name only composition ops the shipped contract defines', () => {
+  const ops = new Set(JSON.parse(read('api/openapi.json')).components.schemas.CompositionOp.oneOf.map((op) => op.properties.type.const));
+  // An op as skills write it: a backticked camelCase verb op, or a dotted op (`clip.update`, `captions.fromComposition`).
+  const opName = /`((?:apply|set|add|remove|update|load|materialize|move|duplicate|cut|ripple|reorder)[A-Z][A-Za-z0-9]*|(?:clip|scene|captions|component)\.(?:add|remove|update|set[A-Z][A-Za-z0-9]*|from[A-Z][A-Za-z0-9]*|repin-v\d+))`/g;
+  const unknown = [];
+  for (const skill of skills) {
+    for (const [, name] of read(`skills/${skill}/SKILL.md`).matchAll(opName)) if (!ops.has(name)) unknown.push(`${skill}: ${name}`);
+  }
+  assert.deepEqual(unknown, []);
+});
+
+test('skills teach no retired version-3 component authoring', () => {
+  // Inline TSX/JSX sources, the `custom` primitive and Remotion imports are refused at admission.
+  const retired = /jsxSource|tsxSource|"primitiveId":\s*"custom"|primitiveId:\s*['"]custom['"]|from\s+['"](?:remotion|@remotion\/[^'"]+)['"]|\bRemotion\b/;
+  const found = skills.filter((skill) => retired.test(read(`skills/${skill}/SKILL.md`)));
+  assert.deepEqual(found, []);
+});
+
+test('skill code blocks hold no version-3 component code', () => {
+  // A fenced block is code an agent copies: TSX modules, React components and @cueframe/animate imports are refused.
+  const retired = /@cueframe\/animate|\.tsx\b|import React\b|export default function\b/;
+  const found = [];
+  for (const skill of skills) {
+    for (const [block] of read(`skills/${skill}/SKILL.md`).matchAll(/```[\s\S]*?```/g)) if (retired.test(block)) found.push(`${skill}: ${block.split('\n')[0]}`);
+  }
+  assert.deepEqual(found, []);
+});
+
+test('skills name only tools an agent can call', () => {
+  // Hosted: the snapshot of the server's tools/list (glama/tools.json, refreshed from the MCP package).
+  const hosted = JSON.parse(read('glama/tools.json')).tools.map((tool) => tool.name);
+  // The Director's own tools, which the hosted tools/list does not serve (cueframe-public:
+  // packages/mcp/src/internalLoopTools.ts and apps/studio/src/llm/desktopToolNames.ts).
+  const director = ['render_frame', 'verify_composition', 'commit_session', 'view_style_reference', 'get_context', 'search_library',
+    'analyze_transcript', 'get_app_state', 'open_component_preview', 'update_component_preview', 'render_component_preview_frame',
+    'close_component_preview', 'commit_component_preview', 'read_component', 'edit_component', 'get_scene_contract'];
+  const known = new Set([...hosted, ...director]);
+  // A tool as skills write it: a backticked snake_case name led by a tool verb.
+  const toolName = /`((?:get|list|create|update|delete|apply|preview|search|import|generate|describe|validate|wait|cancel|retry|resolve|score|extract|prepare|select|register|new|start|verify|open|commit|close|read|edit|repin|publish|finalize|suggest|derive|view|analyze|consult|resume|render_component|render_frame)_[a-z0-9_]+)`/g;
+  const docs = skills.flatMap((skill) => {
+    const dir = new URL(`skills/${skill}/references/`, root);
+    const refs = existsSync(dir) ? readdirSync(dir).filter((name) => name.endsWith('.md')).map((name) => `skills/${skill}/references/${name}`) : [];
+    return [`skills/${skill}/SKILL.md`, ...refs];
+  });
+  const unknown = docs.flatMap((file) => [...read(file).matchAll(toolName)].map(([, name]) => name).filter((name) => !known.has(name)).map((name) => `${file}: ${name}`));
+  assert.deepEqual([...new Set(unknown)], []);
+});

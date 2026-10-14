@@ -60,9 +60,8 @@ export function listComponents(ws: Workspace): string[] {
     .filter((entry) => {
       const candidate = join(dir, entry);
       if (!statSync(candidate).isDirectory()) return false;
-      return (
-        existsSync(join(candidate, 'index.tsx')) && existsSync(join(candidate, 'config.ts'))
-      );
+      // A version-3 index.tsx is listed too, so `sync` reports it as retired instead of skipping it.
+      return existsSync(join(candidate, 'template.html')) || existsSync(join(candidate, 'index.tsx'));
     })
     .sort();
 }

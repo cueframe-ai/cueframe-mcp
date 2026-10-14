@@ -8,7 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { FormatSpec } from './formatSpec.zod';
+import { Format } from './format.zod';
 import { ProjectCompositionSummary } from './projectCompositionSummary.zod';
 import { ProjectLastRender } from './projectLastRender.zod';
 
@@ -16,7 +16,7 @@ export const ProjectResponse = zod.strictObject({
   "id": zod.string(),
   "name": zod.string(),
   "description": zod.string().nullable(),
-  "format": zod.union([FormatSpec,zod.null()]),
+  "format": zod.union([Format,zod.null()]),
   "brandKitId": zod.string().nullable(),
   "activeCompositionId": zod.string().nullable(),
   "composition": ProjectCompositionSummary,

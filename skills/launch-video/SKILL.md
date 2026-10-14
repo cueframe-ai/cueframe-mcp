@@ -55,8 +55,8 @@ affected window and regressions without automatically rerunning the full-film ju
    `frame-center` in the gaps, tiling every clip. The single biggest amateur-to-pro delta in
    product video.
 5. **Cards for the claims and the end card.** Key lines and the closing CTA are `kind:"card"`
-   HTML in the brand's type and palette — persisted first, then shelled with
-   `applyMotionPreset` in a FOLLOWING `apply_composition` call. One CTA on the end card, held
+   HTML in the brand's type and palette, animated in its CSS or with
+   `clip.setKeyframes` in a FOLLOWING `apply_composition` call. One CTA on the end card, held
    long enough to read, plus the date if there is one.
 6. **Audio when requested or appropriate.** Preserve explicit silence; otherwise: `search_resources` for a bed honoring the brand kit's
    `musicMood`, energy arcing toward the reveal; place it `audioRole:"music"`,

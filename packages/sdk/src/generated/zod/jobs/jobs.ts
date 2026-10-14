@@ -9,10 +9,6 @@
  */
 import * as zod from 'zod';
 
-import {
-  JobResponse
-} from '../models';
-
 
 /**
  * Read one async job — the uniform status/result resource behind every long-running operation. Poll until `status` is terminal (`succeeded` | `failed` | `cancelled`), then read `result` (kind-specific payload) or `error` (stable code + message). `job_timeout` means the executor died mid-run and the stall sweep reaped the job — re-enqueue the operation to retry.
@@ -22,8 +18,6 @@ export const GetJobParams = zod.object({
   "jobId": zod.string()
 })
 
-export const GetJobResponse = JobResponse
-
 /**
  * Cancel a running async job so an agent can abort a mis-priced/runaway operation without waiting out its TTL. Cancellation is durable and never meters. Already-terminal jobs are rejected (422 job_not_cancellable).
  * @summary Cancel an async job
@@ -31,5 +25,3 @@ export const GetJobResponse = JobResponse
 export const CancelJobParams = zod.object({
   "jobId": zod.string()
 })
-
-export const CancelJobResponse = JobResponse

@@ -11,13 +11,7 @@ import * as zod from 'zod';
 
 import {
   WebhookCreateRequest,
-  WebhookCreateResponse,
-  WebhookEventCatalogResponse,
-  WebhookListResponse,
-  WebhookPatchRequest,
-  WebhookResponse,
-  WebhookTestResponse,
-  WebhookVerifyResponse
+  WebhookPatchRequest
 } from '../models';
 
 
@@ -34,21 +28,11 @@ export const ListWebhooksQueryParams = zod.object({
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.')
 })
 
-export const ListWebhooksResponse = WebhookListResponse
-
 /**
  * Register a webhook so long-running jobs (render/compose/media) notify you instead of blocking on wait_job. Body: `url` (https, must pass SSRF checks) + `events` (see the WebhookEvent enum). DELIVERY: each event is a POST with body `{ event, timestamp, projectId?, data }` and Standard-Webhooks headers `webhook-id`, `webhook-timestamp`, `webhook-signature: v1,<base64>` (+ `x-cueframe-event`). The `secret` (`whsec_<base64>`) is returned ONCE here — verify the raw body with `new Webhook(secret).verify(rawBody, headers)`. ACTIVATION (synchronous, no separate step): on create, CueFrame POSTs a signed `webhook.verify` challenge; your endpoint must reply 2xx echoing `data.token` (raw body === token, or JSON `{token}`/`{challenge}`). On success the response is `status:"active"`; otherwise `status:"pending"` with `verification.reason` and the webhook receives NO events until it verifies (recover with POST /webhooks/:id/verify — no delete/recreate). Full contract + per-event `data` shapes: GET /webhooks/events.
  * @summary Register a webhook endpoint
  */
 export const CreateWebhookBody = WebhookCreateRequest
-
-export const CreateWebhookResponse = WebhookCreateResponse
-
-/**
- * The machine-readable webhook contract: the delivery envelope, Standard-Webhooks signing (secret format, signed content, how to verify), the synchronous echo-the-token ownership handshake, and every subscribable event with its exact `data` fields. Read this before building a receiver — it answers 'what's the payload shape / how do I verify the signature / how does activation work' without guessing.
- * @summary Get the webhook delivery contract
- */
-export const GetWebhookEventsResponse = WebhookEventCatalogResponse
 
 /**
  * Required permission: webhooks:read
@@ -57,8 +41,6 @@ export const GetWebhookEventsResponse = WebhookEventCatalogResponse
 export const GetWebhookParams = zod.object({
   "id": zod.string()
 })
-
-export const GetWebhookResponse = WebhookResponse
 
 /**
  * Required permission: webhooks:write
@@ -70,8 +52,6 @@ export const PatchWebhookParams = zod.object({
 
 export const PatchWebhookBody = WebhookPatchRequest
 
-export const PatchWebhookResponse = WebhookResponse
-
 /**
  * Required permission: webhooks:write
  * @summary Delete a webhook endpoint
@@ -79,8 +59,6 @@ export const PatchWebhookResponse = WebhookResponse
 export const DeleteWebhookParams = zod.object({
   "id": zod.string()
 })
-
-export const DeleteWebhookResponse = zod.void()
 
 /**
  * Required permission: webhooks:write
@@ -90,8 +68,6 @@ export const TestWebhookParams = zod.object({
   "id": zod.string()
 })
 
-export const TestWebhookResponse = WebhookTestResponse
-
 /**
  * Re-send the signed `webhook.verify` ownership challenge to a PENDING webhook's url and, if the endpoint now echoes `data.token` in a 2xx, flip it active — IN PLACE (id + secret preserved; no delete/recreate). Use it to recover after fixing a receiver that failed the challenge at create time. An already-verified webhook returns `status:"active"` unchanged (idempotent). Returns the same `{ status, verification? }` shape as create.
  * @summary Re-run webhook ownership verification
@@ -99,5 +75,3 @@ export const TestWebhookResponse = WebhookTestResponse
 export const VerifyWebhookParams = zod.object({
   "id": zod.string()
 })
-
-export const VerifyWebhookResponse = WebhookVerifyResponse

@@ -12,9 +12,9 @@ import type { SceneShotSpecV2Backdrop } from './sceneShotSpecV2Backdrop';
 import type { SceneShotSpecV2Camera } from './sceneShotSpecV2Camera';
 import type { SceneShotSpecV2ConstraintsItem } from './sceneShotSpecV2ConstraintsItem';
 import type { SceneShotSpecV2Environment } from './sceneShotSpecV2Environment';
-import type { SceneShotSpecV2LayerDepth0 } from './sceneShotSpecV2LayerDepth0';
 import type { SceneShotSpecV2Post } from './sceneShotSpecV2Post';
 import type { SceneShotSpecV2ReferenceSize } from './sceneShotSpecV2ReferenceSize';
+import type { SceneShotSpecV2Schema0 } from './sceneShotSpecV2Schema0';
 
 /**
  * A version-2 scene shot: a self-contained 3D world-object shot that scene.add / scene.update materializes into an ordinary component clip. The shot owns its layers, camera, lighting, backdrop and normalized local animation; the composition owns start, duration, ordering, cuts and transitions. Coordinates are REFERENCE PIXELS: origin at frame centre, +X right, +Y down, +Z toward the viewer. referenceSize must have the SAME aspect ratio as the composition format; mismatch fails instead of cropping. At equal aspect ratio the shot scales uniformly by outputWidth/referenceWidth. A segment's easing belongs to the keyframe it ARRIVES at; the first keyframe has no easing. Authoring limits: 32 layers, 4 devices, 16 distinct image slots, 256 keyframes per channel, 2048 keyframes per shot. Version 2 supports nested groups, procedural slab/page/phone/laptop objects, screen- and world-space text, admitted image/component/video surfaces, fixed photographic and generated studio environments, transparent/solid/linear/radial backdrops, constraints, focus, grain and vignette. Raw HTML, custom shader props, imported GLB models, arbitrary external HDR environments, skeletal animation and physics are refused with an exact field path.
@@ -26,7 +26,7 @@ export interface SceneShotSpecV2 {
   environment?: SceneShotSpecV2Environment;
   backdrop?: SceneShotSpecV2Backdrop;
   /** @minItems 1 */
-  layers: SceneShotSpecV2LayerDepth0[];
+  layers: SceneShotSpecV2Schema0[];
   animation?: SceneShotSpecV2AnimationItem[];
   post?: SceneShotSpecV2Post;
   constraints?: SceneShotSpecV2ConstraintsItem[];

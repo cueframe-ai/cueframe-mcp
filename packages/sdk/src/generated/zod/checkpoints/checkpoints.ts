@@ -10,12 +10,7 @@
 import * as zod from 'zod';
 
 import {
-  CheckpointListResponse,
-  CheckpointResponse,
-  CheckpointResumeRequest,
-  CheckpointResumeResponse,
-  ReviewDecisionResponse,
-  ReviewPacketResponse
+  CheckpointResumeRequest
 } from '../models';
 
 
@@ -27,8 +22,6 @@ export const GetReviewPacketParams = zod.object({
   "id": zod.string()
 })
 
-export const GetReviewPacketResponse = ReviewPacketResponse
-
 /**
  * Record approve / revise / abandon from the hosted page. Server-side this IS POST /v1/checkpoints/{id}/resume — one implementation; the driving agent learns of the decision via the checkpoint webhooks / wait_job. 409 when the packet is no longer awaiting (superseded, expired, or already decided).
  * @summary Record a hosted review decision (the same resume rail)
@@ -36,8 +29,6 @@ export const GetReviewPacketResponse = ReviewPacketResponse
 export const RecordReviewDecisionParams = zod.object({
   "id": zod.string()
 })
-
-export const RecordReviewDecisionResponse = ReviewDecisionResponse
 
 /**
  * The version stack of approval packets, newest first. Scope with ?composeJobId= to see one run's gate history (v1→vN with per-version status + decisions) or ?projectId= for everything reviewable in a project.
@@ -54,8 +45,6 @@ export const ListCheckpointsQueryParams = zod.object({
   "projectId": zod.string().optional().describe('Scope to everything reviewable in one project.')
 })
 
-export const ListCheckpointsResponse = CheckpointListResponse
-
 /**
  * The full approval packet: the stage artifact under review, presigned storyboard/eval stills, critic verdicts (incl. lock_violation entries), the money triple {thisStep, jobSpendSoFar, estimatedJourneyTotal}, and the recorded decision once resolved. Answer an `awaiting` packet with POST /v1/checkpoints/{id}/resume.
  * @summary Get a checkpoint packet
@@ -63,8 +52,6 @@ export const ListCheckpointsResponse = CheckpointListResponse
 export const GetCheckpointParams = zod.object({
   "id": zod.string()
 })
-
-export const GetCheckpointResponse = CheckpointResponse
 
 /**
  * The A1 review grammar: one `decision` for the gate, optionally carrying anchored `comments` ({beatId} or {timecodeMs} anchors; per-anchor verdict approve|revise|lock — lock freezes the element contractually) and/or `edits` (your revised stage artifact). `revise` loops IN-JOB: the director revises and re-presents this same gate with a new packet (version+1); the brief quote states the included revision cycles — beyond them, revise is refused 402 with the path forward. `abandon` ends the run. Approve-with-comments is legal: the notes record without gating.
@@ -75,5 +62,3 @@ export const ResumeCheckpointParams = zod.object({
 })
 
 export const ResumeCheckpointBody = CheckpointResumeRequest
-
-export const ResumeCheckpointResponse = CheckpointResumeResponse

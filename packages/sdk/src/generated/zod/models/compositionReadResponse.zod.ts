@@ -10,6 +10,7 @@
 import * as zod from 'zod';
 import { Composition } from './composition.zod';
 import { CompositionDependencyRead } from './compositionDependencyRead.zod';
+import { CompositionUpgradeNeed } from './compositionUpgradeNeed.zod';
 
 export const compositionReadResponseTwoRevisionMin = 0;
 export const compositionReadResponseTwoRevisionMax = 9007199254740991;
@@ -23,7 +24,8 @@ export const CompositionReadResponse = zod.union([Composition,zod.strictObject({
   "revision": zod.int().min(compositionReadResponseTwoRevisionMin).max(compositionReadResponseTwoRevisionMax),
   "dependencies": CompositionDependencyRead,
   "expectedBrandIdentity": zod.string().regex(compositionReadResponseTwoExpectedBrandIdentityRegExp).optional(),
-  "brandAuthorityError": zod.string().optional()
+  "brandAuthorityError": zod.string().optional(),
+  "needsUpgrade": zod.array(CompositionUpgradeNeed).optional()
 })]);
 
 export type CompositionReadResponse = zod.input<typeof CompositionReadResponse>;

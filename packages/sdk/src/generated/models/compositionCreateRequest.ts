@@ -7,7 +7,7 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { FormatSpec } from './formatSpec';
+import type { Format } from './format';
 
 /**
  * POST /projects/:id/compositions body — create a new video (composition) in the project. `format` defaults to the project's compositionFormat when omitted.
@@ -18,5 +18,5 @@ export interface CompositionCreateRequest {
      * @maxLength 200
      */
   name?: string;
-  format?: FormatSpec;
+  format?: Format;
 }

@@ -10,9 +10,7 @@
 import * as zod from 'zod';
 
 import {
-  CompositionFromSuggestionRequest,
-  SuggestionsEnvelope,
-  SuggestionsTriggerResponse
+  CompositionFromSuggestionRequest
 } from '../models';
 
 
@@ -25,8 +23,6 @@ export const ComposeFromSuggestionParams = zod.object({
 })
 
 export const ComposeFromSuggestionBody = CompositionFromSuggestionRequest
-
-export const ComposeFromSuggestionResponse = zod.unknown()
 
 /**
  * Required permission: media:read
@@ -48,8 +44,6 @@ export const ListMediaSuggestionsQueryParams = zod.object({
   "topic": zod.string().optional().describe('Only suggestions matching this topic label.')
 })
 
-export const ListMediaSuggestionsResponse = SuggestionsEnvelope
-
 /**
  * Analyze a video for its best short-form moments — returns ranked clip suggestions with trims, hooks, titles, captions, hashtags, and platform fit for turning long footage into shorts. Async: returns 202; poll GET /media/:id/suggestions for the ranked results.
  * @summary Trigger clip-suggestion analysis
@@ -58,8 +52,6 @@ export const SuggestBriefsParams = zod.object({
   "id": zod.string()
 })
 
-export const SuggestBriefsResponse = SuggestionsTriggerResponse
-
 /**
  * Required permission: media:write
  * @summary Reset clip suggestions for a media item
@@ -67,5 +59,3 @@ export const SuggestBriefsResponse = SuggestionsTriggerResponse
 export const ResetMediaSuggestionsParams = zod.object({
   "id": zod.string()
 })
-
-export const ResetMediaSuggestionsResponse = zod.unknown()

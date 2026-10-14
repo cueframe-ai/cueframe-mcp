@@ -7,10 +7,10 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { FormatSpec } from './formatSpec';
+import type { Format } from './format';
 
 export interface WorkspaceCreateRequest {
   /** @maxLength 2048 */
   videoUrl: string;
-  format?: FormatSpec;
+  format?: Format;
 }

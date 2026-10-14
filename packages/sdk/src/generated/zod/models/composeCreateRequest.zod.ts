@@ -8,7 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { FormatSpec } from './formatSpec.zod';
+import { Format } from './format.zod';
 
 
 
@@ -34,7 +34,7 @@ export const ComposeCreateRequest = zod.strictObject({
   "suggestionId": zod.string().min(1).optional(),
   "fromComposition": zod.boolean().optional().describe('Reuse the project\'s current composition as the compose starting point (critique-retry path). The Director RE-AUTHORS graphics: if the current composition is client-authored and contains graphic clips (overlay/component/card), the request is refused (validation_error naming the clips) — render it verbatim with create_render instead. The director\'s own output (critique-retry) is exempt.'),
   "briefId": zod.string().min(1).optional().describe('Compose from a persisted Brief (create_brief) — the intent-first door: every Brief field is HONORED or the request is refused loudly naming the field (window from beat moment-pinning; seeded graphics carried VERBATIM as locked clips; exclusions enforced; locale + caption emphasis threaded to the Director). Exactly ONE of suggestionId | fromComposition | briefId.'),
-  "format": FormatSpec.optional().describe('Optional format override. Phase 2 ignores this — format precedence is project.compositionFormat → 9:16 fhd 30fps default.'),
+  "format": Format.optional().describe('Optional format override. Phase 2 ignores this — format precedence is project.compositionFormat → 9:16 fhd 30fps default.'),
   "scope": zod.unknown().optional().describe('RequestScope discriminated union (per compose-api-contract.md). Editor-only scopes (captions/overlay-track/broll/overlay-instance/segment) require an editor-session token; API tokens get 403 on those.'),
   "critique": zod.string().max(composeCreateRequestCritiqueMax).optional().describe('Structured critique block (per compose-api-contract.md decision #11). Capped at 2KB total; per-criterion blocks capped at 500 chars.'),
   "parentJobId": zod.string().optional().describe('Pointer to the prior compose job this run iterates on. Surfaced on the resulting compose job as baselineComposeJobId.'),

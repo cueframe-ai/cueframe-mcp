@@ -10,31 +10,15 @@
 import * as zod from 'zod';
 
 import {
-  LibrarySearchResponse,
   MatteBakeRequest,
-  MatteBakeTriggerResponse,
-  MediaContextResponse,
-  MediaDirectUploadResponse,
   MediaFactPurchaseRequest,
-  MediaFactPurchaseResponse,
-  MediaFactsResponse,
   MediaFinalizeRequest,
-  MediaFinalizeResponse,
   MediaGenerateRequest,
-  MediaGenerateResponse,
   MediaImportRequest,
-  MediaImportResponse,
-  MediaListResponse,
-  MediaResponse,
   MediaUploadRequest,
-  SubjectDetectionTriggerResponse,
   TimelineAnalysisRequest,
-  TimelineAnalysisResponse,
   TranscriptAnalyzeRequest,
-  TranscriptAnalyzeResponse,
-  TranscriptResponse,
-  UploadTokenRequest,
-  UploadTokenResponse
+  UploadTokenRequest
 } from '../models';
 
 
@@ -53,23 +37,17 @@ export const SearchLibraryQueryParams = zod.object({
   "limit": zod.int().min(1).max(searchLibraryQueryLimitMax).default(searchLibraryQueryLimitDefault).describe('Maximum moments to return. Default 10, maximum 25.')
 })
 
-export const SearchLibraryResponse = LibrarySearchResponse
-
 /**
  * Required permission: media:write
  * @summary Mint a short-lived token for the signed upload lane
  */
 export const CreateUploadTokenBody = UploadTokenRequest
 
-export const CreateUploadTokenResponse = UploadTokenResponse
-
 /**
  * Required permission: media:write
  * @summary Initiate a direct upload (presigned PUT URL)
  */
 export const CreateMediaUploadBody = MediaUploadRequest
-
-export const CreateMediaUploadResponse = MediaDirectUploadResponse
 
 /**
  * Paginated library list. Filter with ?kind= (video|audio|image|gif|asset|source|stock), ?source= (upload|generated|import-url|stock), ?tag= (exact tag) so a real library isn't an undifferentiated soup.
@@ -87,8 +65,6 @@ export const ListMediaQueryParams = zod.object({
   "tag": zod.string().optional().describe('Filter to items carrying this EXACT tag (not a prefix or substring match).')
 })
 
-export const ListMediaResponse = MediaListResponse
-
 /**
  * Required permission: media:write
  * @summary Finalize a direct upload (trigger processing after the bytes are PUT)
@@ -99,23 +75,17 @@ export const FinalizeMediaParams = zod.object({
 
 export const FinalizeMediaBody = MediaFinalizeRequest
 
-export const FinalizeMediaResponse = MediaFinalizeResponse
-
 /**
  * Generate a new media item from a text prompt: text-to-video, text-to-image, image-to-video, or a programmatic Manim animation (generator 'auto' picks the best one for the prompt). Async — returns a media id that flips to ready when generation finishes; poll GET /media/:id or register a media.completed webhook. Priced on what the model actually costs; refused with 402 if your balance cannot cover the quote (see GET /me).
  * @summary Generate media with AI (video, image, or Manim animation)
  */
 export const GenerateMediaBody = MediaGenerateRequest
 
-export const GenerateMediaResponse = MediaGenerateResponse
-
 /**
  * Import media into the project from a public https URL — the server fetches and mirrors the bytes (SSRF-filtered), then processes it (transcode + transcribe). Async: returns a media id that flips to ready when the mirror and processing finish; poll GET /media/:id or use a media.completed webhook.
  * @summary Import media from a URL (server-side fetch)
  */
 export const ImportMediaBody = MediaImportRequest
-
-export const ImportMediaResponse = MediaImportResponse
 
 /**
  * Required permission: media:write
@@ -125,8 +95,6 @@ export const DeleteMediaParams = zod.object({
   "id": zod.string()
 })
 
-export const DeleteMediaResponse = zod.void()
-
 /**
  * Required permission: media:read
  * @summary Get a media item by id
@@ -134,8 +102,6 @@ export const DeleteMediaResponse = zod.void()
 export const GetMediaParams = zod.object({
   "id": zod.string()
 })
-
-export const GetMediaResponse = MediaResponse
 
 /**
  * Required permission: media:read
@@ -160,8 +126,6 @@ export const GetMediaTranscriptQueryParams = zod.object({
   "limit": zod.int().min(1).max(getMediaTranscriptQueryLimitMax).default(getMediaTranscriptQueryLimitDefault).describe('Utterances per page.')
 })
 
-export const GetMediaTranscriptResponse = TranscriptResponse
-
 /**
  * The read-only context an agent needs to author a composition over this source: the detected face/subject roster (face-0 = primary speaker, with normalized bbox + active-speaker share), the transcript, the temporal grids — `beatGrid` (a MUSIC bed's rhythm: bpm, beatTimesMs in milliseconds, confidence, method) and `wordGrid` (VO word-onset timings in milliseconds, from the transcript) — and a presigned `thumbnail` (~the footage at a glance). For stills at CHOSEN timestamps, call preview_frame with a one-clip composition over this media. Call this before authoring crop intents (reframe) and overlay/caption timing. Faces are lazily detected — `faces.status` is `not_detected` until a compose/detect pass has run over the source, never a faked empty roster. `beatGrid` is null until beat analysis has run: generated music beds are analyzed automatically at delivery; an uploaded/imported bed may not carry a grid yet (on-demand analysis is not client-triggerable today). `audioRole` is the DECLARED role of an audio asset (vo | music | sfx | ambience) — author the clip source's `audioRole` from it; `envelope` carries the coarse `envelopeClass` (transient | sweep | ambient) plus any probed attack/centroid/volume stats. Both are null for footage/images or an undeclared audio asset.
  * @summary Get authoring context for a media item (faces + transcript + beat/word grids)
@@ -169,8 +133,6 @@ export const GetMediaTranscriptResponse = TranscriptResponse
 export const GetMediaContextParams = zod.object({
   "id": zod.string()
 })
-
-export const GetMediaContextResponse = MediaContextResponse
 
 /**
  * Required permission: media:write
@@ -184,8 +146,6 @@ export const TriggerSubjectDetectionQueryParams = zod.object({
   "detector": zod.enum(['face', 'person']).optional().describe('Which detector to run. Defaults to `face`; an unknown value is refused, never defaulted.')
 })
 
-export const TriggerSubjectDetectionResponse = SubjectDetectionTriggerResponse
-
 /**
  * Bakes the alpha matte that lets a graphic sit BEHIND the subject for a specific source window. The window is the clip's SOURCE trim (`startSec`/`endSec` in seconds into the underlying file), not timeline time, and it is required — a matte's cost scales with its duration. Async: poll `GET /media/{id}/facts` for the matte fact's status. If a matte for this exact window already exists (bought earlier, or baked by a compose that put a graphic behind the subject) this returns 200 with the existing state and charges NOTHING. `summary.presenceFraction` on the delivered fact is the viability signal: below 0.6 there is no reliable silhouette, and that matte is delivered free.
  * @summary Buy a behind-subject matte for one source window
@@ -195,8 +155,6 @@ export const TriggerMatteBakeParams = zod.object({
 })
 
 export const TriggerMatteBakeBody = MatteBakeRequest
-
-export const TriggerMatteBakeResponse = MatteBakeTriggerResponse
 
 /**
  * The enhancement menu. `facts` is everything expensive we have already computed about this source — subject tracks, mattes — with its status, a small summary a caller can act on without fetching the artifact, and `charge` (what it was billed; absent when it cost nothing, e.g. a matte produced as a side effect of a compose you already paid for, or one delivered below the behind-subject presence floor). `offers` is what is NOT present yet, with a real server quote. A matte is offered ONLY when you pass `startSec`+`endSec` — the clip's SOURCE window — because a matte's price is a function of its duration and a whole-source quote for a three-second clip is not a price. Pass the window from the editor and you get a per-clip matte quote plus the status of that window's matte; omit it from the library and you get everything except the matte.
@@ -212,8 +170,6 @@ export const ListMediaFactsQueryParams = zod.object({
   "endSec": zod.number().optional().describe('Source-out of the clip\'s trim, in seconds. Must be sent WITH startSec.')
 })
 
-export const ListMediaFactsResponse = MediaFactsResponse
-
 /**
  * Purchases one enhancement for this source. `matte` REQUIRES `intent:{startSec,endSec}` — the clip's SOURCE window — because a matte's cost scales with its duration. For `subjectTrack` the same `intent` is OPTIONAL: give the clip's source window to buy the track the render will look up for THAT clip (and pay only for its duration); omit it for the whole source. If the fact already exists (pending or ready) this returns it with `alreadyExisted:true` and charges nothing. Charging happens on DELIVERY, never here: a job that never lands is never billed.
  * @summary Buy a derived fact (subject track or behind-subject matte)
@@ -223,8 +179,6 @@ export const PurchaseMediaFactParams = zod.object({
 })
 
 export const PurchaseMediaFactBody = MediaFactPurchaseRequest
-
-export const PurchaseMediaFactResponse = MediaFactPurchaseResponse
 
 /**
  * Ask ONE editorial question of a transcript and get the answer as text: `summary` (what is actually said, plus the takeaways), `chapters` (where the subject changes), or `highlights` (the moments that stand alone as a short). PRECISION: timestamps are ABSOLUTE seconds from the start of the media and every one is verified against the transcript before you see it (a fabricated timestamp fails the call rather than shipping) — but they are LINE-START markers roughly 15s apart, so a boundary can sit up to 15s BEFORE the moment you asked for. Treat every span as APPROXIMATE: use it to LOCATE the moment, then refine the in/out against the word timings from GET /v1/media/{id}/context before you cut. Feeding a raw span straight into a clip trim will start it mid-sentence. Pass `window` to analyse one slice; omit it for the whole thing. This is a METERED LLM call, not a read: it bills on measured token spend, and a recording too long to analyse in one pass is rejected with 422 `transcript_too_long` (over ~100k characters, roughly two hours of speech) rather than silently summarising only its first half — narrow it with `window`. 422 `media_no_transcript` means the item has no speech on file (or none inside your window); GET /v1/media/{id}/context shows transcript state, and GET /v1/media/{id}/transcript returns the raw words.
@@ -236,12 +190,8 @@ export const AnalyzeTranscriptParams = zod.object({
 
 export const AnalyzeTranscriptBody = TranscriptAnalyzeRequest
 
-export const AnalyzeTranscriptResponse = TranscriptAnalyzeResponse
-
 /**
  * Returns filler, silence-gap, and emphasis word indices for an editor timeline. Analysis settings are selected server-side and cannot be overridden.
  * @summary Analyze a timeline transcript for edit decisions
  */
 export const AnalyzeTimelineBody = TimelineAnalysisRequest
-
-export const AnalyzeTimelineResponse = TimelineAnalysisResponse

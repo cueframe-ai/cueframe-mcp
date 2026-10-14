@@ -7,10 +7,10 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { CompositionFromSuggestionRequestFormat } from './compositionFromSuggestionRequestFormat';
+import type { Format } from './format';
 
 export interface CompositionFromSuggestionRequest {
   /** @minLength 1 */
   suggestionId: string;
-  format?: CompositionFromSuggestionRequestFormat;
+  format?: Format;
 }

@@ -10,8 +10,7 @@
 import * as zod from 'zod';
 
 import {
-  ConsultRequest,
-  ConsultResponse
+  ConsultRequest
 } from '../models';
 
 
@@ -24,5 +23,3 @@ export const ConsultParams = zod.object({
 })
 
 export const ConsultBody = ConsultRequest
-
-export const ConsultResponseSchema = ConsultResponse

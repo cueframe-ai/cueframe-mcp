@@ -11,11 +11,7 @@ import * as zod from 'zod';
 
 import {
   ComposeCreateRequest,
-  ComposeCreateResponse,
-  ComposeJobDetailResponse,
-  ComposeJobListResponse,
-  ComposeSelectRequest,
-  ComposeSelectResponse
+  ComposeSelectRequest
 } from '../models';
 
 
@@ -29,8 +25,6 @@ export const ComposeParams = zod.object({
 
 export const ComposeBody = ComposeCreateRequest
 
-export const ComposeResponse = ComposeCreateResponse
-
 /**
  * Server-Sent Events stream emitting typed `compose_event` frames (per `2026-05-23-compose-api-contract.md` § SSE event types — job_started, candidate_phase_started, candidate_phase_evaluated, candidate_completed, critique_retry_started, winner_selected, job_completed, job_failed). The stream closes once the compose job reaches a terminal status. Required scope: projects:read
  * @summary Stream compose progress (SSE)
@@ -39,8 +33,6 @@ export const StreamComposeParams = zod.object({
   "id": zod.string(),
   "composeJobId": zod.string()
 })
-
-export const StreamComposeResponse = zod.unknown()
 
 /**
  * Selects one candidate from a finished compose ensemble and writes it to the project's composition. `selectStrategy` decides how the editor draft interacts with the write (per compose-api-contract.md).
@@ -53,8 +45,6 @@ export const SelectComposeCandidateParams = zod.object({
 
 export const SelectComposeCandidateBody = ComposeSelectRequest
 
-export const SelectComposeCandidateResponse = ComposeSelectResponse
-
 /**
  * Cancel a running compose so an agent (or a cost guard) can abort a mis-priced or runaway ensemble without waiting out its budget or TTL. Cancellation is confirmed before the job becomes terminal; the compose.cancelled event is then emitted and any linked charge is released. Already-terminal jobs are rejected (422 compose_not_cancellable).
  * @summary Cancel an in-flight compose job
@@ -64,8 +54,6 @@ export const CancelComposeParams = zod.object({
   "composeJobId": zod.string()
 })
 
-export const CancelComposeResponse = ComposeJobDetailResponse
-
 /**
  * Required permission: projects:read
  * @summary List recent compose jobs for a project
@@ -73,8 +61,6 @@ export const CancelComposeResponse = ComposeJobDetailResponse
 export const ListComposeJobsParams = zod.object({
   "id": zod.string()
 })
-
-export const ListComposeJobsResponse = ComposeJobListResponse
 
 /**
  * Required permission: projects:read
@@ -84,5 +70,3 @@ export const GetComposeJobParams = zod.object({
   "id": zod.string(),
   "composeJobId": zod.string()
 })
-
-export const GetComposeJobResponse = ComposeJobDetailResponse

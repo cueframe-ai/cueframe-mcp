@@ -50,6 +50,8 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
       - run: pnpm build
+      - name: no package changed without a version bump (the loop below skips published versions)
+        run: pnpm check:published-versions
       - name: publish committed package versions in dependency order
         # api-contract has no workspace dependency; sdk and skills are bundled into cli at build time; so
         # each package's inputs are on npm before it is published. A version that already exists on npm is

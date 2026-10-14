@@ -10,6 +10,7 @@
 import * as zod from 'zod';
 import { BrandKitResponse } from './brandKitResponse.zod';
 import { Composition } from './composition.zod';
+import { Format } from './format.zod';
 import { ProjectContextMedia } from './projectContextMedia.zod';
 import { ProjectContextTranscript } from './projectContextTranscript.zod';
 
@@ -23,12 +24,7 @@ export const projectContextResponseMarkersItemEndTimeMin = 0;
 
 export const ProjectContextResponse = zod.strictObject({
   "composition": zod.union([Composition,zod.null()]).describe('The project\'s ACTIVE composition wire shape — identical to GET /v1/projects/{id}/composition. NULL when the project has no composition yet (a freshly created project): mint one with new_composition, or let the first apply_composition create it.'),
-  "format": zod.union([zod.strictObject({
-  "aspectRatio": zod.enum(['16:9', '9:16', '1:1', '4:5']),
-  "fps": zod.union([zod.literal(24),zod.literal(25),zod.literal(30),zod.literal(60)]).optional(),
-  "resolution": zod.enum(['hd', 'fhd', '4k']).optional(),
-  "platform": zod.string().optional()
-}),zod.null()]).describe('The composition\'s format, hoisted — the pixel frame every card/graphic must be authored against. Null whenever `composition` is null.'),
+  "format": zod.union([Format,zod.null()]).describe('The composition\'s format, hoisted — the pixel frame every card/graphic must be authored against. Null whenever `composition` is null.'),
   "media": zod.array(ProjectContextMedia).describe('The org\'s media library (most recent first, capped) — the pool this project can draw clips from.'),
   "transcript": zod.union([ProjectContextTranscript,zod.null()]).describe('The FIRST transcribed media item\'s word-timed transcript, flattened — the spine a VO-driven film cuts to. `status:"ready"` carries the words; `status:"unavailable"` means the transcript exists but its body could not be fetched (retry); null means nothing in `media` is transcribed. For any OTHER transcribed item (see each entry\'s `hasTranscript`), read GET /v1/media/{id}/transcript.'),
   "brandKit": zod.union([BrandKitResponse,zod.null()]).describe('The kit BOUND to this project (`projects.brandKitId` is the brand SSOT — bind one via update_project). Null when the project has no kit bound; enumerate the org\'s kits with GET /v1/brand-kits.'),

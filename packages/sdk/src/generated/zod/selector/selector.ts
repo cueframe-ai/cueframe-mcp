@@ -10,7 +10,6 @@
 import * as zod from 'zod';
 
 import {
-  SelectorCandidatesResponse,
   SelectorPreviewRequest
 } from '../models';
 
@@ -30,8 +29,6 @@ export const ListSelectorCandidatesQueryParams = zod.object({
   "groupId": zod.string().min(1).describe('The synced-angle group to score.')
 })
 
-export const ListSelectorCandidatesResponse = SelectorCandidatesResponse
-
 /**
  * Required permission: media:read
  * @summary Re-resolve a switch advisory under a hand-supplied policy (A/B taste; not persisted)
@@ -41,5 +38,3 @@ export const PreviewSelectorParams = zod.object({
 })
 
 export const PreviewSelectorBody = SelectorPreviewRequest
-
-export const PreviewSelectorResponse = SelectorCandidatesResponse

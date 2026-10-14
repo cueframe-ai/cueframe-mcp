@@ -7,7 +7,7 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { ComponentManifestV2 } from './componentManifestV2';
+import type { ComponentManifest } from './componentManifest';
 import type { ComponentPlacement } from './componentPlacement';
 import type { ComponentResponseBrandBindingsItem } from './componentResponseBrandBindingsItem';
 import type { ComponentResponseCategory } from './componentResponseCategory';
@@ -20,7 +20,7 @@ import type { ComponentResponseSource } from './componentResponseSource';
 import type { ComponentResponseTier } from './componentResponseTier';
 import type { ComponentResponseTokens } from './componentResponseTokens';
 import type { ComponentResponseUseCaseItem } from './componentResponseUseCaseItem';
-import type { SceneFormat } from './sceneFormat';
+import type { Format } from './format';
 
 /**
  * Component catalog entry per §Components.
@@ -43,15 +43,15 @@ export interface ComponentResponse {
   examples?: ComponentResponseExamplesItem[];
   /** @exclusiveMinimum 0 */
   durationInFrames?: number;
-  /** The stored runtime manifest (assets, graphics API, alpha policy) of an org-INSTALLED component: the same object the create/update body takes, so a manifest read back here can be written back unchanged. Built-in defaults have no stored manifest and omit it. Its `version` is always 2 (the contract version), unlike the entry's semver `version`. */
-  manifest?: ComponentManifestV2;
+  /** The stored runtime manifest (assets, graphics API, alpha policy) of an org-INSTALLED component: the same object its source snapshot carries, so a manifest read back here can be written back unchanged. Built-in defaults have no stored manifest and omit it. Its `version` is the runtime contract version (4 native, 2 retired TSX), unlike the entry's semver `version`. */
+  manifest?: ComponentManifest;
   /** The entry's id: a `primitiveId` for a built-in, a `componentId` for an installed component. */
   id: string;
   /** 'default' = built-in primitive (place by primitiveId); 'installed' = org-authored component (place by componentId). */
   source: ComponentResponseSource;
   /** RENDER kind (component | transition | scene). NOT the ClipSource variant — see `placement` for how to author it on the timeline. */
   kind: ComponentResponseKind;
-  /** The ENTRY's version: a semver string ('0.0.0' until an authored component is versioned). Distinct from `manifest.version`, which is the runtime contract version and is always the literal 2. */
+  /** The ENTRY's version: a semver string ('0.0.0' until an authored component is versioned). Distinct from `manifest.version`, which is the runtime contract version (4 native, 2 retired TSX). */
   version: string;
   propDefaults?: ComponentResponsePropDefaults;
   /**
@@ -64,7 +64,7 @@ export interface ComponentResponse {
      * @nullable
      */
   subtextParam?: string | null;
-  format?: SceneFormat;
+  format?: Format;
   /** Selection signal: a verb naming what this primitive accomplishes (e.g. 'product-trailer'). Match it to the beat you are authoring. */
   intent?: string;
   /** When to use this — AND when not to. The negative guidance is load-bearing; read it before picking. */

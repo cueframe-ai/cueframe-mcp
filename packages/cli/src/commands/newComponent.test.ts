@@ -10,8 +10,8 @@ import {
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { newComponentCommand } from './newComponent.js';
-import { scaffoldDefinition } from '../internal/componentSource.js';
-import { DEFAULT_COMPONENT_MANIFEST_V2 } from '../internal/componentManifest.js';
+import { scaffoldDefinition, scaffoldTemplate } from '../internal/componentSource.js';
+import { SCAFFOLD_COMPONENT_MANIFEST_V4 } from '../internal/scaffoldManifest.js';
 
 describe('cueframe new component', () => {
   const dirs: string[] = [];
@@ -48,28 +48,18 @@ describe('cueframe new component', () => {
     for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true });
   });
 
-  it('scaffolds the v3 blank component (source, metadata and definition) with a PascalCase export', () => {
+  it('scaffolds the native blank component: template.html and definition.json', () => {
     const root = workspace();
     inDir(root);
     newComponentCommand('my-badge', { json: false });
 
     const dir = join(root, 'cueframe', 'components', 'my-badge');
-    expect(existsSync(join(dir, 'index.tsx'))).toBe(true);
-    expect(existsSync(join(dir, 'config.ts'))).toBe(true);
-    expect(JSON.parse(readFileSync(join(dir, 'definition.json'), 'utf8'))).toEqual(scaffoldDefinition('my-badge'));
-
-    const index = readFileSync(join(dir, 'index.tsx'), 'utf8');
-    expect(index).toContain('export default function MyBadge(');
-    expect(index).toContain('durationInFrames: number; params: Record<string, unknown>; assets:');
-
-    const cfg = readFileSync(join(dir, 'config.ts'), 'utf8');
-    expect(cfg).toContain("id: 'my-badge'");
-    expect(cfg).toContain("name: 'My Badge'");
-    expect(cfg).toContain("category: 'ui-blocks'");
-    expect(cfg).toContain("import component from './index'");
+    expect(readFileSync(join(dir, 'template.html'), 'utf8')).toBe(scaffoldTemplate('my-badge'));
+    expect(JSON.parse(readFileSync(join(dir, 'definition.json'), 'utf8'))).toEqual(scaffoldDefinition());
+    expect(existsSync(join(dir, 'index.tsx'))).toBe(false);
   });
 
-  it('stamps cueframe.json with the contract-v2 component manifest', () => {
+  it('stamps cueframe.json with the version-4 component manifest', () => {
     const root = workspace();
     inDir(root);
     newComponentCommand('my-badge', { json: false });
@@ -77,7 +67,7 @@ describe('cueframe new component', () => {
     const manifest = JSON.parse(readFileSync(join(root, 'cueframe.json'), 'utf8'));
     expect(manifest.components['my-badge']).toEqual({
       custom: true,
-      manifest: DEFAULT_COMPONENT_MANIFEST_V2,
+      manifest: SCAFFOLD_COMPONENT_MANIFEST_V4,
     });
   });
 
@@ -102,7 +92,7 @@ describe('cueframe new component', () => {
     inDir(root);
 
     newComponentCommand('my-badge', { json: false, force: true });
-    expect(readFileSync(join(dir, 'index.tsx'), 'utf8')).toContain('export default function MyBadge(');
+    expect(readFileSync(join(dir, 'template.html'), 'utf8')).toBe(scaffoldTemplate('my-badge'));
   });
 
   it('no workspace → UserError telling the user to run `cueframe init`', () => {

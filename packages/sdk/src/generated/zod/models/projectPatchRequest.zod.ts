@@ -8,7 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { FormatSpec } from './formatSpec.zod';
+import { Format } from './format.zod';
 
 export const projectPatchRequestNameMax = 200;
 
@@ -18,7 +18,7 @@ export const projectPatchRequestNameMax = 200;
 export const ProjectPatchRequest = zod.strictObject({
   "name": zod.string().min(1).max(projectPatchRequestNameMax).optional(),
   "description": zod.string().optional(),
-  "format": FormatSpec.optional(),
+  "format": Format.optional(),
   "brandKitId": zod.string().min(1).optional()
 }).describe('PATCH /projects/:id body.');
 

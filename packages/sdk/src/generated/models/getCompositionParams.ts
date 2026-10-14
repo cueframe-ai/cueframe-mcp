@@ -11,9 +11,9 @@ import type { GetCompositionIncludeDependencies } from './getCompositionIncludeD
 
 export type GetCompositionParams = {
 /**
- * Explicit accepted saved component execution protocol. Absent readers accept only the historical protocol.
+ * The component execution versions this reader accepts, one parameter per version: 3, or 3 and 4 (native placements). Absent readers accept only the historical protocol.
  */
-componentExecutionVersions?: '3';
+componentExecutionVersions?: '3' | ['3', '4'];
 /**
  * Return the immutable composition identity, project revision and shared v1 dependency expectations alongside the composition.
  */

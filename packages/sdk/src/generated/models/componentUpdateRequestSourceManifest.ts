@@ -11,13 +11,14 @@ import type { ComponentUpdateRequestSourceManifestAlphaPolicy } from './componen
 import type { ComponentUpdateRequestSourceManifestAssets } from './componentUpdateRequestSourceManifestAssets';
 import type { ComponentUpdateRequestSourceManifestGraphics } from './componentUpdateRequestSourceManifestGraphics';
 import type { ComponentUpdateRequestSourceManifestSceneShot } from './componentUpdateRequestSourceManifestSceneShot';
-import type { ComponentUpdateRequestSourceManifestVisualMedia } from './componentUpdateRequestSourceManifestVisualMedia';
 
 export type ComponentUpdateRequestSourceManifest = {
-  version: 2;
+  version: 4;
+  runtime: 'hyperframes';
+  hfContract: 1;
+  kind: 'scene';
+  sceneShot?: ComponentUpdateRequestSourceManifestSceneShot;
   assets: ComponentUpdateRequestSourceManifestAssets;
   graphics: ComponentUpdateRequestSourceManifestGraphics;
   alphaPolicy: ComponentUpdateRequestSourceManifestAlphaPolicy;
-  sceneShot?: ComponentUpdateRequestSourceManifestSceneShot;
-  visualMedia?: ComponentUpdateRequestSourceManifestVisualMedia;
 };

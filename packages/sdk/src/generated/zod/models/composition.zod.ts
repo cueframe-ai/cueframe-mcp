@@ -8,156 +8,12 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { ComponentParameterValue } from './componentParameterValue.zod';
+import { Format } from './format.zod';
+import { TimelineClip } from './timelineClip.zod';
 
 
 export const compositionTracksItemVolumeMin = 0;
 export const compositionTracksItemVolumeMax = 4;
-
-
-export const compositionTracksItemContentsItemOneStartTimeMin = 0;
-
-export const compositionTracksItemContentsItemOneDurationExclusiveMin = 0;
-
-
-export const compositionTracksItemContentsItemOneSourceOneTrimStartMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneTrimEndMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneExcludedRangesItemStartMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneExcludedRangesItemEndMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneVolumeMin = 0;
-export const compositionTracksItemContentsItemOneSourceOneVolumeMax = 4;
-
-export const compositionTracksItemContentsItemOneSourceOnePlaybackRateExclusiveMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneFadeInMsMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneFadeOutMsMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneDuckDuckDbMax = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneDuckAttackMsMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneDuckReleaseMsMin = 0;
-
-
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemStartSecMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemEndSecExclusiveMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemFocusTwoXMin = 0;
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemFocusTwoXMax = 1;
-
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemFocusTwoYMin = 0;
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemFocusTwoYMax = 1;
-
-
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemZoomMin = 0.1;
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemZoomMax = 1;
-
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemEaseInMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemEaseOutMin = 0;
-
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemBiasXMin = -0.3;
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemBiasXMax = 0.3;
-
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemBiasYMin = -0.3;
-export const compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemBiasYMax = 0.3;
-
-
-
-export const compositionTracksItemContentsItemOneSourceTwoExecutionComponentIdMax = 256;
-
-export const compositionTracksItemContentsItemOneSourceTwoExecutionSourceVersionIdRegExp = new RegExp('^[a-f0-9]{64}$');
-
-
-export const compositionTracksItemContentsItemOneSourceTwoExecutionMediaBindingsItemMax = 128;
-
-export const compositionTracksItemContentsItemOneSourceTwoPlacementTwoSlotsTargetClipIdsItemMax = 256;
-
-
-
-export const compositionTracksItemContentsItemOneSourceThreePrimitiveIdRegExp = new RegExp('^(?!custom$)');
-export const compositionTracksItemContentsItemOneSourceThreeAnchorXMin = 0;
-export const compositionTracksItemContentsItemOneSourceThreeAnchorXMax = 1;
-
-export const compositionTracksItemContentsItemOneSourceThreeAnchorYMin = 0;
-export const compositionTracksItemContentsItemOneSourceThreeAnchorYMax = 1;
-
-export const compositionTracksItemContentsItemOneSourceThreeParallaxMin = -0.3;
-export const compositionTracksItemContentsItemOneSourceThreeParallaxMax = 0.3;
-
-
-export const compositionTracksItemContentsItemOneSourceFourComponentComponentIdMax = 256;
-
-export const compositionTracksItemContentsItemOneSourceFourComponentSourceVersionIdRegExp = new RegExp('^[a-f0-9]{64}$');
-
-
-export const compositionTracksItemContentsItemOneSourceFourComponentMediaBindingsItemMax = 128;
-
-
-
-export const compositionTracksItemContentsItemOneSourceFourWrapperOrderMin = 0;
-export const compositionTracksItemContentsItemOneSourceFourWrapperOrderMax = 9007199254740991;
-
-
-export const compositionTracksItemContentsItemOneOpacityMin = 0;
-export const compositionTracksItemContentsItemOneOpacityMax = 1;
-
-export const compositionTracksItemContentsItemOneScaleExclusiveMin = 0;
-
-export const compositionTracksItemContentsItemOnePositionXMin = -1;
-export const compositionTracksItemContentsItemOnePositionXMax = 2;
-
-export const compositionTracksItemContentsItemOnePositionYMin = -1;
-export const compositionTracksItemContentsItemOnePositionYMax = 2;
-
-export const compositionTracksItemContentsItemOneRegionXMin = 0;
-export const compositionTracksItemContentsItemOneRegionXMax = 1;
-
-export const compositionTracksItemContentsItemOneRegionYMin = 0;
-export const compositionTracksItemContentsItemOneRegionYMax = 1;
-
-export const compositionTracksItemContentsItemOneRegionWExclusiveMin = 0;
-export const compositionTracksItemContentsItemOneRegionWMax = 1;
-
-export const compositionTracksItemContentsItemOneRegionHExclusiveMin = 0;
-export const compositionTracksItemContentsItemOneRegionHMax = 1;
-
-
-
-export const compositionTracksItemContentsItemOneEffectsItemComponentComponentIdMax = 256;
-
-export const compositionTracksItemContentsItemOneEffectsItemComponentSourceVersionIdRegExp = new RegExp('^[a-f0-9]{64}$');
-
-
-export const compositionTracksItemContentsItemOneEffectsItemComponentMediaBindingsItemMax = 128;
-
-export const compositionTracksItemContentsItemOneEffectsItemWindowStartTimeMin = 0;
-
-export const compositionTracksItemContentsItemOneEffectsItemWindowDurationExclusiveMin = 0;
-
-
-export const compositionTracksItemContentsItemOneTransitionInDurationExclusiveMin = 0;
-
-
-export const compositionTracksItemContentsItemOneTransitionInComponentComponentIdMax = 256;
-
-export const compositionTracksItemContentsItemOneTransitionInComponentSourceVersionIdRegExp = new RegExp('^[a-f0-9]{64}$');
-
-
-export const compositionTracksItemContentsItemOneTransitionInComponentMediaBindingsItemMax = 128;
-
-
-
-
-export const compositionTracksItemContentsItemOneAnimateItemTimeMin = 0;
-
-export const compositionTracksItemContentsItemOneAnimateMinOne = 2;
 
 
 export const compositionTracksItemContentsItemTwoStartTimeMin = 0;
@@ -415,211 +271,17 @@ export const compositionCaptionsTwoLayoutsItemWordSignatureRegExp = new RegExp('
 
 export const Composition = zod.strictObject({
   "v": zod.literal(1),
-  "format": zod.strictObject({
-  "aspectRatio": zod.enum(['16:9', '9:16', '1:1', '4:5']),
-  "fps": zod.union([zod.literal(24),zod.literal(25),zod.literal(30),zod.literal(60)]).optional(),
-  "resolution": zod.enum(['hd', 'fhd', '4k']).optional(),
-  "platform": zod.string().optional()
-}),
+  "format": Format,
   "tracks": zod.array(zod.strictObject({
   "id": zod.string().min(1),
   "kind": zod.enum(['video', 'audio', 'image', 'overlay', 'effect']),
   "name": zod.string().optional(),
   "enabled": zod.boolean().optional(),
   "volume": zod.number().min(compositionTracksItemVolumeMin).max(compositionTracksItemVolumeMax).optional(),
-  "contents": zod.array(zod.union([zod.strictObject({
+  "contents": zod.array(zod.union([TimelineClip,zod.strictObject({
   "id": zod.string().min(1),
-  "startTime": zod.number().min(compositionTracksItemContentsItemOneStartTimeMin).describe('Timeline start (seconds).'),
-  "duration": zod.number().gt(compositionTracksItemContentsItemOneDurationExclusiveMin).describe('Clip duration (seconds).'),
-  "source": zod.union([zod.strictObject({
-  "kind": zod.literal("media"),
-  "mediaId": zod.string().min(1),
-  "trim": zod.strictObject({
-  "start": zod.number().min(compositionTracksItemContentsItemOneSourceOneTrimStartMin).describe('Source trim start (seconds).'),
-  "end": zod.number().min(compositionTracksItemContentsItemOneSourceOneTrimEndMin).describe('Source trim end (seconds).')
-}).optional(),
-  "excludedRanges": zod.array(zod.strictObject({
-  "start": zod.number().min(compositionTracksItemContentsItemOneSourceOneExcludedRangesItemStartMin),
-  "end": zod.number().min(compositionTracksItemContentsItemOneSourceOneExcludedRangesItemEndMin),
-  "reason": zod.string().optional()
-})).optional(),
-  "volume": zod.number().min(compositionTracksItemContentsItemOneSourceOneVolumeMin).max(compositionTracksItemContentsItemOneSourceOneVolumeMax).optional(),
-  "muted": zod.boolean().optional(),
-  "playbackRate": zod.number().gt(compositionTracksItemContentsItemOneSourceOnePlaybackRateExclusiveMin).optional(),
-  "sync": zod.enum(['video', 'independent']).optional(),
-  "kenBurns": zod.enum(['in', 'out', 'pan-l', 'pan-r', 'none']).optional(),
-  "volumeDb": zod.number().optional(),
-  "fadeInMs": zod.number().min(compositionTracksItemContentsItemOneSourceOneFadeInMsMin).optional(),
-  "fadeOutMs": zod.number().min(compositionTracksItemContentsItemOneSourceOneFadeOutMsMin).optional(),
-  "loop": zod.boolean().optional(),
-  "audioRole": zod.enum(['sfx', 'music', 'vo', 'ambience']).optional(),
-  "duck": zod.strictObject({
-  "duckDb": zod.number().max(compositionTracksItemContentsItemOneSourceOneDuckDuckDbMax),
-  "attackMs": zod.number().min(compositionTracksItemContentsItemOneSourceOneDuckAttackMsMin),
-  "releaseMs": zod.number().min(compositionTracksItemContentsItemOneSourceOneDuckReleaseMsMin),
-  "windows": zod.array(zod.strictObject({
-  "startMs": zod.number(),
-  "endMs": zod.number()
-})).optional()
-}).optional(),
-  "anchor": zod.strictObject({
-  "clipId": zod.string().min(1),
-  "offsetMs": zod.number()
-}).optional(),
-  "reframe": zod.strictObject({
-  "segments": zod.array(zod.strictObject({
-  "startSec": zod.number().min(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemStartSecMin).describe('Segment START in seconds, clip-relative. Segments tile the clip\'s duration in order.'),
-  "endSec": zod.number().gt(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemEndSecExclusiveMin).describe('Segment END in seconds, clip-relative. The span (endSec − startSec) is this segment\'s duration — the window `ease` ramps over.'),
-  "focus": zod.union([zod.strictObject({
-  "mode": zod.literal("frame-center")
-}),zod.strictObject({
-  "mode": zod.literal("point"),
-  "x": zod.number().min(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemFocusTwoXMin).max(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemFocusTwoXMax),
-  "y": zod.number().min(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemFocusTwoYMin).max(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemFocusTwoYMax)
-}),zod.strictObject({
-  "mode": zod.literal("face"),
-  "faceId": zod.string().min(1),
-  "shotScale": zod.enum(['close', 'standard', 'wide']).optional()
-}),zod.strictObject({
-  "mode": zod.literal("all-faces")
-}),zod.strictObject({
-  "mode": zod.literal("active-speaker")
-})]).describe('WHO/WHAT the camera tracks this segment (the reframe center), selected by `mode`: `frame-center` = no tracking, hold the geometric center (static/graphic footage, or a pure zoom); `point` = lock to a fixed source-normalized {x,y} (a non-moving on-screen element); `face` = track a detected face by `faceId` (from get_media_context), with optional `shotScale` close|standard|wide for tightness; `all-faces` = frame the bounding box of every detected face (group/ensemble shots); `active-speaker` = follow whoever is speaking (diarized talking-head / podcast). Pick by what the beat is about; pair with `zoom` for how tight.'),
-  "intent": zod.string().optional().describe('Optional editorial LABEL for diff/log readability (e.g. \'speaker-tight\', \'wide-context\'). Cosmetic — NOT honored by the derive math and excluded from the variant cache key.'),
-  "zoom": zod.number().min(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemZoomMin).max(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemZoomMax).optional().describe('How TIGHT the framing is — the fraction of the source the output viewport shows. <1 punches IN (a smaller source fraction, magnified to fill the frame); 1 = the full frame (no crop). ~0.6–0.8 is a moderate push-in, ~0.5 a tight close-up, 0.1 the maximum zoom. There is NO zoom-OUT past the full frame (max 1). Omit for the full frame. MUTUALLY EXCLUSIVE with `focus.shotScale` — a face-tracked shot is sized EITHER by the editorial scale (shotScale, which the bake calibrates to the detected face) OR by an explicit zoom, never both. A segment carrying both is REJECTED: shotScale wins at bake time and the zoom would be silently discarded.'),
-  "ease": zod.strictObject({
-  "in": zod.number().min(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemEaseInMin).describe('Ease-IN ramp DURATION in seconds at the segment START.'),
-  "out": zod.number().min(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemEaseOutMin).describe('Ease-OUT ramp DURATION in seconds at the segment END.')
-}).optional().describe('Zoom/center ramp DURATIONS in SECONDS at this segment\'s edges — NOT a unitless 0–1 curve. ~0.3–0.6s reads as a snappy push; >1s reads sluggish. Keep `in` + `out` ≤ the segment\'s duration (endSec − startSec): the two edges share the span, so to ramp across the WHOLE segment set one edge to the full duration and the other to 0. Omit for an instant cut to this framing.'),
-  "bias": zod.strictObject({
-  "x": zod.number().min(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemBiasXMin).max(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemBiasXMax).describe('Horizontal nudge, source-normalized (+ = right).'),
-  "y": zod.number().min(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemBiasYMin).max(compositionTracksItemContentsItemOneSourceOneReframeSegmentsItemBiasYMax).describe('Vertical nudge, source-normalized (+ = down).')
-}).optional().describe('Optional FINE framing nudge off the focus center, source-normalized in [−0.3, 0.3]. A small correction (headroom, rule-of-thirds), NOT a reframe — use `focus`/`zoom` for the actual shot. Omit (treated as 0) to sit dead-center on the focus.')
-})).min(1)
-}).optional()
-}),zod.strictObject({
-  "kind": zod.literal("component"),
-  "componentId": zod.string().min(1),
-  "props": zod.record(zod.string(), zod.unknown()),
-  "zPlane": zod.enum(['front', 'behind-subject']).optional(),
-  "execution": zod.strictObject({
-  "version": zod.literal(3),
-  "componentId": zod.string().min(1).max(compositionTracksItemContentsItemOneSourceTwoExecutionComponentIdMax),
-  "sourceVersionId": zod.string().regex(compositionTracksItemContentsItemOneSourceTwoExecutionSourceVersionIdRegExp),
-  "params": zod.record(zod.string(), ComponentParameterValue),
-  "seed": zod.string().min(1),
-  "assets": zod.record(zod.string(), zod.string().min(1)).optional(),
-  "mediaBindings": zod.record(zod.string(), zod.array(zod.string().min(1).max(compositionTracksItemContentsItemOneSourceTwoExecutionMediaBindingsItemMax))).optional()
-}),
-  "placement": zod.union([zod.strictObject({
-  "version": zod.literal(3),
-  "kind": zod.literal("clip")
-}),zod.strictObject({
-  "version": zod.literal(3),
-  "kind": zod.literal("content-slots"),
-  "slots": zod.record(zod.string(), zod.strictObject({
-  "targetClipIds": zod.array(zod.string().min(1).max(compositionTracksItemContentsItemOneSourceTwoPlacementTwoSlotsTargetClipIdsItemMax)),
-  "ownership": zod.enum(['reference', 'exclusive'])
-}))
-})])
-}),zod.strictObject({
-  "kind": zod.literal("overlay"),
-  "primitiveId": zod.string().min(1).regex(compositionTracksItemContentsItemOneSourceThreePrimitiveIdRegExp),
-  "params": zod.record(zod.string(), zod.unknown()),
-  "zPlane": zod.enum(['front', 'behind-subject']).optional(),
-  "anchor": zod.strictObject({
-  "space": zod.literal("scene"),
-  "x": zod.number().min(compositionTracksItemContentsItemOneSourceThreeAnchorXMin).max(compositionTracksItemContentsItemOneSourceThreeAnchorXMax),
-  "y": zod.number().min(compositionTracksItemContentsItemOneSourceThreeAnchorYMin).max(compositionTracksItemContentsItemOneSourceThreeAnchorYMax)
-}).optional(),
-  "parallax": zod.number().min(compositionTracksItemContentsItemOneSourceThreeParallaxMin).max(compositionTracksItemContentsItemOneSourceThreeParallaxMax).optional()
-}),zod.strictObject({
-  "kind": zod.literal("effect"),
-  "primitiveId": zod.string().min(1).optional(),
-  "params": zod.record(zod.string(), zod.unknown()).optional(),
-  "component": zod.strictObject({
-  "version": zod.literal(3),
-  "componentId": zod.string().min(1).max(compositionTracksItemContentsItemOneSourceFourComponentComponentIdMax),
-  "sourceVersionId": zod.string().regex(compositionTracksItemContentsItemOneSourceFourComponentSourceVersionIdRegExp),
-  "params": zod.record(zod.string(), ComponentParameterValue),
-  "seed": zod.string().min(1),
-  "assets": zod.record(zod.string(), zod.string().min(1)).optional(),
-  "mediaBindings": zod.record(zod.string(), zod.array(zod.string().min(1).max(compositionTracksItemContentsItemOneSourceFourComponentMediaBindingsItemMax))).optional()
-}).optional(),
-  "targetTrackIds": zod.array(zod.string().min(1)).min(1).optional(),
-  "wrapperOrder": zod.int().min(compositionTracksItemContentsItemOneSourceFourWrapperOrderMin).max(compositionTracksItemContentsItemOneSourceFourWrapperOrderMax).optional()
-}),zod.strictObject({
-  "kind": zod.literal("card"),
-  "html": zod.string().min(1).describe('Your card\'s HTML — rendered VERBATIM as the graphic (shell motion via applyMotionPreset in a FOLLOWING call). CANVAS CONTRACT: the card renders in a viewport equal to the composition format\'s pixel frame (1080×1920 at 9:16 fhd); the root is NOT auto-pinned — declare explicit width/height matching the frame (box-sizing:border-box) and anchor content with flex/grid; position:absolute;inset:0 on the root does NOT fill the frame; for edge-to-edge backgrounds add an inner absolutely-positioned layer with generous negative inset. Overlay compositing applies a ~92% safe-area inset — keep critical copy away from the extreme edges. FONTS: name a family from GET /v1/fonts (list_render_fonts) — the renderer loads those faces for the card and waits for them, so `font-family: Inter` draws Inter. `@import` and remote font files are REFUSED: the card renders with no network. A family that is not on that list has no bytes behind it and the browser falls back, so end any stack with a generic (`Inter, sans-serif`) rather than relying on a system face being present.'),
-  "tokens": zod.record(zod.string(), zod.string()).optional(),
-  "zPlane": zod.literal("front").optional()
-})]),
-  "kind": zod.enum(['video', 'audio', 'image', 'overlay', 'effect']).optional(),
-  "opacity": zod.number().min(compositionTracksItemContentsItemOneOpacityMin).max(compositionTracksItemContentsItemOneOpacityMax).optional(),
-  "scale": zod.number().gt(compositionTracksItemContentsItemOneScaleExclusiveMin).optional(),
-  "rotation": zod.number().optional(),
-  "position": zod.strictObject({
-  "x": zod.number().min(compositionTracksItemContentsItemOnePositionXMin).max(compositionTracksItemContentsItemOnePositionXMax),
-  "y": zod.number().min(compositionTracksItemContentsItemOnePositionYMin).max(compositionTracksItemContentsItemOnePositionYMax)
-}).optional().describe('Clip CENTRE as a fraction of the frame: {x:0.5,y:0.5} is dead centre, 0 to 1 is inside the frame, and a little overshoot (down to -1, up to 2) is how an entrance starts off-canvas. NOT pixels: the renderer maps x to `left: x*100%`, so `x: 180` sits 180 frame-widths away and draws nothing.'),
-  "region": zod.strictObject({
-  "x": zod.number().min(compositionTracksItemContentsItemOneRegionXMin).max(compositionTracksItemContentsItemOneRegionXMax),
-  "y": zod.number().min(compositionTracksItemContentsItemOneRegionYMin).max(compositionTracksItemContentsItemOneRegionYMax),
-  "w": zod.number().gt(compositionTracksItemContentsItemOneRegionWExclusiveMin).max(compositionTracksItemContentsItemOneRegionWMax),
-  "h": zod.number().gt(compositionTracksItemContentsItemOneRegionHExclusiveMin).max(compositionTracksItemContentsItemOneRegionHMax)
-}).optional(),
-  "fit": zod.enum(['cover', 'contain']).optional(),
-  "captionVisibility": zod.enum(['visible', 'hidden']).optional().describe('Video media clip only. Hide native captions while this clip is topmost and covers the lower picture, or when an opaque, effect-free clip has an explicitly full-frame region, even with fit:contain. Caption words and timings remain stored and resume when another visible clip takes over.'),
-  "effects": zod.array(zod.strictObject({
-  "primitiveId": zod.string().min(1).optional(),
-  "params": zod.record(zod.string(), zod.unknown()).optional(),
-  "id": zod.string().min(1).optional(),
-  "component": zod.strictObject({
-  "version": zod.literal(3),
-  "componentId": zod.string().min(1).max(compositionTracksItemContentsItemOneEffectsItemComponentComponentIdMax),
-  "sourceVersionId": zod.string().regex(compositionTracksItemContentsItemOneEffectsItemComponentSourceVersionIdRegExp),
-  "params": zod.record(zod.string(), ComponentParameterValue),
-  "seed": zod.string().min(1),
-  "assets": zod.record(zod.string(), zod.string().min(1)).optional(),
-  "mediaBindings": zod.record(zod.string(), zod.array(zod.string().min(1).max(compositionTracksItemContentsItemOneEffectsItemComponentMediaBindingsItemMax))).optional()
-}).optional(),
-  "window": zod.strictObject({
-  "startTime": zod.number().min(compositionTracksItemContentsItemOneEffectsItemWindowStartTimeMin),
-  "duration": zod.number().gt(compositionTracksItemContentsItemOneEffectsItemWindowDurationExclusiveMin)
-}).optional()
-})).optional(),
-  "transitionIn": zod.strictObject({
-  "type": zod.string().min(1),
-  "duration": zod.number().gt(compositionTracksItemContentsItemOneTransitionInDurationExclusiveMin),
-  "id": zod.string().min(1).optional(),
-  "component": zod.strictObject({
-  "version": zod.literal(3),
-  "componentId": zod.string().min(1).max(compositionTracksItemContentsItemOneTransitionInComponentComponentIdMax),
-  "sourceVersionId": zod.string().regex(compositionTracksItemContentsItemOneTransitionInComponentSourceVersionIdRegExp),
-  "params": zod.record(zod.string(), ComponentParameterValue),
-  "seed": zod.string().min(1),
-  "assets": zod.record(zod.string(), zod.string().min(1)).optional(),
-  "mediaBindings": zod.record(zod.string(), zod.array(zod.string().min(1).max(compositionTracksItemContentsItemOneTransitionInComponentMediaBindingsItemMax))).optional()
-}).optional(),
-  "fromClipId": zod.string().min(1).optional(),
-  "toClipId": zod.string().min(1).optional(),
-  "handlePolicy": zod.literal("outgoing-overrun-at-cut-v1").optional()
-}).optional(),
-  "linkGroupId": zod.string().min(1).optional(),
-  "animate": zod.record(zod.string(), zod.array(zod.strictObject({
-  "time": zod.number().min(compositionTracksItemContentsItemOneAnimateItemTimeMin),
-  "value": zod.number(),
-  "easing": zod.union([zod.enum(['linear', 'ease', 'easeIn', 'easeOut', 'easeInOut']),zod.strictObject({
-  "cubicBezier": zod.tuple([zod.number(),
-zod.number(),
-zod.number(),
-zod.number()])
-})]).optional()
-})).min(compositionTracksItemContentsItemOneAnimateMinOne)).optional().describe('Keyframe channels, clip-relative seconds. Each channel\'s values use the SAME unit as the scalar it animates: `opacity` 0 to 1, `scale` a multiplier (>0), `rotation` degrees, `position.x`/`position.y` a FRACTION of the frame like `position` (0.5 = centre; NOT pixels), `volume` 0 to 4.')
-}),zod.strictObject({
-  "id": zod.string().min(1),
-  "startTime": zod.number().min(compositionTracksItemContentsItemTwoStartTimeMin).describe('Timeline start (seconds).'),
-  "duration": zod.number().gt(compositionTracksItemContentsItemTwoDurationExclusiveMin).describe('Gap duration (seconds).')
+  "startTime": zod.number().min(compositionTracksItemContentsItemTwoStartTimeMin),
+  "duration": zod.number().gt(compositionTracksItemContentsItemTwoDurationExclusiveMin)
 })]))
 })),
   "markers": zod.array(zod.strictObject({
@@ -860,18 +522,26 @@ zod.number()])
 })).optional(),
   "zPlane": zod.enum(['front', 'behind-subject']).optional()
 })]).optional(),
+  "sourceSuggestionId": zod.string().optional(),
   "license": zod.strictObject({
   "type": zod.string().min(1),
   "source": zod.string().optional(),
   "notes": zod.string().optional()
 }).optional(),
+  "licenseVerification": zod.enum(['attested', 'cueframe-verified', 'third-party-verified']).optional(),
   "accessibility": zod.strictObject({
   "audioDescriptionTrackId": zod.string().optional(),
   "captionsTrackId": zod.string().optional(),
   "signLanguageTrackId": zod.string().optional(),
   "notes": zod.string().optional()
+}).optional(),
+  "ownerOrgId": zod.string().optional(),
+  "acl": zod.strictObject({
+  "public": zod.boolean().optional(),
+  "readerOrgIds": zod.array(zod.string()).optional(),
+  "writerOrgIds": zod.array(zod.string()).optional()
 }).optional()
-}).describe('Canonical composition wire shape (multi-track; carries reframe, captions, markers).');
+});
 
 export type Composition = zod.input<typeof Composition>;
 export type CompositionOutput = zod.output<typeof Composition>;

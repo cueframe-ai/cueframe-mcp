@@ -8,8 +8,7 @@
  * OpenAPI spec version: v1
  */
 import {
-  ApiKeyCreateRequest,
-  ApiKeyResponse
+  ApiKeyCreateRequest
 } from '../models';
 
 
@@ -17,5 +16,3 @@ import {
  * @summary Create a scoped API key (session credential only)
  */
 export const CreateApiKeyBody = ApiKeyCreateRequest
-
-export const CreateApiKeyResponse = ApiKeyResponse

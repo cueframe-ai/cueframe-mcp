@@ -7,7 +7,7 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { ComponentManifestV2 } from './componentManifestV2';
+import type { ComponentManifest } from './componentManifest';
 import type { ComponentSourceResponseExamplesItem } from './componentSourceResponseExamplesItem';
 import type { ComponentSourceResponseOrigin } from './componentSourceResponseOrigin';
 import type { ComponentSourceResponsePropSchema } from './componentSourceResponsePropSchema';
@@ -16,11 +16,11 @@ import type { ComponentSourceResponseSourceSnapshot } from './componentSourceRes
 import type { ComponentSourceResponseTokens } from './componentSourceResponseTokens';
 
 /**
- * Installed component SOURCE (TSX) + ownership provenance per §Components.
+ * Installed component SOURCE snapshot + ownership provenance per §Components. tsxSource is present only for a retired TSX (version 3) snapshot.
  */
 export interface ComponentSourceResponse {
   /** @minLength 1 */
-  tsxSource: string;
+  tsxSource?: string;
   /**
      * @minLength 1
      * @maxLength 200
@@ -37,13 +37,13 @@ export interface ComponentSourceResponse {
   examples?: ComponentSourceResponseExamplesItem[];
   /** @exclusiveMinimum 0 */
   durationInFrames?: number;
-  manifest: ComponentManifestV2;
+  manifest: ComponentManifest;
   id: string;
   source: ComponentSourceResponseSource;
   /** Historical source-only reads omit unavailable discovery name/description instead of borrowing current metadata. */
   metadataStatus?: 'unresolved';
   /** Exact immutable source pin; distinct from bundle revisions. */
   sourceVersionId: string;
-  /** Canonical immutable v3 source snapshot; source remains provenance. */
+  /** Canonical immutable source snapshot (version 4 template, or a retired version 3 TSX module); source remains provenance. */
   sourceSnapshot: ComponentSourceResponseSourceSnapshot;
 }

@@ -8,7 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { FormatSpec } from './formatSpec.zod';
+import { Format } from './format.zod';
 
 export const projectCreateRequestNameMax = 200;
 
@@ -22,7 +22,7 @@ export const projectCreateRequestHeightExclusiveMin = 0;
 export const ProjectCreateRequest = zod.strictObject({
   "name": zod.string().min(1).max(projectCreateRequestNameMax),
   "description": zod.string().optional(),
-  "format": FormatSpec.optional(),
+  "format": Format.optional(),
   "brandKitId": zod.string().min(1).optional(),
   "width": zod.number().gt(projectCreateRequestWidthExclusiveMin).optional(),
   "height": zod.number().gt(projectCreateRequestHeightExclusiveMin).optional()

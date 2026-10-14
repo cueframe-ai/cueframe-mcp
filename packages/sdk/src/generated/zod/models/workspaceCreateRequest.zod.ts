@@ -8,7 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
-import { FormatSpec } from './formatSpec.zod';
+import { Format } from './format.zod';
 
 export const workspaceCreateRequestVideoUrlMax = 2048;
 
@@ -16,7 +16,7 @@ export const workspaceCreateRequestVideoUrlMax = 2048;
 
 export const WorkspaceCreateRequest = zod.strictObject({
   "videoUrl": zod.url().max(workspaceCreateRequestVideoUrlMax),
-  "format": FormatSpec.optional()
+  "format": Format.optional()
 });
 
 export type WorkspaceCreateRequest = zod.input<typeof WorkspaceCreateRequest>;

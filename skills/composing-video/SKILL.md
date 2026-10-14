@@ -78,10 +78,10 @@ Chromium captures; the clock never advances). Use these instead:
 2. **`transitionIn` on any overlay clip** — `{ transitionIn: { type: "fade", duration: 0.4 } }`
    now applies to overlay-family clips (cards, components, primitives), not just video.
    Use it for entrances; author exits in-card via `--cf-exit`.
-3. **`applyMotionPreset` op** — shell a static card into a frame-driven component in one op:
-   `{ type: "applyMotionPreset", clipId, preset }` (unknown presets are rejected with the
-   full preset list). The layout stays verbatim; the preset adds entrance/idle/exit
-   choreography. The result is a component you can `get_component_source` and refine.
+3. **`clip.setKeyframes` op** — animate the whole clip on one channel:
+   `{ type: "clip.setKeyframes", clipId, property, keyframes: [{ time, value, ease? }, …] }`
+   for `opacity`, `scale`, `rotation`, `position.x` or `position.y` (times in seconds from the
+   clip's start). For motion beyond that, author a native component with `create_component`.
 
 ---
 
@@ -208,7 +208,7 @@ soundtrack is a measurable share of whether anyone keeps watching.
    reach for `volumeDb` only when you intend to break the hierarchy.
 
 0d. **A brand kit can carry a SOUND identity — set it once, it rides every
-   compose.** `create_brand_kit`'s `audio` block (echoed on `get_brand_kit` +
+   compose.** `create_brand_kit`'s `audio` block (echoed on
    `get_profile`) holds the brand's sonic taste; every ref is a palette reference
    (a pack `soundId` | `bedId` | an org `mediaId` from `list_catalog`'s `audio[]`).
    Four optional fields, resolution precedence **brand > org > pack** (the audio
@@ -328,7 +328,7 @@ Each playbook is an illustrative format default; explicit intent and scope gover
 
 **Frameworks:** Hook → Problem → Solution → Proof → CTA. Decide the CTA first, script it last; write for the ear.
 **A fully animated explainer is a FIRST-CLASS grounded format**, not a fallback for missing footage. An explainer built on authored diagrams of the *actual* mechanism (its real pipeline, the real data) is grounded — the grounding is that each visual depicts THIS thing specifically, not a decorative loop. Reach for it deliberately, not as a consolation for "no footage."
-**Reach for:** an authored `card` clip (your own HTML/typography, shelled with `applyMotionPreset`) to anchor an abstract mechanism with a real diagram — process/algorithm/data viz, not cinematic footage · `lower-third` for term labels · one idea per beat · when using real footage, narrate to the detected transcript timing.
+**Reach for:** an authored `card` clip (your own HTML/typography, animated in its CSS or with `clip.setKeyframes`) to anchor an abstract mechanism with a real diagram — process/algorithm/data viz, not cinematic footage · `lower-third` for term labels · one idea per beat · when using real footage, narrate to the detected transcript timing.
 **Anti-patterns:** a wall of narration over stock gradient loops with no visual keyed to the words (the generic-filler tell — a purposeful diagram of the real mechanism is the opposite); explaining features before establishing the problem; using `generate_media` text-to-video to fake a "product" that doesn't match the real UI (it hallucinates specifics).
 **Quality bar:** every beat has a visual keyed to what's being said — grounded and specific to this content, not decoration; the hook lands in 3s.
 
@@ -378,12 +378,12 @@ Each playbook is an illustrative format default; explicit intent and scope gover
 | Name someone / label a step | `lower-third` scene from `list_catalog` |
 | Title / closing wordmark | `cinematic-title` scene (closing, not opening) |
 | Grade the look | `color-grade` scene/effect |
-| Anchor an abstract mechanism | An authored `card` clip + `applyMotionPreset` (diagrams of the real mechanism — NOT cinematic; a first-class grounded path) |
+| Anchor an abstract mechanism | An authored `card` clip animated in its CSS or with `clip.setKeyframes` (diagrams of the real mechanism — NOT cinematic; a first-class grounded path) |
 | Long-form → clips | `suggest_briefs` → `wait_job(kind:"suggestions")` → `compose({ suggestionId })` |
 | Auto-reframe to another aspect | `derive_composition` (content-aware 9:16 / 1:1 / 4:5 from a 16:9 master) |
 | Discover what to build with | `list_catalog` — pass filters such as `category`/`kind`/`tier`/`useCase`/`mood`/`intent`, plus `limit` and the returned pagination cursor. For builtin packages, request `projection:"component-library"` and `origin:"builtin"`, then resolve the selected exact identity before insertion. Each entry carries `placement` (how to author it), `tier`/`useCase`, and `fixedCopy` (baked text no param changes). Read `cueframe://component/{id}` for the full **prop schema**. |
 | Own / fork a custom graphic | `get_component_source` (exact scoped v3 pin for builtins) / `create_component` / `update_component` (preserve the complete source snapshot) — **see `cueframe-component-authoring`** for the full fork→preview→push loop |
-| Several cells that share space and must reflow together (feature grid, rail + fluid content, cast + type) | An authored component on `FlexLayout` from `@cueframe/animate` — tracks are **weights** (`{ weight: 0, basis: px }` = content-sized, pushes neighbours), `tracksEnd` animates the reflow per frame, `fits` per cell (`stretch`/`contain`/`cover`/`position`/`scale`/`matte`). Static PiP / split is clip `region` + `fit` instead. Never CSS-scale the layout. **See `cueframe-component-authoring`** |
+| Several cells that share space and must reflow together (feature grid, rail + fluid content, cast + type) | An authored card or native component laid out with CSS flex/grid (fixed tracks for content-sized cells, `fr` for the rest), animated from the frame. Static PiP / split is clip `region` + `fit` instead. Never CSS-scale the layout. **See `cueframe-component-authoring`** |
 | Seed + edit the timeline | `apply_composition` (atomic batch ops; `dry_run:true` to check, `if_match` for OCC) — this is where clips, reframe, captions, and format are authored |
 | Set the brand | `create_brand_kit` (402-gated) → set `brandKitId` on the **project** (`create_project` / `update_project`). It lives on the project, NOT on a composition op — trying to set it elsewhere is silently dropped. |
 | Shape-check (NOT quality) | `validate_composition` → `{ valid, errors[] }` (`unknown_primitive`, `invalid_primitive_params`, `clip_source_track_mismatch`, `reframe_coverage_gap`, …); does **not** check trim bounds or image-on-video-track (those fail at save/render) |

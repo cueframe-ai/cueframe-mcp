@@ -13,12 +13,9 @@ import {
   Composition,
   CompositionApplyRequest,
   CompositionCreateRequest,
-  CompositionListResponse,
   CompositionOp,
-  CompositionReadResponse,
   CompositionReplaceRequest,
-  DeriveCompositionRequest,
-  DeriveCompositionResponse
+  DeriveCompositionRequest
 } from '../models';
 
 
@@ -31,12 +28,11 @@ export const GetCompositionParams = zod.object({
 })
 
 export const GetCompositionQueryParams = zod.object({
-  "componentExecutionVersions": zod.literal("3").optional().describe('Explicit accepted saved component execution protocol. Absent readers accept only the historical protocol.'),
+  "componentExecutionVersions": zod.union([zod.literal("3"),zod.tuple([zod.literal("3"),
+zod.literal("4")])]).optional().describe('The component execution versions this reader accepts, one parameter per version: 3, or 3 and 4 (native placements). Absent readers accept only the historical protocol.'),
   "includeDependencies": zod.enum(['true', 'false']).optional().describe('Return the immutable composition identity, project revision and shared v1 dependency expectations alongside the composition.'),
   "compositionId": zod.string().optional().describe('Read a SPECIFIC composition instead of the project\'s active one. Omit it and the active composition is returned. Pairs with `composition_id` on the apply op: an edit you can make to a second composition is one you can read back.')
 })
-
-export const GetCompositionResponse = CompositionReadResponse
 
 /**
  * Required permission: projects:write
@@ -48,8 +44,6 @@ export const PutCompositionParams = zod.object({
 
 export const PutCompositionBody = CompositionReplaceRequest
 
-export const PutCompositionResponse = zod.unknown()
-
 /**
  * Required permission: projects:write
  * @summary Create a new composition (video) in a project
@@ -60,8 +54,6 @@ export const NewCompositionParams = zod.object({
 
 export const NewCompositionBody = CompositionCreateRequest
 
-export const NewCompositionResponse = zod.void()
-
 /**
  * Required permission: projects:read
  * @summary List a project's compositions
@@ -69,8 +61,6 @@ export const NewCompositionResponse = zod.void()
 export const ListCompositionsParams = zod.object({
   "id": zod.string()
 })
-
-export const ListCompositionsResponse = CompositionListResponse
 
 /**
  * Required permission: projects:write
@@ -82,8 +72,6 @@ export const ApplyCompositionOpParams = zod.object({
 
 export const ApplyCompositionOpBody = CompositionOp
 
-export const ApplyCompositionOpResponse = zod.unknown()
-
 /**
  * Atomically applies an array of CompositionOps. All ops succeed or none do (transactional). Pass `if_match` for optimistic-concurrency control (409 stale_etag on mismatch). Pass `dry_run: true` to validate the batch — runs the same apply + projection accept/reject guards WITHOUT persisting, returning `{ valid, errors }` with `locator.op_index` on the first failing op. Both modes may carry `warnings[]` — non-fatal authoring advisories (e.g. a card whose html reads a CSS custom property no token defines). Warnings never block.
  * @summary Apply a batch of operations to a project's composition (or dry-run validate)
@@ -93,8 +81,6 @@ export const ApplyCompositionParams = zod.object({
 })
 
 export const ApplyCompositionBody = CompositionApplyRequest
-
-export const ApplyCompositionResponse = zod.unknown()
 
 /**
  * Required permission: projects:write
@@ -106,39 +92,11 @@ export const DeriveCompositionParams = zod.object({
 
 export const DeriveCompositionBody = DeriveCompositionRequest
 
-export const DeriveCompositionResponseSchema = DeriveCompositionResponse
-
 /**
  * Dry-run the FULL save-time authoring guard set against a Composition body WITHOUT persisting it and without a project. Runs the same pure, DB-free guards saveComposition enforces — wire shape, primitive membership (unknown_primitive / custom_missing_sourcecode), required-param shape (invalid_primitive_params), clip↔track family (clip_source_track_mismatch), reframe coverage (reframe_coverage_gap), and font admission (font_not_reproducible: a caption/param face that is neither bundled nor sealed in a brand font asset) — and returns ONE shape, `200 { valid, errors[] }`, for BOTH wire-shape and deep-invariant failures (no 400-vs-200 split). `valid:false` lists every authoring error (sanitized envelopes) to fix before save/render. The ONLY checks NOT run here are the two DB-bound ones — trim-bounds (media duration) and image/asset-on-video-track (media kind) — which can only be caught at save/render.
  * @summary Validate a composition body without saving it (dry-run)
  */
 export const ValidateCompositionBody = Composition
-
-export const ValidateCompositionResponse = zod.object({
-  "contract": zod.string().describe('The contract this verdict was computed against (the kernel version the deployment runs). If it differs between two calls, the validator changed, not your composition.'),
-  "valid": zod.boolean(),
-  "errors": zod.array(zod.object({
-  "code": zod.string(),
-  "stage": zod.string(),
-  "category": zod.string(),
-  "retryable": zod.boolean(),
-  "message": zod.string(),
-  "fix": zod.record(zod.string(), zod.unknown()).optional()
-})),
-  "advisories": zod.array(zod.object({
-  "rule": zod.string(),
-  "criterion": zod.string(),
-  "clipId": zod.string().optional(),
-  "detail": zod.string(),
-  "fix": zod.string()
-})).describe('Deterministic, render-free QUALITY floors (the SAME named defects the Director\'s in-loop verify and score_composition surface: static-hold, caption-spine, sfx-density, sfx-speech-collision, bed-coverage, audio-role). NON-blocking — they never flip `valid` (an editorially-weak composition still renders); fix them for quality, not to save. Empty when the composition is clean or the wire shape failed (they need a parsed composition).'),
-  "warnings": zod.array(zod.string()).optional().describe('Non-blocking render-fidelity warnings detected before enqueue, including unavailable font families.'),
-  "quote": zod.object({
-  "thisStepUsd": zod.number(),
-  "jobSpendSoFarUsd": zod.number(),
-  "estimatedJourneyTotalUsd": zod.number()
-}).describe('The A2 money triple for the commodity lane: validate is free; estimatedJourneyTotalUsd is the render price to finish from a valid composition — relay it BEFORE create_render.')
-})
 
 /**
  * Delete a composition and its version history. REFUSES the project's ACTIVE composition (409 composition_active) — make another one active first, or delete the project.
@@ -148,5 +106,3 @@ export const DeleteCompositionParams = zod.object({
   "id": zod.string(),
   "compositionId": zod.string()
 })
-
-export const DeleteCompositionResponse = zod.void()

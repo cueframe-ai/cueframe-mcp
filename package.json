@@ -19,12 +19,13 @@
     "generate:sdk": "pnpm --filter @cueframe/api-contract build && orval --config ./orval.config.ts && node packages/sdk/scripts/generate-barrels.mjs && node tools/normalize-generated-text.mjs",
     "check:api-inputs": "node tools/check-api-inputs.mjs",
     "check:contract-version": "node scripts/check-contract-version.mjs",
-    "generate:api-consumers": "pnpm check:api-inputs && node tools/vendor-scene-schema.mjs && pnpm generate:sdk",
+    "generate:api-consumers": "pnpm check:api-inputs && pnpm generate:sdk",
     "check:api-consumer-drift": "pnpm generate:api-consumers && git diff --exit-code -- api/openapi.json packages/sdk/src/generated",
     "spec:drift": "node tools/spec-drift.mjs",
     "build:plugin:openai": "node scripts/plugin/package-openai.mjs",
     "check:plugin:openai": "node scripts/plugin/package-openai.mjs --check",
-    "check:public-packages": "node scripts/check-public-packages.mjs"
+    "check:public-packages": "node scripts/check-public-packages.mjs",
+    "check:published-versions": "node scripts/check-published-versions.mjs"
   },
   "pnpm": {
     "overrides": {
