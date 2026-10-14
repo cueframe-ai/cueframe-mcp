@@ -9,7 +9,7 @@
  */
 
 /**
- * Canonical immutable source snapshot (version 4 template, or a retired version 3 TSX module); source remains provenance.
+ * Immutable source snapshot: a version 4 template, a retired version 3 TSX module, or the historical version 2 source of a component stored before versioned sources (read-only; it never executes). source remains provenance.
  */
 export type ComponentSourceResponseSourceSnapshot = {
   version: 3;
@@ -535,6 +535,68 @@ export type ComponentSourceResponseSourceSnapshot = {
   /** @exclusiveMinimum 0 */
   durationSec?: number;
 })[]};
+};
+};
+} | {
+  version: 2;
+  /**
+     * @minLength 1
+     * @maxLength 128
+     * @pattern ^[a-z0-9][a-z0-9._-]*$
+     */
+  componentId: string;
+  /** @minLength 1 */
+  tsxSource: string;
+  manifest: {
+  version: 2;
+  assets: {[key: string]: {
+  kind: 'image' | 'video' | 'audio' | 'data' | 'visual';
+  required: boolean;
+  /**
+     * @minItems 1
+     * @items.minLength 1
+     */
+  mimeTypes?: string[];
+  mediaDemand?: {
+  mode: 'original';
+} | {
+  mode: 'tier';
+  tier: 256 | 512 | 1024 | 2048;
+} | {
+  mode: 'auto';
+  /**
+     * @maximum 64
+     * @exclusiveMinimum 0
+     */
+  maxProjectedWidthRatio: number;
+  /**
+     * @maximum 64
+     * @exclusiveMinimum 0
+     */
+  maxProjectedHeightRatio: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  minVisibleSourceWidthRatio: number;
+  /**
+     * @maximum 1
+     * @exclusiveMinimum 0
+     */
+  minVisibleSourceHeightRatio: number;
+};
+}};
+  graphics: {
+  api: 'canvas2d' | 'webgl' | 'webgl2' | 'webgpu';
+  required: true;
+  accelerationPreference: 'hardware-preferred' | 'software-allowed';
+};
+  alphaPolicy: 'requires-transparency' | 'allows-opaque';
+  sceneShot?: {
+  version: 2;
+};
+  visualMedia?: {
+  version: 1;
 };
 };
 };

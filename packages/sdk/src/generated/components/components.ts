@@ -8,6 +8,7 @@
  * OpenAPI spec version: v1
  */
 import type {
+  BlankComponentSourceV4,
   BuiltinComponentResolveResponse,
   ComponentCreateRequest,
   ComponentListResponse,
@@ -60,6 +61,30 @@ return request<NativeUpgradeResponse>(getRepinComponentUrl(id),
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
     body: JSON.stringify(nativeUpgradeRequest)
+  }
+);}
+
+
+export const getGetBlankComponentSourceUrl = () => {
+
+
+
+
+  return `/v1/components/blank-source`
+}
+
+/**
+ * The blank native (version 4) component source every new component starts from. Rename it by setting componentId and the template root's data-composition-id together, then create it with create_component.
+ * @summary The blank native component source
+ */
+export const getBlankComponentSource = async ( options?: Parameters<typeof request>[1]): Promise<BlankComponentSourceV4> => {
+
+  return request<BlankComponentSourceV4>(getGetBlankComponentSourceUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
   }
 );}
 

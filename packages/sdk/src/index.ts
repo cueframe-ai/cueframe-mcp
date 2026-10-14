@@ -18,7 +18,7 @@ export * from "./generated/operations";
 
 
 export * from "./generated/models";
-export { COMPONENT_EXECUTION_VERSIONS } from "./generated/executionVersions";
+export { COMPONENT_EXECUTION_VERSIONS, BLANK_COMPONENT_SOURCE_V4 } from "./generated/executionVersions";
 
 // Orval inlines single-property numeric unions into the parent model instead
 // of emitting a named model. Keep the SDK's public convenience type stable.

@@ -16,7 +16,7 @@ import type { ComponentSourceResponseSourceSnapshot } from './componentSourceRes
 import type { ComponentSourceResponseTokens } from './componentSourceResponseTokens';
 
 /**
- * Installed component SOURCE snapshot + ownership provenance per §Components. tsxSource is present only for a retired TSX (version 3) snapshot.
+ * Installed component SOURCE snapshot + ownership provenance per §Components. tsxSource is present for a retired TSX (version 3) snapshot and a historical version 2 source.
  */
 export interface ComponentSourceResponse {
   /** @minLength 1 */
@@ -44,6 +44,6 @@ export interface ComponentSourceResponse {
   metadataStatus?: 'unresolved';
   /** Exact immutable source pin; distinct from bundle revisions. */
   sourceVersionId: string;
-  /** Canonical immutable source snapshot (version 4 template, or a retired version 3 TSX module); source remains provenance. */
+  /** Immutable source snapshot: a version 4 template, a retired version 3 TSX module, or the historical version 2 source of a component stored before versioned sources (read-only; it never executes). source remains provenance. */
   sourceSnapshot: ComponentSourceResponseSourceSnapshot;
 }

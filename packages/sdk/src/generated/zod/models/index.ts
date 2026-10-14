@@ -14,6 +14,7 @@ export * from './apiKeyResponse.zod';
 export * from './audioPaletteEntry.zod';
 export * from './billingPlanEntry.zod';
 export * from './billingPlansResponse.zod';
+export * from './blankComponentSourceV4.zod';
 export * from './brandKitCreateRequest.zod';
 export * from './brandKitExemplarsRequest.zod';
 export * from './brandKitExemplarsResponse.zod';
