@@ -61,8 +61,8 @@ keep the final re-render separate from previews used to resolve individual styli
    hex is silent, which is why you hunt it by eye.
 5. **Fix the holdouts surgically.** `apply_composition` edits per offending clip: rebind card
    fields to `$brand:` tokens (so the NEXT rebrand really is one line), swap the old-wordmark
-   media, re-grade footage toward the new palette. A replaced card gets re-shelled with
-   `applyMotionPreset` in a FOLLOWING call. If the requested scope is styling, retain its layout; rebuild only for an explicitly requested redesign.
+   media, re-grade footage toward the new palette. A replaced card gets its
+   `clip.setKeyframes` re-applied in a FOLLOWING call. If the requested scope is styling, retain its layout; rebuild only for an explicitly requested redesign.
 6. **Review audio only when in scope.** A styling correction preserves existing audio and timing; for a broader brand change: check the bed against the
    new kit's `musicMood`. Wrong mood → `search_resources` a replacement (license recorded),
    same role and ducking, `materializeGrid` re-run if cut timing shifts. Still right → say so

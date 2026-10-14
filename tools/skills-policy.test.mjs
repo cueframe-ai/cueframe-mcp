@@ -58,3 +58,14 @@ test('evaluation fixtures cover creative intent, scope and capability routes wit
     for (const skill of scenario.skills) assert.ok(existsSync(new URL(`skills/${skill}/SKILL.md`, root)), `${scenario.id}: unknown skill ${skill}`);
   }
 });
+
+test('skills name only composition ops the shipped contract defines', () => {
+  const ops = new Set(JSON.parse(read('api/openapi.json')).components.schemas.CompositionOp.oneOf.map((op) => op.properties.type.const));
+  // An op as skills write it: a backticked camelCase verb op, or a dotted op (`clip.update`, `captions.fromComposition`).
+  const opName = /`((?:apply|set|add|remove|update|load|materialize|move|duplicate|cut|ripple|reorder)[A-Z][A-Za-z0-9]*|(?:clip|scene|captions|component)\.(?:add|remove|update|set[A-Z][A-Za-z0-9]*|from[A-Z][A-Za-z0-9]*|repin-v\d+))`/g;
+  const unknown = [];
+  for (const skill of skills) {
+    for (const [, name] of read(`skills/${skill}/SKILL.md`).matchAll(opName)) if (!ops.has(name)) unknown.push(`${skill}: ${name}`);
+  }
+  assert.deepEqual(unknown, []);
+});

@@ -60,8 +60,8 @@ affected behavior and regressions; reserve full-film judging and export for the 
 4. **Seed and author.** `new_composition` at 9:16 → `apply_composition` with the footage beats
    and `setCropIntents` segments tiling each clip (subject-focused, motivated zooms).
 5. **Author every graphic as a bespoke card.** `kind:"card"` HTML using the brand's type and its
-   palette as FIELDS — plates, bands, blocks of the brand color, not tinted defaults. Persist
-   the card, then shell it with `applyMotionPreset` in a FOLLOWING `apply_composition` call. The
+   palette as FIELDS — plates, bands, blocks of the brand color, not tinted defaults. Animate
+   it in its CSS (`--cf-enter`/`--cf-exit`) or with `clip.setKeyframes` in a FOLLOWING call. The
    test: if another brand's hex swapped in would still look correct, the layout isn't bespoke
    enough — redo it.
 6. **Honor the audio decision.** If silence was requested, preserve it without searching for a bed. Otherwise, when music serves the plan: `search_resources` for a bed honoring the kit's

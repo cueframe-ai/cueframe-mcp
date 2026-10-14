@@ -54,7 +54,7 @@ A correction to one sibling does not require rendering the master or the other u
    the beat exists to show.
 4. **Fix per-sibling, surgically.** Where a crop or card misbehaves, `apply_composition` on
    THAT sibling — nudge a `setCropIntents` segment, resize a card for the narrower frame
-   (re-shell with `applyMotionPreset` in a following call if you replace the card). Don't
+   (re-apply its `clip.setKeyframes` if you replace the card). Don't
    re-edit the story; the story is the master's.
 5. **Confirm the audio carried.** The master's decided audio — bed, ducking, beat-aligned cuts
    (`materializeGrid` markers), or its intentional silence — rides into each sibling. Verify

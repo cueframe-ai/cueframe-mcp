@@ -58,8 +58,8 @@ affected window and regressions without automatically rerunning the full-film ju
    `active-speaker` or `face` focus when a person carries it, `point` focus on the action
    otherwise. A wide shot letterboxed into 9:16 is a fail, not a fallback.
 5. **Author the type as cards.** Brand text is `kind:"card"` HTML — your typography,
-   palette-as-fields, considered alignment — persisted first, then shelled with
-   `applyMotionPreset` in a FOLLOWING `apply_composition` call. Catalog text primitives are
+   palette-as-fields, considered alignment — animated in its CSS or with
+   `clip.setKeyframes` in a FOLLOWING `apply_composition` call. Catalog text primitives are
    utility only.
 6. **Honor requested silence or existing audio.** When a bed is appropriate, search a bed with `search_resources` honoring
    the brand kit's `musicMood`, place it as an `audioRole:"music"` clip, then `materializeGrid`

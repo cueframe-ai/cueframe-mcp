@@ -45,8 +45,8 @@ motion and listen to affected audio, not only stills or judge scores. Keep the u
 scope and acceptance criteria; approved simulated UI is not evidence of a real product capture.
 
 - **DEFAULT** Brand/text graphics are AUTHORED — `kind:"card"` HTML (your
-  typography, layout, palette-as-fields) shelled with `applyMotionPreset`,
-  or a custom component. Catalog text primitives are for utility only.
+  typography, layout, palette-as-fields) animated in CSS or with `clip.setKeyframes`,
+  or a native component (`create_component`). Catalog text primitives are for utility only.
   **Consider:** a brand graphic rendered from a catalog text primitive.
 - **DEFAULT** Audio is decided, never defaulted: a music bed (curated packs via
   `import_resource {kind:"music-pack"}`) or ambience/loops (Freesound via
