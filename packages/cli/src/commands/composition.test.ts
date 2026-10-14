@@ -579,3 +579,29 @@ describe('compositionFromSuggestionCommand', () => {
     expect(reqs.filter((r) => r.init.method === 'POST')).toHaveLength(1);
   });
 });
+
+describe('composition reads negotiate every component execution version the contract declares', () => {
+  let spies: ReturnType<typeof setupSpies>;
+  beforeEach(() => {
+    spies = setupSpies();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+  const negotiated = '/v1/projects/proj_123/composition?componentExecutionVersions=3&componentExecutionVersions=4';
+
+  it('composition get asks for versions 3 and 4, so a native placement is readable', async () => {
+    const raw = vi.spyOn(sdk, 'requestRaw').mockResolvedValueOnce({ status: 200, statusText: 'OK', headers: { etag: '"a"' }, body: {} });
+    expect(await run(() => compositionGetCommand('proj_123', { target: 'prod' }), spies.exitSpy)).toBe(0);
+    expect(raw.mock.calls[0][0]).toBe(negotiated);
+  });
+
+  it('the automatic ETag fetch of a default put negotiates the same versions', async () => {
+    const raw = vi.spyOn(sdk, 'requestRaw')
+      .mockResolvedValueOnce({ status: 200, statusText: 'OK', headers: { etag: '"a"' }, body: {} })
+      .mockResolvedValueOnce({ status: 200, statusText: 'OK', headers: { etag: '"b"' }, body: {} });
+    await run(() => compositionPutCommand('proj_123', { target: 'prod', body: '{"tracks":[]}' }), spies.exitSpy);
+    expect(raw.mock.calls[0][0]).toBe(negotiated);
+    expect(raw.mock.calls[0][1]).toMatchObject({ method: 'GET' });
+  });
+});

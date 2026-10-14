@@ -1,6 +1,7 @@
 
 import { readFileSync } from 'fs';
 import { ApiError, adviseError, requestRaw, type RawResponse } from '@cueframe/sdk';
+import { compositionPath } from '../remote/compositionPath.js';
 import { initSdk } from '../remote/sdkClient.js';
 import { ExitCode, exitCodeForStatus, exitWith } from '../remote/exitCodes.js';
 import { emitEvent, emitError, emitResult, info } from '../remote/output.js';
@@ -30,14 +31,13 @@ interface ValidateOpts extends CommonOpts {
   body: string;
 }
 
-
 export async function compositionGetCommand(projectId: string, opts: GetOpts) {
   assertCleanIdentifier(projectId, 'projectId', opts);
   initSdk(opts.target);
 
   emitEvent(opts, 'composition_get_prepare', { projectId });
 
-  const raw = await safeRequest(`/v1/projects/${projectId}/composition`, { method: 'GET' }, opts, 'composition_get');
+  const raw = await safeRequest(compositionPath(projectId), { method: 'GET' }, opts, 'composition_get');
 
   if (raw.status >= 400) {
     emitApiError(raw, opts, 'composition_get');
@@ -241,12 +241,7 @@ async function resolveIfMatch(
   if (opts.force) return '*';
   if (opts.ifMatch) return opts.ifMatch;
 
-  const raw = await safeRequest(
-    `/v1/projects/${projectId}/composition`,
-    { method: 'GET' },
-    opts,
-    'composition_etag_fetch',
-  );
+  const raw = await safeRequest(compositionPath(projectId), { method: 'GET' }, opts, 'composition_etag_fetch');
 
   if (raw.status === 404) {
     info('No existing composition; treating as create (If-Match: *).', opts);

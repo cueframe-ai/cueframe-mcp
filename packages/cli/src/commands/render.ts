@@ -10,9 +10,10 @@ import { downloadOutput, watchRender } from './renderWatch.js';
 import { emitEvent, emitError, emitErrorJson, spinner as oraSpinner } from '../remote/output.js';
 import { assertCleanIdentifier } from '../remote/validate.js';
 import { deriveIdempotencyKey } from '../remote/idempotency.js';
+import { compositionPath } from '../remote/compositionPath.js';
 
 async function fetchCompositionEtag(projectId: string): Promise<string> {
-  const res = await requestRaw(`/v1/projects/${projectId}/composition`, {
+  const res = await requestRaw(compositionPath(projectId), {
     method: 'GET',
   });
   if (res.status === 404) return 'no-composition';
