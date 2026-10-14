@@ -208,7 +208,7 @@ soundtrack is a measurable share of whether anyone keeps watching.
    reach for `volumeDb` only when you intend to break the hierarchy.
 
 0d. **A brand kit can carry a SOUND identity — set it once, it rides every
-   compose.** `create_brand_kit`'s `audio` block (echoed on `get_brand_kit` +
+   compose.** `create_brand_kit`'s `audio` block (echoed on
    `get_profile`) holds the brand's sonic taste; every ref is a palette reference
    (a pack `soundId` | `bedId` | an org `mediaId` from `list_catalog`'s `audio[]`).
    Four optional fields, resolution precedence **brand > org > pack** (the audio
