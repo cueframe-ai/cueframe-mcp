@@ -2,7 +2,7 @@
   "source": {
     "package": "@cueframe/mcp",
     "version": "0.5.0",
-    "commit": "9760d5ca7d24e9d8942d88633e690258ed185584"
+    "commit": "476e227914bc597c3b09caf1c7f077d1b0dc9fec"
   },
   "tools": [
     {
@@ -1572,6 +1572,28 @@
                               "required": [
                                 "version",
                                 "lanes"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "legacyKeyframes": {
+                              "type": "object",
+                              "properties": {
+                                "needsUpgrade": {
+                                  "type": "boolean",
+                                  "const": true
+                                },
+                                "channels": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "record": {}
+                              },
+                              "required": [
+                                "needsUpgrade",
+                                "channels",
+                                "record"
                               ],
                               "additionalProperties": false
                             }
@@ -3234,6 +3256,28 @@
                                 "lanes"
                               ],
                               "additionalProperties": false
+                            },
+                            "legacyKeyframes": {
+                              "type": "object",
+                              "properties": {
+                                "needsUpgrade": {
+                                  "type": "boolean",
+                                  "const": true
+                                },
+                                "channels": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                },
+                                "record": {}
+                              },
+                              "required": [
+                                "needsUpgrade",
+                                "channels",
+                                "record"
+                              ],
+                              "additionalProperties": false
                             }
                           },
                           "additionalProperties": false
@@ -4814,6 +4858,28 @@
                                 "required": [
                                   "version",
                                   "lanes"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "legacyKeyframes": {
+                                "type": "object",
+                                "properties": {
+                                  "needsUpgrade": {
+                                    "type": "boolean",
+                                    "const": true
+                                  },
+                                  "channels": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "record": {}
+                                },
+                                "required": [
+                                  "needsUpgrade",
+                                  "channels",
+                                  "record"
                                 ],
                                 "additionalProperties": false
                               }
@@ -8641,36 +8707,13 @@
                 }
               },
               "componentExecutionVersions": {
-                "anyOf": [
-                  {
-                    "type": "array",
-                    "prefixItems": [
-                      {
-                        "type": "number",
-                        "const": 3
-                      }
-                    ],
-                    "items": false,
-                    "minItems": 1,
-                    "maxItems": 1
-                  },
-                  {
-                    "type": "array",
-                    "prefixItems": [
-                      {
-                        "type": "number",
-                        "const": 3
-                      },
-                      {
-                        "type": "number",
-                        "const": 4
-                      }
-                    ],
-                    "items": false,
-                    "minItems": 2,
-                    "maxItems": 2
-                  }
-                ]
+                "minItems": 1,
+                "maxItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "const": 3
+                }
               },
               "builtinSources": {
                 "minItems": 1,
@@ -8708,16 +8751,8 @@
                       "pattern": "^[a-f0-9]{64}$"
                     },
                     "sourceVersion": {
-                      "anyOf": [
-                        {
-                          "type": "number",
-                          "const": 3
-                        },
-                        {
-                          "type": "number",
-                          "const": 4
-                        }
-                      ]
+                      "type": "number",
+                      "const": 3
                     }
                   },
                   "required": [
@@ -19759,6 +19794,72 @@
       }
     },
     {
+      "name": "repin_component",
+      "title": "Repin Component",
+      "description": "Move clips that pin a retired TSX (version 3) component to its native (version 4) successor: the `successorSourceVersionId` that get_composition's `needsUpgrade` (or a `component_source_retired` refusal) names. Pass projectId and, in `body`, optional `clip_ids` (omit them to move every clip that has a successor) and `composition_id` (the active composition when omitted). Saved inputs are kept. The answer lists `moved` and `withoutSuccessor`; rebuild the latter as native components (create_component, then apply_composition at the same timing and placement).",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "description": "projectId (path)."
+          },
+          "body": {
+            "type": "object",
+            "properties": {
+              "clip_ids": {
+                "description": "The clips (component placements) to move. Omit to move every clip that has a native successor.",
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "composition_id": {
+                "description": "The composition to update; the project's active one when omitted.",
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "projectId",
+          "body"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "outputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "moved": {
+            "type": "array",
+            "items": {}
+          },
+          "withoutSuccessor": {
+            "type": "array",
+            "items": {},
+            "description": "Clips pinning a retired TSX source no curated release shipped: rebuild them as native components."
+          },
+          "etag": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": {}
+      }
+    },
+    {
       "name": "resolve_builtin_component",
       "title": "Resolve Builtin Component",
       "description": "Resolve a selected builtin component-library card using its exact collection, id and revision. Returns the canonical pinned document and source snapshots for a preset or recipe, or the exact source for a definition. Preserve documentSha256 and all identities; a missing revision refuses without falling back to another version or scope. Resolve before apply_template; do not invent wrapper source or reconstruct a package from a thumbnail.",
@@ -26497,6 +26598,28 @@
                                 "required": [
                                   "version",
                                   "lanes"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "legacyKeyframes": {
+                                "type": "object",
+                                "properties": {
+                                  "needsUpgrade": {
+                                    "type": "boolean",
+                                    "const": true
+                                  },
+                                  "channels": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "record": {}
+                                },
+                                "required": [
+                                  "needsUpgrade",
+                                  "channels",
+                                  "record"
                                 ],
                                 "additionalProperties": false
                               }
