@@ -81,7 +81,7 @@ template locally, push to render.
 
 ```bash
 npx -y cueframe@0.8 init --json                       # scaffold cueframe.json + cueframe/components/
-npx -y cueframe@0.8 new component my-badge --json     # scaffold a component in the workspace
+npx -y cueframe@0.8 new component my-badge --category ui-blocks --json   # scaffold a component in the workspace
 #   New scaffolds contain template.html and definition.json (native source, version 4).
 # …edit cueframe/components/<id>/template.html and definition.json in your editor…
 npx -y cueframe@0.8 push my-badge --json              # send the native source; the server admits it
@@ -91,7 +91,8 @@ npx -y cueframe@0.8 render <projectId> -o ./out.mp4 --json
 ```
 
 The CLI writes `template.html` and `definition.json` (input schema, defaults, timing and
-capabilities). The version-4 manifest lives at `cueframe.json` → `components.<id>.manifest`.
+capabilities). `cueframe.json` → `components.<id>` holds the version-4 `manifest` and the catalog
+`name` and `category`, which `push` requires; it refuses a component missing either.
 `push`/`sync` send these as one native `source`, checked against the contract's source schema;
 the server's admission (template lint, determinism, declarations) refuses with a named rule.
 For a builtin fork, copy **all three parts** from the selected `sourceSnapshot`: template,

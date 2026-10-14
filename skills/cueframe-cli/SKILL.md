@@ -197,7 +197,7 @@ video and composites it (the shared renderer never runs your code).
 npx -y cueframe@0.8 init --json
 
 # 2a. Scaffold a component in cueframe/components/<id>/ as owned, editable source.
-npx -y cueframe@0.8 new component my-badge --json
+npx -y cueframe@0.8 new component my-badge --category ui-blocks --json
 
 # The scaffold is a native (version 4) source: template.html + definition.json, with its
 # manifest in cueframe.json. Built-in forks copy the exact template, definition and manifest.
