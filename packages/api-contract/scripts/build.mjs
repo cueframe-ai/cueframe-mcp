@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 
 import { checkApiInputs } from "../../../tools/check-api-inputs.mjs";
 import { checkPublicOpenAPI } from "../../../tools/check-openapi-public.mjs";
+import { kernelComponentProblems } from "../../../tools/check-kernel-components.mjs";
+import { createRequire } from "node:module";
 
 const packageRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const repositoryRoot = join(packageRoot, "..", "..");
@@ -23,6 +25,12 @@ const sync = JSON.parse(api("contract-manifest.json"));
 const spec = JSON.parse(specBytes);
 const surface = JSON.parse(surfaceBytes);
 
+// The embedded kernel components must be exactly the pinned kernel's.
+const kernelArtifact = JSON.parse(
+  readFileSync(createRequire(join(packageRoot, "package.json")).resolve("@cueframe/kernel/composition-ops/openapi-components.json"), "utf8"),
+);
+const kernelProblems = kernelComponentProblems(spec, kernelArtifact, sync.kernelVersion);
+if (kernelProblems.length) throw new Error(kernelProblems.join("\n"));
 // The package version IS the contract version. The private sync may stamp the version it was run against
 // into the manifest (one contract chain, 2026-10-07); when it does, the two must agree.
 if (sync.contractVersion !== undefined && sync.contractVersion !== contractVersion) {
