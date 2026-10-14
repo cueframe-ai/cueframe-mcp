@@ -119,11 +119,11 @@ function ejectedFromFor(ws: Workspace, id: string): string | undefined {
   }
 }
 
-const PROP_SCHEMA_NOTE = 'declared in the v3 source definition';
+const PROP_SCHEMA_NOTE = 'declared in the native (v4) source definition';
 
 function pushErrorExitCode(error: unknown): ExitCodeValue {
   const code = (error as { code?: string }).code;
-  return code === 'no_component_source' || code === 'no_component_manifest' || code === 'invalid_component_definition'
+  return code === 'no_component_source' || code === 'no_component_manifest' || code === 'invalid_component_definition' || code === 'component_source_retired'
     ? ExitCode.UserError
     : exitCodeForError(error);
 }
@@ -138,22 +138,11 @@ export interface PushOutcome {
 
 async function pushOne(ws: Workspace, id: string, opts: PushOpts): Promise<PushOutcome> {
   const dir = componentDir(ws, id);
-  const indexPath = join(dir, 'index.tsx');
-  if (!existsSync(indexPath)) {
-    throw Object.assign(
-      new Error(
-        `Component "${id}" has no index.tsx at ${dir}. Scaffold it first: cueframe new component ${id}`,
-      ),
-      { code: 'no_component_source' },
-    );
-  }
-  const tsxSource = readFileSync(indexPath, 'utf8');
-
+  const source = readComponentSource(ws, id);
   const meta = readComponentMeta(dir);
   const name = meta.name ?? titleize(id);
   const category = toSdkCategory(meta.category);
   const ejectedFrom = ejectedFromFor(ws, id);
-  const source = readComponentSource(ws, id, tsxSource);
   const description = `Custom component "${id}" pushed from the local CueFrame workspace.`;
 
   emitEvent(opts, 'push_component', {

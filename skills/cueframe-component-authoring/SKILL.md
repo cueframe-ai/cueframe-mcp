@@ -27,12 +27,12 @@ See the `cueframe-scene-shot` skill and `cueframe://scene-shot`. Author a compon
 you need behaviour the scene contract does not express.
 
 **Source format matters:**
-- Every executable component uses source v3: keep the complete `sourceSnapshot`, including `definition`,
-  `manifest`, and `tsxSource`. Its definition declares input schema, defaults, timing,
-  brand/media bindings and capabilities. Do not infer these from the source code or flatten
-  a v3 source into a v2 module. The nested asset manifest can still have `version: 2`.
-- The mount signature is `({ durationInFrames, params, assets, render }) => JSX`.
-  Source2 inputs require explicit migration; they are not accepted for editing or rendering.
+- New and changed components are native (source version 4): `{version:4, componentId, template,
+  manifest, definition}`. `template` is one HyperFrames sub-composition whose script ends in one
+  `__cfScene.mount(...)`; the manifest is `{version:4, runtime:'hyperframes', hfContract:1,
+  kind:'scene', assets, graphics, alphaPolicy}`. The definition declares input schema, defaults,
+  timing, brand/media bindings and capabilities. The server instructions' Component Contract has
+  the full rules. Version-3 TSX sources are retired and refused as `component_source_retired`.
 - Neither renderer runs authored source in the editor process. Local and hosted execution
   use isolated render processes and exact immutable source revisions.
 
@@ -47,7 +47,7 @@ Use the live tool schema for request envelopes; hosted write fields are normally
    `builtinCollection` (its scope collection).
    ID-only builtin reads are unsupported. An unavailable exact pin is a refusal; never
    retry another scope or an unpinned head.
-2. **Author/own it:** edit the complete v3 `sourceSnapshot`; use your chosen owned ID
+2. **Author/own it:** edit the complete native `sourceSnapshot`; use your chosen owned ID
    consistently in its `componentId` and the request. Send it as `body.source` to
    `create_component`, with required metadata. Preserve its definition, capability
    declarations, manifest and source format. For an existing component, keep its ID and
@@ -69,36 +69,34 @@ Use the live tool schema for request envelopes; hosted write fields are normally
    Set preview duration deliberately: `durationInFrames` is not a trim window and can retime
    duration-dependent motion. Preserve production timing; inspect the live tool's request shape.
 4. **Check integration:** add it as a `{kind:'component', componentId, props:{},
-   execution:{version:3,componentId,sourceVersionId,params,seed}, placement:{version:3,kind:'clip'}}` clip
+   execution:{version:4,componentId,sourceVersionId,params,seed,assets}, placement:{version:3,kind:'clip'}}` clip
    (`apply_composition`), then inspect saved-composition stills or a scoped `preview_clip` for
    placement and motion. Use `create_render` → `wait_job kind:"render"` when delivering a
    finished MP4, not per tweak.
 
 ## Path B — CLI / coding agent (customer-owned source under git)
 
-Source lives in `cueframe/components/<id>/` (the `cueframe.json` workspace); edit locally as
-standard Remotion, push to render.
+Source lives in `cueframe/components/<id>/` (the `cueframe.json` workspace); edit the native
+template locally, push to render.
 
 ```bash
 npx -y cueframe@0.8 init --json                       # scaffold cueframe.json + cueframe/components/
 npx -y cueframe@0.8 new component my-badge --json     # scaffold a component in the workspace
-#   New scaffolds contain index.tsx, config.ts and definition.json (source v3).
-#   For a builtin fork, retain its TSX, complete definition and asset manifest together.
-# …edit cueframe/components/<id>/ in your editor (standard Remotion)…
-npx -y cueframe@0.8 push my-badge --json              # upload index.tsx as the component tsxSource
+#   New scaffolds contain template.html and definition.json (native source, version 4).
+# …edit cueframe/components/<id>/template.html and definition.json in your editor…
+npx -y cueframe@0.8 push my-badge --json              # send the native source; the server admits it
 #   or: npx -y cueframe@0.8 sync --json               # push every component in the workspace
 # reference the component id in your composition, then render:
 npx -y cueframe@0.8 render <projectId> -o ./out.mp4 --json
 ```
 
-The CLI writes `index.tsx` (module), `config.ts` (metadata) and `definition.json` (complete v3
-input schema, defaults, timing and capabilities). Its asset manifest lives at
-`cueframe.json` → `components.<id>.manifest`; that nested manifest retains version 2.
-`push`/`sync` send these as one v3 `source` snapshot. For a builtin fork, copy **all three source
-parts** from the selected `sourceSnapshot`: TSX, definition and manifest; choose the owned ID
-consistently. Never replace a definition with the blank scaffold's defaults.
-Older workspaces without `definition.json` are refused before API calls: review and declare
-their real behavior instead of running `new --force` over existing source. To preview before
+The CLI writes `template.html` and `definition.json` (input schema, defaults, timing and
+capabilities). The version-4 manifest lives at `cueframe.json` → `components.<id>.manifest`.
+`push`/`sync` send these as one native `source`, checked against the contract's source schema;
+the server's admission (template lint, determinism, declarations) refuses with a named rule.
+For a builtin fork, copy **all three parts** from the selected `sourceSnapshot`: template,
+definition and manifest. A workspace component that still has a version-3 `index.tsx` is
+refused as `component_source_retired` before any API call; author it again as a native template. To preview before
 a full render, push it and use the appropriate component preview loop.
 
 ## Path C — Director editing a local desktop project (project-embedded source)
@@ -220,6 +218,6 @@ const R = params.region ?? { x: 0, y: 0, w: 1, h: 1 };
 ## Don't
 - Don't expect a forked primitive to use rich named props — read `params` inside and use the explicit
   `assets` and `render` bags for media and frame state.
-- When a built-in fits the request, fork its exact v3 snapshot using Path A. Never discard its
-  definition by copying only its TSX; preserve the definition and manifest too.
+- When a built-in fits the request, fork its exact snapshot using Path A. Never discard its
+  definition by copying only its template; preserve the definition and manifest too.
 - Don't `create_component` a fresh id each fix iteration — `update_component` (same id) is the loop.

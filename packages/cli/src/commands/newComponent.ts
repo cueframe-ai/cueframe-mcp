@@ -11,8 +11,8 @@ import { findWorkspace, componentDir } from '../internal/workspace.js';
 import { emitEvent, emitError, emitResult } from '../remote/output.js';
 import { ExitCode, exitWith } from '../remote/exitCodes.js';
 import { assertCleanIdentifier } from '../remote/validate.js';
-import { scaffoldDefinition } from '../internal/componentSource.js';
-import { DEFAULT_COMPONENT_MANIFEST_V2 } from '../internal/componentManifest.js';
+import { scaffoldDefinition, scaffoldTemplate } from '../internal/componentSource.js';
+import { DEFAULT_COMPONENT_MANIFEST_V4 } from '../internal/componentManifest.js';
 
 interface NewComponentOpts {
   json?: boolean;
@@ -27,45 +27,9 @@ function toPascal(name: string): string {
   return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join('');
 }
 
-function toTitle(name: string): string {
-  const words = name.split(/[^a-zA-Z0-9]+/).filter(Boolean);
-  return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-}
-
 function fail(opts: NewComponentOpts, message: string): never {
   emitError(opts, 'new_component', new Error(message), ExitCode.UserError);
   exitWith(ExitCode.UserError);
-}
-
-function indexTsxStub(name: string, pascal: string): string {
-  return (
-    `import React from 'react';\n` +
-    `\n` +
-    `/** Custom CueFrame component. Source v3 standalone clip; edit definition.json with the code. */\n` +
-    `export default function ${pascal}({ params }: { durationInFrames: number; params: Record<string, unknown>; assets: Record<string, unknown>; render: { frame: number; fps: number; width: number; height: number; seed: string; colorSpace: 'srgb' } }) {\n` +
-    `  return <div style={{ width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>{String((params as { text?: unknown }).text ?? '${name}')}</div>;\n` +
-    `}\n`
-  );
-}
-
-function configTsStub(name: string, title: string): string {
-  return (
-    `import { z } from 'zod';\n` +
-    `import component from './index';\n` +
-    `\n` +
-    `const paramsSchema = z.object({}).passthrough();\n` +
-    `\n` +
-    `export const config = {\n` +
-    `  id: '${name}',\n` +
-    `  component,\n` +
-    `  name: '${title}',\n` +
-    `  category: 'ui-blocks',\n` +
-    `  kind: 'component',\n` +
-    `  version: '0.1.0',\n` +
-    `  paramsSchema,\n` +
-    `};\n` +
-    `export default config;\n`
-  );
 }
 
 export function newComponentCommand(name: string, opts: NewComponentOpts): void {
@@ -76,7 +40,6 @@ export function newComponentCommand(name: string, opts: NewComponentOpts): void 
   if (!pascal) {
     fail(opts, `name "${name}" has no alphanumeric characters to form a component identifier.`);
   }
-  const title = toTitle(name);
   emitEvent(opts, 'new_component_prepare', { name, dryRun, force });
 
   const ws = findWorkspace(process.cwd());
@@ -97,9 +60,8 @@ export function newComponentCommand(name: string, opts: NewComponentOpts): void 
   }
 
   const files = {
-    'index.tsx': indexTsxStub(name, pascal),
-    'config.ts': configTsStub(name, title),
-    'definition.json': JSON.stringify(scaffoldDefinition(name), null, 2) + '\n',
+    'template.html': scaffoldTemplate(name),
+    'definition.json': JSON.stringify(scaffoldDefinition(), null, 2) + '\n',
   };
 
   if (!dryRun) {
@@ -111,7 +73,7 @@ export function newComponentCommand(name: string, opts: NewComponentOpts): void 
     const manifestPath = join(ws.root, MANIFEST_FILENAME);
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as Record<string, unknown>;
     const components = (manifest.components as Record<string, unknown> | undefined) ?? {};
-    components[name] = { custom: true, manifest: DEFAULT_COMPONENT_MANIFEST_V2 };
+    components[name] = { custom: true, manifest: DEFAULT_COMPONENT_MANIFEST_V4 };
     manifest.components = components;
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   }
@@ -134,7 +96,7 @@ export function newComponentCommand(name: string, opts: NewComponentOpts): void 
         console.log(`  ${dryRun ? 'would write' : 'wrote'} ${file}`);
       }
       if (!dryRun) console.log(`  stamped cueframe.json components.${name} (custom)`);
-      console.log('Edit index.tsx, then `cueframe push ' + name + '` to publish it to CueFrame.');
+      console.log('Edit template.html and definition.json, then `cueframe push ' + name + '` to publish it to CueFrame.');
     },
   );
 }

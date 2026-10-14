@@ -199,14 +199,13 @@ npx -y cueframe@0.8 init --json
 # 2a. Scaffold a component in cueframe/components/<id>/ as owned, editable source.
 npx -y cueframe@0.8 new component my-badge --json
 
-# Built-in forks require an exact v3 sourceSnapshot; retain its TSX, definition and manifest.
-# The CLI sends index.tsx + definition.json + the workspace asset manifest as one v3 source.
+# The scaffold is a native (version 4) source: template.html + definition.json, with its
+# manifest in cueframe.json. Built-in forks copy the exact template, definition and manifest.
 
-# 3. Edit cueframe/components/<id>/ — it's standard Remotion. The component is mounted
-#    with params/assets/render; definition.json declares its source-v3 capabilities and timing.
-#    The nested asset manifest remains version 2.
+# 3. Edit cueframe/components/<id>/template.html (one HyperFrames sub-composition ending in
+#    __cfScene.mount(...)) and definition.json (inputs, defaults, timing, capabilities).
 
-# 4. Publish to CueFrame so it can render (uploads index.tsx as the component's tsxSource).
+# 4. Publish to CueFrame so it can render (the server admits the source or names the rule it breaks).
 npx -y cueframe@0.8 push my-badge --json            # one component
 npx -y cueframe@0.8 sync --json                      # every component in the workspace
 

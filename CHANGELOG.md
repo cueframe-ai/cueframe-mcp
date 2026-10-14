@@ -27,7 +27,9 @@ Generated from contract 4.0.0. Breaking:
 
 ## cueframe 0.8.2
 
-- Builds against `@cueframe/sdk` 0.7.0, with `FormatFps`/`FormatResolution` replacing the removed `FormatSpec*` types. Command behaviour is unchanged. `cueframe push` still sends version-3 component sources.
+- `cueframe new component` scaffolds a native (version 4) source: `template.html` and `definition.json`, with a version-4 manifest in `cueframe.json`. It no longer writes `index.tsx` and `config.ts`.
+- `cueframe push` and `cueframe sync` send that native source, checked against the contract's source schema. A workspace component that still has only a version-3 `index.tsx` is refused as `component_source_retired` before any API call. The server already refuses version-3 authoring.
+- Builds against `@cueframe/sdk` 0.7.0, with `FormatFps`/`FormatResolution` replacing the removed `FormatSpec*` types.
 
 ## @cueframe/api-contract 3.0.1
 

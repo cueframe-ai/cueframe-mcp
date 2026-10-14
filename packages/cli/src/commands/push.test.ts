@@ -12,8 +12,8 @@ import { pushCommand, syncCommand } from './push';
 import { components, ApiError } from '@cueframe/sdk';
 import { createComponentBody, updateComponentBody } from '@cueframe/sdk/zod';
 import * as sdkClient from '../remote/sdkClient.js';
-import { scaffoldDefinition } from '../internal/componentSource.js';
-import { DEFAULT_COMPONENT_MANIFEST_V2 } from '../internal/componentManifest.js';
+import { scaffoldDefinition, scaffoldTemplate } from '../internal/componentSource.js';
+import { DEFAULT_COMPONENT_MANIFEST_V4 } from '../internal/componentManifest.js';
 
 function setupSpies() {
   vi.spyOn(sdkClient, 'initSdk').mockImplementation(() => {});
@@ -41,11 +41,7 @@ function run(fn: () => Promise<unknown>, exitSpy: ReturnType<typeof vi.spyOn>): 
     });
 }
 
-const INDEX_TSX = `import React from 'react';
-export default function MyBadge({ params }: { durationInFrames: number; params: Record<string, unknown> }) {
-  return <div>{String((params as { text?: unknown }).text ?? 'my-badge')}</div>;
-}
-`;
+const TEMPLATE = scaffoldTemplate('my-badge');
 
 const CONFIG_TS = `import { z } from 'zod';
 import component from './index';
@@ -73,14 +69,14 @@ describe('cueframe push / sync', () => {
       join(root, 'cueframe.json'),
       JSON.stringify(opts.manifest ?? {
         componentsDir: 'cueframe/components',
-        components: { 'my-badge': { manifest: DEFAULT_COMPONENT_MANIFEST_V2 } },
+        components: { 'my-badge': { manifest: DEFAULT_COMPONENT_MANIFEST_V4 } },
       }),
     );
     const cdir = join(root, 'cueframe', 'components', 'my-badge');
     mkdirSync(cdir, { recursive: true });
-    writeFileSync(join(cdir, 'index.tsx'), INDEX_TSX);
+    writeFileSync(join(cdir, 'template.html'), TEMPLATE);
     writeFileSync(join(cdir, 'config.ts'), CONFIG_TS);
-    writeFileSync(join(cdir, 'definition.json'), JSON.stringify(scaffoldDefinition('my-badge')));
+    writeFileSync(join(cdir, 'definition.json'), JSON.stringify(scaffoldDefinition()));
     return root;
   }
 
@@ -102,7 +98,7 @@ describe('cueframe push / sync', () => {
     for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true });
   });
 
-  it('push CREATES with source, ownership, and the contract-v2 manifest', async () => {
+  it('push CREATES with the native source, ownership, and the version-4 manifest', async () => {
     inDir(workspace());
     vi.spyOn(components, 'getComponent').mockRejectedValue(
       new ApiError(404, { code: 'not_found', message: 'no such component' }),
@@ -117,12 +113,12 @@ describe('cueframe push / sync', () => {
     const body = create.mock.calls[0][0];
     expect(createComponentBody.safeParse(body)).toMatchObject({ success: true });
     expect(body.componentId).toBe('my-badge');
-    expect(body.source && 'tsxSource' in body.source && body.source.tsxSource).toBe(INDEX_TSX);
-    expect(body.source?.version).toBe(3);
-    expect(body.source && 'definition' in body.source && body.source.definition).toEqual(scaffoldDefinition('my-badge'));
+    expect(body.source && 'template' in body.source && body.source.template).toBe(TEMPLATE);
+    expect(body.source?.version).toBe(4);
+    expect(body.source?.definition).toEqual(scaffoldDefinition());
     expect(body).not.toHaveProperty('tsxSource');
     expect(body.origin).toBe('customer-owned');
-    expect(body.source?.manifest).toEqual(DEFAULT_COMPONENT_MANIFEST_V2);
+    expect(body.source?.manifest).toEqual(DEFAULT_COMPONENT_MANIFEST_V4);
     expect(body.name).toBe('My Badge');
     expect(body.category).toBe('ui-blocks');
   });
@@ -140,9 +136,9 @@ describe('cueframe push / sync', () => {
     expect(update.mock.calls[0][0]).toBe('my-badge');
     expect(updateComponentBody.safeParse(update.mock.calls[0][1])).toMatchObject({ success: true });
     const updated = update.mock.calls[0][1].source;
-    expect(updated && 'tsxSource' in updated && updated.tsxSource).toBe(INDEX_TSX);
+    expect(updated && 'template' in updated && updated.template).toBe(TEMPLATE);
     expect(update.mock.calls[0][1].origin).toBe('customer-owned');
-    expect(update.mock.calls[0][1].source?.manifest).toEqual(DEFAULT_COMPONENT_MANIFEST_V2);
+    expect(update.mock.calls[0][1].source?.manifest).toEqual(DEFAULT_COMPONENT_MANIFEST_V4);
   });
 
   it('push carries ejectedFrom from the manifest when present', async () => {
@@ -154,7 +150,7 @@ describe('cueframe push / sync', () => {
             'my-badge': {
               ejectedFrom: 'catalog:my-badge',
               primitiveVersion: '0.1.0',
-              manifest: DEFAULT_COMPONENT_MANIFEST_V2,
+              manifest: DEFAULT_COMPONENT_MANIFEST_V4,
             },
           },
         },
@@ -174,12 +170,12 @@ describe('cueframe push / sync', () => {
     const root = workspace();
     const cdir2 = join(root, 'cueframe', 'components', 'lower-third');
     mkdirSync(cdir2, { recursive: true });
-    writeFileSync(join(cdir2, 'index.tsx'), INDEX_TSX);
-    writeFileSync(join(cdir2, 'definition.json'), JSON.stringify(scaffoldDefinition('lower-third')));
+    writeFileSync(join(cdir2, 'template.html'), scaffoldTemplate('lower-third'));
+    writeFileSync(join(cdir2, 'definition.json'), JSON.stringify(scaffoldDefinition()));
     writeFileSync(join(cdir2, 'config.ts'), CONFIG_TS.replace('my-badge', 'lower-third'));
     const workspaceManifestPath = join(root, 'cueframe.json');
     const workspaceManifest = JSON.parse(readFileSync(workspaceManifestPath, 'utf8'));
-    workspaceManifest.components['lower-third'] = { manifest: DEFAULT_COMPONENT_MANIFEST_V2 };
+    workspaceManifest.components['lower-third'] = { manifest: DEFAULT_COMPONENT_MANIFEST_V4 };
     writeFileSync(workspaceManifestPath, JSON.stringify(workspaceManifest));
     inDir(root);
 
@@ -195,7 +191,7 @@ describe('cueframe push / sync', () => {
     expect(ids).toEqual(['lower-third', 'my-badge']);
   });
 
-  it('refuses to push a component without a contract-v2 manifest', async () => {
+  it('refuses to push a component without a version-4 manifest', async () => {
     inDir(workspace({ manifest: { componentsDir: 'cueframe/components' } }));
     const create = vi.spyOn(components, 'createComponent').mockResolvedValue({ id: 'my-badge' } as any);
 
@@ -203,7 +199,7 @@ describe('cueframe push / sync', () => {
 
     expect(code).toBe(2);
     expect(create).not.toHaveBeenCalled();
-    expect(spies.stderrChunks.join('')).toContain('contract-v2 manifest');
+    expect(spies.stderrChunks.join('')).toContain('native (version 4) manifest');
   });
 
   it('refuses an old workspace without a definition before any API call', async () => {
@@ -216,7 +212,20 @@ describe('cueframe push / sync', () => {
     expect(code).toBe(2);
     expect(get).not.toHaveBeenCalled();
     expect(create).not.toHaveBeenCalled();
-    expect(spies.stderrChunks.join('')).toContain('explicit v3 definition.json');
+    expect(spies.stderrChunks.join('')).toContain('explicit definition.json');
+  });
+
+  it('refuses a version-3 TSX component as retired before any API call', async () => {
+    const root = workspace();
+    const cdir = join(root, 'cueframe/components/my-badge');
+    rmSync(join(cdir, 'template.html'));
+    writeFileSync(join(cdir, 'index.tsx'), 'export default function MyBadge() { return null; }\n');
+    inDir(root);
+    const get = vi.spyOn(components, 'getComponent');
+    const code = await run(() => pushCommand('my-badge', { target: 'prod' }), spies.exitSpy);
+    expect(code).toBe(2);
+    expect(get).not.toHaveBeenCalled();
+    expect(spies.stderrChunks.join('')).toContain('version-3 TSX source');
   });
 
   it('push with no workspace → UserError (exit 2) telling the user to run init', async () => {
