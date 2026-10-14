@@ -1,11 +1,7 @@
 
-import { existsSync, readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import ts from 'typescript';
 import { components } from '@cueframe/sdk';
 import {
   findWorkspace,
-  componentDir,
   listComponents,
   type Workspace,
 } from '../internal/workspace.js';
@@ -14,116 +10,18 @@ import { ExitCode, exitCodeForError, exitWith, type ExitCodeValue } from '../rem
 import { emitEvent, emitError, emitErrorJson, emitResult } from '../remote/output.js';
 import { assertCleanIdentifier } from '../remote/validate.js';
 import { readComponentSource } from '../internal/componentSource.js';
+import { readComponentMetadata, type ComponentMetadata } from '../internal/componentManifest.js';
 
 interface PushOpts {
   target: string;
   json?: boolean;
 }
 
-const MANIFEST_FILENAME = 'cueframe.json';
-
-const SDK_CATEGORIES = ['effects', 'transitions', 'text', 'layouts', 'backgrounds', 'ui-blocks', 'scenes'] as const;
-type SdkCategory = (typeof SDK_CATEGORIES)[number];
-
-function toSdkCategory(raw: string | undefined): SdkCategory {
-  return (SDK_CATEGORIES as readonly string[]).includes(raw ?? '')
-    ? (raw as SdkCategory)
-    : 'layouts';
-}
-
-interface ComponentMeta {
-  name?: string;
-  category?: string;
-  version?: string;
-}
-
-function unwrap(expr: ts.Expression): ts.Expression {
-  let e = expr;
-  while (
-    ts.isAsExpression(e) ||
-    ts.isParenthesizedExpression(e) ||
-    (typeof ts.isSatisfiesExpression === 'function' && ts.isSatisfiesExpression(e))
-  ) {
-    e = e.expression;
-  }
-  return e;
-}
-
-function importsFrom(sf: ts.SourceFile, specifier: string): boolean {
-  for (const stmt of sf.statements) {
-    if (!ts.isImportDeclaration(stmt)) continue;
-    if (!ts.isStringLiteral(stmt.moduleSpecifier)) continue;
-    if (stmt.moduleSpecifier.text === specifier) return true;
-  }
-  return false;
-}
-
-function analyzeConfigLiteral(source: string, fileName: string): ComponentMeta {
-  const sf = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-  let objLit: ts.ObjectLiteralExpression | undefined;
-  for (const stmt of sf.statements) {
-    if (!ts.isVariableStatement(stmt)) continue;
-    for (const decl of stmt.declarationList.declarations) {
-      if (ts.isIdentifier(decl.name) && decl.name.text === 'config' && decl.initializer) {
-        const init = unwrap(decl.initializer);
-        if (ts.isObjectLiteralExpression(init)) objLit = init;
-      }
-    }
-    if (objLit) break;
-  }
-  const meta: ComponentMeta = {};
-  if (!objLit) return meta;
-  for (const p of objLit.properties) {
-    if (!ts.isPropertyAssignment(p)) continue;
-    if (!(ts.isIdentifier(p.name) || ts.isStringLiteral(p.name))) continue;
-    const key = p.name.text;
-    if (!ts.isStringLiteralLike(p.initializer)) continue;
-    if (key === 'name') meta.name = p.initializer.text;
-    else if (key === 'category') meta.category = p.initializer.text;
-    else if (key === 'version') meta.version = p.initializer.text;
-  }
-  return meta;
-}
-
-function readComponentMeta(dir: string): ComponentMeta {
-  const configPath = join(dir, 'config.ts');
-  if (!existsSync(configPath)) return {};
-  const configSrc = readFileSync(configPath, 'utf8');
-  const configSf = ts.createSourceFile('config.ts', configSrc, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-  const underConfigPath = join(dir, '_config.ts');
-  if (importsFrom(configSf, './_config') && existsSync(underConfigPath)) {
-    return analyzeConfigLiteral(readFileSync(underConfigPath, 'utf8'), '_config.ts');
-  }
-  return analyzeConfigLiteral(configSrc, 'config.ts');
-}
-
-function titleize(id: string): string {
-  return id
-    .split(/[^a-zA-Z0-9]+/)
-    .filter(Boolean)
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
-}
-
-function ejectedFromFor(ws: Workspace, id: string): string | undefined {
-  const manifestPath = join(ws.root, MANIFEST_FILENAME);
-  if (!existsSync(manifestPath)) return undefined;
-  try {
-    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as {
-      components?: Record<string, { ejectedFrom?: string }>;
-    };
-    const ejectedFrom = manifest.components?.[id]?.ejectedFrom;
-    return typeof ejectedFrom === 'string' && ejectedFrom.length > 0 ? ejectedFrom : undefined;
-  } catch {
-    return undefined;
-  }
-}
-
 const PROP_SCHEMA_NOTE = 'declared in the native (v4) source definition';
 
 function pushErrorExitCode(error: unknown): ExitCodeValue {
   const code = (error as { code?: string }).code;
-  return code === 'no_component_source' || code === 'no_component_manifest' || code === 'invalid_component_definition' || code === 'component_source_retired'
+  return code === 'no_component_source' || code === 'no_component_manifest' || code === 'invalid_component_definition' || code === 'component_source_retired' || code === 'invalid_component_metadata' || code === 'invalid_workspace_manifest'
     ? ExitCode.UserError
     : exitCodeForError(error);
 }
@@ -132,24 +30,19 @@ export interface PushOutcome {
   id: string;
   action: 'created' | 'updated';
   name: string;
-  category: SdkCategory;
+  category: ComponentMetadata['category'];
   propSchema: typeof PROP_SCHEMA_NOTE;
 }
 
 async function pushOne(ws: Workspace, id: string, opts: PushOpts): Promise<PushOutcome> {
-  const dir = componentDir(ws, id);
   const source = readComponentSource(ws, id);
-  const meta = readComponentMeta(dir);
-  const name = meta.name ?? titleize(id);
-  const category = toSdkCategory(meta.category);
-  const ejectedFrom = ejectedFromFor(ws, id);
+  const { name, category, ejectedFrom } = readComponentMetadata(ws, id);
   const description = `Custom component "${id}" pushed from the local CueFrame workspace.`;
 
   emitEvent(opts, 'push_component', {
     id,
     name,
     category,
-    version: meta.version,
     ejectedFrom,
     propSchema: PROP_SCHEMA_NOTE,
   });

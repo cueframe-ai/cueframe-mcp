@@ -37,8 +37,7 @@
     "commander": "^13.1.0",
     "open": "^10.1.0",
     "ora": "^8.2.0",
-    "pino": "^10.3.1",
-    "typescript": "^5.9.3"
+    "pino": "^10.3.1"
   },
   "scripts": {
     "build": "tsup && node scripts/copy-agent-skills.mjs && node scripts/check-bundle-free-of-kernel.mjs",
@@ -52,6 +51,7 @@
     "zod": "^4.5.4",
     "@types/node": "^24.0.0",
     "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.2",
     "@cueframe/skills": "workspace:*"
   },

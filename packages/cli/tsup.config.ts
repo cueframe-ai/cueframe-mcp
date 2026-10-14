@@ -11,7 +11,6 @@ export default defineConfig({
   bundle: true,
   // Only the SDK and zod are inlined. The CLI carries no kernel code; validation and binding run on the server.
   noExternal: ['@cueframe/sdk', 'zod'],
-  external: ['typescript'],
   banner: { js: '#!/usr/bin/env node' },
   clean: true,
   dts: false,

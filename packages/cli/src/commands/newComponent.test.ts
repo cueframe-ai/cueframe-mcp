@@ -51,7 +51,7 @@ describe('cueframe new component', () => {
   it('scaffolds the native blank component: template.html and definition.json', () => {
     const root = workspace();
     inDir(root);
-    newComponentCommand('my-badge', { json: false });
+    newComponentCommand('my-badge', { category: 'ui-blocks', json: false });
 
     const dir = join(root, 'cueframe', 'components', 'my-badge');
     expect(readFileSync(join(dir, 'template.html'), 'utf8')).toBe(scaffoldTemplate('my-badge'));
@@ -62,13 +62,23 @@ describe('cueframe new component', () => {
   it('stamps cueframe.json with the version-4 component manifest', () => {
     const root = workspace();
     inDir(root);
-    newComponentCommand('my-badge', { json: false });
+    newComponentCommand('my-badge', { category: 'ui-blocks', json: false });
 
     const manifest = JSON.parse(readFileSync(join(root, 'cueframe.json'), 'utf8'));
     expect(manifest.components['my-badge']).toEqual({
       custom: true,
+      name: 'My Badge',
+      category: 'ui-blocks',
       manifest: SCAFFOLD_COMPONENT_MANIFEST_V4,
     });
+  });
+
+  it('refuses a category the contract does not list, naming the allowed ones', () => {
+    const root = workspace();
+    vi.spyOn(process, 'cwd').mockReturnValue(root);
+    const errs = captureExit();
+    expect(() => newComponentCommand('my-badge', { category: 'widgets', json: false })).toThrow('exit:2');
+    expect(errs.join('')).toMatch(/--category must be one of .*ui-blocks.*got "widgets"/);
   });
 
   it('refuses a non-empty existing dir without --force', () => {
@@ -79,7 +89,7 @@ describe('cueframe new component', () => {
     vi.spyOn(process, 'cwd').mockReturnValue(root);
     const errs = captureExit();
 
-    expect(() => newComponentCommand('my-badge', { json: false })).toThrow('exit:2');
+    expect(() => newComponentCommand('my-badge', { category: 'ui-blocks', json: false })).toThrow('exit:2');
     expect(errs.join('')).toMatch(/--force/);
     expect(readFileSync(join(dir, 'index.tsx'), 'utf8')).toBe('existing');
   });
@@ -91,7 +101,7 @@ describe('cueframe new component', () => {
     writeFileSync(join(dir, 'index.tsx'), 'existing');
     inDir(root);
 
-    newComponentCommand('my-badge', { json: false, force: true });
+    newComponentCommand('my-badge', { category: 'ui-blocks', json: false, force: true });
     expect(readFileSync(join(dir, 'template.html'), 'utf8')).toBe(scaffoldTemplate('my-badge'));
   });
 
@@ -99,14 +109,14 @@ describe('cueframe new component', () => {
     const root = bareDir();
     vi.spyOn(process, 'cwd').mockReturnValue(root);
     const errs = captureExit();
-    expect(() => newComponentCommand('my-badge', { json: false })).toThrow('exit:2');
+    expect(() => newComponentCommand('my-badge', { category: 'ui-blocks', json: false })).toThrow('exit:2');
     expect(errs.join('')).toMatch(/cueframe init/);
   });
 
   it('dry-run writes nothing', () => {
     const root = workspace();
     inDir(root);
-    newComponentCommand('my-badge', { json: false, dryRun: true });
+    newComponentCommand('my-badge', { category: 'ui-blocks', json: false, dryRun: true });
 
     expect(existsSync(join(root, 'cueframe', 'components', 'my-badge'))).toBe(false);
     const manifest = JSON.parse(readFileSync(join(root, 'cueframe.json'), 'utf8'));

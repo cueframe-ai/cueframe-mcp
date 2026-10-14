@@ -13,8 +13,10 @@ import { ExitCode, exitWith } from '../remote/exitCodes.js';
 import { assertCleanIdentifier } from '../remote/validate.js';
 import { scaffoldDefinition, scaffoldTemplate } from '../internal/componentSource.js';
 import { SCAFFOLD_COMPONENT_MANIFEST_V4 } from '../internal/scaffoldManifest.js';
+import { createComponentBody } from '@cueframe/sdk/zod';
 
 interface NewComponentOpts {
+  category: string;
   json?: boolean;
   dryRun?: boolean;
   force?: boolean;
@@ -25,6 +27,10 @@ const MANIFEST_FILENAME = 'cueframe.json';
 function toPascal(name: string): string {
   const words = name.split(/[^a-zA-Z0-9]+/).filter(Boolean);
   return words.map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+}
+
+function toTitle(name: string): string {
+  return name.split(/[^a-zA-Z0-9]+/).filter(Boolean).map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
 function fail(opts: NewComponentOpts, message: string): never {
@@ -39,6 +45,10 @@ export function newComponentCommand(name: string, opts: NewComponentOpts): void 
   const pascal = toPascal(name);
   if (!pascal) {
     fail(opts, `name "${name}" has no alphanumeric characters to form a component identifier.`);
+  }
+  const category = createComponentBody.shape.category.safeParse(opts.category);
+  if (!category.success) {
+    fail(opts, `--category must be one of ${createComponentBody.shape.category.options.join(', ')}; got "${opts.category}".`);
   }
   emitEvent(opts, 'new_component_prepare', { name, dryRun, force });
 
@@ -73,7 +83,7 @@ export function newComponentCommand(name: string, opts: NewComponentOpts): void 
     const manifestPath = join(ws.root, MANIFEST_FILENAME);
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as Record<string, unknown>;
     const components = (manifest.components as Record<string, unknown> | undefined) ?? {};
-    components[name] = { custom: true, manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 };
+    components[name] = { custom: true, name: toTitle(name), category: category.data, manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 };
     manifest.components = components;
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   }

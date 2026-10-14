@@ -43,20 +43,6 @@ function run(fn: () => Promise<unknown>, exitSpy: ReturnType<typeof vi.spyOn>): 
 
 const TEMPLATE = scaffoldTemplate('my-badge');
 
-const CONFIG_TS = `import { z } from 'zod';
-import component from './index';
-const paramsSchema = z.object({}).passthrough();
-export const config = {
-  id: 'my-badge',
-  component,
-  name: 'My Badge',
-  category: 'ui-blocks',
-  kind: 'component',
-  version: '0.2.0',
-  paramsSchema,
-};
-export default config;
-`;
 
 describe('cueframe push / sync', () => {
   const dirs: string[] = [];
@@ -69,13 +55,12 @@ describe('cueframe push / sync', () => {
       join(root, 'cueframe.json'),
       JSON.stringify(opts.manifest ?? {
         componentsDir: 'cueframe/components',
-        components: { 'my-badge': { manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 } },
+        components: { 'my-badge': { name: 'My Badge', category: 'ui-blocks', manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 } },
       }),
     );
     const cdir = join(root, 'cueframe', 'components', 'my-badge');
     mkdirSync(cdir, { recursive: true });
     writeFileSync(join(cdir, 'template.html'), TEMPLATE);
-    writeFileSync(join(cdir, 'config.ts'), CONFIG_TS);
     writeFileSync(join(cdir, 'definition.json'), JSON.stringify(scaffoldDefinition()));
     return root;
   }
@@ -150,6 +135,8 @@ describe('cueframe push / sync', () => {
             'my-badge': {
               ejectedFrom: 'catalog:my-badge',
               primitiveVersion: '0.1.0',
+              name: 'My Badge',
+              category: 'ui-blocks',
               manifest: SCAFFOLD_COMPONENT_MANIFEST_V4,
             },
           },
@@ -172,10 +159,9 @@ describe('cueframe push / sync', () => {
     mkdirSync(cdir2, { recursive: true });
     writeFileSync(join(cdir2, 'template.html'), scaffoldTemplate('lower-third'));
     writeFileSync(join(cdir2, 'definition.json'), JSON.stringify(scaffoldDefinition()));
-    writeFileSync(join(cdir2, 'config.ts'), CONFIG_TS.replace('my-badge', 'lower-third'));
     const workspaceManifestPath = join(root, 'cueframe.json');
     const workspaceManifest = JSON.parse(readFileSync(workspaceManifestPath, 'utf8'));
-    workspaceManifest.components['lower-third'] = { manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 };
+    workspaceManifest.components['lower-third'] = { name: 'Lower Third', category: 'text', manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 };
     writeFileSync(workspaceManifestPath, JSON.stringify(workspaceManifest));
     inDir(root);
 
@@ -191,7 +177,7 @@ describe('cueframe push / sync', () => {
     expect(ids).toEqual(['lower-third', 'my-badge']);
   });
 
-  it('refuses to push a component without a version-4 manifest', async () => {
+  it('refuses to push a component that has no cueframe.json entry', async () => {
     inDir(workspace({ manifest: { componentsDir: 'cueframe/components' } }));
     const create = vi.spyOn(components, 'createComponent').mockResolvedValue({ id: 'my-badge' } as any);
 
@@ -199,7 +185,7 @@ describe('cueframe push / sync', () => {
 
     expect(code).toBe(2);
     expect(create).not.toHaveBeenCalled();
-    expect(spies.stderrChunks.join('')).toContain('native (version 4) manifest');
+    expect(spies.stderrChunks.join('')).toContain('has no entry at cueframe.json components.my-badge');
   });
 
   it('refuses an old workspace without a definition before any API call', async () => {
@@ -226,6 +212,19 @@ describe('cueframe push / sync', () => {
     expect(code).toBe(2);
     expect(get).not.toHaveBeenCalled();
     expect(spies.stderrChunks.join('')).toContain('version-3 TSX source');
+  });
+
+  it('refuses a component without a name or with an unknown category, before any API call', async () => {
+    for (const entry of [{ category: 'ui-blocks' }, { name: 'My Badge', category: 'widgets' }]) {
+      inDir(workspace({ manifest: { componentsDir: 'cueframe/components', components: { 'my-badge': { ...entry, manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 } } } }));
+      const get = vi.spyOn(components, 'getComponent');
+      const code = await run(() => pushCommand('my-badge', { target: 'prod' }), spies.exitSpy);
+      expect(code).toBe(2);
+      expect(get).not.toHaveBeenCalled();
+      expect(spies.stderrChunks.join('')).toContain('needs a name and a category in cueframe.json components.my-badge');
+      vi.restoreAllMocks();
+      spies = setupSpies();
+    }
   });
 
   it('push with no workspace → UserError (exit 2) telling the user to run init', async () => {
