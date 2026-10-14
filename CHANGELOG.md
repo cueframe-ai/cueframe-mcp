@@ -4,13 +4,13 @@ One entry per package per release. Versions follow each package's `package.json`
 
 ## @cueframe/api-contract 4.0.0
 
-Breaking schema release, synced from private 74beb83 with kernel 0.6.0. The contract now embeds the kernel's own OpenAPI components verbatim, and the build ships `openapi.json` exactly as synced. The toolkit's scene-schema vendoring step is retired.
+Breaking schema release, synced from private 0a430db with kernel 0.6.0. The contract now embeds the kernel's own OpenAPI components verbatim, and the build ships `openapi.json` exactly as synced. The toolkit's scene-schema vendoring step is retired.
 
 - `Composition` is the full kernel shape and is strict: unknown top-level keys are refused. `ownerOrgId`, `acl`, `licenseVerification` and `sourceSuggestionId` are `readOnly`. Only the server sets them.
 - `FormatSpec` is renamed `Format`. The `SceneFormat` and `TransitionSpec` components are removed, and every format references `Format`.
 - Kernel-owned components, now published as the kernel defines them: `CompositionOp` (with `clip.setKeyframes`; `applyMotionPreset` is retired), `TimelineClip` (a track entry is a `TimelineClip` or a gap), `ComponentExecutionRef` (execution versions 3 and 4), `ComponentParameterValue`, `CompositionConcurrency` and `ErrorEnvelope`.
 - `SceneShotSpecV2` is the kernel's recursive schema with `SceneShotSpecV2Schema0`/`SceneShotSpecV2Schema1`. The depth-capped `SceneShotSpecV2LayerDepth0`–`4` and `SceneShotSpecV2JsonValue` are removed. The API still enforces the group-depth limit of 4.
-- Component create, update and patch sources, and component source snapshots, are a version-3 (`tsxSource` + manifest v2) | version-4 (native manifest) union.
+- Component create, update and patch take native (version 4) sources only: `{version: 4, componentId, template, manifest, definition}`. Version-3 TSX sources can no longer be written. Component source reads (snapshots) still return version 3 or version 4.
 - A component clip source may be retired: `execution` and `placement` are optional there, and an open `retired` record marks a clip from before the native cutover, with its props kept. Saves and renders refuse such clips with `component_source_retired`.
 - The composition read (`getComposition`) answers `needsUpgrade: CompositionUpgradeNeed[]` (`{clipId, kind: 'unpinned-component' | 'v3-component' | 'retired-primitive', componentId?, sourceVersionId?, primitiveId?, successorComponentId?, successorSourceVersionId?}`) only when such clips remain.
 - New operation `repinComponent` (`POST /v1/projects/{id}/components/native-upgrade`) moves retired TSX component clips to their native successors.
@@ -21,7 +21,7 @@ Breaking schema release, synced from private 74beb83 with kernel 0.6.0. The cont
 Generated from contract 4.0.0. Breaking:
 
 - `FormatSpec`, `FormatSpecFps` and `FormatSpecResolution` are removed with no alias: use `Format`, `FormatFps` and `FormatResolution`. The `SceneFormat*`, `CompositionFormat*`, `TransitionSpec*`, `SceneShotSpecV2LayerDepth*` and `SceneShotSpecV2JsonValue` models are removed. The new models include `TimelineClip*`, `ComponentExecutionRef`, `ComponentManifestV4*`, `SceneShotSpecV2Schema0/1` and `NativeUpgrade*`.
-- Component source bodies are a version-3 | version-4 union, so `createComponentBody.shape.source` is a `ZodUnion`. Narrow on `version` (or `'tsxSource' in source`).
+- Component create, update and patch source types and validators are native (version 4) only. Source read models remain a version-3 | version-4 union.
 - `@cueframe/sdk/zod` no longer exports response validators. All 274 response exports are gone: every `<OperationId>Response`/`<operationId>Response`, their `*ResponseItem` companions, and the `consult`/`deriveComposition`/`health`/`whoami` `*ResponseSchema` aliases. The 56 `<operationId>Body` schemas are unchanged. Importing the module now retains about 10.5 MiB instead of 15.5 MiB. The TypeScript response types are unchanged.
 - The scene body schema now accepts any group nesting depth on the client. The API refuses nesting deeper than 4.
 - New `components.repinComponent` client function.
