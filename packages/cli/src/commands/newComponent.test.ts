@@ -10,8 +10,9 @@ import {
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { newComponentCommand } from './newComponent.js';
-import { scaffoldDefinition, scaffoldTemplate } from '../internal/componentSource.js';
-import { SCAFFOLD_COMPONENT_MANIFEST_V4 } from '../internal/scaffoldManifest.js';
+import { blankComponentSource } from '../internal/componentSource.js';
+import { BLANK_COMPONENT_SOURCE_V4 } from '@cueframe/sdk';
+import { createComponentBody } from '@cueframe/sdk/zod';
 
 describe('cueframe new component', () => {
   const dirs: string[] = [];
@@ -54,8 +55,8 @@ describe('cueframe new component', () => {
     newComponentCommand('my-badge', { category: 'ui-blocks', json: false });
 
     const dir = join(root, 'cueframe', 'components', 'my-badge');
-    expect(readFileSync(join(dir, 'template.html'), 'utf8')).toBe(scaffoldTemplate('my-badge'));
-    expect(JSON.parse(readFileSync(join(dir, 'definition.json'), 'utf8'))).toEqual(scaffoldDefinition());
+    expect(readFileSync(join(dir, 'template.html'), 'utf8')).toBe(blankComponentSource('my-badge').template);
+    expect(JSON.parse(readFileSync(join(dir, 'definition.json'), 'utf8'))).toEqual(blankComponentSource('my-badge').definition);
     expect(existsSync(join(dir, 'index.tsx'))).toBe(false);
   });
 
@@ -69,7 +70,7 @@ describe('cueframe new component', () => {
       custom: true,
       name: 'My Badge',
       category: 'ui-blocks',
-      manifest: SCAFFOLD_COMPONENT_MANIFEST_V4,
+      manifest: blankComponentSource('my-badge').manifest,
     });
   });
 
@@ -102,7 +103,7 @@ describe('cueframe new component', () => {
     inDir(root);
 
     newComponentCommand('my-badge', { category: 'ui-blocks', json: false, force: true });
-    expect(readFileSync(join(dir, 'template.html'), 'utf8')).toBe(scaffoldTemplate('my-badge'));
+    expect(readFileSync(join(dir, 'template.html'), 'utf8')).toBe(blankComponentSource('my-badge').template);
   });
 
   it('no workspace → UserError telling the user to run `cueframe init`', () => {
@@ -121,5 +122,19 @@ describe('cueframe new component', () => {
     expect(existsSync(join(root, 'cueframe', 'components', 'my-badge'))).toBe(false);
     const manifest = JSON.parse(readFileSync(join(root, 'cueframe.json'), 'utf8'));
     expect(manifest.components).toBeUndefined();
+  });
+});
+
+describe('the scaffold is the contract blank source, renamed', () => {
+  it('renames componentId and the template root together, and keeps the rest', () => {
+    const source = blankComponentSource('my-badge');
+    expect(source.componentId).toBe('my-badge');
+    expect(source.template).toContain('data-composition-id="my-badge"');
+    expect(source.template).not.toContain(`data-composition-id="${BLANK_COMPONENT_SOURCE_V4.componentId}"`);
+    expect(source.definition).toEqual(BLANK_COMPONENT_SOURCE_V4.definition);
+    expect(source.manifest).toEqual(BLANK_COMPONENT_SOURCE_V4.manifest);
+  });
+  it('is a source the contract accepts', () => {
+    expect(createComponentBody.shape.source.safeParse(blankComponentSource('my-badge')).success).toBe(true);
   });
 });

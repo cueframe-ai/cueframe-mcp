@@ -11,8 +11,7 @@ import { findWorkspace, componentDir } from '../internal/workspace.js';
 import { emitEvent, emitError, emitResult } from '../remote/output.js';
 import { ExitCode, exitWith } from '../remote/exitCodes.js';
 import { assertCleanIdentifier } from '../remote/validate.js';
-import { scaffoldDefinition, scaffoldTemplate } from '../internal/componentSource.js';
-import { SCAFFOLD_COMPONENT_MANIFEST_V4 } from '../internal/scaffoldManifest.js';
+import { blankComponentSource } from '../internal/componentSource.js';
 import { createComponentBody } from '@cueframe/sdk/zod';
 
 interface NewComponentOpts {
@@ -69,9 +68,10 @@ export function newComponentCommand(name: string, opts: NewComponentOpts): void 
     );
   }
 
+  const blank = blankComponentSource(name);
   const files = {
-    'template.html': scaffoldTemplate(name),
-    'definition.json': JSON.stringify(scaffoldDefinition(), null, 2) + '\n',
+    'template.html': blank.template,
+    'definition.json': JSON.stringify(blank.definition, null, 2) + '\n',
   };
 
   if (!dryRun) {
@@ -83,7 +83,7 @@ export function newComponentCommand(name: string, opts: NewComponentOpts): void 
     const manifestPath = join(ws.root, MANIFEST_FILENAME);
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as Record<string, unknown>;
     const components = (manifest.components as Record<string, unknown> | undefined) ?? {};
-    components[name] = { custom: true, name: toTitle(name), category: category.data, manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 };
+    components[name] = { custom: true, name: toTitle(name), category: category.data, manifest: blank.manifest };
     manifest.components = components;
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   }
