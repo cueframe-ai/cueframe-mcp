@@ -1832,8 +1832,15 @@
             "enum": [
               "unpinned-component",
               "v3-component",
-              "retired-primitive"
+              "retired-primitive",
+              "legacy-keyframes"
             ]
+          },
+          "channels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "componentId": {
             "type": "string"
@@ -3063,6 +3070,28 @@
                     "required": [
                       "version",
                       "lanes"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "legacyKeyframes": {
+                    "type": "object",
+                    "properties": {
+                      "needsUpgrade": {
+                        "type": "boolean",
+                        "const": true
+                      },
+                      "channels": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "record": {}
+                    },
+                    "required": [
+                      "needsUpgrade",
+                      "channels",
+                      "record"
                     ],
                     "additionalProperties": false
                   }
@@ -5887,6 +5916,28 @@
             "required": [
               "version",
               "lanes"
+            ],
+            "additionalProperties": false
+          },
+          "legacyKeyframes": {
+            "type": "object",
+            "properties": {
+              "needsUpgrade": {
+                "type": "boolean",
+                "const": true
+              },
+              "channels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "record": {}
+            },
+            "required": [
+              "needsUpgrade",
+              "channels",
+              "record"
             ],
             "additionalProperties": false
           }

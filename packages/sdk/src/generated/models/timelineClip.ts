@@ -12,6 +12,7 @@ import type { TimelineClipCaptionVisibility } from './timelineClipCaptionVisibil
 import type { TimelineClipEffectsItem } from './timelineClipEffectsItem';
 import type { TimelineClipFit } from './timelineClipFit';
 import type { TimelineClipKind } from './timelineClipKind';
+import type { TimelineClipLegacyKeyframes } from './timelineClipLegacyKeyframes';
 import type { TimelineClipPosition } from './timelineClipPosition';
 import type { TimelineClipRegion } from './timelineClipRegion';
 import type { TimelineClipSource } from './timelineClipSource';
@@ -47,4 +48,5 @@ export interface TimelineClip {
   linkGroupId?: string;
   tweens?: TimelineClipTweensItem[];
   automation?: TimelineClipAutomation;
+  legacyKeyframes?: TimelineClipLegacyKeyframes;
 }
