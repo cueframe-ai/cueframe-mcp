@@ -4,7 +4,7 @@ One entry per package per release. Versions follow each package's `package.json`
 
 ## @cueframe/api-contract 4.0.0
 
-Breaking schema release, synced from private 7167821 with kernel 0.6.0. The contract now embeds the kernel's own OpenAPI components verbatim, and the build ships `openapi.json` exactly as synced. The toolkit's scene-schema vendoring step is retired.
+Breaking schema release, synced from private cf276ab with kernel 0.6.0. The contract now embeds the kernel's own OpenAPI components verbatim, and the build ships `openapi.json` exactly as synced. The toolkit's scene-schema vendoring step is retired.
 
 - `Composition` is the full kernel shape and is strict: unknown top-level keys are refused. `ownerOrgId`, `acl`, `licenseVerification` and `sourceSuggestionId` are `readOnly`. Only the server sets them.
 - `FormatSpec` is renamed `Format`. The `SceneFormat` and `TransitionSpec` components are removed, and every format references `Format`.
@@ -12,6 +12,7 @@ Breaking schema release, synced from private 7167821 with kernel 0.6.0. The cont
 - `SceneShotSpecV2` is the kernel's recursive schema with `SceneShotSpecV2Schema0`/`SceneShotSpecV2Schema1`. The depth-capped `SceneShotSpecV2LayerDepth0`–`4` and `SceneShotSpecV2JsonValue` are removed. The API still enforces the group-depth limit of 4.
 - Component create, update and patch sources, and component source snapshots, are a version-3 (`tsxSource` + manifest v2) | version-4 (native manifest) union.
 - New operation `repinComponent` (`POST /v1/projects/{id}/components/native-upgrade`) moves retired TSX component clips to their native successors.
+- `POST /v1/projects/{id}/composition/from-suggestion` (`composeFromSuggestion`) documents its 200 body as the new `CompositionFromSuggestionResponse`. Its `notes` (`BriefNote[]`) name what the brief asked for that the composition does not carry.
 
 ## @cueframe/sdk 0.7.0
 
@@ -22,6 +23,7 @@ Generated from contract 4.0.0. Breaking:
 - `@cueframe/sdk/zod` no longer exports response validators. All 274 response exports are gone: every `<OperationId>Response`/`<operationId>Response`, their `*ResponseItem` companions, and the `consult`/`deriveComposition`/`health`/`whoami` `*ResponseSchema` aliases. The 56 `<operationId>Body` schemas are unchanged. Importing the module now retains about 10.5 MiB instead of 15.5 MiB. The TypeScript response types are unchanged.
 - The scene body schema now accepts any group nesting depth on the client. The API refuses nesting deeper than 4.
 - New `components.repinComponent` client function.
+- `clips.composeFromSuggestion` resolves to the new `CompositionFromSuggestionResponse` (with `BriefNote` notes) instead of `void`.
 
 ## cueframe 0.8.2
 

@@ -9,6 +9,7 @@
  */
 import type {
   CompositionFromSuggestionRequest,
+  CompositionFromSuggestionResponse,
   ListMediaSuggestionsParams,
   SuggestionsEnvelope,
   SuggestionsTriggerResponse
@@ -29,7 +30,7 @@ export const getComposeFromSuggestionUrl = (id: string,) => {
  * @summary Build and persist a composition from a clip suggestion
  */
 export const composeFromSuggestion = async (id: string,
-    compositionFromSuggestionRequest: CompositionFromSuggestionRequest, options?: Parameters<typeof request>[1]): Promise<void> => {
+    compositionFromSuggestionRequest: CompositionFromSuggestionRequest, options?: Parameters<typeof request>[1]): Promise<CompositionFromSuggestionResponse> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -45,7 +46,7 @@ export const composeFromSuggestion = async (id: string,
     }
     return headers;
   };
-return request<void>(getComposeFromSuggestionUrl(id),
+return request<CompositionFromSuggestionResponse>(getComposeFromSuggestionUrl(id),
   {
     ...options,
     method: 'POST',

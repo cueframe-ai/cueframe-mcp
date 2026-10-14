@@ -26380,6 +26380,64 @@
           "suggestionId": "sug_01J8Z3K9Q2X4Y5W6V7T8R9S0P1"
         }
       },
+      "BriefNote": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "color_grade_unavailable",
+              "text_overlay_unplaceable"
+            ],
+            "description": "color_grade_unavailable: the brief's colorMood asks for a grade, and color grading is not available. text_overlay_unplaceable: a text overlay the text primitive's rules refuse (e.g. too long); it was not placed."
+          },
+          "field": {
+            "type": "string",
+            "description": "The brief field it came from, e.g. motionStyle.colorMood or textOverlays[1]."
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "field",
+          "message"
+        ],
+        "additionalProperties": false
+      },
+      "CompositionFromSuggestionResponse": {
+        "type": "object",
+        "properties": {
+          "compositionId": {
+            "type": "string"
+          },
+          "versionId": {
+            "type": "string"
+          },
+          "etag": {
+            "type": "string"
+          },
+          "composition": {
+            "$ref": "#/components/schemas/Composition"
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BriefNote"
+            },
+            "description": "What the brief asked for that the composition does not carry. Empty when it carries everything."
+          }
+        },
+        "required": [
+          "compositionId",
+          "versionId",
+          "etag",
+          "composition",
+          "notes"
+        ],
+        "additionalProperties": false
+      },
       "WorkspaceCreateRequest": {
         "type": "object",
         "properties": {
@@ -33283,7 +33341,14 @@
         },
         "responses": {
           "200": {
-            "description": "Composition saved; new ETag in header."
+            "description": "Composition saved; new ETag in header. `notes` names what the brief asked for that the composition does not carry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompositionFromSuggestionResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
