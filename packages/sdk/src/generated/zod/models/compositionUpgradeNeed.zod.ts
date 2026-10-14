@@ -11,7 +11,8 @@ import * as zod from 'zod';
 
 export const CompositionUpgradeNeed = zod.strictObject({
   "clipId": zod.string(),
-  "kind": zod.enum(['unpinned-component', 'v3-component', 'retired-primitive']),
+  "kind": zod.enum(['unpinned-component', 'v3-component', 'retired-primitive', 'legacy-keyframes']),
+  "channels": zod.array(zod.string()).optional(),
   "componentId": zod.string().optional(),
   "sourceVersionId": zod.string().optional(),
   "primitiveId": zod.string().optional(),

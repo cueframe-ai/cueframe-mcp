@@ -717,6 +717,7 @@ export * from './timelineClipEffectsItemParams';
 export * from './timelineClipEffectsItemWindow';
 export * from './timelineClipFit';
 export * from './timelineClipKind';
+export * from './timelineClipLegacyKeyframes';
 export * from './timelineClipPosition';
 export * from './timelineClipRegion';
 export * from './timelineClipSource';

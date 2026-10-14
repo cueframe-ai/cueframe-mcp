@@ -12,6 +12,7 @@ import type { CompositionUpgradeNeedKind } from './compositionUpgradeNeedKind';
 export interface CompositionUpgradeNeed {
   clipId: string;
   kind: CompositionUpgradeNeedKind;
+  channels?: string[];
   componentId?: string;
   sourceVersionId?: string;
   primitiveId?: string;

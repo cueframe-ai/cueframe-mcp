@@ -359,6 +359,11 @@ export type CompositionOp = {
 }[];
 }[];
 };
+  legacyKeyframes?: {
+  needsUpgrade: true;
+  channels: string[];
+  record: unknown;
+};
 };
 } | {
   type: 'removeClipsByMediaId';

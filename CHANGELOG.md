@@ -2,6 +2,20 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 4.0.1
+
+- Corrective release. 4.0.0 embedded the kernel-owned schemas from before kernel 0.7.0 while naming kernel 0.6.0. This contract embeds `@cueframe/kernel` 0.7.0's components verbatim, synced from private abcba19. The projection is sha256 `e6483b21…` and the kernel artifact is the published 0.7.0 tarball.
+- `CompositionUpgradeNeed` gains kind `legacy-keyframes` and `channels`. `TimelineClip` gains `legacyKeyframes`. Operations are unchanged.
+- The contract build now refuses to package unless every kernel-owned component equals the one in the pinned `@cueframe/kernel` (a devDependency), and that kernel's version must equal the manifest's `kernelVersion`.
+
+## @cueframe/sdk 0.7.1
+
+- Regenerated from contract 4.0.1. `CompositionUpgradeNeed.kind` adds `legacy-keyframes`, `CompositionUpgradeNeed.channels` is new, and so is `TimelineClip.legacyKeyframes` (`TimelineClipLegacyKeyframes`).
+
+## cueframe 0.8.3
+
+- Built against `@cueframe/sdk` 0.7.1. Command behaviour is unchanged.
+
 ## @cueframe/api-contract 4.0.0
 
 Breaking schema release, synced from private 0a430db with kernel 0.6.0. The contract now embeds the kernel's own OpenAPI components verbatim, and the build ships `openapi.json` exactly as synced. The toolkit's scene-schema vendoring step is retired.

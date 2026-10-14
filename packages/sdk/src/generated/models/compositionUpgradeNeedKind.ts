@@ -15,4 +15,5 @@ export const CompositionUpgradeNeedKind = {
   'unpinned-component': 'unpinned-component',
   'v3-component': 'v3-component',
   'retired-primitive': 'retired-primitive',
+  'legacy-keyframes': 'legacy-keyframes',
 } as const;

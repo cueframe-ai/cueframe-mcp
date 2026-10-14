@@ -315,6 +315,11 @@ export const TimelineClip = zod.strictObject({
   "v": zod.number()
 })).min(timelineClipAutomationLanesItemPointsMin)
 }))
+}).optional(),
+  "legacyKeyframes": zod.strictObject({
+  "needsUpgrade": zod.literal(true),
+  "channels": zod.array(zod.string()),
+  "record": zod.unknown()
 }).optional()
 });
 

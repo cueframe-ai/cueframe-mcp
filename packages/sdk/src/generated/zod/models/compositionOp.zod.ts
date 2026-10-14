@@ -597,6 +597,11 @@ export const CompositionOp = zod.union([zod.strictObject({
   "v": zod.number()
 })).min(compositionOpFourPatchAutomationLanesItemPointsMin)
 }))
+}).optional(),
+  "legacyKeyframes": zod.strictObject({
+  "needsUpgrade": zod.literal(true),
+  "channels": zod.array(zod.string()),
+  "record": zod.unknown()
 }).optional()
 })
 }).describe('Patch an existing clip by id (cross-family). The patch is a partial TimelineClip. NOTE: `source` is REPLACED wholesale — the patch merges at the top level only, so a partial `source` WIPES the source fields you omit. Patch the whole source object when changing it. (To change reframe/excluded ranges, prefer setCropIntents / addExcludedRange, not a source patch.)'),zod.strictObject({
