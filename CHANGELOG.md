@@ -4,13 +4,14 @@ One entry per package per release. Versions follow each package's `package.json`
 
 ## @cueframe/api-contract 4.0.0
 
-Breaking schema release, synced from private cf276ab with kernel 0.6.0. The contract now embeds the kernel's own OpenAPI components verbatim, and the build ships `openapi.json` exactly as synced. The toolkit's scene-schema vendoring step is retired.
+Breaking schema release, synced from private 1e9de22 with kernel 0.6.0. The contract now embeds the kernel's own OpenAPI components verbatim, and the build ships `openapi.json` exactly as synced. The toolkit's scene-schema vendoring step is retired.
 
 - `Composition` is the full kernel shape and is strict: unknown top-level keys are refused. `ownerOrgId`, `acl`, `licenseVerification` and `sourceSuggestionId` are `readOnly`. Only the server sets them.
 - `FormatSpec` is renamed `Format`. The `SceneFormat` and `TransitionSpec` components are removed, and every format references `Format`.
 - Kernel-owned components, now published as the kernel defines them: `CompositionOp` (with `clip.setKeyframes`; `applyMotionPreset` is retired), `TimelineClip` (a track entry is a `TimelineClip` or a gap), `ComponentExecutionRef` (execution versions 3 and 4), `ComponentParameterValue`, `CompositionConcurrency` and `ErrorEnvelope`.
 - `SceneShotSpecV2` is the kernel's recursive schema with `SceneShotSpecV2Schema0`/`SceneShotSpecV2Schema1`. The depth-capped `SceneShotSpecV2LayerDepth0`–`4` and `SceneShotSpecV2JsonValue` are removed. The API still enforces the group-depth limit of 4.
 - Component create, update and patch sources, and component source snapshots, are a version-3 (`tsxSource` + manifest v2) | version-4 (native manifest) union.
+- A component clip source may be retired: `execution` and `placement` are optional there, and `retired: {reason: 'unpinned', stored?}` marks a clip from before the native cutover, with its props kept. Saves and renders refuse such clips with `component_source_retired`.
 - New operation `repinComponent` (`POST /v1/projects/{id}/components/native-upgrade`) moves retired TSX component clips to their native successors.
 - `POST /v1/projects/{id}/composition/from-suggestion` (`composeFromSuggestion`) documents its 200 body as the new `CompositionFromSuggestionResponse`. Its `notes` (`BriefNote[]`) name what the brief asked for that the composition does not carry.
 

@@ -141,8 +141,8 @@ export type TimelineClipSource = {
   componentId: string;
   props: {[key: string]: unknown};
   zPlane?: 'front' | 'behind-subject';
-  execution: ComponentExecutionRef;
-  placement: {
+  execution?: ComponentExecutionRef;
+  placement?: {
   version: 3;
   kind: 'clip';
 } | {
@@ -156,6 +156,10 @@ export type TimelineClipSource = {
   targetClipIds: string[];
   ownership: 'reference' | 'exclusive';
 }};
+};
+  retired?: {
+  reason: 'unpinned';
+  stored?: {[key: string]: unknown};
 };
 } | {
   kind: 'overlay';

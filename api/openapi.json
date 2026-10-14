@@ -2531,14 +2531,32 @@
                                 "additionalProperties": false
                               }
                             ]
+                          },
+                          "retired": {
+                            "type": "object",
+                            "properties": {
+                              "reason": {
+                                "type": "string",
+                                "const": "unpinned"
+                              },
+                              "stored": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string"
+                                },
+                                "additionalProperties": {}
+                              }
+                            },
+                            "required": [
+                              "reason"
+                            ],
+                            "additionalProperties": false
                           }
                         },
                         "required": [
                           "kind",
                           "componentId",
-                          "props",
-                          "execution",
-                          "placement"
+                          "props"
                         ],
                         "additionalProperties": false
                       },
@@ -5350,14 +5368,32 @@
                         "additionalProperties": false
                       }
                     ]
+                  },
+                  "retired": {
+                    "type": "object",
+                    "properties": {
+                      "reason": {
+                        "type": "string",
+                        "const": "unpinned"
+                      },
+                      "stored": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      }
+                    },
+                    "required": [
+                      "reason"
+                    ],
+                    "additionalProperties": false
                   }
                 },
                 "required": [
                   "kind",
                   "componentId",
-                  "props",
-                  "execution",
-                  "placement"
+                  "props"
                 ],
                 "additionalProperties": false
               },

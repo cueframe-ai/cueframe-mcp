@@ -211,7 +211,7 @@ export const TimelineClip = zod.strictObject({
   "componentId": zod.string().min(1),
   "props": zod.record(zod.string(), zod.unknown()),
   "zPlane": zod.enum(['front', 'behind-subject']).optional(),
-  "execution": ComponentExecutionRef,
+  "execution": ComponentExecutionRef.optional(),
   "placement": zod.union([zod.strictObject({
   "version": zod.literal(3),
   "kind": zod.literal("clip")
@@ -222,7 +222,11 @@ export const TimelineClip = zod.strictObject({
   "targetClipIds": zod.array(zod.string().min(1).max(timelineClipSourceTwoPlacementTwoSlotsTargetClipIdsItemMax)),
   "ownership": zod.enum(['reference', 'exclusive'])
 }))
-})])
+})]).optional(),
+  "retired": zod.strictObject({
+  "reason": zod.literal("unpinned"),
+  "stored": zod.record(zod.string(), zod.unknown()).optional()
+}).optional()
 }),zod.strictObject({
   "kind": zod.literal("overlay"),
   "primitiveId": zod.string().min(1).regex(timelineClipSourceThreePrimitiveIdRegExp),
