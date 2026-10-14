@@ -1803,6 +1803,12 @@
               },
               "brandAuthorityError": {
                 "type": "string"
+              },
+              "needsUpgrade": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CompositionUpgradeNeed"
+                }
               }
             },
             "required": [
@@ -1814,6 +1820,42 @@
             "additionalProperties": false
           }
         ]
+      },
+      "CompositionUpgradeNeed": {
+        "type": "object",
+        "properties": {
+          "clipId": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "unpinned-component",
+              "v3-component",
+              "retired-primitive"
+            ]
+          },
+          "componentId": {
+            "type": "string"
+          },
+          "sourceVersionId": {
+            "type": "string"
+          },
+          "primitiveId": {
+            "type": "string"
+          },
+          "successorComponentId": {
+            "type": "string"
+          },
+          "successorSourceVersionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "clipId",
+          "kind"
+        ],
+        "additionalProperties": false
       },
       "CompositionApplyRequest": {
         "type": "object",
@@ -2534,23 +2576,10 @@
                           },
                           "retired": {
                             "type": "object",
-                            "properties": {
-                              "reason": {
-                                "type": "string",
-                                "const": "unpinned"
-                              },
-                              "stored": {
-                                "type": "object",
-                                "propertyNames": {
-                                  "type": "string"
-                                },
-                                "additionalProperties": {}
-                              }
+                            "propertyNames": {
+                              "type": "string"
                             },
-                            "required": [
-                              "reason"
-                            ],
-                            "additionalProperties": false
+                            "additionalProperties": {}
                           }
                         },
                         "required": [
@@ -5371,23 +5400,10 @@
                   },
                   "retired": {
                     "type": "object",
-                    "properties": {
-                      "reason": {
-                        "type": "string",
-                        "const": "unpinned"
-                      },
-                      "stored": {
-                        "type": "object",
-                        "propertyNames": {
-                          "type": "string"
-                        },
-                        "additionalProperties": {}
-                      }
+                    "propertyNames": {
+                      "type": "string"
                     },
-                    "required": [
-                      "reason"
-                    ],
-                    "additionalProperties": false
+                    "additionalProperties": {}
                   }
                 },
                 "required": [

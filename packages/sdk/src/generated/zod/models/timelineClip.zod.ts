@@ -223,10 +223,7 @@ export const TimelineClip = zod.strictObject({
   "ownership": zod.enum(['reference', 'exclusive'])
 }))
 })]).optional(),
-  "retired": zod.strictObject({
-  "reason": zod.literal("unpinned"),
-  "stored": zod.record(zod.string(), zod.unknown()).optional()
-}).optional()
+  "retired": zod.record(zod.string(), zod.unknown()).optional()
 }),zod.strictObject({
   "kind": zod.literal("overlay"),
   "primitiveId": zod.string().min(1).regex(timelineClipSourceThreePrimitiveIdRegExp),

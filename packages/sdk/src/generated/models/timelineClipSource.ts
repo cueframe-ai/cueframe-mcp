@@ -157,10 +157,7 @@ export type TimelineClipSource = {
   ownership: 'reference' | 'exclusive';
 }};
 };
-  retired?: {
-  reason: 'unpinned';
-  stored?: {[key: string]: unknown};
-};
+  retired?: {[key: string]: unknown};
 } | {
   kind: 'overlay';
   /**

@@ -143,7 +143,7 @@ timing, track and brand-kit binding as it is.
 - **`v3-component` with no successor** (a custom pre-cutover component): read its source, params,
   timing and placement, and author a native replacement with `create_component` as a version-4
   template following the server instructions' Component Contract.
-- **`unpinned-component`:** the clip carries `retired: {reason: 'unpinned', stored?}` with its
+- **`unpinned-component`:** the clip carries a `retired` record (what was stored before the cutover), with its
   props preserved. Re-author it from those props the same way.
 - **`retired-primitive`:** rebuild what `primitiveId` drew from the clip's params, as a card or
   a native component.

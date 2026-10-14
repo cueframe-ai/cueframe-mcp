@@ -292,6 +292,8 @@ export * from './compositionSummary';
 export * from './compositionTracksItem';
 export * from './compositionTracksItemContentsItem';
 export * from './compositionTracksItemKind';
+export * from './compositionUpgradeNeed';
+export * from './compositionUpgradeNeedKind';
 export * from './consultRequest';
 export * from './consultRequestFocus';
 export * from './consultRequestMode';

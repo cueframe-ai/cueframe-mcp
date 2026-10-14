@@ -76,6 +76,7 @@ export * from './compositionOp.zod';
 export * from './compositionReadResponse.zod';
 export * from './compositionReplaceRequest.zod';
 export * from './compositionSummary.zod';
+export * from './compositionUpgradeNeed.zod';
 export * from './consultRequest.zod';
 export * from './consultResponse.zod';
 export * from './consultResult.zod';
