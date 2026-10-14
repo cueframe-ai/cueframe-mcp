@@ -57,6 +57,8 @@ jobs:
       - run: pnpm test
       - name: pack and install the four packages into an empty consumer
         run: node scripts/pack-install-smoke.mjs
+      - name: a package whose content changed is not still at a published version
+        run: pnpm check:published-versions
 
   hygiene:
     runs-on: ubuntu-latest

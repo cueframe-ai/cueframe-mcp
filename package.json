@@ -24,7 +24,8 @@
     "spec:drift": "node tools/spec-drift.mjs",
     "build:plugin:openai": "node scripts/plugin/package-openai.mjs",
     "check:plugin:openai": "node scripts/plugin/package-openai.mjs --check",
-    "check:public-packages": "node scripts/check-public-packages.mjs"
+    "check:public-packages": "node scripts/check-public-packages.mjs",
+    "check:published-versions": "node scripts/check-published-versions.mjs"
   },
   "pnpm": {
     "overrides": {

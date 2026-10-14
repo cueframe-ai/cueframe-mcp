@@ -31,6 +31,14 @@ Generated from contract 4.0.0. Breaking:
 - `cueframe push` and `cueframe sync` send that native source, checked against the contract's source schema. A workspace component that still has only a version-3 `index.tsx` is refused as `component_source_retired` before any API call. The server already refuses version-3 authoring.
 - Builds against `@cueframe/sdk` 0.7.0, with `FormatFps`/`FormatResolution` replacing the removed `FormatSpec*` types.
 
+## @cueframe/skills 0.3.0
+
+The skills now match contract 4.0.0. The plugin manifests carry the same version.
+
+- The retired `applyMotionPreset` op is gone from every skill. Cards animate in their CSS (`--cf-enter`/`--cf-exit`) or with `clip.setKeyframes`, and anything beyond one channel is a native component (`create_component`). A policy test fails any skill that names an op missing from the contract's `CompositionOp`.
+- `cueframe-component-authoring` and `cueframe-cli` teach native (version 4) component sources: a template, a definition and a version-4 manifest. Version-3 TSX sources are retired.
+- `cueframe-component-authoring` gains "Upgrading an old project": read `get_composition`'s `needsUpgrade`, repin entries that have a successor with `repin_component`, and re-author the rest in place.
+
 ## @cueframe/api-contract 3.0.1
 
 - Regenerated against kernel 0.5.2 (private 670cac8). `TemplateMediaValue`'s URL arm declares `format: "uri"` instead of the invalid `starts_with`. Operations are unchanged.

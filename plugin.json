@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "cueframe",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Make and edit videos with CueFrame: composition, motion graphics, captions, clipping and rendering skills, plus the hosted MCP server.",
   "author": {
     "name": "CueFrame, Inc.",
