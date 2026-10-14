@@ -100,3 +100,13 @@ test('openapi.json with one edit fails, naming openapi.json', () => {
   assert.equal(result.problems.length, 1);
   assert.match(result.problems[0], /^openapi\.json: sha256 .* does not match the sync manifest/);
 });
+
+test('the sync manifest names the kernel artifact whose components the contract embeds, under this package version', () => {
+  // The private sync asserts the embedded components deep-equal that artifact (assertEmbedsKernelComponents);
+  // here the manifest must carry the artifact's identity and the contract version this package publishes.
+  const manifest = JSON.parse(readFileSync(resolve(REPO_ROOT, 'api/contract-manifest.json'), 'utf8'));
+  const { version } = JSON.parse(readFileSync(resolve(REPO_ROOT, 'packages/api-contract/package.json'), 'utf8'));
+  assert.equal(manifest.kernelArtifact?.version, manifest.kernelVersion);
+  assert.match(manifest.kernelArtifact.sha256, /^[0-9a-f]{64}$/);
+  assert.equal(manifest.contractVersion, version);
+});
