@@ -1,11 +1,11 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import type { ComponentManifestV4 } from '@cueframe/sdk';
 import type { Workspace } from './workspace.js';
 
 // The server admits every manifest on push (POST /v1/components); the CLI
 // carries no copy of that contract and reads the manifest as written.
-export function readComponentManifest(ws: Workspace, id: string): ComponentManifestV4 {
+/** The manifest as written; readComponentSource validates it with the rest of the source. */
+export function readComponentManifest(ws: Workspace, id: string): unknown {
   const path = join(ws.root, 'cueframe.json');
   if (!existsSync(path)) {
     throw Object.assign(new Error('No cueframe.json workspace manifest was found.'), {
@@ -22,5 +22,5 @@ export function readComponentManifest(ws: Workspace, id: string): ComponentManif
       { code: 'no_component_manifest' },
     );
   }
-  return manifest as ComponentManifestV4;
+  return manifest;
 }

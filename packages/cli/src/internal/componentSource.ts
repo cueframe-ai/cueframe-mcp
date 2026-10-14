@@ -5,13 +5,12 @@ import type { ComponentCreateRequestSource } from '@cueframe/sdk';
 import { componentDir, type Workspace } from './workspace.js';
 import { readComponentManifest } from './componentManifest.js';
 
-export type LocalSourceV4 = Extract<ComponentCreateRequestSource, { version: 4 }>;
 
 const retired = (message: string) => Object.assign(new Error(message), { code: 'component_source_retired' });
 const invalid = (message: string) => Object.assign(new Error(message), { code: 'invalid_component_definition' });
 
 /** An explicit declaration for the blank scaffold only, never a migration default. */
-export function scaffoldDefinition(): LocalSourceV4['definition'] {
+export function scaffoldDefinition(): ComponentCreateRequestSource['definition'] {
   return {
     inputSchema: { type: 'object' },
     defaults: {},
@@ -42,7 +41,7 @@ export function scaffoldTemplate(id: string): string {
  * cueframe.json manifest, checked against the contract's source schema. The server's
  * admission (template lint, determinism, declarations) runs on push.
  */
-export function readComponentSource(ws: Workspace, id: string): LocalSourceV4 {
+export function readComponentSource(ws: Workspace, id: string): ComponentCreateRequestSource {
   const dir = componentDir(ws, id);
   const templatePath = join(dir, 'template.html');
   if (!existsSync(templatePath)) {
@@ -61,5 +60,5 @@ export function readComponentSource(ws: Workspace, id: string): LocalSourceV4 {
   const source = { version: 4, componentId: id, template: readFileSync(templatePath, 'utf8'), manifest: readComponentManifest(ws, id), definition };
   const parsed = createComponentBody.shape.source.safeParse(source);
   if (!parsed.success) throw invalid(`Invalid native component source: ${parsed.error.message}`);
-  return parsed.data as LocalSourceV4;
+  return parsed.data;
 }
