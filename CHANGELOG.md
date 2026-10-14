@@ -2,6 +2,35 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 4.0.0
+
+Breaking schema release, synced from private 7167821 with kernel 0.6.0. The contract now embeds the kernel's own OpenAPI components verbatim, and the build ships `openapi.json` exactly as synced. The toolkit's scene-schema vendoring step is retired.
+
+- `Composition` is the full kernel shape and is strict: unknown top-level keys are refused. `ownerOrgId`, `acl`, `licenseVerification` and `sourceSuggestionId` are `readOnly`. Only the server sets them.
+- `FormatSpec` is renamed `Format`. The `SceneFormat` and `TransitionSpec` components are removed, and every format references `Format`.
+- Kernel-owned components, now published as the kernel defines them: `CompositionOp` (with `clip.setKeyframes`; `applyMotionPreset` is retired), `TimelineClip` (a track entry is a `TimelineClip` or a gap), `ComponentExecutionRef` (execution versions 3 and 4), `ComponentParameterValue`, `CompositionConcurrency` and `ErrorEnvelope`.
+- `SceneShotSpecV2` is the kernel's recursive schema with `SceneShotSpecV2Schema0`/`SceneShotSpecV2Schema1`. The depth-capped `SceneShotSpecV2LayerDepth0`–`4` and `SceneShotSpecV2JsonValue` are removed. The API still enforces the group-depth limit of 4.
+- Component create, update and patch sources, and component source snapshots, are a version-3 (`tsxSource` + manifest v2) | version-4 (native manifest) union.
+- New operation `repinComponent` (`POST /v1/projects/{id}/components/native-upgrade`) moves retired TSX component clips to their native successors.
+
+## @cueframe/sdk 0.7.0
+
+Generated from contract 4.0.0. Breaking:
+
+- `FormatSpec`, `FormatSpecFps` and `FormatSpecResolution` are removed with no alias: use `Format`, `FormatFps` and `FormatResolution`. The `SceneFormat*`, `CompositionFormat*`, `TransitionSpec*`, `SceneShotSpecV2LayerDepth*` and `SceneShotSpecV2JsonValue` models are removed. The new models include `TimelineClip*`, `ComponentExecutionRef`, `ComponentManifestV4*`, `SceneShotSpecV2Schema0/1` and `NativeUpgrade*`.
+- Component source bodies are a version-3 | version-4 union, so `createComponentBody.shape.source` is a `ZodUnion`. Narrow on `version` (or `'tsxSource' in source`).
+- `@cueframe/sdk/zod` no longer exports response validators. All 274 response exports are gone: every `<OperationId>Response`/`<operationId>Response`, their `*ResponseItem` companions, and the `consult`/`deriveComposition`/`health`/`whoami` `*ResponseSchema` aliases. The 56 `<operationId>Body` schemas are unchanged. Importing the module now retains about 10.5 MiB instead of 15.5 MiB. The TypeScript response types are unchanged.
+- The scene body schema now accepts any group nesting depth on the client. The API refuses nesting deeper than 4.
+- New `components.repinComponent` client function.
+
+## cueframe 0.8.2
+
+- Builds against `@cueframe/sdk` 0.7.0, with `FormatFps`/`FormatResolution` replacing the removed `FormatSpec*` types. Command behaviour is unchanged. `cueframe push` still sends version-3 component sources.
+
+## @cueframe/api-contract 3.0.1
+
+- Regenerated against kernel 0.5.2 (private 670cac8). `TemplateMediaValue`'s URL arm declares `format: "uri"` instead of the invalid `starts_with`. Operations are unchanged.
+
 ## @cueframe/api-contract 2.0.1
 
 - Preserve the current hosted API's payment metadata and 402 responses on the four template-job operations while retaining the reviewed component V3 schemas and full operation inventory. Regenerate from the reviewed canonical private source with clean commit provenance.
