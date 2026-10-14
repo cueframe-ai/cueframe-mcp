@@ -2,6 +2,28 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 4.1.0
+
+- Additive. Adds `GET /v1/components/blank-source` (`getBlankComponentSource`), which returns `BlankComponentSourceV4`: the kernel's one blank native (version 4) component source that every scaffold starts from. To rename it, change `componentId` and the template root's `data-composition-id` together.
+- `ComponentSourceResponse.sourceSnapshot` also admits the kernel's legacy version-2 source (`ComponentSourceV2`), so components from before the cutover read back.
+- Embeds `@cueframe/kernel` 0.7.1's components, synced from private 98e4934. The projection is sha256 `783e29d7…` and the kernel artifact is the published 0.7.1 tarball.
+
+## @cueframe/sdk 0.8.0
+
+- Regenerated from contract 4.1.0: `components.getBlankComponentSource`.
+- Exports `BLANK_COMPONENT_SOURCE_V4`, generated from the contract's `BlankComponentSourceV4`, alongside `COMPONENT_EXECUTION_VERSIONS`.
+
+## cueframe 0.9.0
+
+- `cueframe new component <id>` scaffolds from the contract's blank native source (`BLANK_COMPONENT_SOURCE_V4`), renamed to the id. The CLI no longer keeps its own template, definition or manifest.
+- `cueframe new component` requires `--category`, and writes `name` and `category` into `cueframe.json` → `components.<id>`.
+- `cueframe push`/`sync` require that `name` and `category`. A missing name or an unknown category is refused as `invalid_component_metadata` before any API call, and the message names the allowed categories. The CLI no longer guesses a name from the id, defaults the category to `layouts`, or reads metadata from a legacy `config.ts`. An unreadable `cueframe.json` is refused as `invalid_workspace_manifest`.
+- `typescript` is no longer a runtime dependency.
+
+## @cueframe/skills 0.3.1
+
+- `cueframe-component-authoring` and `cueframe-cli` show `new component <id> --category <category>` and say that `push` requires the catalog `name` and `category` in `cueframe.json`.
+
 ## @cueframe/api-contract 4.0.1
 
 - Corrective release. 4.0.0 embedded the kernel-owned schemas from before kernel 0.7.0 while naming kernel 0.6.0. This contract embeds `@cueframe/kernel` 0.7.0's components verbatim, synced from private abcba19. The projection is sha256 `e6483b21…` and the kernel artifact is the published 0.7.0 tarball.
