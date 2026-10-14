@@ -101,62 +101,33 @@ a full render, push it and use the appropriate component preview loop.
 
 ## Path C — Director editing a local desktop project (project-embedded source)
 
-When `get_context` reports the project lane as local, motion does not require an account or an org
-component. When exposed, use `open_component_preview` to compile an isolated preview (new source,
-with an explicit `component_definition`, or `component_id` to preserve an existing library source), `update_component_preview`
-with exact-text edits (`{oldText, newText, replaceAll?}`, each `oldText` matching once), and
-`render_component_preview_frame` for exact frame evidence. Inspect playback for motion;
+When `get_context` reports the project lane as local, motion does not need an account or an org
+component. Components here are native (source version 4) too:
+- **New component:** open a draft with `open_component_preview`, passing `template`,
+  `component_manifest` (`{version:4, runtime:'hyperframes', hfContract:1, kind:'scene', assets,
+  graphics, alphaPolicy}`) and `component_definition`.
+- **Existing component:** pass `component_id` instead, to start from the clip's pinned version or
+  the library version.
+
+The draft is admitted in full: template lint, determinism and the variable declaration.
+`data-composition-variables` must equal the definition's projection (its scalar inputSchema
+properties, then the manifest's slots).
+
+Edit the draft with `update_component_preview` (exact-text `{oldText, newText, replaceAll?}`
+edits). Check exact frames with `render_component_preview_frame`, and inspect playback for motion.
 `commit_component_preview` publishes the checked source to the library and pins the clip, with a
-fresh ETag. `read_component` and `edit_component` read and edit the library directly. Close the preview when finished. This loop does not bake a timeline video and
-does not imply HMR: source updates still compile.
+fresh ETag. `read_component` and `edit_component` read and edit the library directly. Close the
+preview when finished.
 
-If those tools are unavailable, add/update through `apply_composition` and inspect the local
-timeline. An inline custom overlay has this shape:
+Media slots are image or video, declared in `component_manifest.assets` and bound to project
+media ids in `component_assets`. The template passes them to `MediaTileScene` as
+`streams: { hero: { asset: assets.hero } }`. Declare `alphaPolicy` explicitly:
+`requires-transparency` for overlays, `allows-opaque` for full-frame plates.
 
-```json
-{
-  "type": "clip.add",
-  "clip": {
-    "id": "local-motion",
-    "kind": "overlay",
-    "startTime": 0,
-    "duration": 3,
-    "source": {
-      "kind": "overlay",
-      "primitiveId": "custom",
-      "params": {
-        "jsxSource": "export default function Graphic({ durationInFrames, params, assets, render }) { ... }",
-        "componentManifest": { "version": 2, "assets": {}, "graphics": { "api": "canvas2d", "required": true, "accelerationPreference": "software-allowed" }, "alphaPolicy": "requires-transparency" },
-        "componentDefinition": { "inputSchema": { "type": "object", "properties": {}, "additionalProperties": false }, "defaults": {}, "timing": { "defaultDuration": { "frames": 90, "fps": 30 } }, "brandBindings": [], "capabilities": [{ "kind": "clip" }] },
-        "componentAssets": {}
-      }
-    }
-  },
-  "newTrack": true
-}
-```
-
-The desktop compiles the module in an isolated child process and creates it in the desktop's component
-library as a complete v3 source. Declare the actual parameter schema and defaults in
-`componentDefinition`; the empty schema above is for a graphic with no custom parameters.
-Keep a fork's existing definition and nested manifest together with its source. Inline source creates a component only: a clip whose component already exists with other
-source is refused as `component_exists`, and that component changes through edits.
-The timeline and final export render that exact version; no preview media is baked. A compile failure
-refuses the whole batch and leaves the composition untouched. Use `create_component` only for a reusable
-org-catalog component on a reachable cloud lane.
-
-For media-backed graphics, declare each slot in `componentManifest.assets`, bind the slot to a
-project media id in `componentAssets`, and read its request-scoped handle from `assets`. The renderer
-localizes and hashes the file before execution. Remote URLs, undeclared assets, arbitrary filesystem
-paths, WebGL substitution, and static/card substitution are not fallback paths.
-
-Declare `componentManifest.alphaPolicy` explicitly: `requires-transparency` for overlays and
-`allows-opaque` for intentional full-frame plates. Both adapters verify the same field.
-
-Normal static imports are supported only from the runtime allowlist: React, Remotion, Three.js
-WebGPU/TSL, React Three Fiber/Drei, Remotion Three, and CueFrame animation helpers. Use ordinary hooks,
-loops, refs, constructors, typed arrays, canvas, and WebGPU when needed. Drive visible animation from
-`render.frame`/`render.fps` and seed variation from `render.seed`; ambient time/randomness is refused.
+Every frame must be a pure function of `render.frame`, params and `render.seed`. Timers, `Date`,
+network, imports, other globals and CSS animation are refused at admission. The timeline and final
+export render the exact committed version. Use `create_component` only for a reusable org-catalog
+component on a reachable cloud lane.
 
 ## Upgrading an old project
 

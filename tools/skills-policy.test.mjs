@@ -69,3 +69,10 @@ test('skills name only composition ops the shipped contract defines', () => {
   }
   assert.deepEqual(unknown, []);
 });
+
+test('skills teach no retired version-3 component authoring', () => {
+  // Inline TSX/JSX sources, the `custom` primitive and Remotion imports are refused at admission.
+  const retired = /jsxSource|tsxSource|"primitiveId":\s*"custom"|primitiveId:\s*['"]custom['"]|from\s+['"](?:remotion|@remotion\/[^'"]+)['"]|\bRemotion\b/;
+  const found = skills.filter((skill) => retired.test(read(`skills/${skill}/SKILL.md`)));
+  assert.deepEqual(found, []);
+});
