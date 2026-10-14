@@ -40,7 +40,7 @@ you need behaviour the scene contract does not express.
 
 Use the live tool schema for request envelopes; hosted write fields are normally under `body`.
 
-1. **Discover and read a built-in:** call `list_components` with
+1. **Discover and read a built-in:** call `list_catalog` with
    `projection: "component-library", origin: "builtin", libraryKind: "definition"`.
    Select the intended card and preserve its complete scoped source reference. Call
    `get_component_source` with that reference's `componentId`, `sourceVersionId`,
@@ -134,7 +134,7 @@ component on a reachable cloud lane.
 `get_composition` returns `needsUpgrade` only when clips from before the native cutover remain:
 `[{clipId, kind, componentId?, sourceVersionId?, primitiveId?, successorComponentId?,
 successorSourceVersionId?}]`. Saves and renders refuse those clips. A retired component is
-refused with `component_source_retired` (its `locator.clipIds` names the clips), and a retired
+refused with `component_source_retired`, and a retired
 primitive with `render_unknown_primitive`. Upgrade only the listed clips. Keep every other clip,
 timing, track and brand-kit binding as it is.
 

@@ -13,7 +13,7 @@ import { components, ApiError } from '@cueframe/sdk';
 import { createComponentBody, updateComponentBody } from '@cueframe/sdk/zod';
 import * as sdkClient from '../remote/sdkClient.js';
 import { scaffoldDefinition, scaffoldTemplate } from '../internal/componentSource.js';
-import { DEFAULT_COMPONENT_MANIFEST_V4 } from '../internal/componentManifest.js';
+import { SCAFFOLD_COMPONENT_MANIFEST_V4 } from '../internal/scaffoldManifest.js';
 
 function setupSpies() {
   vi.spyOn(sdkClient, 'initSdk').mockImplementation(() => {});
@@ -69,7 +69,7 @@ describe('cueframe push / sync', () => {
       join(root, 'cueframe.json'),
       JSON.stringify(opts.manifest ?? {
         componentsDir: 'cueframe/components',
-        components: { 'my-badge': { manifest: DEFAULT_COMPONENT_MANIFEST_V4 } },
+        components: { 'my-badge': { manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 } },
       }),
     );
     const cdir = join(root, 'cueframe', 'components', 'my-badge');
@@ -118,7 +118,7 @@ describe('cueframe push / sync', () => {
     expect(body.source?.definition).toEqual(scaffoldDefinition());
     expect(body).not.toHaveProperty('tsxSource');
     expect(body.origin).toBe('customer-owned');
-    expect(body.source?.manifest).toEqual(DEFAULT_COMPONENT_MANIFEST_V4);
+    expect(body.source?.manifest).toEqual(SCAFFOLD_COMPONENT_MANIFEST_V4);
     expect(body.name).toBe('My Badge');
     expect(body.category).toBe('ui-blocks');
   });
@@ -138,7 +138,7 @@ describe('cueframe push / sync', () => {
     const updated = update.mock.calls[0][1].source;
     expect(updated && 'template' in updated && updated.template).toBe(TEMPLATE);
     expect(update.mock.calls[0][1].origin).toBe('customer-owned');
-    expect(update.mock.calls[0][1].source?.manifest).toEqual(DEFAULT_COMPONENT_MANIFEST_V4);
+    expect(update.mock.calls[0][1].source?.manifest).toEqual(SCAFFOLD_COMPONENT_MANIFEST_V4);
   });
 
   it('push carries ejectedFrom from the manifest when present', async () => {
@@ -150,7 +150,7 @@ describe('cueframe push / sync', () => {
             'my-badge': {
               ejectedFrom: 'catalog:my-badge',
               primitiveVersion: '0.1.0',
-              manifest: DEFAULT_COMPONENT_MANIFEST_V4,
+              manifest: SCAFFOLD_COMPONENT_MANIFEST_V4,
             },
           },
         },
@@ -175,7 +175,7 @@ describe('cueframe push / sync', () => {
     writeFileSync(join(cdir2, 'config.ts'), CONFIG_TS.replace('my-badge', 'lower-third'));
     const workspaceManifestPath = join(root, 'cueframe.json');
     const workspaceManifest = JSON.parse(readFileSync(workspaceManifestPath, 'utf8'));
-    workspaceManifest.components['lower-third'] = { manifest: DEFAULT_COMPONENT_MANIFEST_V4 };
+    workspaceManifest.components['lower-third'] = { manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 };
     writeFileSync(workspaceManifestPath, JSON.stringify(workspaceManifest));
     inDir(root);
 

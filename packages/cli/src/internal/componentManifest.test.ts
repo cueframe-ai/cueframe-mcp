@@ -3,7 +3,8 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { defaultManifest, type Workspace } from './workspace.js';
-import { DEFAULT_COMPONENT_MANIFEST_V4, readComponentManifest } from './componentManifest.js';
+import { readComponentManifest } from './componentManifest.js';
+import { SCAFFOLD_COMPONENT_MANIFEST_V4 } from './scaffoldManifest.js';
 
 /**
  * Every field the component-source response can carry in one manifest: named
@@ -71,8 +72,8 @@ describe('readComponentManifest reads the manifest the server validates on push'
   });
 
   it('returns the manifest the CLI itself stamps', () => {
-    const ws = workspaceWith(DEFAULT_COMPONENT_MANIFEST_V4);
-    expect(readComponentManifest(ws, 'badge')).toEqual(DEFAULT_COMPONENT_MANIFEST_V4);
+    const ws = workspaceWith(SCAFFOLD_COMPONENT_MANIFEST_V4);
+    expect(readComponentManifest(ws, 'badge')).toEqual(SCAFFOLD_COMPONENT_MANIFEST_V4);
   });
 
   it('passes a manifest the server would refuse through unchanged; the server is the judge', () => {

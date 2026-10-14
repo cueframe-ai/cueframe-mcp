@@ -274,7 +274,7 @@ export async function syncCommand(opts: PushOpts): Promise<void> {
     },
     () => {
       if (results.length === 0 && failures.length === 0) {
-        console.log('No components to sync. Scaffold one with `cueframe eject` or `cueframe new component`.');
+        console.log('No components to sync. Scaffold one with `cueframe new component <id>`.');
         return;
       }
       for (const r of results) console.log(`✓ ${r.action} ${r.id} (${r.name})`);

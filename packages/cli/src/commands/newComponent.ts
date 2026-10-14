@@ -12,7 +12,7 @@ import { emitEvent, emitError, emitResult } from '../remote/output.js';
 import { ExitCode, exitWith } from '../remote/exitCodes.js';
 import { assertCleanIdentifier } from '../remote/validate.js';
 import { scaffoldDefinition, scaffoldTemplate } from '../internal/componentSource.js';
-import { DEFAULT_COMPONENT_MANIFEST_V4 } from '../internal/componentManifest.js';
+import { SCAFFOLD_COMPONENT_MANIFEST_V4 } from '../internal/scaffoldManifest.js';
 
 interface NewComponentOpts {
   json?: boolean;
@@ -73,7 +73,7 @@ export function newComponentCommand(name: string, opts: NewComponentOpts): void 
     const manifestPath = join(ws.root, MANIFEST_FILENAME);
     const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as Record<string, unknown>;
     const components = (manifest.components as Record<string, unknown> | undefined) ?? {};
-    components[name] = { custom: true, manifest: DEFAULT_COMPONENT_MANIFEST_V4 };
+    components[name] = { custom: true, manifest: SCAFFOLD_COMPONENT_MANIFEST_V4 };
     manifest.components = components;
     writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   }

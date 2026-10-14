@@ -68,6 +68,8 @@ The private contract sync only warns when it rewrites `api/*.json` under an un-b
 
 Per-package loops work too: `pnpm --filter @cueframe/sdk test`.
 
+The root `pnpm.overrides` force patched versions of transitive dependencies so CI's `pnpm audit --prod` gate passes. They arrived with the open-source hardening pass (2026-09-14): `@better-auth/sso` and `better-call` under the CLI's `better-auth`, `js-yaml` under `add-mcp`, and `esbuild` under the build tools. Drop an override once its parent's own range admits the patched version, and keep `pnpm audit --prod` green.
+
 ## Security
 
 Please do not open public issues for security reports; mail security@cueframe.ai. Read [SECURITY.md](SECURITY.md) before testing or reporting a potential vulnerability.

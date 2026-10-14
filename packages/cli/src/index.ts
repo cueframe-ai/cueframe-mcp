@@ -104,7 +104,7 @@ export async function main() {
 
   program
     .command('push')
-    .description('Publish a locally-authored component (cueframe/components/<id>/index.tsx) to CueFrame so it renders server-side. Upserts by id.')
+    .description('Publish a locally-authored native component (cueframe/components/<id>/template.html + definition.json) to CueFrame so it renders server-side. Upserts by id.')
     .argument('[id]', 'Component id to push (omit and use `cueframe sync` to push all)')
     .option('-t, --target <target>', 'Target environment: prod (default), local. CUEFRAME_API_URL overrides the host.')
     .action((id: string | undefined, opts: { target?: string }) =>

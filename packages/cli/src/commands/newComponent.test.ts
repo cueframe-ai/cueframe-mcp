@@ -11,7 +11,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { newComponentCommand } from './newComponent.js';
 import { scaffoldDefinition, scaffoldTemplate } from '../internal/componentSource.js';
-import { DEFAULT_COMPONENT_MANIFEST_V4 } from '../internal/componentManifest.js';
+import { SCAFFOLD_COMPONENT_MANIFEST_V4 } from '../internal/scaffoldManifest.js';
 
 describe('cueframe new component', () => {
   const dirs: string[] = [];
@@ -67,7 +67,7 @@ describe('cueframe new component', () => {
     const manifest = JSON.parse(readFileSync(join(root, 'cueframe.json'), 'utf8'));
     expect(manifest.components['my-badge']).toEqual({
       custom: true,
-      manifest: DEFAULT_COMPONENT_MANIFEST_V4,
+      manifest: SCAFFOLD_COMPONENT_MANIFEST_V4,
     });
   });
 
