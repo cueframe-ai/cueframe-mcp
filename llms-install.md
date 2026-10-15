@@ -18,7 +18,7 @@ The app's Agents settings show the exact command for each platform; copy it from
 
 ## Step 1: connect to the hosted server
 
-The hosted server speaks Streamable HTTP. OAuth opens in the browser on the first call; for headless use send `Authorization: Bearer cf_live_*` instead. To mint a key: `npx -y cueframe@0.8 login`, then `npx -y cueframe@0.8 keys create --name <name>` (`cueframe login` alone signs you in; it does not produce a key).
+The hosted server speaks Streamable HTTP. OAuth opens in the browser on the first call; for headless use send `Authorization: Bearer cf_live_*` instead. To mint a key: `npx -y cueframe@0.9 login`, then `npx -y cueframe@0.9 keys create --name <name>` (`cueframe login` alone signs you in; it does not produce a key).
 
 ```json
 { "mcpServers": { "cueframe": { "url": "https://api.cueframe.ai/v1/mcp" } } }
@@ -55,7 +55,7 @@ Put the block from Step 1 in the client's MCP config: `.mcp.json` (Claude Code),
 Either install this plugin through your client's plugin or marketplace command (the install lines are in [README.md](./README.md)), or let the CLI install the skills into `~/.agents/skills` and `~/.claude/skills`:
 
 ```
-npx -y cueframe@0.8 install
+npx -y cueframe@0.9 install
 ```
 
 Restart your agent session after installation so it can load the server and skills.

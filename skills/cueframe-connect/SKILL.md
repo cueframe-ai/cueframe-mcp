@@ -23,7 +23,7 @@ When a required capability is missing, explain the limitation and the supported 
 - **Claude.ai / Claude Desktop:** Settings → Connectors → add a custom connector with
   `https://api.cueframe.ai/v1/mcp`.
 - **Other agents (Cursor, Codex, VS Code, Windsurf, Zed, Antigravity CLI, Copilot CLI, …):**
-  use `npx -y cueframe@0.8 install --help` to select the intended client; preserve existing configuration and avoid duplicate installs.
+  use `npx -y cueframe@0.9 install --help` to select the intended client; preserve existing configuration and avoid duplicate installs.
 - **ChatGPT:** the CLI cannot wire it because there is no local config to write; add
   `https://api.cueframe.ai/v1/mcp` as a custom connector instead.
 - **No account (pay per call):** connect
