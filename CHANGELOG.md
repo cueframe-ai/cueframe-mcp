@@ -2,6 +2,10 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/skills 0.3.2
+
+- Every skill runs the CLI as `npx -y cueframe@0.9`. 0.3.1 pinned `cueframe@0.8` while showing `new component <id> --category <category>`, which 0.8.x rejects and 0.9.0 requires, so agents following `cueframe-cli` or `cueframe-component-authoring` were refused either way. `scripts/plugin/cli-version.json` now has a test that holds it to the major.minor of `packages/cli`.
+
 ## @cueframe/api-contract 4.1.0
 
 - Additive. Adds `GET /v1/components/blank-source` (`getBlankComponentSource`), which returns `BlankComponentSourceV4`: the kernel's one blank native (version 4) component source that every scaffold starts from. To rename it, change `componentId` and the template root's `data-composition-id` together.

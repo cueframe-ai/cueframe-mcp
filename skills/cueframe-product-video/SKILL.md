@@ -21,7 +21,7 @@ to author, not how to transport it.
 
 **Drive the primitives over MCP if you can call tools** (`new_composition` /
 `apply_composition` / `validate_composition` / `create_render` — see the
-`cueframe-connect` skill for the one-line setup). The `npx -y cueframe@0.8 …` commands
+`cueframe-connect` skill for the one-line setup). The `npx -y cueframe@0.9 …` commands
 written out below are the same operations for a terminal or CI job with no MCP
 host; see the `cueframe-cli` skill.
 
@@ -64,7 +64,7 @@ style's) over each window. Result → `source.reframe.segments` on the clip.
 ## 3. Compose
 
 One video track, the screen recording as a media clip carrying the reframe.
-`npx -y cueframe@0.8 composition put <projectId> -b @composition.json` (see `cueframe-cli`).
+`npx -y cueframe@0.9 composition put <projectId> -b @composition.json` (see `cueframe-cli`).
 Choose `-a 16:9` for landscape product video, `9:16` for social.
 
 ## 4. Polish — layer overlay primitives (this is what makes it look "produced")
@@ -101,21 +101,21 @@ check framing with `preview_frame` and click/zoom timing with an affected-window
 For a small revision, verify that change and relevant regressions without exporting the whole film.
 When delivering the finished video:
 
-`npx -y cueframe@0.8 render <projectId> -o out.mp4 --json`. Verify the output (ffprobe +
+`npx -y cueframe@0.9 render <projectId> -o out.mp4 --json`. Verify the output (ffprobe +
 sample frames) before declaring done.
 
 ## Worked examples — composition JSON
 
 These are **orientation, not the contract.** The live wire schema is
-`npx -y cueframe@0.8 schema composition`, and the way to know a draft is correct is
-`npx -y cueframe@0.8 composition validate -b @composition.json` — it runs the same
+`npx -y cueframe@0.9 schema composition`, and the way to know a draft is correct is
+`npx -y cueframe@0.9 composition validate -b @composition.json` — it runs the same
 validator the server enforces, with no save and no render. Discover + validate
 before you render; never spend a render to find a schema mistake.
 
 Each block below is a complete `@composition.json` (the bare object `composition put`
 accepts: top-level `v`, `format`, `tracks`, optional `captions`). All five validate
 against the real wire schema + save invariants (swap the `<…MediaId>` placeholders for
-real `npx -y cueframe@0.8 upload` ids). Conventions that keep them valid:
+real `npx -y cueframe@0.9 upload` ids). Conventions that keep them valid:
 
 - Tracks hold **`contents`** (not `clips`); each clip wraps a `source`.
 - A clip's `source.kind` must match the track `kind`: `media` → `video`/`image`/`audio`
@@ -297,4 +297,4 @@ Talking-head with an `active-speaker` reframe and a `heroText` title at `zPlane:
   background. See EX3 / EX4 below.
 - This recipe lives in a skill on purpose: the engine stays use-case-free; the
   product opinions (style, which primitives, layout) live here and ship via
-  `npx -y cueframe@0.8 install`. Add sibling recipes (`cueframe-podcast-clip`, …) the same way.
+  `npx -y cueframe@0.9 install`. Add sibling recipes (`cueframe-podcast-clip`, …) the same way.
