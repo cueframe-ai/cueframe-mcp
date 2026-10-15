@@ -104,6 +104,14 @@ export const GetMediaParams = zod.object({
 })
 
 /**
+ * Issue a presigned GET URL for the item's stored source file, the bytes CueFrame composes from. The URL works without an Authorization header and expires at `expiresAt` (about an hour); read again for a fresh one. Available as soon as the upload or import is stored, before processing completes. Required permission: media:read
+ * @summary A download URL for a media item's source file
+ */
+export const GetMediaDownloadUrlParams = zod.object({
+  "id": zod.string()
+})
+
+/**
  * Required permission: media:read
  * @summary Get a media transcript (paginated)
  */

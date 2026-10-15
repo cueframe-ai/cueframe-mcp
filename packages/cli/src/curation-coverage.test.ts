@@ -50,6 +50,7 @@ const CLI_WRAPPED: Record<string, string> = {
   listMedia: 'clips',
   createMediaUpload: 'upload',
   deleteMedia: 'media delete',
+  getMediaDownloadUrl: 'media download-url',
   listProjects: 'list',
   createProject: 'project create',
   deleteProject: 'project delete',

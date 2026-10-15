@@ -7,12 +7,15 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
+import type { NativeUpgradeResponseInputsRefusedItem } from './nativeUpgradeResponseInputsRefusedItem';
 import type { NativeUpgradeResponseMovedItem } from './nativeUpgradeResponseMovedItem';
 
 export interface NativeUpgradeResponse {
   moved: NativeUpgradeResponseMovedItem[];
-  /** Clips pinning a retired TSX source no curated release shipped: rebuild them as native components. */
+  /** Clips in a retired form no curated release recorded: rebuild them as native components, or remove them, in the same edit that upgrades the others. */
   withoutSuccessor: string[];
+  /** Clips whose successor refuses their stored inputs (its input schema), each with why: fix the inputs by rebuilding the clip, or remove it. */
+  inputsRefused: NativeUpgradeResponseInputsRefusedItem[];
   /** @nullable */
   etag: string | null;
 }

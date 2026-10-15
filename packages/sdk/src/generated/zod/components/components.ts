@@ -18,8 +18,8 @@ import {
 
 
 /**
- * Repin clips that pin a retired curated TSX (version 3) component to its native (version 4) successor — the successorSourceVersionId a refusal of such a clip names. Name clip_ids, or omit them to move every clip that has a successor. Every saved input is kept. Clips with no successor are listed in withoutSuccessor.
- * @summary Move retired TSX component clips to their native successors
+ * Move clips stored in a retired form to their native (version 4) successors: a clip pinning a retired curated TSX (version 3) component, or one stored before execution pins (needsUpgrade kind unpinned-component), moves to the successorSourceVersionId the read or a refusal of such a clip names. Name clip_ids, or omit them to move every clip that has a successor. Every saved input is kept. Clips with no successor are listed in withoutSuccessor, and clips whose stored inputs the successor refuses in inputsRefused; a write never leaves a retired clip in place, so rebuild or remove those in the same edit that upgrades the others.
+ * @summary Move retired component clips to their native successors
  */
 export const RepinComponentParams = zod.object({
   "id": zod.string()

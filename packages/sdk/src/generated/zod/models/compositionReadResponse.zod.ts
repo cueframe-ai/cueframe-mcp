@@ -10,23 +10,24 @@
 import * as zod from 'zod';
 import { Composition } from './composition.zod';
 import { CompositionDependencyRead } from './compositionDependencyRead.zod';
+import { CompositionRead } from './compositionRead.zod';
 import { CompositionUpgradeNeed } from './compositionUpgradeNeed.zod';
 
-export const compositionReadResponseTwoRevisionMin = 0;
-export const compositionReadResponseTwoRevisionMax = 9007199254740991;
+export const compositionReadResponseOneRevisionMin = 0;
+export const compositionReadResponseOneRevisionMax = 9007199254740991;
 
-export const compositionReadResponseTwoExpectedBrandIdentityRegExp = new RegExp('^[a-f0-9]{64}$');
+export const compositionReadResponseOneExpectedBrandIdentityRegExp = new RegExp('^[a-f0-9]{64}$');
 
 
-export const CompositionReadResponse = zod.union([Composition,zod.strictObject({
+export const CompositionReadResponse = zod.union([zod.strictObject({
   "composition": Composition,
   "composition_id": zod.string(),
-  "revision": zod.int().min(compositionReadResponseTwoRevisionMin).max(compositionReadResponseTwoRevisionMax),
+  "revision": zod.int().min(compositionReadResponseOneRevisionMin).max(compositionReadResponseOneRevisionMax),
   "dependencies": CompositionDependencyRead,
-  "expectedBrandIdentity": zod.string().regex(compositionReadResponseTwoExpectedBrandIdentityRegExp).optional(),
+  "expectedBrandIdentity": zod.string().regex(compositionReadResponseOneExpectedBrandIdentityRegExp).optional(),
   "brandAuthorityError": zod.string().optional(),
   "needsUpgrade": zod.array(CompositionUpgradeNeed).optional()
-})]);
+}),CompositionRead]);
 
 export type CompositionReadResponse = zod.input<typeof CompositionReadResponse>;
 export type CompositionReadResponseOutput = zod.output<typeof CompositionReadResponse>;

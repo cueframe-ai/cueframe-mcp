@@ -9,9 +9,10 @@
  */
 import type { Composition } from './composition';
 import type { CompositionDependencyRead } from './compositionDependencyRead';
+import type { CompositionRead } from './compositionRead';
 import type { CompositionUpgradeNeed } from './compositionUpgradeNeed';
 
-export type CompositionReadResponse = Composition | {
+export type CompositionReadResponse = {
   composition: Composition;
   composition_id: string;
   /**
@@ -24,4 +25,4 @@ export type CompositionReadResponse = Composition | {
   expectedBrandIdentity?: string;
   brandAuthorityError?: string;
   needsUpgrade?: CompositionUpgradeNeed[];
-};
+} | CompositionRead;

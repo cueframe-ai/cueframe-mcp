@@ -11,6 +11,7 @@ import { analyzeCommand } from './commands/analyze.js';
 import { clipsCommand } from './commands/clips.js';
 import { projectCreateCommand } from './commands/project.js';
 import { projectDeleteCommand, mediaDeleteCommand } from './commands/destroy.js';
+import { mediaDownloadUrlCommand } from './commands/media.js';
 import { renderCommand } from './commands/render.js';
 import { templateRunCommand, templateStatusCommand, templateValidateCommand } from './commands/template.js';
 import { renderWatchCommand } from './commands/renderWatch.js';
@@ -229,7 +230,15 @@ export async function main() {
 
   const media = program
     .command('media')
-    .description('Media library cleanup commands');
+    .description('Media library commands');
+  media
+    .command('download-url')
+    .description('Print a presigned download URL for a media item\'s stored source file (valid about an hour; pipe it into curl). With --json: { url, expiresAt }.')
+    .argument('<mediaId>', 'Media item ID (from `cueframe clips`)')
+    .option('-t, --target <target>', 'Target environment: prod (default), local. CUEFRAME_API_URL overrides the host.')
+    .action((mediaId: string, opts: { target?: string }) =>
+      mediaDownloadUrlCommand(mediaId, { target: parseTarget(opts.target), json: globals().json }),
+    );
   media
     .command('delete')
     .description('Permanently delete a media item (irreversible cleanup — removes the source and its derived assets).')
