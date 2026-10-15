@@ -11,6 +11,7 @@
 export type NativeUpgradeResponseMovedItem = {
   clipId: string;
   componentId: string;
-  from: string;
+  /** The source version the clip pinned; absent for a clip stored before execution pins. */
+  from?: string;
   to: string;
 };

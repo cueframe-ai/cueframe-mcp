@@ -11,6 +11,7 @@ import type {
   Composition,
   CompositionApplyRequest,
   CompositionCreateRequest,
+  CompositionCreateResponse,
   CompositionListResponse,
   CompositionOp,
   CompositionReadResponse,
@@ -143,7 +144,7 @@ export const getNewCompositionUrl = (id: string,) => {
  * @summary Create a new composition (video) in a project
  */
 export const newComposition = async (id: string,
-    compositionCreateRequest: CompositionCreateRequest, options?: Parameters<typeof request>[1]): Promise<void> => {
+    compositionCreateRequest: CompositionCreateRequest, options?: Parameters<typeof request>[1]): Promise<CompositionCreateResponse> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -159,7 +160,7 @@ export const newComposition = async (id: string,
     }
     return headers;
   };
-return request<void>(getNewCompositionUrl(id),
+return request<CompositionCreateResponse>(getNewCompositionUrl(id),
   {
     ...options,
     method: 'POST',

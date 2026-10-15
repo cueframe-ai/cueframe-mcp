@@ -2,6 +2,24 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 4.2.0
+
+- Additive. Adds `GET /v1/media/{id}/download-url` (`getMediaDownloadUrl`, media:read), which answers `MediaDownloadUrlResponse` `{url, expiresAt}`: a presigned GET for the item's stored source file, valid for the media URL lifetime (about an hour), available as soon as the upload or import is stored.
+- `POST /v1/projects/{id}/compositions` (`newComposition`) documents its 201 body as `CompositionCreateResponse` `{compositionId, format, etag}`. It carried no response schema before, so generated consumers (the MCP's `new_composition` among them) could not declare an output schema.
+- `RenderResponse` says what rendered: `compositionId` (the composition the snapshot was frozen from), `format` (the resolved output format), `engine` (`hyperframes` | `remotion`), `completedAt`, `outputDurationSec` and `preview`; each is null on renders minted before it was recorded.
+- `GET /v1/projects/{id}/composition` documents its plain body as `CompositionRead`: the kernel's `Composition` plus `needsUpgrade` (present only when clips are stored in a retired form). The flag reached only the `includeDependencies=true` envelope before.
+- `NativeUpgradeResponse` (`POST /v1/components/native-upgrade`) adds `inputsRefused`: clips whose successor refuses their stored inputs, each `{clipId, componentId, message}`; `moved[].from` is optional (absent for a clip stored before execution pins).
+- Embeds `@cueframe/kernel` 0.7.2's components unchanged, synced from private 9edcbdf02. The projection is sha256 `f5b1b6e9…`.
+
+## @cueframe/sdk 0.9.0
+
+- Regenerated from contract 4.2.0: `media.getMediaDownloadUrl`, `MediaDownloadUrlResponse`, `CompositionCreateResponse`, `CompositionRead`, the new `RenderResponse` fields (`compositionId`, `format`, `engine`, `completedAt`, `outputDurationSec`, `preview`) and `NativeUpgradeResponse.inputsRefused`. Pins `@cueframe/kernel` 0.7.2.
+
+## cueframe 0.9.1
+
+- `cueframe media download-url <mediaId>` prints a presigned download URL for a media item's stored source file (pipe it into curl); with `--json` it answers `{ url, expiresAt }`.
+- Built against `@cueframe/sdk` 0.9.0.
+
 ## @cueframe/skills 0.3.2
 
 - Every skill runs the CLI as `npx -y cueframe@0.9`. 0.3.1 pinned `cueframe@0.8` while showing `new component <id> --category <category>`, which 0.8.x rejects and 0.9.0 requires, so agents following `cueframe-cli` or `cueframe-component-authoring` were refused either way. `scripts/plugin/cli-version.json` now has a test that holds it to the major.minor of `packages/cli`.

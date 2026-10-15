@@ -16,6 +16,7 @@ import type {
   MatteBakeTriggerResponse,
   MediaContextResponse,
   MediaDirectUploadResponse,
+  MediaDownloadUrlResponse,
   MediaFactPurchaseRequest,
   MediaFactPurchaseResponse,
   MediaFactsResponse,
@@ -334,6 +335,30 @@ export const getGetMediaUrl = (id: string,) => {
 export const getMedia = async (id: string, options?: Parameters<typeof request>[1]): Promise<MediaResponse> => {
 
   return request<MediaResponse>(getGetMediaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+export const getGetMediaDownloadUrlUrl = (id: string,) => {
+
+
+
+
+  return `/v1/media/${id}/download-url`
+}
+
+/**
+ * Issue a presigned GET URL for the item's stored source file, the bytes CueFrame composes from. The URL works without an Authorization header and expires at `expiresAt` (about an hour); read again for a fresh one. Available as soon as the upload or import is stored, before processing completes. Required permission: media:read
+ * @summary A download URL for a media item's source file
+ */
+export const getMediaDownloadUrl = async (id: string, options?: Parameters<typeof request>[1]): Promise<MediaDownloadUrlResponse> => {
+
+  return request<MediaDownloadUrlResponse>(getGetMediaDownloadUrlUrl(id),
   {
     ...options,
     method: 'GET'

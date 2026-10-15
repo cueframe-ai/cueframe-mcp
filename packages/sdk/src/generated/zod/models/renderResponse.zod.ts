@@ -8,6 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
+import { Format } from './format.zod';
 import { RenderProgress } from './renderProgress.zod';
 
 export const RenderResponse = zod.strictObject({
@@ -23,6 +24,15 @@ export const RenderResponse = zod.strictObject({
   "retryable": zod.boolean().nullable().describe('Whether re-attempting the SAME render can succeed (status `error`); null otherwise. true → call retry_render. false → deterministic (category authoring/internal); fix the composition first — retry_render alone reproduces it. Mirrors the render.failed webhook\'s `retryable`.'),
   "createdAt": zod.string(),
   "updatedAt": zod.string().describe('ISO-8601 timestamp of the render\'s most recent progress update. Compute staleness = now − updatedAt to distinguish a wedged render from a slow one and decide whether to wait, cancel, or retry.'),
+  "compositionId": zod.string().nullable().describe('The composition this render froze at create time (the project\'s active one, or the compositionId the request named). Null on renders minted before this was recorded.'),
+  "format": zod.union([Format,zod.null()]).describe('The resolved output format the render was encoded at (aspectRatio, fps, resolution): the frozen composition\'s, after any create-time scale override. Null on legacy rows.'),
+  "engine": zod.union([zod.enum(['hyperframes', 'remotion']),zod.null()]).describe('The render engine the row was minted for. Null on rows minted before the engine was recorded.'),
+  "completedAt": zod.string().nullable().describe('ISO-8601 instant the render reached its terminal status (complete, error or cancelled); null while it runs. Pair with createdAt for the wall time.'),
+  "outputDurationSec": zod.number().nullable().describe('The output\'s length in seconds (the composition timeline\'s, or the preview window\'s), as billed. Null on legacy rows.'),
+  "preview": zod.union([zod.strictObject({
+  "fromSec": zod.number(),
+  "toSec": zod.number()
+}),zod.null()]).describe('The scoped preview window when this is a preview_clip render; null for a full deliverable.'),
   "listUsd": zod.number().optional().describe('A2 money stamp: the metered event\'s LIST price (USD), stamped at the success terminal (exports for deliverable renders, compose_capture for A8 previews). A plan allowance may zero the actual invoice line — this is the list price, never a Stripe charge. Absent while running, on failure, and for x402 orgs (on-chain receipts). Mirrors the get_usage ledger.'),
   "warnings": zod.array(zod.string()).optional().describe('Non-fatal advisories surfaced at render-CREATE (omitted when none, and on GET — create-time only).')
 }).describe('Render job response per §Renders.');

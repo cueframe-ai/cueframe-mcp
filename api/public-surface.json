@@ -33,6 +33,7 @@
     "GET /v1/media/search searchLibrary",
     "GET /v1/media/{id} getMedia",
     "GET /v1/media/{id}/context getMediaContext",
+    "GET /v1/media/{id}/download-url getMediaDownloadUrl",
     "GET /v1/media/{id}/facts listMediaFacts",
     "GET /v1/media/{id}/suggestions listMediaSuggestions",
     "GET /v1/media/{id}/transcript getMediaTranscript",

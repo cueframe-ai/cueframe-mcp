@@ -33,8 +33,8 @@ importers:
   packages/api-contract:
     devDependencies:
       '@cueframe/kernel':
-        specifier: 0.7.1
-        version: 0.7.1
+        specifier: 0.7.2
+        version: 0.7.2
 
   packages/cli:
     dependencies:
@@ -192,8 +192,8 @@ packages:
     peerDependencies:
       commander: ~15.0.0
 
-  '@cueframe/kernel@0.7.1':
-    resolution: {integrity: sha512-0fs1YDd2GjvnLdoC0DCdeG8PMmDCHgift1ibhxfhKiYr4OV9vOI7GEEDKtnmR++7iXmDLlII+0+TpvxnOcs2hA==}
+  '@cueframe/kernel@0.7.2':
+    resolution: {integrity: sha512-UMmX6FhmhzYLapZzXXfS2ROhRHIJA3XhDszXq+O+/uoOTLICrYgz3+T0xRgsKKKziLnrK9bQP9UfJPYpvKnNfw==}
     peerDependencies:
       '@ai-sdk/anthropic': ^4.0.39
       '@ai-sdk/openai': ^4.0.42
@@ -2280,7 +2280,7 @@ snapshots:
     dependencies:
       commander: 15.0.0
 
-  '@cueframe/kernel@0.7.1':
+  '@cueframe/kernel@0.7.2':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       '@noble/hashes': 1.8.0

@@ -7,9 +7,12 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
+import type { Format } from './format';
 import type { RenderProgress } from './renderProgress';
 import type { RenderResponseCategory } from './renderResponseCategory';
+import type { RenderResponseEngine } from './renderResponseEngine';
 import type { RenderResponseErrorDetails } from './renderResponseErrorDetails';
+import type { RenderResponsePreview } from './renderResponsePreview';
 import type { RenderResponseStatus } from './renderResponseStatus';
 
 /**
@@ -45,6 +48,27 @@ export interface RenderResponse {
   createdAt: string;
   /** ISO-8601 timestamp of the render's most recent progress update. Compute staleness = now − updatedAt to distinguish a wedged render from a slow one and decide whether to wait, cancel, or retry. */
   updatedAt: string;
+  /**
+     * The composition this render froze at create time (the project's active one, or the compositionId the request named). Null on renders minted before this was recorded.
+     * @nullable
+     */
+  compositionId: string | null;
+  /** The resolved output format the render was encoded at (aspectRatio, fps, resolution): the frozen composition's, after any create-time scale override. Null on legacy rows. */
+  format: Format | null;
+  /** The render engine the row was minted for. Null on rows minted before the engine was recorded. */
+  engine: RenderResponseEngine;
+  /**
+     * ISO-8601 instant the render reached its terminal status (complete, error or cancelled); null while it runs. Pair with createdAt for the wall time.
+     * @nullable
+     */
+  completedAt: string | null;
+  /**
+     * The output's length in seconds (the composition timeline's, or the preview window's), as billed. Null on legacy rows.
+     * @nullable
+     */
+  outputDurationSec: number | null;
+  /** The scoped preview window when this is a preview_clip render; null for a full deliverable. */
+  preview: RenderResponsePreview;
   /** A2 money stamp: the metered event's LIST price (USD), stamped at the success terminal (exports for deliverable renders, compose_capture for A8 previews). A plan allowance may zero the actual invoice line — this is the list price, never a Stripe charge. Absent while running, on failure, and for x402 orgs (on-chain receipts). Mirrors the get_usage ledger. */
   listUsd?: number;
   /** Non-fatal advisories surfaced at render-CREATE (omitted when none, and on GET — create-time only). */

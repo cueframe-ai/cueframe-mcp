@@ -13,10 +13,15 @@ export const NativeUpgradeResponse = zod.strictObject({
   "moved": zod.array(zod.strictObject({
   "clipId": zod.string(),
   "componentId": zod.string(),
-  "from": zod.string(),
+  "from": zod.string().optional().describe('The source version the clip pinned; absent for a clip stored before execution pins.'),
   "to": zod.string()
 })),
-  "withoutSuccessor": zod.array(zod.string()).describe('Clips pinning a retired TSX source no curated release shipped: rebuild them as native components.'),
+  "withoutSuccessor": zod.array(zod.string()).describe('Clips in a retired form no curated release recorded: rebuild them as native components, or remove them, in the same edit that upgrades the others.'),
+  "inputsRefused": zod.array(zod.strictObject({
+  "clipId": zod.string(),
+  "componentId": zod.string(),
+  "message": zod.string()
+})).describe('Clips whose successor refuses their stored inputs (its input schema), each with why: fix the inputs by rebuilding the clip, or remove it.'),
   "etag": zod.string().nullable()
 });
 
