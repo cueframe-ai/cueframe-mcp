@@ -34,7 +34,7 @@ export interface MediaContextResponse {
   transcript: MediaContextResponseTranscript;
   /** The MUSIC-role rhythm grid (audio-substrate MVP). Present only for a music bed that carries a computed beat grid; null otherwise. For a music-driven film, cut on these beats (transition midpoints on beats, risers resolving on downbeats). */
   beatGrid: MediaContextResponseBeatGrid;
-  /** The VO-role rhythm grid: word onsets surfaced from the transcript (pure exposure). Present only when a transcript exists; null otherwise. For a VO-driven (narration) film, cut every beat boundary to the voice — the film-spine rule. */
+  /** The VO-role rhythm grid for this bounded transcript page. Present when a transcript exists; null otherwise. Check pagination.hasMore before treating it as a complete voice spine. */
   wordGrid: MediaContextResponseWordGrid;
   /** DECLARED audio role of this asset (audio-substrate P0): 'vo' (narration), 'music' (bed that ducks under speech), 'sfx' (one-shot hit), 'ambience' (a bed that HOLDS under VO — never ducks). Author the clip source's `audioRole` from this. Null for footage/images or an undeclared audio asset. */
   audioRole: MediaContextResponseAudioRole;

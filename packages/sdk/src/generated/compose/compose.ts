@@ -10,6 +10,7 @@
 import type {
   ComposeCreateRequest,
   ComposeCreateResponse,
+  ComposeDispatchReconciliationResponse,
   ComposeJobDetailResponse,
   ComposeJobListResponse,
   ComposeSelectRequest,
@@ -120,6 +121,32 @@ return request<ComposeSelectResponse>(getSelectComposeCandidateUrl(id,composeJob
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
     body: JSON.stringify(composeSelectRequest)
+  }
+);}
+
+
+export const getReconcileComposeDispatchUrl = (id: string,
+    composeJobId: string,) => {
+
+
+
+
+  return `/v1/projects/${id}/compose/jobs/${composeJobId}/reconcile`
+}
+
+/**
+ * Reads the recorded execution engine by its persisted key. A missing lookup keeps the job pending; this never dispatches another run.
+ * @summary Reconcile an uncertain compose start
+ */
+export const reconcileComposeDispatch = async (id: string,
+    composeJobId: string, options?: Parameters<typeof request>[1]): Promise<ComposeDispatchReconciliationResponse> => {
+
+  return request<ComposeDispatchReconciliationResponse>(getReconcileComposeDispatchUrl(id,composeJobId),
+  {
+    ...options,
+    method: 'POST'
+
+
   }
 );}
 

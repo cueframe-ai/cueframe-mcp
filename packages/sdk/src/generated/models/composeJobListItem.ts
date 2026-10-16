@@ -13,6 +13,7 @@ export interface ComposeJobListItem {
   composeJobId: string;
   projectId: string;
   status: ComposeJobListItemStatus;
+  reconciliationRequired?: boolean;
   suggestionId?: string;
   createdAt: number;
   /** @nullable */

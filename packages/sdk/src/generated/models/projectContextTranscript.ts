@@ -11,6 +11,7 @@
 export type ProjectContextTranscript = {
   status: 'ready';
   mediaId: string;
+  /** At most the first 200 words, for orientation; use paginated GET /v1/media/{id}/transcript for exact later words. */
   words: {
   text: string;
   /** Word onset (SECONDS from source start). */
@@ -18,6 +19,14 @@ export type ProjectContextTranscript = {
   /** Word end (SECONDS from source start). */
   end: number;
 }[];
+  /**
+     * Number of words in the lead transcript.
+     * @minimum 0
+     * @maximum 9007199254740991
+     */
+  totalWords: number;
+  /** True when the lead transcript extends beyond the 200-word orientation preview. */
+  hasMore: boolean;
 } | {
   status: 'unavailable';
   mediaId: string;

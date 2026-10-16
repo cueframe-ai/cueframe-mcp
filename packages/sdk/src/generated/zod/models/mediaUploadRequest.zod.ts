@@ -12,7 +12,7 @@ import * as zod from 'zod';
 export const mediaUploadRequestFilenameMax = 500;
 
 export const mediaUploadRequestSizeExclusiveMin = 0;
-export const mediaUploadRequestSizeMax = 10737418240;
+export const mediaUploadRequestSizeMax = 5368709120;
 
 
 

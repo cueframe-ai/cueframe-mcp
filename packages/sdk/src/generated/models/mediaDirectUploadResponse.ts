@@ -9,7 +9,7 @@
  */
 
 /**
- * POST /media response: reserved media id + a presigned PUT URL. PUT the raw bytes to uploadUrl (≤ ~5 GiB), then POST /media/:id/finalize.
+ * POST /media response: reserved media id + a presigned PUT URL. PUT the raw bytes to uploadUrl (≤ 5 GiB), then POST /media/:id/finalize.
  */
 export interface MediaDirectUploadResponse {
   id: string;

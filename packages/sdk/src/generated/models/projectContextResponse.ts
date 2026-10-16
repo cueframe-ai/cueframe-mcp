@@ -12,6 +12,7 @@ import type { Composition } from './composition';
 import type { Format } from './format';
 import type { ProjectContextMedia } from './projectContextMedia';
 import type { ProjectContextResponseMarkersItem } from './projectContextResponseMarkersItem';
+import type { ProjectContextResponseMediaPagination } from './projectContextResponseMediaPagination';
 import type { ProjectContextTranscript } from './projectContextTranscript';
 
 /**
@@ -22,9 +23,10 @@ export interface ProjectContextResponse {
   composition: Composition | null;
   /** The composition's format, hoisted — the pixel frame every card/graphic must be authored against. Null whenever `composition` is null. */
   format: Format | null;
-  /** The org's media library (most recent first, capped) — the pool this project can draw clips from. */
+  /** The first 50 items in the org's media library (most recent first) — the pool this project can draw clips from. Check mediaPagination before treating this as complete. */
   media: ProjectContextMedia[];
-  /** The FIRST transcribed media item's word-timed transcript, flattened — the spine a VO-driven film cuts to. `status:"ready"` carries the words; `status:"unavailable"` means the transcript exists but its body could not be fetched (retry); null means nothing in `media` is transcribed. For any OTHER transcribed item (see each entry's `hasTranscript`), read GET /v1/media/{id}/transcript. */
+  mediaPagination: ProjectContextResponseMediaPagination;
+  /** The FIRST transcribed media item's first 200 word timings for orientation. `status:"ready"` carries the bounded preview, `totalWords` and `hasMore`; use paginated GET /v1/media/{id}/transcript for exact later words. `status:"unavailable"` means the transcript exists but its body could not be fetched (retry); null means nothing in `media` is transcribed. For any OTHER transcribed item (see each entry's `hasTranscript`), read GET /v1/media/{id}/transcript. */
   transcript: ProjectContextTranscript | null;
   /** The kit BOUND to this project (`projects.brandKitId` is the brand SSOT — bind one via update_project). Null when the project has no kit bound; enumerate the org's kits with GET /v1/brand-kits. */
   brandKit: BrandKitResponse | null;

@@ -13,6 +13,7 @@ export const ComposeJobListItem = zod.strictObject({
   "composeJobId": zod.string(),
   "projectId": zod.string(),
   "status": zod.enum(['queued', 'running', 'awaiting_input', 'complete', 'failed', 'cancelled']),
+  "reconciliationRequired": zod.boolean().optional(),
   "suggestionId": zod.string().optional(),
   "createdAt": zod.number(),
   "completedAt": zod.number().nullable()

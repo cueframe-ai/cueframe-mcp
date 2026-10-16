@@ -9,6 +9,11 @@
  */
 import * as zod from 'zod';
 
+export const projectContextTranscriptOneTotalWordsMin = 0;
+export const projectContextTranscriptOneTotalWordsMax = 9007199254740991;
+
+
+
 export const ProjectContextTranscript = zod.union([zod.strictObject({
   "status": zod.literal("ready"),
   "mediaId": zod.string(),
@@ -16,7 +21,9 @@ export const ProjectContextTranscript = zod.union([zod.strictObject({
   "text": zod.string(),
   "start": zod.number().describe('Word onset (SECONDS from source start).'),
   "end": zod.number().describe('Word end (SECONDS from source start).')
-}))
+})).describe('At most the first 200 words, for orientation; use paginated GET /v1/media/{id}/transcript for exact later words.'),
+  "totalWords": zod.int().min(projectContextTranscriptOneTotalWordsMin).max(projectContextTranscriptOneTotalWordsMax).describe('Number of words in the lead transcript.'),
+  "hasMore": zod.boolean().describe('True when the lead transcript extends beyond the 200-word orientation preview.')
 }),zod.strictObject({
   "status": zod.literal("unavailable"),
   "mediaId": zod.string()

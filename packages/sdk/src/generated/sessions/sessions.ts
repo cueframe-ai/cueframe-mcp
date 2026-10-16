@@ -9,6 +9,8 @@
  */
 import type {
   ListSessionsParams,
+  MuxCancelRequest,
+  MuxJobRequest,
   MuxJobResponse,
   SessionCreateRequest,
   SessionListResponse,
@@ -146,14 +148,29 @@ export const getTriggerMuxJobUrl = (id: string,) => {
  * Required permission: sessions:write
  * @summary Trigger mux-audio-onto-video workflow
  */
-export const triggerMuxJob = async (id: string, options?: Parameters<typeof request>[1]): Promise<MuxJobResponse> => {
+export const triggerMuxJob = async (id: string,
+    muxJobRequest: MuxJobRequest, options?: Parameters<typeof request>[1]): Promise<MuxJobResponse> => {
 
-  return request<MuxJobResponse>(getTriggerMuxJobUrl(id),
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<MuxJobResponse>(getTriggerMuxJobUrl(id),
   {
     ...options,
-    method: 'POST'
-
-
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(muxJobRequest)
   }
 );}
 
@@ -178,5 +195,44 @@ export const getMuxJob = async (id: string, options?: Parameters<typeof request>
     method: 'GET'
 
 
+  }
+);}
+
+
+export const getCancelMuxJobUrl = (id: string,) => {
+
+
+
+
+  return `/v1/sessions/${id}/mux-job/cancel`
+}
+
+/**
+ * Required permission: sessions:write
+ * @summary Cancel one mux attempt while retaining the session
+ */
+export const cancelMuxJob = async (id: string,
+    muxCancelRequest: MuxCancelRequest, options?: Parameters<typeof request>[1]): Promise<MuxJobResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<MuxJobResponse>(getCancelMuxJobUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(muxCancelRequest)
   }
 );}

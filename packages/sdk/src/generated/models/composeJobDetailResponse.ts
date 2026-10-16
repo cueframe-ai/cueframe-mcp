@@ -17,6 +17,7 @@ export interface ComposeJobDetailResponse {
   composeJobId: string;
   projectId: string;
   status: ComposeJobDetailResponseStatus;
+  reconciliationRequired?: boolean;
   /** @nullable */
   error: string | null;
   request: ComposeJobDetailResponseRequest;

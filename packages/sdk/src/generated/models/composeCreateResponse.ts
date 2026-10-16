@@ -18,6 +18,7 @@ export interface ComposeCreateResponse {
   projectId: string;
   /** queued = normal; failed = startup failed and the job is already terminal (the SSE stream will emit a single `job_failed` frame and close). */
   status: ComposeCreateResponseStatus;
+  reconciliationRequired?: boolean;
   /** Relative SSE endpoint to stream this job's events (per compose-api-contract.md). */
   streamUrl?: string;
 }

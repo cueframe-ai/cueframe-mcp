@@ -11,6 +11,7 @@ import * as zod from 'zod';
 import { ContextSubjectWindow } from './contextSubjectWindow.zod';
 import { MediaFact } from './mediaFact.zod';
 import { MediaFactOffer } from './mediaFactOffer.zod';
+import { PaginationMeta } from './paginationMeta.zod';
 import { TranscriptResponse } from './transcriptResponse.zod';
 
 export const MediaContextResponse = zod.strictObject({
@@ -27,7 +28,7 @@ export const MediaContextResponse = zod.strictObject({
 }),
   "transcript": zod.strictObject({
   "status": zod.enum(['ready', 'not_transcribed', 'unavailable']),
-  "data": zod.union([TranscriptResponse,zod.null()])
+  "data": zod.union([TranscriptResponse,zod.null()]).describe('One bounded utterance page (default 20); pass pagination.nextCursor as after to continue. fullText contains this page only.')
 }),
   "beatGrid": zod.union([zod.strictObject({
   "bpm": zod.number(),
@@ -36,8 +37,9 @@ export const MediaContextResponse = zod.strictObject({
   "method": zod.enum(['requested-anchored', 'detected']).describe('`requested-anchored` = phase-locked to a requested BPM (a generated bed whose prompt named a tempo); `detected` = full beat tracking (import/upload).')
 }),zod.null()]).describe('The MUSIC-role rhythm grid (audio-substrate MVP). Present only for a music bed that carries a computed beat grid; null otherwise. For a music-driven film, cut on these beats (transition midpoints on beats, risers resolving on downbeats).'),
   "wordGrid": zod.union([zod.strictObject({
-  "wordTimesMs": zod.array(zod.number()).describe('Word onset times in MILLISECONDS, in order — divide by 1000 for timeline startTime (composition timeline fields are seconds).')
-}),zod.null()]).describe('The VO-role rhythm grid: word onsets surfaced from the transcript (pure exposure). Present only when a transcript exists; null otherwise. For a VO-driven (narration) film, cut every beat boundary to the voice — the film-spine rule.'),
+  "wordTimesMs": zod.array(zod.number()).describe('Word onset times in MILLISECONDS for this transcript utterance page — divide by 1000 for timeline startTime (composition timeline fields are seconds).'),
+  "pagination": PaginationMeta.describe('The same utterance cursor as transcript.data.pagination; continue with after to see later word onsets.')
+}),zod.null()]).describe('The VO-role rhythm grid for this bounded transcript page. Present when a transcript exists; null otherwise. Check pagination.hasMore before treating it as a complete voice spine.'),
   "audioRole": zod.union([zod.enum(['vo', 'music', 'sfx', 'ambience']),zod.null()]).describe('DECLARED audio role of this asset (audio-substrate P0): \'vo\' (narration), \'music\' (bed that ducks under speech), \'sfx\' (one-shot hit), \'ambience\' (a bed that HOLDS under VO — never ducks). Author the clip source\'s `audioRole` from this. Null for footage/images or an undeclared audio asset.'),
   "envelope": zod.union([zod.strictObject({
   "envelopeClass": zod.enum(['transient', 'sweep', 'ambient']).describe('Coarse temporal shape: \'transient\' (a sharp one-shot), \'sweep\' (a bounded rise/fall over ~0.5–2s), \'ambient\' (an unbounded bed).'),

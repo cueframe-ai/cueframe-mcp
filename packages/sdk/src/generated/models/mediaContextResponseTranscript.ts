@@ -12,5 +12,6 @@ import type { TranscriptResponse } from './transcriptResponse';
 
 export type MediaContextResponseTranscript = {
   status: MediaContextResponseTranscriptStatus;
+  /** One bounded utterance page (default 20); pass pagination.nextCursor as after to continue. fullText contains this page only. */
   data: TranscriptResponse | null;
 };

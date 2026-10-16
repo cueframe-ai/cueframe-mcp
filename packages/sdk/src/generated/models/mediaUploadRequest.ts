@@ -20,7 +20,7 @@ export interface MediaUploadRequest {
   filename: string;
   contentType: MediaUploadRequestContentType;
   /**
-     * @maximum 10737418240
+     * @maximum 5368709120
      * @exclusiveMinimum 0
      */
   size: number;

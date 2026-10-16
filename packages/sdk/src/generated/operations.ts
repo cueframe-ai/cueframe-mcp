@@ -12,6 +12,7 @@ export * as composeSession from "./compose-session/compose-session";
 export * as compositions from "./compositions/compositions";
 export * as consult from "./consult/consult";
 export * as critics from "./critics/critics";
+export * as editorial from "./editorial/editorial";
 export * as evidence from "./evidence/evidence";
 export * as exports from "./exports/exports";
 export * as fonts from "./fonts/fonts";
