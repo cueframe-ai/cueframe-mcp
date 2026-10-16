@@ -13,6 +13,7 @@ export const ComposeCreateResponse = zod.strictObject({
   "composeJobId": zod.string().describe('Opaque compose job id; pass to the SSE stream URL.'),
   "projectId": zod.string(),
   "status": zod.enum(['queued', 'failed']).describe('queued = normal; failed = startup failed and the job is already terminal (the SSE stream will emit a single `job_failed` frame and close).'),
+  "reconciliationRequired": zod.boolean().optional(),
   "streamUrl": zod.string().optional().describe('Relative SSE endpoint to stream this job\'s events (per compose-api-contract.md).')
 }).describe('POST /projects/:id/compose response.');
 

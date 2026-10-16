@@ -16,6 +16,7 @@ export const ExportStatus = {
   trimming: 'trimming',
   building: 'building',
   uploading: 'uploading',
+  reconciliation_required: 'reconciliation_required',
   complete: 'complete',
   error: 'error',
   cancelled: 'cancelled',

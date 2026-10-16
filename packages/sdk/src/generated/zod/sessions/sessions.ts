@@ -10,6 +10,8 @@
 import * as zod from 'zod';
 
 import {
+  MuxCancelRequest,
+  MuxJobRequest,
   SessionCreateRequest
 } from '../models';
 
@@ -57,6 +59,8 @@ export const TriggerMuxJobParams = zod.object({
   "id": zod.string()
 })
 
+export const TriggerMuxJobBody = MuxJobRequest
+
 /**
  * Required permission: sessions:read
  * @summary Poll mux job status
@@ -64,3 +68,13 @@ export const TriggerMuxJobParams = zod.object({
 export const GetMuxJobParams = zod.object({
   "id": zod.string()
 })
+
+/**
+ * Required permission: sessions:write
+ * @summary Cancel one mux attempt while retaining the session
+ */
+export const CancelMuxJobParams = zod.object({
+  "id": zod.string()
+})
+
+export const CancelMuxJobBody = MuxCancelRequest

@@ -10,11 +10,15 @@
 import * as zod from 'zod';
 
 
+export const searchLibraryParamsMediaIdMax = 32;
+
+
 export const searchLibraryParamsLimitDefault = 10;
 export const searchLibraryParamsLimitMax = 25;
 
 
 export const SearchLibraryParams = zod.strictObject({
+  "mediaId": zod.array(zod.string().min(1)).max(searchLibraryParamsMediaIdMax).optional(),
   "q": zod.string().min(1),
   "limit": zod.int().min(1).max(searchLibraryParamsLimitMax).default(searchLibraryParamsLimitDefault)
 })

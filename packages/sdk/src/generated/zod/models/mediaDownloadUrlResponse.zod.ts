@@ -9,10 +9,13 @@
  */
 import * as zod from 'zod';
 
+export const mediaDownloadUrlResponseExpiresAtRegExp = new RegExp('^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$');
+
+
 export const MediaDownloadUrlResponse = zod.strictObject({
-  "url": zod.string().describe('Presigned GET URL for the item\'s stored source file (the bytes CueFrame composes from). Fetch it directly, no auth header.'),
-  "expiresAt": zod.string().describe('When the URL stops working (ISO-8601). Read this endpoint again for a fresh one; nothing is cached.')
-}).describe('GET /media/:id/download-url response.');
+  "url": zod.url().describe('Presigned URL for the media item\'s stored source bytes.'),
+  "expiresAt": zod.iso.datetime({"offset":true}).regex(mediaDownloadUrlResponseExpiresAtRegExp).describe('Expiry of this URL in UTC (about one hour).')
+});
 
 export type MediaDownloadUrlResponse = zod.input<typeof MediaDownloadUrlResponse>;
 export type MediaDownloadUrlResponseOutput = zod.output<typeof MediaDownloadUrlResponse>;

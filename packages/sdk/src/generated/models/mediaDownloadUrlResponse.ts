@@ -8,12 +8,12 @@
  * OpenAPI spec version: v1
  */
 
-/**
- * GET /media/:id/download-url response.
- */
 export interface MediaDownloadUrlResponse {
-  /** Presigned GET URL for the item's stored source file (the bytes CueFrame composes from). Fetch it directly, no auth header. */
+  /** Presigned URL for the media item's stored source bytes. */
   url: string;
-  /** When the URL stops working (ISO-8601). Read this endpoint again for a fresh one; nothing is cached. */
+  /**
+     * Expiry of this URL in UTC (about one hour).
+     * @pattern ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+     */
   expiresAt: string;
 }

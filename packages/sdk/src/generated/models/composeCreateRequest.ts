@@ -35,7 +35,7 @@ export interface ComposeCreateRequest {
   /** Pointer to the prior compose job this run iterates on. Surfaced on the resulting compose job as baselineComposeJobId. */
   parentJobId?: string;
   /**
-     * Ensemble size. Currently pinned to 1 — the multi-candidate ensemble is disabled pending a capacity bound, so any value >1 is ignored and every compose runs a single candidate. Still accepted for forward-compat; will honor [1, 5] again once re-enabled.
+     * Ensemble size, 1–5. Defaults to one; explicit multi-candidate runs divide the job budget across candidates and admit at most two concurrently. A held editorial checkpoint always uses one candidate.
      * @minimum 1
      * @maximum 5
      */

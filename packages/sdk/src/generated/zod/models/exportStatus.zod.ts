@@ -9,7 +9,7 @@
  */
 import * as zod from 'zod';
 
-export const ExportStatus = zod.enum(['queued', 'trimming', 'building', 'uploading', 'complete', 'error', 'cancelled']);
+export const ExportStatus = zod.enum(['queued', 'trimming', 'building', 'uploading', 'reconciliation_required', 'complete', 'error', 'cancelled']);
 
 export type ExportStatus = zod.input<typeof ExportStatus>;
 export type ExportStatusOutput = zod.output<typeof ExportStatus>;

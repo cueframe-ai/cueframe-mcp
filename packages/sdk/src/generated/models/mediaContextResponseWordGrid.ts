@@ -7,11 +7,14 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
+import type { PaginationMeta } from './paginationMeta';
 
 /**
- * The VO-role rhythm grid: word onsets surfaced from the transcript (pure exposure). Present only when a transcript exists; null otherwise. For a VO-driven (narration) film, cut every beat boundary to the voice — the film-spine rule.
+ * The VO-role rhythm grid for this bounded transcript page. Present when a transcript exists; null otherwise. Check pagination.hasMore before treating it as a complete voice spine.
  */
 export type MediaContextResponseWordGrid = {
-  /** Word onset times in MILLISECONDS, in order — divide by 1000 for timeline startTime (composition timeline fields are seconds). */
+  /** Word onset times in MILLISECONDS for this transcript utterance page — divide by 1000 for timeline startTime (composition timeline fields are seconds). */
   wordTimesMs: number[];
+  /** The same utterance cursor as transcript.data.pagination; continue with after to see later word onsets. */
+  pagination: PaginationMeta;
 } | null;

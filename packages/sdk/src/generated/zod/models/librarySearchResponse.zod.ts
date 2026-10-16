@@ -10,10 +10,24 @@
 import * as zod from 'zod';
 import { LibrarySearchResult } from './librarySearchResult.zod';
 
+export const librarySearchResponseCoverageExaminedMediaMin = 0;
+export const librarySearchResponseCoverageExaminedMediaMax = 9007199254740991;
+
+
+
 export const LibrarySearchResponse = zod.strictObject({
-  "results": zod.array(LibrarySearchResult).describe('Matching moments, best first. Empty means nothing matched (when `indexing` is false) — the library was searched and came back empty-handed.'),
-  "indexing": zod.boolean().describe('TRUE when some of the org\'s footage is NOT in the visual index yet — media that predates it, or is still processing. This is COVERAGE, not emptiness: it can be true ALONGSIDE results, and then it means "these are the best moments among what we have looked at so far", not "these are the best moments". An empty `results` with `indexing: true` means "not looked at yet", NOT "no match" — re-run the media through processing (reprocess) to index it, then search again. FALSE with empty `results` is a real miss: the library was searched and nothing matched.')
-}).describe('Semantic search over the org\'s OWN footage. The query is embedded with the same CLIP model that embedded every indexed frame, so a description of what you want to SEE ("wide shot of the speaker at a whiteboard") finds the moment even when nobody says those words.');
+  "results": zod.array(LibrarySearchResult).describe('Ranked retrieved moments. Empty results do not prove absence of suitable footage.'),
+  "indexing": zod.boolean().describe('Missing chunks observed in the bounded coverage window; false does not establish whole-library completeness.'),
+  "coverage": zod.strictObject({
+  "indexing": zod.boolean(),
+  "hasAnyIndexed": zod.boolean(),
+  "scope": zod.enum(['workspace', 'explicit_media']),
+  "examinedMedia": zod.int().min(librarySearchResponseCoverageExaminedMediaMin).max(librarySearchResponseCoverageExaminedMediaMax),
+  "membershipComplete": zod.boolean(),
+  "analysisComplete": zod.literal(false),
+  "scopedIndexReady": zod.boolean()
+}).describe('Declared scope and bounded membership evidence. Legacy chunk existence cannot certify complete interval or generation coverage.')
+}).describe('Semantic retrieval over authorized footage; explicit media scope applies before candidate truncation.');
 
 export type LibrarySearchResponse = zod.input<typeof LibrarySearchResponse>;
 export type LibrarySearchResponseOutput = zod.output<typeof LibrarySearchResponse>;

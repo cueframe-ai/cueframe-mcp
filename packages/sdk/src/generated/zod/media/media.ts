@@ -10,6 +10,7 @@
 import * as zod from 'zod';
 
 import {
+  HostedProcessingRunStartRequest,
   MatteBakeRequest,
   MediaFactPurchaseRequest,
   MediaFinalizeRequest,
@@ -23,9 +24,12 @@ import {
 
 
 /**
- * Find MOMENTS in your library by describing what they look like. The query uses the same visual-semantic index as the footage, so it matches on visual content — "wide shot of a speaker at a whiteboard", "hands on a keyboard", "city skyline at dusk" — including shots nobody talks about (which is where transcript search fails). Results are time-ranged: feed `mediaId` + `startSec`/`endSec` straight into apply_composition as a clip. `q` is required; `limit` defaults to 10 and caps at 25. `indexing` is COVERAGE, not emptiness: it is true whenever some of the org's footage is not in the visual index yet (media that predates it, or still processing), and it can be true ALONGSIDE results — then read them as "the best moments among what we have looked at so far". Empty `results` with `indexing: true` is a state, not a failure; re-run the item through processing to index it. The first search after an idle period can take up to ~90s; subsequent searches are typically faster.
+ * Find MOMENTS in your library by describing what they look like. The query uses the same visual-semantic index as the footage, so it matches on visual content — "wide shot of a speaker at a whiteboard", "hands on a keyboard", "city skyline at dusk" — including shots nobody talks about (which is where transcript search fails). Results are time-ranged: feed `mediaId` + `startSec`/`endSec` straight into apply_composition as a clip. `q` is required; `limit` defaults to 10 and caps at 25. `indexing` reports missing chunks observed in a bounded membership window; false does not prove complete coverage. Inspect `coverage` for scope and limits. Empty results mean retrieval returned no hits, not that no suitable footage exists. Optional repeated `mediaId` parameters restrict retrieval before top-k truncation (maximum 32).
  * @summary Semantic search over the org's own footage
  */
+
+export const searchLibraryQueryMediaIdMax = 32;
+
 
 export const searchLibraryQueryLimitDefault = 10;
 export const searchLibraryQueryLimitMax = 25;
@@ -33,8 +37,47 @@ export const searchLibraryQueryLimitMax = 25;
 
 
 export const SearchLibraryQueryParams = zod.object({
+  "mediaId": zod.array(zod.string().min(1)).max(searchLibraryQueryMediaIdMax).optional().describe('Optional explicit media scope, applied before candidate truncation. Up to 32 distinct IDs.'),
   "q": zod.string().min(1).describe('What the moment should look like, in plain language. Describe the IMAGE, not the words spoken.'),
   "limit": zod.int().min(1).max(searchLibraryQueryLimitMax).default(searchLibraryQueryLimitDefault).describe('Maximum moments to return. Default 10, maximum 25.')
+})
+
+/**
+ * Required permission: media:write
+ * @summary Start a direct hosted processing run
+ */
+export const StartHostedProcessingRunParams = zod.object({
+  "id": zod.string()
+})
+
+export const StartHostedProcessingRunBody = HostedProcessingRunStartRequest
+
+/**
+ * Required permission: media:read
+ * @summary Read a scoped hosted processing run
+ */
+export const GetHostedProcessingRunParams = zod.object({
+  "id": zod.string(),
+  "runId": zod.string()
+})
+
+/**
+ * Required permission: media:read
+ * @summary Get one committed hosted processing artifact
+ */
+export const GetHostedProcessingArtifactParams = zod.object({
+  "id": zod.string(),
+  "runId": zod.string(),
+  "operation": zod.string()
+})
+
+/**
+ * Required permission: media:write
+ * @summary Request cancellation of a hosted processing run
+ */
+export const CancelHostedProcessingRunParams = zod.object({
+  "id": zod.string(),
+  "runId": zod.string()
 })
 
 /**
@@ -76,13 +119,13 @@ export const FinalizeMediaParams = zod.object({
 export const FinalizeMediaBody = MediaFinalizeRequest
 
 /**
- * Generate a new media item from a text prompt: text-to-video, text-to-image, image-to-video, or a programmatic Manim animation (generator 'auto' picks the best one for the prompt). Async — returns a media id that flips to ready when generation finishes; poll GET /media/:id or register a media.completed webhook. Priced on what the model actually costs; refused with 402 if your balance cannot cover the quote (see GET /me).
- * @summary Generate media with AI (video, image, or Manim animation)
+ * Generate a new media item from a text prompt: text-to-video, text-to-image, image-to-video, speech, music, or sound effects (generator 'auto' selects the supported model). Async — returns a media id that flips to ready when generation finishes; poll GET /media/:id or register a media.completed webhook. Priced on what the model actually costs; refused with 402 if your balance cannot cover the quote (see GET /me).
+ * @summary Generate media with AI (video, image, or audio)
  */
 export const GenerateMediaBody = MediaGenerateRequest
 
 /**
- * Import media into the project from a public https URL — the server fetches and mirrors the bytes (SSRF-filtered), then processes it (transcode + transcribe). Async: returns a media id that flips to ready when the mirror and processing finish; poll GET /media/:id or use a media.completed webhook.
+ * Import media into the project from a public https URL — the server fetches and mirrors the bytes (SSRF-filtered), then processes video and audio. Async: returns a media id that flips to ready when the mirror and processing finish; poll GET /media/:id or use a media.completed webhook.
  * @summary Import media from a URL (server-side fetch)
  */
 export const ImportMediaBody = MediaImportRequest
@@ -104,8 +147,8 @@ export const GetMediaParams = zod.object({
 })
 
 /**
- * Issue a presigned GET URL for the item's stored source file, the bytes CueFrame composes from. The URL works without an Authorization header and expires at `expiresAt` (about an hour); read again for a fresh one. Available as soon as the upload or import is stored, before processing completes. Required permission: media:read
- * @summary A download URL for a media item's source file
+ * Issue a presigned GET URL for the published source file CueFrame composes from. It works without an Authorization header for about an hour; read again for a fresh URL. Available once upload or import bytes are stored, before processing finishes. Required permission: media:read.
+ * @summary Get a presigned URL for stored media source bytes
  */
 export const GetMediaDownloadUrlParams = zod.object({
   "id": zod.string()
@@ -135,11 +178,20 @@ export const GetMediaTranscriptQueryParams = zod.object({
 })
 
 /**
- * The read-only context an agent needs to author a composition over this source: the detected face/subject roster (face-0 = primary speaker, with normalized bbox + active-speaker share), the transcript, the temporal grids — `beatGrid` (a MUSIC bed's rhythm: bpm, beatTimesMs in milliseconds, confidence, method) and `wordGrid` (VO word-onset timings in milliseconds, from the transcript) — and a presigned `thumbnail` (~the footage at a glance). For stills at CHOSEN timestamps, call preview_frame with a one-clip composition over this media. Call this before authoring crop intents (reframe) and overlay/caption timing. Faces are lazily detected — `faces.status` is `not_detected` until a compose/detect pass has run over the source, never a faked empty roster. `beatGrid` is null until beat analysis has run: generated music beds are analyzed automatically at delivery; an uploaded/imported bed may not carry a grid yet (on-demand analysis is not client-triggerable today). `audioRole` is the DECLARED role of an audio asset (vo | music | sfx | ambience) — author the clip source's `audioRole` from it; `envelope` carries the coarse `envelopeClass` (transient | sweep | ambient) plus any probed attack/centroid/volume stats. Both are null for footage/images or an undeclared audio asset.
+ * The read-only context an agent needs to author a composition over this source: the detected face/subject roster (face-0 = primary speaker, with normalized bbox + active-speaker share), the transcript, the temporal grids — `beatGrid` (a MUSIC bed's rhythm: bpm, beatTimesMs in milliseconds, confidence, method) and `wordGrid` (VO word-onset timings in milliseconds, from the transcript) — and a presigned `thumbnail` (~the footage at a glance). For stills at CHOSEN timestamps, call preview_frame with a one-clip composition over this media. Call this before authoring crop intents (reframe) and overlay/caption timing. The transcript and wordGrid cover one utterance page (default 20); pass transcript.data.pagination.nextCursor as after for later words. Faces are lazily detected — `faces.status` is `not_detected` until a compose/detect pass has run over the source, never a faked empty roster. `beatGrid` is null until beat analysis has run: generated music beds are analyzed automatically at delivery; an uploaded/imported bed may not carry a grid yet (on-demand analysis is not client-triggerable today). `audioRole` is the DECLARED role of an audio asset (vo | music | sfx | ambience) — author the clip source's `audioRole` from it; `envelope` carries the coarse `envelopeClass` (transient | sweep | ambient) plus any probed attack/centroid/volume stats. Both are null for footage/images or an undeclared audio asset.
  * @summary Get authoring context for a media item (faces + transcript + beat/word grids)
  */
 export const GetMediaContextParams = zod.object({
   "id": zod.string()
+})
+
+export const getMediaContextQueryLimitMax = 100;
+
+
+
+export const GetMediaContextQueryParams = zod.object({
+  "limit": zod.int().min(1).max(getMediaContextQueryLimitMax).optional().describe('Transcript utterances per context page (default 20, maximum 100).'),
+  "after": zod.string().optional().describe('Zero-based utterance cursor from transcript.data.pagination.nextCursor.')
 })
 
 /**

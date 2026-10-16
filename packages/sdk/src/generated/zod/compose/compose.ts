@@ -46,6 +46,15 @@ export const SelectComposeCandidateParams = zod.object({
 export const SelectComposeCandidateBody = ComposeSelectRequest
 
 /**
+ * Reads the recorded execution engine by its persisted key. A missing lookup keeps the job pending; this never dispatches another run.
+ * @summary Reconcile an uncertain compose start
+ */
+export const ReconcileComposeDispatchParams = zod.object({
+  "id": zod.string(),
+  "composeJobId": zod.string()
+})
+
+/**
  * Cancel a running compose so an agent (or a cost guard) can abort a mis-priced or runaway ensemble without waiting out its budget or TTL. Cancellation is confirmed before the job becomes terminal; the compose.cancelled event is then emitted and any linked charge is released. Already-terminal jobs are rejected (422 compose_not_cancellable).
  * @summary Cancel an in-flight compose job
  */

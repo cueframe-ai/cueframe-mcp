@@ -8,7 +8,9 @@
  * OpenAPI spec version: v1
  */
 import type {
+  GetMediaContextParams,
   GetMediaTranscriptParams,
+  HostedProcessingRunStartRequest,
   LibrarySearchResponse,
   ListMediaFactsParams,
   ListMediaParams,
@@ -47,6 +49,14 @@ export const getSearchLibraryUrl = (params: SearchLibraryParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ["mediaId"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : String(v));
+      });
+      return;
+    }
 
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : String(value))
@@ -59,7 +69,7 @@ export const getSearchLibraryUrl = (params: SearchLibraryParams,) => {
 }
 
 /**
- * Find MOMENTS in your library by describing what they look like. The query uses the same visual-semantic index as the footage, so it matches on visual content — "wide shot of a speaker at a whiteboard", "hands on a keyboard", "city skyline at dusk" — including shots nobody talks about (which is where transcript search fails). Results are time-ranged: feed `mediaId` + `startSec`/`endSec` straight into apply_composition as a clip. `q` is required; `limit` defaults to 10 and caps at 25. `indexing` is COVERAGE, not emptiness: it is true whenever some of the org's footage is not in the visual index yet (media that predates it, or still processing), and it can be true ALONGSIDE results — then read them as "the best moments among what we have looked at so far". Empty `results` with `indexing: true` is a state, not a failure; re-run the item through processing to index it. The first search after an idle period can take up to ~90s; subsequent searches are typically faster.
+ * Find MOMENTS in your library by describing what they look like. The query uses the same visual-semantic index as the footage, so it matches on visual content — "wide shot of a speaker at a whiteboard", "hands on a keyboard", "city skyline at dusk" — including shots nobody talks about (which is where transcript search fails). Results are time-ranged: feed `mediaId` + `startSec`/`endSec` straight into apply_composition as a clip. `q` is required; `limit` defaults to 10 and caps at 25. `indexing` reports missing chunks observed in a bounded membership window; false does not prove complete coverage. Inspect `coverage` for scope and limits. Empty results mean retrieval returned no hits, not that no suitable footage exists. Optional repeated `mediaId` parameters restrict retrieval before top-k truncation (maximum 32).
  * @summary Semantic search over the org's own footage
  */
 export const searchLibrary = async (params: SearchLibraryParams, options?: Parameters<typeof request>[1]): Promise<LibrarySearchResponse> => {
@@ -68,6 +78,125 @@ export const searchLibrary = async (params: SearchLibraryParams, options?: Param
   {
     ...options,
     method: 'GET'
+
+
+  }
+);}
+
+
+export const getStartHostedProcessingRunUrl = (id: string,) => {
+
+
+
+
+  return `/v1/media/${id}/processing-runs`
+}
+
+/**
+ * Required permission: media:write
+ * @summary Start a direct hosted processing run
+ */
+export const startHostedProcessingRun = async (id: string,
+    hostedProcessingRunStartRequest: HostedProcessingRunStartRequest, options?: Parameters<typeof request>[1]): Promise<void> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<void>(getStartHostedProcessingRunUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(hostedProcessingRunStartRequest)
+  }
+);}
+
+
+export const getGetHostedProcessingRunUrl = (id: string,
+    runId: string,) => {
+
+
+
+
+  return `/v1/media/${id}/processing-runs/${runId}`
+}
+
+/**
+ * Required permission: media:read
+ * @summary Read a scoped hosted processing run
+ */
+export const getHostedProcessingRun = async (id: string,
+    runId: string, options?: Parameters<typeof request>[1]): Promise<void> => {
+
+  return request<void>(getGetHostedProcessingRunUrl(id,runId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+export const getGetHostedProcessingArtifactUrl = (id: string,
+    runId: string,
+    operation: string,) => {
+
+
+
+
+  return `/v1/media/${id}/processing-runs/${runId}/artifacts/${operation}`
+}
+
+/**
+ * Required permission: media:read
+ * @summary Get one committed hosted processing artifact
+ */
+export const getHostedProcessingArtifact = async (id: string,
+    runId: string,
+    operation: string, options?: Parameters<typeof request>[1]): Promise<void> => {
+
+  return request<void>(getGetHostedProcessingArtifactUrl(id,runId,operation),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+export const getCancelHostedProcessingRunUrl = (id: string,
+    runId: string,) => {
+
+
+
+
+  return `/v1/media/${id}/processing-runs/${runId}/cancel`
+}
+
+/**
+ * Required permission: media:write
+ * @summary Request cancellation of a hosted processing run
+ */
+export const cancelHostedProcessingRun = async (id: string,
+    runId: string, options?: Parameters<typeof request>[1]): Promise<void> => {
+
+  return request<void>(getCancelHostedProcessingRunUrl(id,runId),
+  {
+    ...options,
+    method: 'POST'
 
 
   }
@@ -229,8 +358,8 @@ export const getGenerateMediaUrl = () => {
 }
 
 /**
- * Generate a new media item from a text prompt: text-to-video, text-to-image, image-to-video, or a programmatic Manim animation (generator 'auto' picks the best one for the prompt). Async — returns a media id that flips to ready when generation finishes; poll GET /media/:id or register a media.completed webhook. Priced on what the model actually costs; refused with 402 if your balance cannot cover the quote (see GET /me).
- * @summary Generate media with AI (video, image, or Manim animation)
+ * Generate a new media item from a text prompt: text-to-video, text-to-image, image-to-video, speech, music, or sound effects (generator 'auto' selects the supported model). Async — returns a media id that flips to ready when generation finishes; poll GET /media/:id or register a media.completed webhook. Priced on what the model actually costs; refused with 402 if your balance cannot cover the quote (see GET /me).
+ * @summary Generate media with AI (video, image, or audio)
  */
 export const generateMedia = async (mediaGenerateRequest: MediaGenerateRequest, options?: Parameters<typeof request>[1]): Promise<MediaGenerateResponse> => {
 
@@ -267,7 +396,7 @@ export const getImportMediaUrl = () => {
 }
 
 /**
- * Import media into the project from a public https URL — the server fetches and mirrors the bytes (SSRF-filtered), then processes it (transcode + transcribe). Async: returns a media id that flips to ready when the mirror and processing finish; poll GET /media/:id or use a media.completed webhook.
+ * Import media into the project from a public https URL — the server fetches and mirrors the bytes (SSRF-filtered), then processes video and audio. Async: returns a media id that flips to ready when the mirror and processing finish; poll GET /media/:id or use a media.completed webhook.
  * @summary Import media from a URL (server-side fetch)
  */
 export const importMedia = async (mediaImportRequest: MediaImportRequest, options?: Parameters<typeof request>[1]): Promise<MediaImportResponse> => {
@@ -353,8 +482,8 @@ export const getGetMediaDownloadUrlUrl = (id: string,) => {
 }
 
 /**
- * Issue a presigned GET URL for the item's stored source file, the bytes CueFrame composes from. The URL works without an Authorization header and expires at `expiresAt` (about an hour); read again for a fresh one. Available as soon as the upload or import is stored, before processing completes. Required permission: media:read
- * @summary A download URL for a media item's source file
+ * Issue a presigned GET URL for the published source file CueFrame composes from. It works without an Authorization header for about an hour; read again for a fresh URL. Available once upload or import bytes are stored, before processing finishes. Required permission: media:read.
+ * @summary Get a presigned URL for stored media source bytes
  */
 export const getMediaDownloadUrl = async (id: string, options?: Parameters<typeof request>[1]): Promise<MediaDownloadUrlResponse> => {
 
@@ -401,21 +530,30 @@ export const getMediaTranscript = async (id: string,
 );}
 
 
-export const getGetMediaContextUrl = (id: string,) => {
+export const getGetMediaContextUrl = (id: string,
+    params?: GetMediaContextParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/v1/media/${id}/context`
+  return stringifiedParams.length > 0 ? `/v1/media/${id}/context?${stringifiedParams}` : `/v1/media/${id}/context`
 }
 
 /**
- * The read-only context an agent needs to author a composition over this source: the detected face/subject roster (face-0 = primary speaker, with normalized bbox + active-speaker share), the transcript, the temporal grids — `beatGrid` (a MUSIC bed's rhythm: bpm, beatTimesMs in milliseconds, confidence, method) and `wordGrid` (VO word-onset timings in milliseconds, from the transcript) — and a presigned `thumbnail` (~the footage at a glance). For stills at CHOSEN timestamps, call preview_frame with a one-clip composition over this media. Call this before authoring crop intents (reframe) and overlay/caption timing. Faces are lazily detected — `faces.status` is `not_detected` until a compose/detect pass has run over the source, never a faked empty roster. `beatGrid` is null until beat analysis has run: generated music beds are analyzed automatically at delivery; an uploaded/imported bed may not carry a grid yet (on-demand analysis is not client-triggerable today). `audioRole` is the DECLARED role of an audio asset (vo | music | sfx | ambience) — author the clip source's `audioRole` from it; `envelope` carries the coarse `envelopeClass` (transient | sweep | ambient) plus any probed attack/centroid/volume stats. Both are null for footage/images or an undeclared audio asset.
+ * The read-only context an agent needs to author a composition over this source: the detected face/subject roster (face-0 = primary speaker, with normalized bbox + active-speaker share), the transcript, the temporal grids — `beatGrid` (a MUSIC bed's rhythm: bpm, beatTimesMs in milliseconds, confidence, method) and `wordGrid` (VO word-onset timings in milliseconds, from the transcript) — and a presigned `thumbnail` (~the footage at a glance). For stills at CHOSEN timestamps, call preview_frame with a one-clip composition over this media. Call this before authoring crop intents (reframe) and overlay/caption timing. The transcript and wordGrid cover one utterance page (default 20); pass transcript.data.pagination.nextCursor as after for later words. Faces are lazily detected — `faces.status` is `not_detected` until a compose/detect pass has run over the source, never a faked empty roster. `beatGrid` is null until beat analysis has run: generated music beds are analyzed automatically at delivery; an uploaded/imported bed may not carry a grid yet (on-demand analysis is not client-triggerable today). `audioRole` is the DECLARED role of an audio asset (vo | music | sfx | ambience) — author the clip source's `audioRole` from it; `envelope` carries the coarse `envelopeClass` (transient | sweep | ambient) plus any probed attack/centroid/volume stats. Both are null for footage/images or an undeclared audio asset.
  * @summary Get authoring context for a media item (faces + transcript + beat/word grids)
  */
-export const getMediaContext = async (id: string, options?: Parameters<typeof request>[1]): Promise<MediaContextResponse> => {
+export const getMediaContext = async (id: string,
+    params?: GetMediaContextParams, options?: Parameters<typeof request>[1]): Promise<MediaContextResponse> => {
 
-  return request<MediaContextResponse>(getGetMediaContextUrl(id),
+  return request<MediaContextResponse>(getGetMediaContextUrl(id,params),
   {
     ...options,
     method: 'GET'

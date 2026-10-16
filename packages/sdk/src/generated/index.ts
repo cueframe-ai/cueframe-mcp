@@ -11,6 +11,7 @@ export * from './compose-session/compose-session';
 export * from './compositions/compositions';
 export * from './consult/consult';
 export * from './critics/critics';
+export * from './editorial/editorial';
 export * from './evidence/evidence';
 export * from './exports/exports';
 export * from './fonts/fonts';

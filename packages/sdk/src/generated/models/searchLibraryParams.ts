@@ -10,6 +10,12 @@
 
 export type SearchLibraryParams = {
 /**
+ * Optional explicit media scope, applied before candidate truncation. Up to 32 distinct IDs.
+ * @maxItems 32
+ * @items.minLength 1
+ */
+mediaId?: string[];
+/**
  * What the moment should look like, in plain language. Describe the IMAGE, not the words spoken.
  * @minLength 1
  */

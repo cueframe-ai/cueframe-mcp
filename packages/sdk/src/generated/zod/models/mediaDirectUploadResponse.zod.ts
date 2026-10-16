@@ -13,7 +13,7 @@ export const MediaDirectUploadResponse = zod.strictObject({
   "id": zod.string(),
   "uploadUrl": zod.url(),
   "expiresAt": zod.string()
-}).describe('POST /media response: reserved media id + a presigned PUT URL. PUT the raw bytes to uploadUrl (≤ ~5 GiB), then POST /media/:id/finalize.');
+}).describe('POST /media response: reserved media id + a presigned PUT URL. PUT the raw bytes to uploadUrl (≤ 5 GiB), then POST /media/:id/finalize.');
 
 export type MediaDirectUploadResponse = zod.input<typeof MediaDirectUploadResponse>;
 export type MediaDirectUploadResponseOutput = zod.output<typeof MediaDirectUploadResponse>;
