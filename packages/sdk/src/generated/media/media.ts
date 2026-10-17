@@ -9,6 +9,7 @@
  */
 import type {
   GetMediaContextParams,
+  GetMediaParams,
   GetMediaTranscriptParams,
   HostedProcessingRunStartRequest,
   LibrarySearchResponse,
@@ -449,21 +450,30 @@ export const deleteMedia = async (id: string, options?: Parameters<typeof reques
 );}
 
 
-export const getGetMediaUrl = (id: string,) => {
+export const getGetMediaUrl = (id: string,
+    params?: GetMediaParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/v1/media/${id}`
+  return stringifiedParams.length > 0 ? `/v1/media/${id}?${stringifiedParams}` : `/v1/media/${id}`
 }
 
 /**
  * Required permission: media:read
  * @summary Get a media item by id
  */
-export const getMedia = async (id: string, options?: Parameters<typeof request>[1]): Promise<MediaResponse> => {
+export const getMedia = async (id: string,
+    params?: GetMediaParams, options?: Parameters<typeof request>[1]): Promise<MediaResponse> => {
 
-  return request<MediaResponse>(getGetMediaUrl(id),
+  return request<MediaResponse>(getGetMediaUrl(id,params),
   {
     ...options,
     method: 'GET'

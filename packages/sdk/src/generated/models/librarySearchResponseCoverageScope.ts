@@ -14,4 +14,5 @@ export type LibrarySearchResponseCoverageScope = typeof LibrarySearchResponseCov
 export const LibrarySearchResponseCoverageScope = {
   workspace: 'workspace',
   explicit_media: 'explicit_media',
+  project: 'project',
 } as const;

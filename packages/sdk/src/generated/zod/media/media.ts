@@ -28,6 +28,7 @@ import {
  * @summary Semantic search over the org's own footage
  */
 
+
 export const searchLibraryQueryMediaIdMax = 32;
 
 
@@ -37,6 +38,7 @@ export const searchLibraryQueryLimitMax = 25;
 
 
 export const SearchLibraryQueryParams = zod.object({
+  "projectId": zod.string().min(1).optional().describe('Restrict search to project membership before ranking.'),
   "mediaId": zod.array(zod.string().min(1)).max(searchLibraryQueryMediaIdMax).optional().describe('Optional explicit media scope, applied before candidate truncation. Up to 32 distinct IDs.'),
   "q": zod.string().min(1).describe('What the moment should look like, in plain language. Describe the IMAGE, not the words spoken.'),
   "limit": zod.int().min(1).max(searchLibraryQueryLimitMax).default(searchLibraryQueryLimitDefault).describe('Maximum moments to return. Default 10, maximum 25.')
@@ -100,9 +102,11 @@ export const listMediaQueryLimitMax = 100;
 
 
 
+
 export const ListMediaQueryParams = zod.object({
   "limit": zod.int().min(1).max(listMediaQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.'),
+  "projectId": zod.string().min(1).optional(),
   "kind": zod.enum(['video', 'audio', 'image', 'gif', 'asset', 'source', 'stock']).optional().describe('Filter to one media kind.'),
   "source": zod.enum(['upload', 'generated', 'import-url', 'stock']).optional().describe('Filter by how the item entered the library.'),
   "tag": zod.string().optional().describe('Filter to items carrying this EXACT tag (not a prefix or substring match).')
@@ -144,6 +148,13 @@ export const DeleteMediaParams = zod.object({
  */
 export const GetMediaParams = zod.object({
   "id": zod.string()
+})
+
+
+
+
+export const GetMediaQueryParams = zod.object({
+  "projectId": zod.string().min(1).optional()
 })
 
 /**

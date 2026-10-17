@@ -229696,7 +229696,8 @@
                 "type": "string",
                 "enum": [
                   "workspace",
-                  "explicit_media"
+                  "explicit_media",
+                  "project"
                 ]
               },
               "examinedMedia": {
@@ -238867,6 +238868,16 @@
         },
         "parameters": [
           {
+            "name": "projectId",
+            "in": "query",
+            "required": false,
+            "description": "Restrict search to project membership before ranking.",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
             "name": "mediaId",
             "in": "query",
             "required": false,
@@ -240067,6 +240078,15 @@
             }
           },
           {
+            "name": "projectId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
             "name": "kind",
             "in": "query",
             "required": false,
@@ -240823,6 +240843,25 @@
             "read"
           ]
         },
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Media item.",
@@ -240923,16 +240962,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
         "x-payment-info": {
           "price": {
             "mode": "fixed",
@@ -242937,7 +242966,7 @@
           "projects"
         ],
         "summary": "One-call agent context: composition + media + transcript + brand",
-        "description": "Everything an authoring agent needs to open a project, in ONE read: the active composition (with its format and markers hoisted), the org's media pool with a `hasTranscript` flag per item, the first transcribed item's word-timed transcript, and the brand kit bound to the project. Replaces the get_composition + get_media_context + get_profile opening sequence. A freshly created project reads back with `composition: null` — that is the empty state, not an error; 404 means the project doesn't exist for your org. Transcript BODIES are never inlined per media item — read another item's with GET /v1/media/{id}/transcript, and its faces/beat/word grids with GET /v1/media/{id}/context. The media pool is capped at 50; mediaPagination reports whether more exists. Continue with paginated GET /v1/media (list_media in MCP) to see the rest.",
+        "description": "Everything an authoring agent needs to open a project, in ONE read: the active composition (with its format and markers hoisted), the project's media pool with a `hasTranscript` flag per item, the first transcribed item's word-timed transcript, and the brand kit bound to the project. Replaces the get_composition + get_media_context + get_profile opening sequence. A freshly created project reads back with `composition: null` — that is the empty state, not an error; 404 means the project doesn't exist for your org. Transcript BODIES are never inlined per media item — read another item's with GET /v1/media/{id}/transcript, and its faces/beat/word grids with GET /v1/media/{id}/context. The media pool is capped at 50; mediaPagination reports whether more exists. Continue with paginated GET /v1/media?projectId=... (list_media in MCP) to see the rest.",
         "security": [
           {
             "bearerAuth": []

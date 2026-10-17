@@ -10,6 +10,11 @@
 
 export type SearchLibraryParams = {
 /**
+ * Restrict search to project membership before ranking.
+ * @minLength 1
+ */
+projectId?: string;
+/**
  * Optional explicit media scope, applied before candidate truncation. Up to 32 distinct IDs.
  * @maxItems 32
  * @items.minLength 1
