@@ -21,7 +21,7 @@ export const LibrarySearchResponse = zod.strictObject({
   "coverage": zod.strictObject({
   "indexing": zod.boolean(),
   "hasAnyIndexed": zod.boolean(),
-  "scope": zod.enum(['workspace', 'explicit_media']),
+  "scope": zod.enum(['workspace', 'explicit_media', 'project']),
   "examinedMedia": zod.int().min(librarySearchResponseCoverageExaminedMediaMin).max(librarySearchResponseCoverageExaminedMediaMax),
   "membershipComplete": zod.boolean(),
   "analysisComplete": zod.literal(false),

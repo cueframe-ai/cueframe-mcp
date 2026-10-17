@@ -22,6 +22,10 @@ limit?: number;
  */
 after?: string;
 /**
+ * @minLength 1
+ */
+projectId?: string;
+/**
  * Filter to one media kind.
  */
 kind?: ListMediaKind;

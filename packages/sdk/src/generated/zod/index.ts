@@ -153,6 +153,7 @@ export { GenerateMediaBody as generateMediaBody } from "./media/media";
 export { ImportMediaBody as importMediaBody } from "./media/media";
 export { DeleteMediaParams as deleteMediaParams } from "./media/media";
 export { GetMediaParams as getMediaParams } from "./media/media";
+export { GetMediaQueryParams as getMediaQueryParams } from "./media/media";
 export { GetMediaDownloadUrlParams as getMediaDownloadUrlParams } from "./media/media";
 export { GetMediaTranscriptParams as getMediaTranscriptParams } from "./media/media";
 export { GetMediaTranscriptQueryParams as getMediaTranscriptQueryParams } from "./media/media";
