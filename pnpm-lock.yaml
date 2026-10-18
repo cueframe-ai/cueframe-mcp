@@ -194,7 +194,7 @@ packages:
       commander: ~15.0.0
 
   '@cueframe/kernel@file:artifacts/cueframe-kernel-0.7.5.tgz':
-    resolution: {integrity: sha512-ObTVwWHwgWhbSy51Yf5cneasTtxAIIY+U8Rb68umDI62Jvy97RhGLjSiaj4lhkq1RBp8lccIziFgYajEYcCXUg==, tarball: file:artifacts/cueframe-kernel-0.7.5.tgz}
+    resolution: {integrity: sha512-Fw7PKEl8wGPBEHJ6Kdecq9lMEG30xNFgGD8SgS7oUy4QLK4VGoWfSPk715VSLVCetjcQvG1ddz//jqwukDBxRA==, tarball: file:artifacts/cueframe-kernel-0.7.5.tgz}
     version: 0.7.5
     peerDependencies:
       '@ai-sdk/anthropic': ^4.0.39

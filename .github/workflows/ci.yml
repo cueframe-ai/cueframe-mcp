@@ -71,6 +71,7 @@ jobs:
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: 24
+          package-manager-cache: false # hygiene uses npm only; pnpm is not installed in this job
       - name: server.json and glama.json validate against their live schemas
         # scripts/check-server-json.mjs (part of `pnpm check`) validates server.json offline against the
         # vendored copy of the 2025-12-11 registry schema; this step proves the vendored copy still equals
