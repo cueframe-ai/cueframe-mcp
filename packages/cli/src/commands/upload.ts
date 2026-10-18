@@ -1,5 +1,6 @@
-import { readFile, stat } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { stat } from 'node:fs/promises';
+import { existsSync, openAsBlob } from 'node:fs';
+import { CreateMediaUploadBody } from '@cueframe/sdk/zod';
 import { basename, extname } from 'node:path';
 import {
   ApiError,
@@ -67,8 +68,18 @@ export async function uploadCommand(
   }
 
   const filename = basename(filePath);
-  const fileSize = (await stat(filePath)).size;
+  const fileStat = await stat(filePath);
+  const fileSize = fileStat.size;
   const contentType = contentTypeFor(filename, opts);
+
+  const spec = CreateMediaUploadBody.safeParse({ filename, contentType, size: fileSize });
+  if (!fileStat.isFile() || !spec.success) {
+    const message = !fileStat.isFile()
+      ? 'Upload input must be a regular file.'
+      : `Invalid upload: ${spec.error?.message}`;
+    emitError(opts, 'preflight', new Error(message), ExitCode.UserError);
+    exitWith(ExitCode.UserError);
+  }
 
   if (opts.audioRole && !AUDIO_ROLES.includes(opts.audioRole as any)) {
     const err = new Error(
@@ -129,11 +140,14 @@ export async function uploadCommand(
     opts.json,
   );
   try {
-    const buf = await readFile(filePath);
+    // Node's file-backed Blob streams with bounded memory and checks that the
+    // file has not changed during transfer. Fetch supplies its Content-Length.
+    const body = await openAsBlob(filePath, { type: contentType });
+    if (body.size !== fileSize) throw new Error('Upload file changed after reservation.');
     const putRes = await fetch(uploadUrl, {
       method: 'PUT',
       headers: { 'Content-Type': contentType },
-      body: buf,
+      body,
     });
     if (!putRes.ok) {
       throw new Error(`presigned PUT failed: ${putRes.status} ${putRes.statusText}`);
