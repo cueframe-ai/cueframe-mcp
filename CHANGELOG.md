@@ -2,6 +2,11 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 4.4.2
+
+- Refresh contract provenance to kernel 0.7.6 and the retained private working-tree snapshot. The manifest records the exact kernel archive and source snapshot digests; it does not describe a clean committed deployment.
+- The OpenAPI, reviewed public surface, scene schema and scene examples are byte-identical to 4.4.1. Regenerated SDK sources are unchanged; this package update adds no API operation or schema change.
+
 ## @cueframe/api-contract 4.2.0
 
 - Additive. Adds `GET /v1/media/{id}/download-url` (`getMediaDownloadUrl`, media:read), which answers `MediaDownloadUrlResponse` `{url, expiresAt}`: a presigned GET for the item's stored source file, valid for the media URL lifetime (about an hour), available as soon as the upload or import is stored.
