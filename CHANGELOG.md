@@ -2,6 +2,10 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## cueframe 0.9.3
+
+- Resolve the shared SDK dependency to 0.11.1, including canonical fact receipt identities. CLI commands and NDJSON event shapes remain compatible.
+
 ## @cueframe/api-contract 4.4.3
 
 - Add persisted `factId` to media-fact reads, allowing exact ready/pending receipt reuse without another paid dispatch.
