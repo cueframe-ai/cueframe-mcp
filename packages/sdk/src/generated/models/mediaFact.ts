@@ -18,6 +18,8 @@ import type { MediaFactSummary } from './mediaFactSummary';
  * One derived fact about a media item — computed once, charged at most once.
  */
 export interface MediaFact {
+  /** The persisted fact receipt identity. Reuse pending or ready exact-window facts without dispatching new work. */
+  factId: string;
   kind: MediaFactKind;
   intent: MediaFactIntent;
   status: MediaFactStatus;

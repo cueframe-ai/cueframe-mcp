@@ -215289,6 +215289,10 @@
       "MediaFact": {
         "type": "object",
         "properties": {
+          "factId": {
+            "type": "string",
+            "description": "The persisted fact receipt identity. Reuse pending or ready exact-window facts without dispatching new work."
+          },
           "kind": {
             "type": "string",
             "enum": [
@@ -215394,6 +215398,7 @@
           }
         },
         "required": [
+          "factId",
           "kind",
           "intent",
           "status"

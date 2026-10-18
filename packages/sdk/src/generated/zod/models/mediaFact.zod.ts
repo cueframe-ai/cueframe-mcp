@@ -10,6 +10,7 @@
 import * as zod from 'zod';
 
 export const MediaFact = zod.strictObject({
+  "factId": zod.string().describe('The persisted fact receipt identity. Reuse pending or ready exact-window facts without dispatching new work.'),
   "kind": zod.enum(['transcript', 'subjectTrack', 'matte']),
   "intent": zod.strictObject({
   "kind": zod.enum(['whole', 'window']),

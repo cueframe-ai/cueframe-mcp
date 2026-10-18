@@ -1,6 +1,6 @@
 {
   "name": "@cueframe/sdk",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "TypeScript SDK for the CueFrame video editing and rendering API: media, compositions, captions and cloud render jobs.",
   "type": "module",
   "exports": {

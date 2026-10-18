@@ -28,6 +28,7 @@ jobs:
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version: 24
+          package-manager-cache: false
       # The live spec goes through the same scene vendoring that produced the
       # repo copy, so the gate compares like with like. No install: the script
       # imports node builtins and two files in tools/.

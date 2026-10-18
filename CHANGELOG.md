@@ -2,6 +2,19 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## cueframe 0.9.3
+
+- Resolve the shared SDK dependency to 0.11.1, including canonical fact receipt identities. CLI commands and NDJSON event shapes remain compatible.
+
+## @cueframe/api-contract 4.4.3
+
+- Add persisted `factId` to media-fact reads, allowing exact ready/pending receipt reuse without another paid dispatch.
+- Refresh provenance from clean committed private source with verified kernel 0.7.6.
+
+## @cueframe/sdk 0.11.1
+
+- Generate media-fact receipt identities from contract 4.4.3 and expose the canonical read/purchase response validators through the public Zod entry point.
+
 ## @cueframe/api-contract 4.4.2
 
 - Refresh contract provenance to kernel 0.7.6 and the retained private working-tree snapshot. The manifest records the exact kernel archive and source snapshot digests; it does not describe a clean committed deployment.
