@@ -7,8 +7,8 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
+import type { CompositionConcurrency } from './compositionConcurrency';
 import type { CompositionOp } from './compositionOp';
-import type { EditorialApplyRequestCompositionOperationsItemConcurrency } from './editorialApplyRequestCompositionOperationsItemConcurrency';
 
 export type EditorialApplyRequestCompositionOperationsItem = {
   /**
@@ -17,5 +17,5 @@ export type EditorialApplyRequestCompositionOperationsItem = {
      */
   operationId: string;
   operation: CompositionOp;
-  concurrency?: EditorialApplyRequestCompositionOperationsItemConcurrency;
+  concurrency?: CompositionConcurrency;
 };

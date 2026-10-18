@@ -7,6 +7,7 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
+import type { Format } from './format';
 
 /**
  * Immutable source snapshot: a version 4 template, a retired version 3 TSX module, or the historical version 2 source of a component stored before versioned sources (read-only; it never executes). source remains provenance.
@@ -214,12 +215,7 @@ export type ComponentSourceResponseSourceSnapshot = {
 })[];
   preview?: {
   params?: {[key: string]: unknown};
-  format?: {
-  aspectRatio: '16:9' | '9:16' | '1:1' | '4:5';
-  fps?: 24 | 25 | 30 | 60;
-  resolution?: 'hd' | 'fhd' | '4k';
-  platform?: string;
-};
+  format?: Format;
   assets?: {[key: string]: {
   /** @pattern ^https:\/\/.* */
   url: string;
@@ -477,12 +473,7 @@ export type ComponentSourceResponseSourceSnapshot = {
 })[];
   preview?: {
   params?: {[key: string]: unknown};
-  format?: {
-  aspectRatio: '16:9' | '9:16' | '1:1' | '4:5';
-  fps?: 24 | 25 | 30 | 60;
-  resolution?: 'hd' | 'fhd' | '4k';
-  platform?: string;
-};
+  format?: Format;
   assets?: {[key: string]: {
   /** @pattern ^https:\/\/.* */
   url: string;
