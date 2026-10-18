@@ -9,6 +9,7 @@
  */
 import * as zod from 'zod';
 import { ComponentManifest } from './componentManifest.zod';
+import { Format } from './format.zod';
 
 
 export const componentSourceResponseNameMax = 200;
@@ -371,12 +372,7 @@ export const ComponentSourceResponse = zod.strictObject({
 })).min(1).optional(),
   "preview": zod.strictObject({
   "params": zod.record(zod.string(), zod.unknown()).optional(),
-  "format": zod.strictObject({
-  "aspectRatio": zod.enum(['16:9', '9:16', '1:1', '4:5']),
-  "fps": zod.union([zod.literal(24),zod.literal(25),zod.literal(30),zod.literal(60)]).optional(),
-  "resolution": zod.enum(['hd', 'fhd', '4k']).optional(),
-  "platform": zod.string().optional()
-}).optional(),
+  "format": Format.optional(),
   "assets": zod.record(zod.string(), zod.union([zod.strictObject({
   "url": zod.url().regex(componentSourceResponseSourceSnapshotOneOneDefinitionPreviewAssetsOneUrlRegExp),
   "sha256": zod.string().regex(componentSourceResponseSourceSnapshotOneOneDefinitionPreviewAssetsOneSha256RegExp),
@@ -507,12 +503,7 @@ export const ComponentSourceResponse = zod.strictObject({
 })).min(1).optional(),
   "preview": zod.strictObject({
   "params": zod.record(zod.string(), zod.unknown()).optional(),
-  "format": zod.strictObject({
-  "aspectRatio": zod.enum(['16:9', '9:16', '1:1', '4:5']),
-  "fps": zod.union([zod.literal(24),zod.literal(25),zod.literal(30),zod.literal(60)]).optional(),
-  "resolution": zod.enum(['hd', 'fhd', '4k']).optional(),
-  "platform": zod.string().optional()
-}).optional(),
+  "format": Format.optional(),
   "assets": zod.record(zod.string(), zod.union([zod.strictObject({
   "url": zod.url().regex(componentSourceResponseSourceSnapshotOneTwoDefinitionPreviewAssetsOneUrlRegExp),
   "sha256": zod.string().regex(componentSourceResponseSourceSnapshotOneTwoDefinitionPreviewAssetsOneSha256RegExp),

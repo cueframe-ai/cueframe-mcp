@@ -2,6 +2,20 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 4.4.4
+
+- Preserve canonical shared-schema references in the OpenAPI producer, matching the deployed API projection without changing runtime behavior.
+- Refresh provenance from the clean committed producer source.
+
+## @cueframe/sdk 0.12.0
+
+- Regenerate the shared concurrency and component preview schemas from API contract 4.4.4, using their canonical schema references.
+- Remove the previously published inline types `EditorialApplyRequestCompositionConcurrency` and `EditorialApplyRequestCompositionOperationsItemConcurrency`; consumers use the existing canonical `CompositionConcurrency` type.
+
+## cueframe 0.9.4
+
+- Bundle SDK 0.12.0 and its corrected canonical contract projection; commands and NDJSON event shapes remain compatible.
+
 ## cueframe 0.9.3
 
 - Resolve the shared SDK dependency to 0.11.1, including canonical fact receipt identities. CLI commands and NDJSON event shapes remain compatible.

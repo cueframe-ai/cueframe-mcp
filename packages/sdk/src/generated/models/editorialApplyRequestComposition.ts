@@ -7,8 +7,8 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
+import type { CompositionConcurrency } from './compositionConcurrency';
 import type { EditorialApplyRequestCompositionBuiltinSourcesItem } from './editorialApplyRequestCompositionBuiltinSourcesItem';
-import type { EditorialApplyRequestCompositionConcurrency } from './editorialApplyRequestCompositionConcurrency';
 import type { EditorialApplyRequestCompositionOperationsItem } from './editorialApplyRequestCompositionOperationsItem';
 
 export type EditorialApplyRequestComposition = {
@@ -46,7 +46,7 @@ export type EditorialApplyRequestComposition = {
      * @exclusiveMinimum 0
      */
   sequence: number;
-  concurrency?: EditorialApplyRequestCompositionConcurrency;
+  concurrency?: CompositionConcurrency;
   /**
      * @minItems 1
      * @maxItems 100

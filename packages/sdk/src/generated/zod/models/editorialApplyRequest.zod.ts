@@ -8,6 +8,7 @@
  * OpenAPI spec version: v1
  */
 import * as zod from 'zod';
+import { CompositionConcurrency } from './compositionConcurrency.zod';
 import { CompositionOp } from './compositionOp.zod';
 
 export const editorialApplyRequestRunExpectedRevisionMax = 128;
@@ -34,35 +35,7 @@ export const editorialApplyRequestCompositionClientIdRegExp = new RegExp('^[^:]+
 export const editorialApplyRequestCompositionSequenceExclusiveMin = 0;
 export const editorialApplyRequestCompositionSequenceMax = 9007199254740991;
 
-export const editorialApplyRequestCompositionConcurrencyOneExpectedRevisionMin = 0;
-export const editorialApplyRequestCompositionConcurrencyOneExpectedRevisionMax = 9007199254740991;
-
-export const editorialApplyRequestCompositionConcurrencyTwoCompositionIdMax = 128;
-
-export const editorialApplyRequestCompositionConcurrencyTwoObservedRevisionMin = 0;
-export const editorialApplyRequestCompositionConcurrencyTwoObservedRevisionMax = 9007199254740991;
-
-export const editorialApplyRequestCompositionConcurrencyTwoBasisItemKeyMax = 256;
-
-export const editorialApplyRequestCompositionConcurrencyTwoBasisItemTokenMax = 65536;
-
-export const editorialApplyRequestCompositionConcurrencyTwoBasisMax = 2048;
-
 export const editorialApplyRequestCompositionOperationsItemOperationIdMax = 128;
-
-export const editorialApplyRequestCompositionOperationsItemConcurrencyOneExpectedRevisionMin = 0;
-export const editorialApplyRequestCompositionOperationsItemConcurrencyOneExpectedRevisionMax = 9007199254740991;
-
-export const editorialApplyRequestCompositionOperationsItemConcurrencyTwoCompositionIdMax = 128;
-
-export const editorialApplyRequestCompositionOperationsItemConcurrencyTwoObservedRevisionMin = 0;
-export const editorialApplyRequestCompositionOperationsItemConcurrencyTwoObservedRevisionMax = 9007199254740991;
-
-export const editorialApplyRequestCompositionOperationsItemConcurrencyTwoBasisItemKeyMax = 256;
-
-export const editorialApplyRequestCompositionOperationsItemConcurrencyTwoBasisItemTokenMax = 65536;
-
-export const editorialApplyRequestCompositionOperationsItemConcurrencyTwoBasisMax = 2048;
 
 export const editorialApplyRequestCompositionOperationsMax = 100;
 
@@ -88,33 +61,11 @@ zod.literal(4)])]).optional(),
   "expectedRevision": zod.int().min(editorialApplyRequestCompositionExpectedRevisionMin).max(editorialApplyRequestCompositionExpectedRevisionMax),
   "clientId": zod.string().min(1).max(editorialApplyRequestCompositionClientIdMax).regex(editorialApplyRequestCompositionClientIdRegExp),
   "sequence": zod.int().gt(editorialApplyRequestCompositionSequenceExclusiveMin).max(editorialApplyRequestCompositionSequenceMax),
-  "concurrency": zod.union([zod.strictObject({
-  "mode": zod.literal("exact"),
-  "expectedRevision": zod.int().min(editorialApplyRequestCompositionConcurrencyOneExpectedRevisionMin).max(editorialApplyRequestCompositionConcurrencyOneExpectedRevisionMax)
-}),zod.strictObject({
-  "mode": zod.literal("guarded"),
-  "compositionId": zod.string().min(1).max(editorialApplyRequestCompositionConcurrencyTwoCompositionIdMax).optional(),
-  "observedRevision": zod.int().min(editorialApplyRequestCompositionConcurrencyTwoObservedRevisionMin).max(editorialApplyRequestCompositionConcurrencyTwoObservedRevisionMax),
-  "basis": zod.array(zod.strictObject({
-  "key": zod.string().min(1).max(editorialApplyRequestCompositionConcurrencyTwoBasisItemKeyMax),
-  "token": zod.string().max(editorialApplyRequestCompositionConcurrencyTwoBasisItemTokenMax)
-})).max(editorialApplyRequestCompositionConcurrencyTwoBasisMax)
-})]).optional(),
+  "concurrency": CompositionConcurrency.optional(),
   "operations": zod.array(zod.strictObject({
   "operationId": zod.string().min(1).max(editorialApplyRequestCompositionOperationsItemOperationIdMax),
   "operation": CompositionOp,
-  "concurrency": zod.union([zod.strictObject({
-  "mode": zod.literal("exact"),
-  "expectedRevision": zod.int().min(editorialApplyRequestCompositionOperationsItemConcurrencyOneExpectedRevisionMin).max(editorialApplyRequestCompositionOperationsItemConcurrencyOneExpectedRevisionMax)
-}),zod.strictObject({
-  "mode": zod.literal("guarded"),
-  "compositionId": zod.string().min(1).max(editorialApplyRequestCompositionOperationsItemConcurrencyTwoCompositionIdMax).optional(),
-  "observedRevision": zod.int().min(editorialApplyRequestCompositionOperationsItemConcurrencyTwoObservedRevisionMin).max(editorialApplyRequestCompositionOperationsItemConcurrencyTwoObservedRevisionMax),
-  "basis": zod.array(zod.strictObject({
-  "key": zod.string().min(1).max(editorialApplyRequestCompositionOperationsItemConcurrencyTwoBasisItemKeyMax),
-  "token": zod.string().max(editorialApplyRequestCompositionOperationsItemConcurrencyTwoBasisItemTokenMax)
-})).max(editorialApplyRequestCompositionOperationsItemConcurrencyTwoBasisMax)
-})]).optional()
+  "concurrency": CompositionConcurrency.optional()
 })).min(1).max(editorialApplyRequestCompositionOperationsMax)
 })
 });
