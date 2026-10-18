@@ -1,11 +1,11 @@
 {
   "schemaVersion": 2,
   "kernelVersion": "0.7.6",
-  "privateCommit": "b9f02bf947f6bd6ae1da28f400bbd5f18c55add7",
+  "privateCommit": "b5b2d9dc7211393fa077fc8e34c9856408298728",
   "privateSource": {
     "kind": "commit",
-    "baseCommit": "b9f02bf947f6bd6ae1da28f400bbd5f18c55add7",
-    "lockfileSha256": "6ba4cea72615dc01d9a4663c96736fcb9efc003f5312d9069f5ec6ab797a7d4e"
+    "baseCommit": "b5b2d9dc7211393fa077fc8e34c9856408298728",
+    "lockfileSha256": "6d84002e978f93132f354ae676a7849986ce36464deeabe61ca64108d4a98249"
   },
   "kernelArtifact": {
     "version": "0.7.6",
@@ -16,5 +16,5 @@
     "scene-schema.json": "dbed283643cb2a60968f7d4f5372d5b4cb9d2204ae88054e83c87366b1f8aa7c",
     "scene-examples.json": "6eca2929e8567fb804e599619363e4f3f61e4ee1d53b170266d2261ae22cd5a2"
   },
-  "contractVersion": "4.4.2"
+  "contractVersion": "4.4.3"
 }
