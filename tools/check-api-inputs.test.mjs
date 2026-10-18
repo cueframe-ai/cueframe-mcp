@@ -110,3 +110,16 @@ test('the sync manifest names the kernel artifact whose components the contract 
   assert.match(manifest.kernelArtifact.sha256, /^[0-9a-f]{64}$/);
   assert.equal(manifest.contractVersion, version);
 });
+
+
+test('missing, malformed, or version-mismatched kernel artifact provenance fails admission', () => {
+  for (const kernelArtifact of [undefined, { version: 'wrong', sha256: 'a'.repeat(64) }, { version: '0.7.5', sha256: 'invalid' }]) {
+    const result = withApiCopy(({ readJson, writeJson }) => {
+      const manifest = readJson('contract-manifest.json');
+      manifest.kernelArtifact = kernelArtifact;
+      writeJson('contract-manifest.json', manifest);
+    });
+    assert.equal(result.ok, false);
+    assert.match(result.problems[0], /verified kernel artifact identity/);
+  }
+});

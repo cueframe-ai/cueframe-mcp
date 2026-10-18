@@ -35,6 +35,9 @@ export function checkApiInputs(root) {
         ['sha256', 'patchSha256', 'untrackedSha256'].every((key) => digest(source[key]))));
     if (!valid) return { ok: false, problems: ['api/contract-manifest.json: invalid source snapshot provenance; re-run the private contract sync'], manifest };
   }
+  if (manifest.kernelArtifact?.version !== manifest.kernelVersion || !/^[0-9a-f]{64}$/.test(manifest.kernelArtifact?.sha256 ?? '')) {
+    return { ok: false, problems: ['api/contract-manifest.json: missing or invalid verified kernel artifact identity; re-run the private contract sync'], manifest };
+  }
   const provenance = `kernel ${manifest.kernelVersion}, commit ${manifest.privateCommit.slice(0, 9)}`;
   const problems = [];
   for (const name of SYNCED_FILES) {
