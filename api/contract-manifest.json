@@ -1,15 +1,15 @@
 {
   "schemaVersion": 2,
-  "kernelVersion": "0.7.9",
-  "privateCommit": "bdf94d7f3e17d34bb6152468945669be3dfed416",
+  "kernelVersion": "0.7.10",
+  "privateCommit": "b00d29853104b6f9ddef6466080cd7134811ef66",
   "privateSource": {
     "kind": "commit",
-    "baseCommit": "bdf94d7f3e17d34bb6152468945669be3dfed416",
-    "lockfileSha256": "d63de61e9bf9bd842b9c7f4f548b09812cad47db28f0ed2aa6a57863d1d2f055"
+    "baseCommit": "b00d29853104b6f9ddef6466080cd7134811ef66",
+    "lockfileSha256": "7a905adae0647e249e46debd303352caabadbd272e2251b60b8f625fe057e0dd"
   },
   "kernelArtifact": {
-    "version": "0.7.9",
-    "sha256": "9d573d7c37231a727e5a3c75e12e62098d7856eb8fd615f8ac81ee22834478e3"
+    "version": "0.7.10",
+    "sha256": "ecd52e5d2b90646c8378bf1970c2a28e7d4c464bd8319db26d9ae164258f9653"
   },
   "files": {
     "openapi.json": "55d3e29f017adf0f93311e430f8b050daea435af48908079b110a98246648430",
