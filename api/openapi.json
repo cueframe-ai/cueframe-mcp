@@ -244310,7 +244310,7 @@
           "renders"
         ],
         "summary": "Re-render against an existing renderJob's snapshot",
-        "description": "Required permission: renders:write",
+        "description": "Queue a NEW render of an existing render's composition snapshot. Priced and billed like the render it repeats: measured output-minutes x resolution, charged when the retry completes.",
         "security": [
           {
             "bearerAuth": []
@@ -244329,6 +244329,7 @@
             "write"
           ]
         },
+        "x-x402": "render",
         "responses": {
           "201": {
             "description": "Retry queued — returns a NEW renderJob with status=queued.",
@@ -244469,9 +244470,8 @@
         ],
         "x-payment-info": {
           "price": {
-            "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "mode": "dynamic",
+            "currency": "USDC"
           },
           "protocols": [
             {
