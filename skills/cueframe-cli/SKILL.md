@@ -185,12 +185,14 @@ composition from a suggestion instead of you hand-writing it.
 
 Pipe `--json` output through `jq -c 'select(.event=="…")'` to grab specific lifecycle events.
 
-## Component authoring — fork a built-in primitive or scaffold your own
+## Component authoring: scaffold your own
 
-Own the motion-graphics components you render (shadcn-style): fork a built-in CueFrame
-primitive as editable source, customize it, and render it on CueFrame — or scaffold a blank
-one. The source lives in your repo under version control; CueFrame bakes it to a transparent
-video and composites it (the shared renderer never runs your code).
+Own the motion-graphics components you render (shadcn-style): scaffold a native component as
+editable source, customize it, and render it on CueFrame. The source lives in your repo under
+version control; CueFrame bakes it to a transparent video and composites it (the shared
+renderer never runs your code). The CLI does not fork built-ins: the maintained builtin
+presets and recipes are placed as they are (list them with `list_catalog`
+projection `component-library`).
 
 ```bash
 # 1. Scaffold a workspace (writes cueframe.json + cueframe/components/). Idempotent.
@@ -200,7 +202,7 @@ npx -y cueframe@0.9 init --json
 npx -y cueframe@0.9 new component my-badge --category ui-blocks --json
 
 # The scaffold is a native (version 4) source: template.html + definition.json, with its
-# manifest in cueframe.json. Built-in forks copy the exact template, definition and manifest.
+# manifest in cueframe.json.
 
 # 3. Edit cueframe/components/<id>/template.html (one HyperFrames sub-composition ending in
 #    __cfScene.mount(...)) and definition.json (inputs, defaults, timing, capabilities).
