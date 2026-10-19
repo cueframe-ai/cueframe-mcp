@@ -128,6 +128,9 @@ export { CreateFcpxmlExportParams as createFcpxmlExportParams } from "./exports/
 export { CreateFcpxmlExportBody as createFcpxmlExportBody } from "./exports/exports";
 export { CreatePremiereExportParams as createPremiereExportParams } from "./exports/exports";
 export { CreatePremiereExportBody as createPremiereExportBody } from "./exports/exports";
+export { CreateVideoClipExportParams as createVideoClipExportParams } from "./exports/exports";
+export { CreateVideoClipExportBody as createVideoClipExportBody } from "./exports/exports";
+export { RetryExportParams as retryExportParams } from "./exports/exports";
 export { GetExportParams as getExportParams } from "./exports/exports";
 export { CancelExportParams as cancelExportParams } from "./exports/exports";
 export * from "./fonts/fonts";

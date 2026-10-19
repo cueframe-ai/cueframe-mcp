@@ -92,6 +92,71 @@ return request<ExportResponse>(getCreatePremiereExportUrl(id),
 );}
 
 
+export const getCreateVideoClipExportUrl = (id: string,) => {
+
+
+
+
+  return `/v1/projects/${id}/exports/videoClip`
+}
+
+/**
+ * Export one suggestion as an H.264/AAC MP4 through the keyed NLE workflow. Poll getExport for its artifact.
+ * @summary Create a video clip export
+ */
+export const createVideoClipExport = async (id: string,
+    exportCreateRequest: ExportCreateRequest, options?: Parameters<typeof request>[1]): Promise<ExportResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<ExportResponse>(getCreateVideoClipExportUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(exportCreateRequest)
+  }
+);}
+
+
+export const getRetryExportUrl = (id: string,
+    exportId: string,) => {
+
+
+
+
+  return `/v1/projects/${id}/exports/${exportId}/retry`
+}
+
+/**
+ * Create a new keyed export from the original immutable snapshot in its admitted project. Use Idempotency-Key to safely replay the HTTP request.
+ * @summary Retry an export's admitted specification
+ */
+export const retryExport = async (id: string,
+    exportId: string, options?: Parameters<typeof request>[1]): Promise<ExportResponse> => {
+
+  return request<ExportResponse>(getRetryExportUrl(id,exportId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
 export const getGetExportUrl = (id: string,
     exportId: string,) => {
 

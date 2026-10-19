@@ -70,6 +70,8 @@ const CLI_WRAPPED: Record<string, string> = {
 };
 
 const CLI_EXEMPT: Record<string, string> = {
+  createVideoClipExport: 'expert-only: direct MP4 export via generated SDK or cueframe api POST /v1/projects/:id/exports/videoClip; render remains the ordinary CLI video command',
+  retryExport: 'expert-only: retry the admitted export snapshot via generated SDK or cueframe api POST /v1/projects/:id/exports/:exportId/retry; classified alongside cancelExport',
   startHostedProcessingRun: 'expert-only: configured processing admission via SDK or cueframe api POST /v1/media/:id/processing-runs; upload owns the ordinary ingest lane',
   getHostedProcessingRun: 'expert-only: exact processing run status via SDK or cueframe api GET /v1/media/:id/processing-runs/:runId',
   getHostedProcessingArtifact: 'expert-only: scoped processing artifact grant via SDK or cueframe api; no first-class artifact command',

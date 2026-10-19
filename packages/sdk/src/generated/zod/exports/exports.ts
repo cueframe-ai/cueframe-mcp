@@ -35,6 +35,25 @@ export const CreatePremiereExportParams = zod.object({
 export const CreatePremiereExportBody = ExportCreateRequest
 
 /**
+ * Export one suggestion as an H.264/AAC MP4 through the keyed NLE workflow. Poll getExport for its artifact.
+ * @summary Create a video clip export
+ */
+export const CreateVideoClipExportParams = zod.object({
+  "id": zod.string()
+})
+
+export const CreateVideoClipExportBody = ExportCreateRequest
+
+/**
+ * Create a new keyed export from the original immutable snapshot in its admitted project. Use Idempotency-Key to safely replay the HTTP request.
+ * @summary Retry an export's admitted specification
+ */
+export const RetryExportParams = zod.object({
+  "id": zod.string(),
+  "exportId": zod.string()
+})
+
+/**
  * Required permission: renders:read
  * @summary Get an export job
  */

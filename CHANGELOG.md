@@ -2,6 +2,21 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 5.0.0
+
+- Add maintained video-clip export creation and immutable-snapshot export retry operations.
+- Correct `ExportFormat` responses to include `videoClip`, which existing product exports already return. This widens a response enum and requires a major contract version for consumers with exhaustive format handling; existing FCPXML and Premiere behavior remains compatible.
+- Record reviewed producer source and verified kernel 0.7.8 provenance.
+
+## @cueframe/sdk 0.13.0
+
+- Generate video-clip creation and export retry clients and validators from contract 5.0.0. Handle `videoClip` when matching export formats exhaustively.
+
+## cueframe 0.9.5
+
+- Stream large uploads with bounded memory and retain the existing structured NDJSON progress and failure events.
+- Bundle SDK 0.13.0 and contract 5.0.0.
+
 ## @cueframe/api-contract 4.4.4
 
 - Preserve canonical shared-schema references in the OpenAPI producer, matching the deployed API projection without changing runtime behavior.

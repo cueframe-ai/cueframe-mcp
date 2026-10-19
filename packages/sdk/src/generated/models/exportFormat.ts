@@ -14,4 +14,5 @@ export type ExportFormat = typeof ExportFormat[keyof typeof ExportFormat];
 export const ExportFormat = {
   fcpxml: 'fcpxml',
   premiere: 'premiere',
+  videoClip: 'videoClip',
 } as const;
