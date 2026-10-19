@@ -1,6 +1,6 @@
 ---
 name: cueframe-component-authoring
-description: Use when authoring, forking, or customizing a CueFrame motion-graphics component/primitive/graphic — e.g. "customize the cinematic-title primitive", "make my own animated lower-third", "fork a CueFrame template and edit it", "author a custom graphic and render it". Covers cloud MCP, local desktop, and CLI project paths using complete versioned source snapshots. Use BEFORE hand-writing a component from scratch — forking a built-in is usually the faster start.
+description: Use when authoring, forking, or customizing a CueFrame motion-graphics component/primitive/graphic — e.g. "customize the parallax look", "make my own animated lower-third", "fork a CueFrame template and edit it", "author a custom graphic and render it". Covers cloud MCP, local desktop, and CLI project paths using complete versioned source snapshots. Use BEFORE hand-writing a component from scratch — forking a built-in is usually the faster start.
 ---
 
 # CueFrame component authoring (fork / customize / own)
