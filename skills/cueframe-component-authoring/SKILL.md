@@ -80,14 +80,14 @@ Source lives in `cueframe/components/<id>/` (the `cueframe.json` workspace); edi
 template locally, push to render.
 
 ```bash
-npx -y cueframe@0.9 init --json                       # scaffold cueframe.json + cueframe/components/
-npx -y cueframe@0.9 new component my-badge --category ui-blocks --json   # scaffold a component in the workspace
+npx -y cueframe@0.10 init --json                       # scaffold cueframe.json + cueframe/components/
+npx -y cueframe@0.10 new component my-badge --category ui-blocks --json   # scaffold a component in the workspace
 #   New scaffolds contain template.html and definition.json (native source, version 4).
 # …edit cueframe/components/<id>/template.html and definition.json in your editor…
-npx -y cueframe@0.9 push my-badge --json              # send the native source; the server admits it
-#   or: npx -y cueframe@0.9 sync --json               # push every component in the workspace
+npx -y cueframe@0.10 push my-badge --json              # send the native source; the server admits it
+#   or: npx -y cueframe@0.10 sync --json               # push every component in the workspace
 # reference the component id in your composition, then render:
-npx -y cueframe@0.9 render <projectId> -o ./out.mp4 --json
+npx -y cueframe@0.10 render <projectId> -o ./out.mp4 --json
 ```
 
 The CLI writes `template.html` and `definition.json` (input schema, defaults, timing and

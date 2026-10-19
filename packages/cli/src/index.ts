@@ -1,5 +1,11 @@
-import { Command } from 'commander';
-import type { FormatFps } from '@cueframe/sdk';
+import { Command, Option } from 'commander';
+import {
+  FormatAspectRatio,
+  FormatResolution,
+  RenderCreateRequestIntent,
+  RenderCreateRequestPriority,
+  type FormatFps,
+} from '@cueframe/sdk';
 import { installCommand } from './commands/install.js';
 import { initCommand } from './commands/init.js';
 import { newComponentCommand } from './commands/newComponent.js';
@@ -58,6 +64,11 @@ function parseFps(v: string | undefined): FormatFps | undefined {
   console.error(`Invalid --fps ${v}. Allowed: 24, 25, 30, 60.`);
   exitWith(ExitCode.UserError);
 }
+
+const aspectOption = (description: string) =>
+  new Option('-a, --aspect <ratio>', description).choices(Object.values(FormatAspectRatio));
+const resolutionOption = (description: string) =>
+  new Option('--resolution <r>', description).choices(Object.values(FormatResolution));
 
 export async function main() {
   const program = new Command();
@@ -199,9 +210,9 @@ export async function main() {
     .description('Create a new project. With --from-suggestion, atomically build the composition from a clip suggestion in one round-trip — the project is then immediately renderable via `cueframe render <projectId>`.')
     .requiredOption('-n, --name <name>', 'Project name')
     .option('-t, --target <target>', 'Target environment: prod (default), local. CUEFRAME_API_URL overrides the host.')
-    .option('-a, --aspect <ratio>', 'Aspect ratio: 9:16, 1:1, 16:9', '9:16')
-    .option('--fps <n>', 'Frame rate', '30')
-    .option('--resolution <r>', 'Resolution: hd, fhd, 2k, 4k', 'fhd')
+    .addOption(aspectOption('Aspect ratio').default('9:16'))
+    .option('--fps <n>', 'Frame rate: 24, 25, 30, 60', '30')
+    .addOption(resolutionOption('Resolution').default('fhd'))
     .option('--brand-kit <id>', 'Bind a brand kit id to the project')
     .option('--from-suggestion <sug>', 'Clip suggestion publicId (sug_…) — atomically builds the composition after project creation so render needs no further args')
     .option('--cheap', 'With --from-suggestion: use the deterministic translator (no LLM, ~100ms) instead of the AI authoring pass. Useful for tests / programmatic flows.')
@@ -348,21 +359,25 @@ export async function main() {
     .allowExcessArguments(false)
     .argument('<projectId>', 'Project ID (from `cueframe list` or `project create`)')
     .option('-t, --target <target>', 'Target environment: prod (default), local. CUEFRAME_API_URL overrides the host.')
-    .option('-a, --aspect <ratio>', 'Aspect ratio: 9:16, 1:1, 16:9 (defaults to project format)')
-    .option('--fps <n>', 'Frame rate', '30')
-    .option('--resolution <r>', 'Resolution: hd, fhd, 2k, 4k', 'fhd')
+    .addOption(aspectOption("Format override; must match the composition's aspect (a new aspect is `derive_composition`). Default: the composition's format"))
+    .option('--fps <n>', 'Frame rate (24, 25, 30, 60); needs --aspect. A saved composition keeps its own fps')
+    .addOption(resolutionOption('Output resolution override; needs --aspect. Default: the composition\'s resolution'))
     .option('-o, --out <path>', 'Output file path (default: ./reel-<id>.mp4)')
     .option(
       '--idempotency-key <key>',
-      'Override the auto-derived Idempotency-Key. Default: sha256("render:<projectId>:<currentCompositionETag>"). Pass a fresh UUID to force a new render row.',
+      'Override the auto-derived Idempotency-Key. Default: sha256 of the project, the current composition ETag and the request body (format, priority, intent). Pass a fresh UUID to force a new render row.',
     )
-    .option(
-      '--priority <p>',
-      'Routing intent: interactive (low-latency, access-gated), standard (default), background (lowest queue weight).',
+    .addOption(
+      new Option(
+        '--priority <p>',
+        'Routing intent: interactive (low-latency, access-gated), standard (default), background (lowest queue weight).',
+      ).choices(Object.values(RenderCreateRequestPriority)),
     )
-    .option(
-      '--intent <i>',
-      'Encode-quality hint: preview (fast / low-bitrate, for editor scrubbing) or final (default, full Format).',
+    .addOption(
+      new Option(
+        '--intent <i>',
+        'Encode-quality hint: preview (fast / low-bitrate, for editor scrubbing) or final (default, full Format).',
+      ).choices(Object.values(RenderCreateRequestIntent)),
     )
     .action(async (projectId: string, opts: any) => {
       await renderCommand(projectId, {
@@ -428,12 +443,12 @@ export async function main() {
     );
   composition
     .command('put')
-    .description('Replace the composition. GETs ETag first for safe concurrent writes.')
+    .description('Replace the composition. Requires --if-match <etag> from `composition get` (or --force), so a newer save is never silently overwritten.')
     .argument('<projectId>', 'Project ID')
     .option('-t, --target <target>', 'Target environment: prod (default), local. CUEFRAME_API_URL overrides the host.')
     .requiredOption('-b, --body <body>', 'Composition JSON (inline, @file.json, or @- for stdin)')
-    .option('--if-match <etag>', 'Use this ETag (skip the GET round-trip)')
-    .option('--force', 'Use If-Match: * (unconditional overwrite — may clobber concurrent edits)')
+    .option('--if-match <etag>', 'ETag of the version your edit is based on (from `composition get`); a newer save fails with 409 stale_etag')
+    .option('--force', 'Send If-Match: * (unconditional overwrite, or create the first composition)')
     .action(async (projectId: string, opts: any) => {
       await compositionPutCommand(projectId, {
         target: opts.target,
