@@ -34,7 +34,7 @@ export const AccountResponse = zod.strictObject({
   "usage": zod.string().describe('Browser URL for the usage ledger.'),
   "billing": zod.string().describe('Browser URL for plan and credits.'),
   "apiKeys": zod.string().describe('Browser URL for minting and revoking API keys.'),
-  "project": zod.null().describe('No per-project browser view exists yet, so there is no URL to hand a user for a project or its composition. Stated as an explicit null so a client does not construct a route that 404s (CUE-19). Show a rendered frame (preview_frame) or a completed render instead.')
+  "project": zod.null().describe('No per-project browser view exists yet, so there is no URL to hand a user for a project or its composition. Stated as an explicit null so a client does not construct a route that 404s. Show a rendered frame (preview_frame) or a completed render instead.')
 }).describe('The browser URLs that actually exist, so an agent asked to "show me" can hand the user a real link instead of guessing one from an id. A null means the surface is not built, not that it is hidden from this key.')
 }).describe('Account discovery for the authenticated key: identity + plan + entitlements + cost ceilings + the browser surfaces that exist. Read this to see what your plan/credits allow before a metered call (create_render / compose / generate_media / create_brand_kit).');
 

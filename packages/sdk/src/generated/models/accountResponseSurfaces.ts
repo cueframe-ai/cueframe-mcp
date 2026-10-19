@@ -21,7 +21,7 @@ export type AccountResponseSurfaces = {
   /** Browser URL for minting and revoking API keys. */
   apiKeys: string;
   /**
-     * No per-project browser view exists yet, so there is no URL to hand a user for a project or its composition. Stated as an explicit null so a client does not construct a route that 404s (CUE-19). Show a rendered frame (preview_frame) or a completed render instead.
+     * No per-project browser view exists yet, so there is no URL to hand a user for a project or its composition. Stated as an explicit null so a client does not construct a route that 404s. Show a rendered frame (preview_frame) or a completed render instead.
      * @nullable
      */
   project: null;
