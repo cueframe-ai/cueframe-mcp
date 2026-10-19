@@ -9,6 +9,7 @@
  */
 import type {
   GetMediaContextParams,
+  GetMediaDownloadUrlParams,
   GetMediaParams,
   GetMediaTranscriptParams,
   HostedProcessingRunStartRequest,
@@ -483,21 +484,30 @@ export const getMedia = async (id: string,
 );}
 
 
-export const getGetMediaDownloadUrlUrl = (id: string,) => {
+export const getGetMediaDownloadUrlUrl = (id: string,
+    params?: GetMediaDownloadUrlParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/v1/media/${id}/download-url`
+  return stringifiedParams.length > 0 ? `/v1/media/${id}/download-url?${stringifiedParams}` : `/v1/media/${id}/download-url`
 }
 
 /**
  * Issue a presigned GET URL for the published source file CueFrame composes from. It works without an Authorization header for about an hour; read again for a fresh URL. Available once upload or import bytes are stored, before processing finishes. Required permission: media:read.
  * @summary Get a presigned URL for stored media source bytes
  */
-export const getMediaDownloadUrl = async (id: string, options?: Parameters<typeof request>[1]): Promise<MediaDownloadUrlResponse> => {
+export const getMediaDownloadUrl = async (id: string,
+    params?: GetMediaDownloadUrlParams, options?: Parameters<typeof request>[1]): Promise<MediaDownloadUrlResponse> => {
 
-  return request<MediaDownloadUrlResponse>(getGetMediaDownloadUrlUrl(id),
+  return request<MediaDownloadUrlResponse>(getGetMediaDownloadUrlUrl(id,params),
   {
     ...options,
     method: 'GET'

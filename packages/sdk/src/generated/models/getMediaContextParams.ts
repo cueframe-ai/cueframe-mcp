@@ -19,4 +19,9 @@ limit?: number;
  * Zero-based utterance cursor from transcript.data.pagination.nextCursor.
  */
 after?: string;
+/**
+ * Read the item through this project, for media shared into it.
+ * @minLength 1
+ */
+projectId?: string;
 };
