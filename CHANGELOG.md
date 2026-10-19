@@ -2,6 +2,17 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## cueframe 0.10.0
+
+- **Breaking:** `composition put` no longer fetches the current ETag itself. Pass `--if-match <etag>` with the ETag from the `composition get` your edit started from, or `--force` to create the first composition or overwrite deliberately; without either it exits 2 before any request. The old default read the newest ETag right before the PUT, so a save made while you were editing was silently replaced.
+- `render` derives its Idempotency-Key from the project, the composition ETag and the canonical request body, so `--aspect`, `--fps`, `--resolution`, `--priority` and `--intent` each produce a distinct render. If the ETag cannot be read, `render` exits instead of keying on a constant; `--idempotency-key` skips the read.
+- `render --aspect` no longer forces `fps: 30` and `resolution: fhd`; only the flags you pass are sent, and `--fps`/`--resolution` without `--aspect` is a usage error.
+- `--aspect` accepts `4:5`; `--resolution` accepts `hd`, `fhd` and `4k` (it listed `2k`, which the API rejects). `--aspect`, `--resolution`, `--priority` and `--intent` are validated against the contract's enums.
+
+## @cueframe/skills 0.4.0
+
+- Pin `cueframe@0.10` and document `composition put --if-match` and the render idempotency rules.
+
 ## @cueframe/api-contract 5.0.0
 
 - Add maintained video-clip export creation and immutable-snapshot export retry operations.
