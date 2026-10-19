@@ -216722,7 +216722,8 @@
         "type": "string",
         "enum": [
           "fcpxml",
-          "premiere"
+          "premiere",
+          "videoClip"
         ]
       },
       "ExportStatus": {
@@ -245090,6 +245091,354 @@
             },
             "in": "path",
             "name": "id",
+            "required": true
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USDC",
+            "amount": "10000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      }
+    },
+    "/v1/projects/{id}/exports/videoClip": {
+      "post": {
+        "operationId": "createVideoClipExport",
+        "tags": [
+          "exports"
+        ],
+        "summary": "Create a video clip export",
+        "description": "Export one suggestion as an H.264/AAC MP4 through the keyed NLE workflow. Poll getExport for its artifact.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "renders:write"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "renders": [
+            "write"
+          ]
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Video clip export queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
+            "headers": {
+              "Payment-Required": {
+                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable — billing_unavailable / honest-503 for runtime deps.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USDC",
+            "amount": "10000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      }
+    },
+    "/v1/projects/{id}/exports/{exportId}/retry": {
+      "post": {
+        "operationId": "retryExport",
+        "tags": [
+          "exports"
+        ],
+        "summary": "Retry an export's admitted specification",
+        "description": "Create a new keyed export from the original immutable snapshot in its admitted project. Use Idempotency-Key to safely replay the HTTP request.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "renders:write"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "renders": [
+            "write"
+          ]
+        },
+        "responses": {
+          "202": {
+            "description": "Export retry queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
+            "headers": {
+              "Payment-Required": {
+                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable — billing_unavailable / honest-503 for runtime deps.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "exportId",
             "required": true
           }
         ],

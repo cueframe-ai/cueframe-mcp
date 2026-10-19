@@ -9,7 +9,7 @@
  */
 import * as zod from 'zod';
 
-export const ExportFormat = zod.enum(['fcpxml', 'premiere']);
+export const ExportFormat = zod.enum(['fcpxml', 'premiere', 'videoClip']);
 
 export type ExportFormat = zod.input<typeof ExportFormat>;
 export type ExportFormatOutput = zod.output<typeof ExportFormat>;
