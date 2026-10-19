@@ -37,13 +37,14 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => ({
+  isError: true,
   content: [
     {
       type: 'text',
       text:
         `This is a discovery-only listing of the CueFrame MCP server; "${request.params.name}" was not executed. ` +
         `The tools run on the hosted server at ${HOSTED_URL}: connect your client to that URL and sign in in the browser. ` +
-        'For headless use, run `npx -y cueframe@0.9 login` and then `npx -y cueframe@0.9 keys create --name <name>` to mint an API key, ' +
+        'For headless use, run `npx -y cueframe@0.10 login` and then `npx -y cueframe@0.10 keys create --name <name>` to mint an API key, ' +
         'and send it as `Authorization: Bearer <that key>`.',
     },
   ],

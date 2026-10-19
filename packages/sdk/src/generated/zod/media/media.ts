@@ -165,6 +165,13 @@ export const GetMediaDownloadUrlParams = zod.object({
   "id": zod.string()
 })
 
+
+
+
+export const GetMediaDownloadUrlQueryParams = zod.object({
+  "projectId": zod.string().min(1).optional()
+})
+
 /**
  * Required permission: media:read
  * @summary Get a media transcript (paginated)
@@ -200,9 +207,11 @@ export const getMediaContextQueryLimitMax = 100;
 
 
 
+
 export const GetMediaContextQueryParams = zod.object({
   "limit": zod.int().min(1).max(getMediaContextQueryLimitMax).optional().describe('Transcript utterances per context page (default 20, maximum 100).'),
-  "after": zod.string().optional().describe('Zero-based utterance cursor from transcript.data.pagination.nextCursor.')
+  "after": zod.string().optional().describe('Zero-based utterance cursor from transcript.data.pagination.nextCursor.'),
+  "projectId": zod.string().min(1).optional().describe('Read the item through this project, for media shared into it.')
 })
 
 /**

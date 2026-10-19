@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { deriveIdempotencyKey } from './idempotency';
+import { canonicalJson, deriveIdempotencyKey } from './idempotency';
 
 describe('deriveIdempotencyKey', () => {
   it('produces a stable sha256-hex string', async () => {
@@ -81,5 +81,12 @@ describe('deriveIdempotencyKey', () => {
       b.toString(16).padStart(2, '0'),
     ).join('');
     expect(key).toBe(expected);
+  });
+});
+
+describe('canonicalJson', () => {
+  it('orders keys at every depth and keeps array order', () => {
+    expect(canonicalJson({ b: 1, a: { d: [2, 1], c: null } })).toBe('{"a":{"c":null,"d":[2,1]},"b":1}');
+    expect(canonicalJson({ a: { c: null, d: [2, 1] }, b: 1 })).toBe(canonicalJson({ b: 1, a: { d: [2, 1], c: null } }));
   });
 });

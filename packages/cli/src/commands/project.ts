@@ -1,4 +1,4 @@
-import { projects, type FormatFps, type FormatResolution } from '@cueframe/sdk';
+import { projects, type FormatAspectRatio, type FormatFps, type FormatResolution } from '@cueframe/sdk';
 import { initSdk, formatError } from '../remote/sdkClient.js';
 import { exitCodeForError, exitWith } from '../remote/exitCodes.js';
 import { emitEvent, emitErrorJson, spinner as oraSpinner } from '../remote/output.js';
@@ -7,7 +7,7 @@ import { compositionFromSuggestionCommand } from './composition.js';
 export async function projectCreateCommand(opts: {
   name: string;
   target: string;
-  aspect?: '9:16' | '1:1' | '16:9';
+  aspect?: FormatAspectRatio;
   fps?: FormatFps;
   resolution?: FormatResolution;
   brandKitId?: string;

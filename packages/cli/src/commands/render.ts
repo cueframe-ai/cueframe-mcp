@@ -1,44 +1,67 @@
 import {
   ApiError,
   requestRaw,
+  type FormatAspectRatio,
   type FormatFps,
   type FormatResolution,
+  type RenderCreateRequest,
+  type RenderCreateRequestIntent,
+  type RenderCreateRequestPriority,
 } from '@cueframe/sdk';
 import { initSdk, formatError } from '../remote/sdkClient.js';
 import { ExitCode, exitCodeForError, exitWith } from '../remote/exitCodes.js';
 import { downloadOutput, watchRender } from './renderWatch.js';
 import { emitEvent, emitError, emitErrorJson, spinner as oraSpinner } from '../remote/output.js';
 import { assertCleanIdentifier } from '../remote/validate.js';
-import { deriveIdempotencyKey } from '../remote/idempotency.js';
-import { compositionPath } from '../remote/compositionPath.js';
+import { canonicalJson, deriveIdempotencyKey } from '../remote/idempotency.js';
+import { compositionPath, normalizeEtag } from '../remote/compositionPath.js';
 
 async function fetchCompositionEtag(projectId: string): Promise<string> {
-  const res = await requestRaw(compositionPath(projectId), {
-    method: 'GET',
-  });
-  if (res.status === 404) return 'no-composition';
-  if (res.status >= 400) {
-    return 'unknown-composition';
+  let res;
+  try {
+    res = await requestRaw(compositionPath(projectId), { method: 'GET' });
+  } catch (err) {
+    throw Object.assign(
+      new Error(`Could not read the composition ETag to derive the render's Idempotency-Key: ${formatError(err)}. Retry, or pass --idempotency-key.`),
+      { exitCode: ExitCode.NetworkError },
+    );
   }
-  return res.headers['etag'] ?? 'no-etag';
+  // A project with no composition yet renders from its clip; the key still covers project and body.
+  if (res.status === 404) return 'no-composition';
+  const etag = res.headers['etag'];
+  if (res.status >= 400 || !etag) {
+    const wire = (res.body as { error?: { code?: string; message?: string } } | null)?.error;
+    throw new ApiError(res.status >= 400 ? res.status : 502, {
+      code: wire?.code ?? 'composition_etag_unavailable',
+      message: `Could not read the composition ETag to derive the render's Idempotency-Key (${res.status}${wire?.message ? `: ${wire.message}` : ''}). Retry, or pass --idempotency-key.`,
+    });
+  }
+  return normalizeEtag(etag);
 }
 
 export async function renderCommand(
   projectId: string,
   opts: {
     target: string;
-    aspect?: '9:16' | '1:1' | '16:9';
+    aspect?: FormatAspectRatio;
     fps?: FormatFps;
     resolution?: FormatResolution;
     out?: string;
     json?: boolean;
     dryRun?: boolean;
     idempotencyKey?: string;
-    priority?: 'interactive' | 'standard' | 'background';
-    intent?: 'preview' | 'final';
+    priority?: RenderCreateRequestPriority;
+    intent?: RenderCreateRequestIntent;
   },
 ) {
   assertCleanIdentifier(projectId, 'projectId', opts);
+
+  if (!opts.aspect && (opts.fps !== undefined || opts.resolution !== undefined)) {
+    console.error(
+      '--fps and --resolution need --aspect: a render format override names its aspect ratio, which must match the composition\'s.',
+    );
+    exitWith(ExitCode.UserError);
+  }
 
   if (opts.dryRun) {
     emitEvent(opts, 'render_dry_run', {
@@ -61,6 +84,17 @@ export async function renderCommand(
     target: opts.target,
   });
 
+  const body: RenderCreateRequest = {};
+  if (opts.aspect) {
+    body.format = {
+      aspectRatio: opts.aspect,
+      ...(opts.fps !== undefined ? { fps: opts.fps } : {}),
+      ...(opts.resolution !== undefined ? { resolution: opts.resolution } : {}),
+    };
+  }
+  if (opts.priority) body.priority = opts.priority;
+  if (opts.intent) body.intent = opts.intent;
+
   let idempotencyKey: string;
   try {
     idempotencyKey =
@@ -68,42 +102,27 @@ export async function renderCommand(
       (await deriveIdempotencyKey('render', [
         projectId,
         await fetchCompositionEtag(projectId),
+        canonicalJson(body),
       ]));
-    emitEvent(opts, 'idempotency_key', {
-      scope: 'render',
-      key: idempotencyKey,
-      overridden: !!opts.idempotencyKey,
-    });
   } catch (err) {
-    idempotencyKey = '';
-    emitEvent(opts, 'idempotency_key', {
-      scope: 'render',
-      key: null,
-      skipped: true,
-      reason: err instanceof Error ? err.message : String(err),
-    });
+    emitError(opts, 'render_prepare', err, exitCodeForError(err));
+    exitWith(exitCodeForError(err));
   }
+  emitEvent(opts, 'idempotency_key', {
+    scope: 'render',
+    key: idempotencyKey,
+    overridden: !!opts.idempotencyKey,
+  });
 
   const create = oraSpinner('Queuing render…', opts.json);
   let renderId: string;
   let renderStatus: string;
   let isReplay = false;
   try {
-    const body: Record<string, unknown> = opts.aspect
-      ? {
-          format: {
-            aspectRatio: opts.aspect,
-            fps: opts.fps ?? 30,
-            resolution: opts.resolution ?? 'fhd',
-          },
-        }
-      : {};
-    if (opts.priority) body.priority = opts.priority;
-    if (opts.intent) body.intent = opts.intent;
     const headers: Record<string, string> = {
       'content-type': 'application/json',
+      'idempotency-key': idempotencyKey,
     };
-    if (idempotencyKey) headers['idempotency-key'] = idempotencyKey;
 
     const raw = await requestRaw(`/v1/projects/${projectId}/renders`, {
       method: 'POST',

@@ -164,6 +164,7 @@ export { DeleteMediaParams as deleteMediaParams } from "./media/media";
 export { GetMediaParams as getMediaParams } from "./media/media";
 export { GetMediaQueryParams as getMediaQueryParams } from "./media/media";
 export { GetMediaDownloadUrlParams as getMediaDownloadUrlParams } from "./media/media";
+export { GetMediaDownloadUrlQueryParams as getMediaDownloadUrlQueryParams } from "./media/media";
 export { GetMediaTranscriptParams as getMediaTranscriptParams } from "./media/media";
 export { GetMediaTranscriptQueryParams as getMediaTranscriptQueryParams } from "./media/media";
 export { GetMediaContextParams as getMediaContextParams } from "./media/media";

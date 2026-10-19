@@ -191,7 +191,7 @@ export const getRetryRenderUrl = (id: string,
 }
 
 /**
- * Required permission: renders:write
+ * Queue a NEW render of an existing render's composition snapshot. Priced and billed like the render it repeats: measured output-minutes x resolution, charged when the retry completes.
  * @summary Re-render against an existing renderJob's snapshot
  */
 export const retryRender = async (id: string,

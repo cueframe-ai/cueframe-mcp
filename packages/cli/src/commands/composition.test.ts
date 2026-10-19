@@ -183,44 +183,28 @@ describe('compositionPutCommand — ETag threading', () => {
     vi.restoreAllMocks();
   });
 
-  it('GETs to fetch ETag, then PUTs with If-Match: <etag>', async () => {
-    const reqs: Captured[] = [];
-    const spy = vi.spyOn(sdk, 'requestRaw').mockImplementation(
-      async (url: string, init?: RequestInit): Promise<RawResponse> => {
-        reqs.push({ url, init: init ?? {} });
-        if (init?.method === 'GET' || !init?.method) {
-          return {
-            status: 200,
-            statusText: 'OK',
-            headers: { etag: '"v1"' },
-            body: { tracks: [] },
-          };
-        }
-        return {
-          status: 200,
-          statusText: 'OK',
-          headers: { etag: '"v2"' },
-          body: { compositionId: 'c1', versionId: 'v2', etag: '"v2"' },
-        };
-      },
-    );
-
+  it('refuses without --if-match or --force, before any request, naming `composition get`', async () => {
+    const spy = vi.spyOn(sdk, 'requestRaw');
     const code = await run(
-      () =>
-        compositionPutCommand('proj_123', {
-          target: 'prod',
-          body: '{"tracks":[]}',
-        }),
+      () => compositionPutCommand('proj_123', { target: 'prod', body: '{"tracks":[]}' }),
       spies.exitSpy,
     );
-    expect(code).toBe(0);
-    expect(spy).toHaveBeenCalledTimes(2);
-    expect(reqs[0].init.method ?? 'GET').toBe('GET');
-    expect(reqs[1].init.method).toBe('PUT');
-    const putHeaders = new Headers(reqs[1].init.headers as HeadersInit);
-    expect(putHeaders.get('if-match')).toBe('"v1"');
-    expect(putHeaders.get('content-type')).toBe('application/json');
-    expect(reqs[1].init.body).toBe('{"tracks":[]}');
+    expect(code).toBe(2);
+    expect(spy).not.toHaveBeenCalled();
+    const stderr = spies.errSpy.mock.calls.map((c) => c[0]).join('\n') + spies.stderrChunks.join('');
+    expect(stderr).toMatch(/--if-match/);
+    expect(stderr).toMatch(/composition get/);
+    expect(stderr).toMatch(/--force/);
+  });
+
+  it('refuses --if-match together with --force', async () => {
+    const spy = vi.spyOn(sdk, 'requestRaw');
+    const code = await run(
+      () => compositionPutCommand('proj_123', { target: 'prod', body: '{}', ifMatch: '"v1"', force: true }),
+      spies.exitSpy,
+    );
+    expect(code).toBe(2);
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('--force uses If-Match: * and skips the GET round-trip', async () => {
@@ -277,38 +261,6 @@ describe('compositionPutCommand — ETag threading', () => {
     expect(h.get('if-match')).toBe('"cached-v2"');
   });
 
-  it('first-time create (GET → 404) sends If-Match: *', async () => {
-    const reqs: Captured[] = [];
-    vi.spyOn(sdk, 'requestRaw').mockImplementation(async (url, init): Promise<RawResponse> => {
-      reqs.push({ url, init: init ?? {} });
-      if (init?.method === 'GET' || !init?.method) {
-        return {
-          status: 404,
-          statusText: 'Not Found',
-          headers: {},
-          body: { error: { code: 'not_found', message: 'Composition not found' } },
-        };
-      }
-      return {
-        status: 200,
-        statusText: 'OK',
-        headers: { etag: '"first"' },
-        body: { etag: '"first"' },
-      };
-    });
-    await run(
-      () =>
-        compositionPutCommand('proj_123', {
-          target: 'prod',
-          body: '{"tracks":[]}',
-        }),
-      spies.exitSpy,
-    );
-    expect(reqs).toHaveLength(2);
-    const putHeaders = new Headers(reqs[1].init.headers as HeadersInit);
-    expect(putHeaders.get('if-match')).toBe('*');
-  });
-
   it('409 stale_etag surfaces the rebase advice', async () => {
     vi.spyOn(sdk, 'requestRaw').mockImplementation(async (_url, init): Promise<RawResponse> => {
       if (init?.method === 'PUT') {
@@ -327,6 +279,7 @@ describe('compositionPutCommand — ETag threading', () => {
         compositionPutCommand('proj_123', {
           target: 'prod',
           body: '{"tracks":[]}',
+          ifMatch: '"v1"',
         }),
       spies.exitSpy,
     );
@@ -596,11 +549,11 @@ describe('composition reads negotiate every component execution version the cont
     expect(raw.mock.calls[0][0]).toBe(negotiated);
   });
 
-  it('the automatic ETag fetch of a default put negotiates the same versions', async () => {
+  it('the automatic ETag fetch of from-suggestion negotiates the same versions', async () => {
     const raw = vi.spyOn(sdk, 'requestRaw')
       .mockResolvedValueOnce({ status: 200, statusText: 'OK', headers: { etag: '"a"' }, body: {} })
       .mockResolvedValueOnce({ status: 200, statusText: 'OK', headers: { etag: '"b"' }, body: {} });
-    await run(() => compositionPutCommand('proj_123', { target: 'prod', body: '{"tracks":[]}' }), spies.exitSpy);
+    await run(() => compositionFromSuggestionCommand('proj_123', { target: 'prod', suggestionId: 'sug_1' }), spies.exitSpy);
     expect(raw.mock.calls[0][0]).toBe(negotiated);
     expect(raw.mock.calls[0][1]).toMatchObject({ method: 'GET' });
   });

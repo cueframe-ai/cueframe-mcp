@@ -12,9 +12,11 @@ import * as zod from 'zod';
 export const getMediaContextParamsLimitMax = 100;
 
 
+
 export const GetMediaContextParams = zod.strictObject({
   "limit": zod.int().min(1).max(getMediaContextParamsLimitMax).optional(),
-  "after": zod.string().optional()
+  "after": zod.string().optional(),
+  "projectId": zod.string().min(1).optional()
 })
 
 export type GetMediaContextParams = zod.input<typeof GetMediaContextParams>;

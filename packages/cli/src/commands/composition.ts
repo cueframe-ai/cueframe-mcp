@@ -1,7 +1,7 @@
 
 import { readFileSync } from 'fs';
 import { ApiError, adviseError, requestRaw, type RawResponse } from '@cueframe/sdk';
-import { compositionPath } from '../remote/compositionPath.js';
+import { compositionPath, normalizeEtag } from '../remote/compositionPath.js';
 import { initSdk } from '../remote/sdkClient.js';
 import { ExitCode, exitCodeForStatus, exitWith } from '../remote/exitCodes.js';
 import { emitEvent, emitError, emitResult, info } from '../remote/output.js';
@@ -62,9 +62,10 @@ export async function compositionPutCommand(projectId: string, opts: PutOpts) {
     exitWith(ExitCode.UserError);
   }
 
+  const ifMatch = requireIfMatch(opts);
+
   initSdk(opts.target);
 
-  const ifMatch = await resolveIfMatch(projectId, opts);
   const bodyText = await resolveBodyArg(opts.body);
 
   emitEvent(opts, 'composition_put_prepare', { projectId, ifMatch });
@@ -230,8 +231,21 @@ export async function compositionValidateCommand(opts: ValidateOpts) {
 }
 
 
-function normalizeEtag(etag: string): string {
-  return etag.replace(/^W\//, '').replace(/-gzip(?=("?)$)/, '');
+function requireIfMatch(opts: { ifMatch?: string; force?: boolean }): string {
+  if (opts.ifMatch && opts.force) {
+    console.error('Pass either --if-match <etag> or --force, not both.');
+    exitWith(ExitCode.UserError);
+  }
+  if (opts.force) return '*';
+  if (opts.ifMatch) return opts.ifMatch;
+  console.error(
+    [
+      'composition put needs the ETag of the version your edit is based on, so it cannot overwrite a newer save.',
+      '  Read it with `cueframe composition get <projectId>` (the `# ETag:` line, or `.etag` with --json) and pass --if-match <etag>.',
+      '  Pass --force to overwrite unconditionally, or to create the first composition of a project that has none.',
+    ].join('\n'),
+  );
+  exitWith(ExitCode.UserError);
 }
 
 async function resolveIfMatch(

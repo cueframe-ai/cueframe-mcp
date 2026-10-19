@@ -136,7 +136,7 @@ export const getListCatalogUrl = (params?: ListCatalogParams,) => {
 }
 
 /**
- * Discover the built-in primitive catalog (87 primitives + 7 scenes) plus your installed components. Narrow with facet filters (category, kind, tier, useCase, mood) or free-text (q / intent); when ANY filter is set, results are ordered recommended-tier-first. With NO `limit` the WHOLE (filtered) catalog returns in one page — pass `limit` only to page. Each entry carries a `placement` hint telling you exactly how to author it on the timeline.
+ * Discover the one built-in primitive (heroText, the behind-subject overlay) plus your installed components; pass projection=component-library for the maintained builtin presets and recipes. Narrow with facet filters (category, kind, tier, useCase, mood) or free-text (q / intent); when ANY filter is set, results are ordered recommended-tier-first. With NO `limit` the WHOLE (filtered) catalog returns in one page — pass `limit` only to page. Each entry carries a `placement` hint telling you exactly how to author it on the timeline.
  * @summary List component catalog (defaults + installed)
  */
 export const listCatalog = async (params?: ListCatalogParams, options?: Parameters<typeof request>[1]): Promise<ComponentListResponse> => {

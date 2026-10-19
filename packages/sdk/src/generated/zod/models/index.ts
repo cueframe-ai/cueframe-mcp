@@ -126,6 +126,7 @@ export * from './format.zod';
 export * from './getComponentSourceParams.zod';
 export * from './getCompositionParams.zod';
 export * from './getMediaContextParams.zod';
+export * from './getMediaDownloadUrlParams.zod';
 export * from './getMediaParams.zod';
 export * from './getMediaTranscriptParams.zod';
 export * from './getUsageParams.zod';

@@ -17,7 +17,7 @@ The MCP server package, `@cueframe/mcp`, is private and lives in the application
 - Gemini CLI: `gemini extensions install https://github.com/cueframe-ai/cueframe-mcp`
 - Any client that supports Agent Skills: `npx skills add cueframe-ai/cueframe-mcp`
 - Any MCP client: `claude mcp add --transport http cueframe https://api.cueframe.ai/v1/mcp` (or the equivalent in your client)
-- The CueFrame CLI: `npx -y cueframe@0.9 install`
+- The CueFrame CLI: `npx -y cueframe@0.10 install`
 
 ## If you are an agent pointed at this repository
 
