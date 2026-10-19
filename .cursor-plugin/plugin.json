@@ -1,7 +1,7 @@
 {
   "name": "cueframe",
   "displayName": "CueFrame",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Make and edit videos with CueFrame: composition, motion graphics, captions, clipping and rendering skills, plus the hosted MCP server.",
   "author": {
     "name": "CueFrame, Inc.",

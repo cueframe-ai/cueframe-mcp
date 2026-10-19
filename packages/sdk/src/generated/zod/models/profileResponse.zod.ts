@@ -9,6 +9,7 @@
  */
 import * as zod from 'zod';
 import { CriticSummary } from './criticSummary.zod';
+import { TasteEntry } from './tasteEntry.zod';
 
 export const profileResponseBrandKitsItemAudioMusicMoodMax = 300;
 
@@ -77,8 +78,9 @@ export const ProfileResponse = zod.strictObject({
   "stage": zod.enum(['content', 'layout', 'motion']).optional(),
   "decision": zod.string(),
   "decidedAt": zod.number()
-})).describe('The last recorded checkpoint decisions — the raw taste log phase 2 will distill.')
-}).describe('The org\'s legible taste: brand + critics + references + decision log.');
+})).describe('The last recorded checkpoint decisions — the raw log learned taste is saved from.'),
+  "taste": zod.array(TasteEntry).describe('Learned style preferences. Advice only: the current request, its brief, the project and the brand kit, exclusions and critics all take precedence.')
+}).describe('The org\'s legible taste: brand + critics + references + decision log + learned taste.');
 
 export type ProfileResponse = zod.input<typeof ProfileResponse>;
 export type ProfileResponseOutput = zod.output<typeof ProfileResponse>;

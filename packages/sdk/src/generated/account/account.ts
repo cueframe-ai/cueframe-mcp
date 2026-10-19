@@ -9,7 +9,14 @@
  */
 import type {
   AccountResponse,
-  ProfileResponse
+  ProfileResponse,
+  TasteCreateRequest,
+  TasteCreateResponse,
+  TasteEntry,
+  TasteListResponse,
+  TasteSettingsRequest,
+  TasteSettingsResponse,
+  TasteUpdateRequest
 } from '../models';
 
 import { request } from '../../client';
@@ -47,7 +54,7 @@ export const getGetProfileUrl = () => {
 }
 
 /**
- * One read for everything the platform knows about this org's taste: brand kits, registered critics (the machine-checkable standard both the Director's gates and score_composition enforce), the critics' reference media with presigned thumbnails, and the recent checkpoint-decision log (what was approved/revised/abandoned, where). Read this before composing for an org you haven't worked with — it is the house style.
+ * One read for everything the platform knows about this org's taste: brand kits, registered critics (the machine-checkable standard both the Director's gates and score_composition enforce), the critics' reference media with presigned thumbnails, the recent checkpoint-decision log (what was approved/revised/abandoned, where), and the learned taste: style preferences saved from earlier feedback. Read this before composing for an org you haven't worked with — it is the house style. Learned taste is advice: the current request, its brief, the project, the brand kit, exclusions and critics take precedence.
  * @summary Read the org's Profile — its legible taste
  */
 export const getProfile = async ( options?: Parameters<typeof request>[1]): Promise<ProfileResponse> => {
@@ -58,5 +65,168 @@ export const getProfile = async ( options?: Parameters<typeof request>[1]): Prom
     method: 'GET'
 
 
+  }
+);}
+
+
+export const getListTasteUrl = () => {
+
+
+
+
+  return `/v1/profile/taste`
+}
+
+/**
+ * Required permission: projects:read
+ * @summary List the org's learned taste
+ */
+export const listTaste = async ( options?: Parameters<typeof request>[1]): Promise<TasteListResponse> => {
+
+  return request<TasteListResponse>(getListTasteUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+export const getCreateTasteEntryUrl = () => {
+
+
+
+
+  return `/v1/profile/taste`
+}
+
+/**
+ * Saves one durable style preference for the org, with its source. Identical text is a no-op. Refused (never truncated) past the per-entry or per-org limit, and while the owner has learned taste off.
+ * @summary Remember a style preference
+ */
+export const createTasteEntry = async (tasteCreateRequest: TasteCreateRequest, options?: Parameters<typeof request>[1]): Promise<TasteCreateResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<TasteCreateResponse>(getCreateTasteEntryUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(tasteCreateRequest)
+  }
+);}
+
+
+export const getUpdateTasteEntryUrl = (tasteId: string,) => {
+
+
+
+
+  return `/v1/profile/taste/${tasteId}`
+}
+
+/**
+ * Required permission: projects:write
+ * @summary Edit a style preference
+ */
+export const updateTasteEntry = async (tasteId: string,
+    tasteUpdateRequest: TasteUpdateRequest, options?: Parameters<typeof request>[1]): Promise<TasteEntry> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<TasteEntry>(getUpdateTasteEntryUrl(tasteId),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(tasteUpdateRequest)
+  }
+);}
+
+
+export const getDeleteTasteEntryUrl = (tasteId: string,) => {
+
+
+
+
+  return `/v1/profile/taste/${tasteId}`
+}
+
+/**
+ * Required permission: projects:write
+ * @summary Forget a style preference
+ */
+export const deleteTasteEntry = async (tasteId: string, options?: Parameters<typeof request>[1]): Promise<void> => {
+
+  return request<void>(getDeleteTasteEntryUrl(tasteId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+export const getUpdateTasteSettingsUrl = () => {
+
+
+
+
+  return `/v1/profile/taste/settings`
+}
+
+/**
+ * Owner only. Turning it off deletes every entry; nothing is saved or recalled until it is back on.
+ * @summary Turn learned taste on or off
+ */
+export const updateTasteSettings = async (tasteSettingsRequest: TasteSettingsRequest, options?: Parameters<typeof request>[1]): Promise<TasteSettingsResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<TasteSettingsResponse>(getUpdateTasteSettingsUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(tasteSettingsRequest)
   }
 );}

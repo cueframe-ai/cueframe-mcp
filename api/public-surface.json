@@ -5,6 +5,7 @@
     "DELETE /v1/critics/{criticId} deleteCritic",
     "DELETE /v1/media/{id} deleteMedia",
     "DELETE /v1/media/{id}/suggestions resetMediaSuggestions",
+    "DELETE /v1/profile/taste/{tasteId} deleteTasteEntry",
     "DELETE /v1/projects/{id} deleteProject",
     "DELETE /v1/projects/{id}/compose-session/{sessionId} closeComposeSession",
     "DELETE /v1/projects/{id}/compositions/{compositionId} deleteComposition",
@@ -47,6 +48,7 @@
     "GET /v1/media/{id}/suggestions listMediaSuggestions",
     "GET /v1/media/{id}/transcript getMediaTranscript",
     "GET /v1/profile getProfile",
+    "GET /v1/profile/taste listTaste",
     "GET /v1/projects listProjects",
     "GET /v1/projects/{id} getProject",
     "GET /v1/projects/{id}/compose-session/{sessionId}/composition getComposeSessionComposition",
@@ -78,6 +80,7 @@
     "GET /v1/whoami whoami",
     "PATCH /v1/briefs/{id} updateBrief",
     "PATCH /v1/components/{id} patchComponent",
+    "PATCH /v1/profile/taste/{tasteId} updateTasteEntry",
     "PATCH /v1/projects/{id} patchProject",
     "PATCH /v1/webhooks/{id} patchWebhook",
     "POST /v1/api-keys createApiKey",
@@ -115,6 +118,7 @@
     "POST /v1/media/{id}/processing-runs/{runId}/cancel cancelHostedProcessingRun",
     "POST /v1/media/{id}/suggestions suggestBriefs",
     "POST /v1/media/{id}/transcript/analyze analyzeTranscript",
+    "POST /v1/profile/taste createTasteEntry",
     "POST /v1/projects createProject",
     "POST /v1/projects/{id}/component-preview previewComponent",
     "POST /v1/projects/{id}/components/native-upgrade repinComponent",
@@ -166,6 +170,7 @@
     "POST /v1/workspace createWorkspace",
     "PUT /v1/components/{id} updateComponent",
     "PUT /v1/editorial/briefs/{briefId} editorialUpdateBrief",
+    "PUT /v1/profile/taste/settings updateTasteSettings",
     "PUT /v1/projects/{id}/composition putComposition"
   ]
 }

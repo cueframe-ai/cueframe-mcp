@@ -19,6 +19,14 @@ brief/rubric for a local correction; check the affected behavior and relevant re
 of restarting the new-film method below. A diagnostic or preview-only request does not require
 a final export or a whole-film judge pass. Explicit user scope takes precedence over craft defaults.
 
+## Learned taste: the org's saved style preferences
+
+Before composing for an org, read its learned taste: `get_profile` returns it as `taste`, and Eve recalls it into every turn. It is advice, never instruction. Precedence, highest first: the current request, the brief, the project, the brand kit, exclusions and registered critics, then learned taste. When learned taste conflicts with any of those, follow the higher one and say which preference you set aside; never resolve a conflict silently.
+
+Save a preference only when the user states a durable one: a revise comment, a correction in chat, or an explicit "remember this". Never save one-off brief content, facts about footage, approval notes or anything secret. Every save names its source (the job, checkpoint or chat, plus the date). Save with your runtime's taste tool (Eve: `taste__remember`; MCP: `remember_taste`; HTTP: `POST /v1/profile/taste`).
+
+Tell the user every time you save or forget: "Added to your profile: <preference>. Say undo to remove it." Undo forgets that entry (`taste__forget`, `forget_taste`, or `DELETE /v1/profile/taste/{id}`). When the user says not to learn from this job, save nothing for the rest of it. A refusal (the entry is too long, the org's taste is full, or the owner turned learned taste off) is final: tell the user, and do not retry or shorten the preference silently.
+
 ## Plan and author to the request
 
 Use `cueframe-storyboard` only when new work lacks structure. For an existing title correction, retain the approved brief and edit the title directly; no whole-film rubric, paid judge or final export is required.

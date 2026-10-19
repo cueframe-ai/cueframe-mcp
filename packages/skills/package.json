@@ -1,6 +1,6 @@
 {
   "name": "@cueframe/skills",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "CueFrame agent skills: the SKILL.md tree the CueFrame plugin ships, packaged for programs that copy or embed the skills.",
   "license": "Apache-2.0",
   "type": "module",

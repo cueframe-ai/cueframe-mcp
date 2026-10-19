@@ -225133,6 +225133,151 @@
         ],
         "additionalProperties": false
       },
+      "TasteEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "source",
+          "createdAt",
+          "updatedAt"
+        ],
+        "additionalProperties": false,
+        "description": "One learned style preference: advice for agents, never enforcement."
+      },
+      "TasteListResponse": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "The owner's switch. While off, nothing is saved or recalled."
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TasteEntry"
+            }
+          }
+        },
+        "required": [
+          "enabled",
+          "entries"
+        ],
+        "additionalProperties": false
+      },
+      "TasteCreateRequest": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "One durable style preference, at most 2048 bytes. An org's entries together hold at most 4000 characters."
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Where it came from: the job, checkpoint or chat, plus a date."
+          }
+        },
+        "required": [
+          "text",
+          "source"
+        ],
+        "additionalProperties": false,
+        "description": "Remember a style preference for the org. Saving text the org already holds changes nothing."
+      },
+      "TasteCreateResponse": {
+        "type": "object",
+        "properties": {
+          "entry": {
+            "$ref": "#/components/schemas/TasteEntry"
+          },
+          "created": {
+            "type": "boolean",
+            "description": "False when the org already held this exact text."
+          }
+        },
+        "required": [
+          "entry",
+          "created"
+        ],
+        "additionalProperties": false
+      },
+      "TasteUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "One durable style preference, at most 2048 bytes. An org's entries together hold at most 4000 characters."
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Where it came from: the job, checkpoint or chat, plus a date."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Edit a style preference in place; its id stays the same."
+      },
+      "TasteSettingsRequest": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Turning learned taste off deletes every entry."
+          }
+        },
+        "required": [
+          "enabled"
+        ],
+        "additionalProperties": false
+      },
+      "TasteSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "deleted": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Entries deleted by this change."
+          }
+        },
+        "required": [
+          "enabled",
+          "deleted"
+        ],
+        "additionalProperties": false
+      },
       "ProfileResponse": {
         "type": "object",
         "properties": {
@@ -225365,17 +225510,25 @@
               ],
               "additionalProperties": false
             },
-            "description": "The last recorded checkpoint decisions — the raw taste log phase 2 will distill."
+            "description": "The last recorded checkpoint decisions — the raw log learned taste is saved from."
+          },
+          "taste": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TasteEntry"
+            },
+            "description": "Learned style preferences. Advice only: the current request, its brief, the project and the brand kit, exclusions and critics all take precedence."
           }
         },
         "required": [
           "brandKits",
           "critics",
           "references",
-          "recentDecisions"
+          "recentDecisions",
+          "taste"
         ],
         "additionalProperties": false,
-        "description": "The org's legible taste: brand + critics + references + decision log."
+        "description": "The org's legible taste: brand + critics + references + decision log + learned taste."
       },
       "MediaListResponse": {
         "type": "object",
@@ -257464,7 +257617,7 @@
           "account"
         ],
         "summary": "Read the org's Profile — its legible taste",
-        "description": "One read for everything the platform knows about this org's taste: brand kits, registered critics (the machine-checkable standard both the Director's gates and score_composition enforce), the critics' reference media with presigned thumbnails, and the recent checkpoint-decision log (what was approved/revised/abandoned, where). Read this before composing for an org you haven't worked with — it is the house style.",
+        "description": "One read for everything the platform knows about this org's taste: brand kits, registered critics (the machine-checkable standard both the Director's gates and score_composition enforce), the critics' reference media with presigned thumbnails, the recent checkpoint-decision log (what was approved/revised/abandoned, where), and the learned taste: style preferences saved from earlier feedback. Read this before composing for an org you haven't worked with — it is the house style. Learned taste is advice: the current request, its brief, the project, the brand kit, exclusions and critics take precedence.",
         "security": [
           {
             "bearerAuth": []
@@ -257574,6 +257727,535 @@
               "x402": {}
             }
           ]
+        }
+      }
+    },
+    "/v1/profile/taste": {
+      "get": {
+        "operationId": "listTaste",
+        "tags": [
+          "account"
+        ],
+        "summary": "List the org's learned taste",
+        "description": "Required permission: projects:read",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:read"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "read"
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "The org's learned taste and the owner's switch.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasteListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "createTasteEntry",
+        "tags": [
+          "account"
+        ],
+        "summary": "Remember a style preference",
+        "description": "Saves one durable style preference for the org, with its source. Identical text is a no-op. Refused (never truncated) past the per-entry or per-org limit, and while the owner has learned taste off.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:write"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "write"
+          ]
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TasteCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The saved entry, or the identical one the org already held.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasteCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/profile/taste/{tasteId}": {
+      "patch": {
+        "operationId": "updateTasteEntry",
+        "tags": [
+          "account"
+        ],
+        "summary": "Edit a style preference",
+        "description": "Required permission: projects:write",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:write"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "write"
+          ]
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TasteUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The edited entry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasteEntry"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "tasteId",
+            "required": true
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteTasteEntry",
+        "tags": [
+          "account"
+        ],
+        "summary": "Forget a style preference",
+        "description": "Required permission: projects:write",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:write"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "write"
+          ]
+        },
+        "responses": {
+          "204": {
+            "description": "Forgotten."
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "tasteId",
+            "required": true
+          }
+        ]
+      }
+    },
+    "/v1/profile/taste/settings": {
+      "put": {
+        "operationId": "updateTasteSettings",
+        "tags": [
+          "account"
+        ],
+        "summary": "Turn learned taste on or off",
+        "description": "Owner only. Turning it off deletes every entry; nothing is saved or recalled until it is back on.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:write"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "write"
+          ]
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TasteSettingsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The switch's new state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasteSettingsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
         }
       }
     },
