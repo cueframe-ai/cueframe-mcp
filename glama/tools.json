@@ -1,8 +1,8 @@
 {
   "source": {
     "package": "@cueframe/mcp",
-    "version": "0.7.1",
-    "commit": "0f4963badd5a71f99cefb415a0cc8cdeac514e66"
+    "version": "0.7.2",
+    "commit": "4bf69c8eca5e3c77ddf4b69575a9963f45bc7c44"
   },
   "tools": [
     {
@@ -16815,6 +16815,10 @@
           "mediaItemId": {
             "type": "string",
             "description": "mediaItemId (path)."
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
           }
         },
         "required": [
@@ -134116,6 +134120,11 @@
           "after": {
             "type": "string",
             "description": "Zero-based utterance cursor from transcript.data.pagination.nextCursor."
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Read the item through this project, for media shared into it."
           }
         },
         "required": [

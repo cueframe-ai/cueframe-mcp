@@ -37,6 +37,7 @@ const server = new Server(
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => ({
+  isError: true,
   content: [
     {
       type: 'text',
