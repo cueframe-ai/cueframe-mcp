@@ -1,6 +1,6 @@
 {
   "name": "@cueframe/api-contract",
-  "version": "4.4.5",
+  "version": "5.0.0",
   "description": "Versioned OpenAPI contract and composition schemas for the CueFrame video editing and rendering API.",
   "type": "module",
   "license": "Apache-2.0",
