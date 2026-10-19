@@ -240778,6 +240778,25 @@
             "read"
           ]
         },
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "Presigned source URL.",
@@ -240878,16 +240897,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
         "x-payment-info": {
           "price": {
             "mode": "fixed",
@@ -241126,6 +241135,16 @@
             "description": "Zero-based utterance cursor from transcript.data.pagination.nextCursor.",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "in": "query",
+            "required": false,
+            "description": "Read the item through this project, for media shared into it.",
+            "schema": {
+              "type": "string",
+              "minLength": 1
             }
           },
           {

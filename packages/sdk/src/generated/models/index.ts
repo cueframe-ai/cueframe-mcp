@@ -501,6 +501,7 @@ export * from './getComposeSessionComposition200';
 export * from './getCompositionIncludeDependencies';
 export * from './getCompositionParams';
 export * from './getMediaContextParams';
+export * from './getMediaDownloadUrlParams';
 export * from './getMediaParams';
 export * from './getMediaTranscriptParams';
 export * from './getOpenAPISpec200';
