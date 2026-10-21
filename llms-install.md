@@ -18,7 +18,7 @@ The app's Agents settings show the exact command for each platform; copy it from
 
 ## Step 1: connect to the hosted server
 
-The hosted server speaks Streamable HTTP. OAuth opens in the browser on the first call; for headless use send `Authorization: Bearer cf_live_*` instead. To mint a key: `npx -y cueframe@0.10 login`, then `npx -y cueframe@0.10 keys create --name <name>` (`cueframe login` alone signs you in; it does not produce a key).
+The hosted server speaks Streamable HTTP. OAuth opens in the browser on the first call; for headless use send `Authorization: Bearer cf_live_*` instead. To mint a key: `npx -y cueframe@0.11 login`, then `npx -y cueframe@0.11 keys create --name <name>` (`cueframe login` alone signs you in; it does not produce a key).
 
 ```json
 { "mcpServers": { "cueframe": { "url": "https://api.cueframe.ai/v1/mcp" } } }
@@ -55,7 +55,7 @@ Put the block from Step 1 in the client's MCP config: `.mcp.json` (Claude Code),
 Either install this plugin through your client's plugin or marketplace command (the install lines are in [README.md](./README.md)), or let the CLI install the skills into `~/.agents/skills` and `~/.claude/skills`:
 
 ```
-npx -y cueframe@0.10 install
+npx -y cueframe@0.11 install
 ```
 
 Restart your agent session after installation so it can load the server and skills.
@@ -75,7 +75,8 @@ import { createClient, account, projects, compositions, renders } from "@cuefram
 createClient({ baseUrl: "https://api.cueframe.ai", apiKey: process.env.CUEFRAME_API_KEY });
 console.log((await account.getAccount()).plan);
 const project = await projects.createProject({ name: "first-render", format: { aspectRatio: "16:9" } });
-await compositions.applyComposition(project.id, { ops: [{ type: "clip.add", newTrack: true, clip: { id: "c1", kind: "video", startTime: 0, duration: 10, source: { kind: "media", mediaId: "<a media id>" } } }] });
+const { etag } = await compositions.newComposition(project.id, { name: "first" });
+await compositions.applyComposition(project.id, { if_match: etag, ops: [{ type: "clip.add", newTrack: true, clip: { id: "c1", kind: "video", startTime: 0, duration: 10, source: { kind: "media", mediaId: "<a media id>" } } }] });
 console.log((await renders.createRender(project.id, {})).id);
 ```
 

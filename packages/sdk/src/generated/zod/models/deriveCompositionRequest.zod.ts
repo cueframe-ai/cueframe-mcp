@@ -15,7 +15,8 @@ import { Format } from './format.zod';
 
 export const DeriveCompositionRequest = zod.strictObject({
   "fromCompositionId": zod.string().min(1).describe('Source composition to reframe a sibling from.'),
-  "targetFormat": Format.describe('The target output format (aspectRatio + optional fps/resolution) for the new sibling.')
+  "targetFormat": Format.describe('The target output format (aspectRatio + optional fps/resolution) for the new sibling.'),
+  "if_match": zod.string().optional().describe('Required: the source composition\'s strong etag the caller last saw. Missing is refused with 428 precondition_required; a source that changed since is 409 stale_etag.')
 }).describe('Derive a reframed sibling composition for a new aspect (Auto-Reframe / Magic-Resize, agent-native).');
 
 export type DeriveCompositionRequest = zod.input<typeof DeriveCompositionRequest>;

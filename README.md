@@ -21,7 +21,7 @@ CueFrame is a hosted service for composing, editing and rendering video. Connect
 For Claude Code, Codex, Cursor, VS Code, and other supported local agents, run this in your terminal with **Node.js 24 or newer**:
 
 ```bash
-npx -y cueframe@0.10 install
+npx -y cueframe@0.11 install
 ```
 
 The installer detects supported agents and adds the hosted CueFrame MCP endpoint to their configuration. It installs the skills in `~/.agents/skills` and `~/.claude/skills`, preserving locally modified skills by default. It can update multiple detected clients; use `--dry-run` to inspect the changes first.
@@ -158,10 +158,10 @@ Claude Code's session hook and Cursor's rule help select the entry point. Other 
 Use the CLI for explicit video commands, shell scripts and structured JSON output. It connects to the hosted API; it does not run a local renderer. Requires **Node.js 24 or newer**.
 
 ```bash
-npx -y cueframe@0.10 --help
-npx -y cueframe@0.10 login
-npx -y cueframe@0.10 api GET /v1/me --json
-npx -y cueframe@0.10 describe --json
+npx -y cueframe@0.11 --help
+npx -y cueframe@0.11 login
+npx -y cueframe@0.11 api GET /v1/me --json
+npx -y cueframe@0.11 describe --json
 ```
 
 `login` opens the browser to authenticate. Headless scripts can supply `CUEFRAME_API_KEY`. The account request checks your connection and credits; `describe` lists command arguments and options without making an API call.

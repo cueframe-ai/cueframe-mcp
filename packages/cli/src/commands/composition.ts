@@ -1,7 +1,7 @@
 
 import { readFileSync } from 'fs';
-import { ApiError, adviseError, requestRaw, type RawResponse } from '@cueframe/sdk';
-import { compositionPath, normalizeEtag } from '../remote/compositionPath.js';
+import { ApiError, adviseError, normalizeEtag, requestRaw, type RawResponse } from '@cueframe/sdk';
+import { compositionPath } from '../remote/compositionPath.js';
 import { initSdk } from '../remote/sdkClient.js';
 import { ExitCode, exitCodeForStatus, exitWith } from '../remote/exitCodes.js';
 import { emitEvent, emitError, emitResult, info } from '../remote/output.js';
@@ -17,13 +17,12 @@ interface GetOpts extends CommonOpts {}
 interface PutOpts extends CommonOpts {
   body: string;
   ifMatch?: string;
-  force?: boolean;
+  create?: boolean;
 }
 
 interface FromSuggestionOpts extends CommonOpts {
   suggestionId: string;
   ifMatch?: string;
-  force?: boolean;
   format?: string;
 }
 
@@ -62,18 +61,17 @@ export async function compositionPutCommand(projectId: string, opts: PutOpts) {
     exitWith(ExitCode.UserError);
   }
 
-  const ifMatch = requireIfMatch(opts);
+  const precondition = requirePrecondition(opts);
 
   initSdk(opts.target);
 
   const bodyText = await resolveBodyArg(opts.body);
 
-  emitEvent(opts, 'composition_put_prepare', { projectId, ifMatch });
+  emitEvent(opts, 'composition_put_prepare', { projectId, ...precondition });
 
-  const headers = new Headers({
-    'content-type': 'application/json',
-    'if-match': ifMatch,
-  });
+  const headers = new Headers({ 'content-type': 'application/json' });
+  if (precondition.ifMatch) headers.set('if-match', precondition.ifMatch);
+  else headers.set('if-none-match', '*');
 
   const raw = await safeRequest(
     `/v1/projects/${projectId}/composition`,
@@ -141,10 +139,8 @@ export async function compositionFromSuggestionCommand(projectId: string, opts: 
   const MAX_ETAG_RETRIES = 3;
   while (true) {
     attempts++;
-    const headers = new Headers({
-      'content-type': 'application/json',
-      'if-match': currentIfMatch,
-    });
+    const headers = new Headers({ 'content-type': 'application/json' });
+    if (currentIfMatch) headers.set('if-match', currentIfMatch);
     raw = await safeRequest(
       `/v1/projects/${projectId}/composition/from-suggestion`,
       { method: 'POST', headers, body },
@@ -231,35 +227,35 @@ export async function compositionValidateCommand(opts: ValidateOpts) {
 }
 
 
-function requireIfMatch(opts: { ifMatch?: string; force?: boolean }): string {
-  if (opts.ifMatch && opts.force) {
-    console.error('Pass either --if-match <etag> or --force, not both.');
+function requirePrecondition(opts: { ifMatch?: string; create?: boolean }): { ifMatch?: string; create?: true } {
+  if (opts.ifMatch && opts.create) {
+    console.error('Pass either --if-match <etag> or --create, not both.');
     exitWith(ExitCode.UserError);
   }
-  if (opts.force) return '*';
-  if (opts.ifMatch) return opts.ifMatch;
+  if (opts.create) return { create: true };
+  if (opts.ifMatch) return { ifMatch: opts.ifMatch };
   console.error(
     [
       'composition put needs the ETag of the version your edit is based on, so it cannot overwrite a newer save.',
       '  Read it with `cueframe composition get <projectId>` (the `# ETag:` line, or `.etag` with --json) and pass --if-match <etag>.',
-      '  Pass --force to overwrite unconditionally, or to create the first composition of a project that has none.',
+      '  Pass --create to write the first composition of a project that has none (If-None-Match: *).',
     ].join('\n'),
   );
   exitWith(ExitCode.UserError);
 }
 
+// null means the project has no composition yet, so the request carries no If-Match.
 async function resolveIfMatch(
   projectId: string,
-  opts: { ifMatch?: string; force?: boolean; target: string; json?: boolean },
-): Promise<string> {
-  if (opts.force) return '*';
+  opts: { ifMatch?: string; target: string; json?: boolean },
+): Promise<string | null> {
   if (opts.ifMatch) return opts.ifMatch;
 
   const raw = await safeRequest(compositionPath(projectId), { method: 'GET' }, opts, 'composition_etag_fetch');
 
   if (raw.status === 404) {
-    info('No existing composition; treating as create (If-Match: *).', opts);
-    return '*';
+    info('No existing composition; building the first one.', opts);
+    return null;
   }
 
   if (raw.status >= 400) {
@@ -272,7 +268,7 @@ async function resolveIfMatch(
     emitError(
       opts,
       'composition_etag_fetch',
-      new Error('Server returned no ETag on composition GET; cannot safely thread If-Match. Pass --force to overwrite anyway.'),
+      new Error('Server returned no ETag on composition GET; cannot safely thread If-Match. Pass --if-match <etag> from `composition get`.'),
       ExitCode.ApiServerError,
     );
     exitWith(ExitCode.ApiServerError);

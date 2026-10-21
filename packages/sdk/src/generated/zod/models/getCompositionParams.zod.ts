@@ -13,7 +13,8 @@ export const GetCompositionParams = zod.strictObject({
   "componentExecutionVersions": zod.union([zod.literal("3"),zod.tuple([zod.literal("3"),
 zod.literal("4")])]).optional(),
   "includeDependencies": zod.enum(['true', 'false']).optional(),
-  "compositionId": zod.string().optional()
+  "compositionId": zod.string().optional(),
+  "session_id": zod.string().optional()
 })
 
 export type GetCompositionParams = zod.input<typeof GetCompositionParams>;

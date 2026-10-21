@@ -101,7 +101,7 @@ export const getPutCompositionUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Replaces the whole composition. Send `If-Match` with the ETag you observed (409 stale_etag on mismatch), or `If-None-Match: *` to create the first composition (409 conflict if one exists). Without either the write is refused with 428 precondition_required; `If-Match: *` is refused.
  * @summary Replace a project's composition
  */
 export const putComposition = async (id: string,
@@ -203,7 +203,7 @@ export const getApplyCompositionOpUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Applies one CompositionOp. Send `If-Match` with the composition ETag you observed (409 stale_etag on mismatch); without it the write is refused with 428 precondition_required.
  * @summary Apply one operation to a project's composition
  */
 export const applyCompositionOp = async (id: string,
@@ -242,7 +242,7 @@ export const getApplyCompositionUrl = (id: string,) => {
 }
 
 /**
- * Atomically applies an array of CompositionOps. All ops succeed or none do (transactional). Pass `if_match` for optimistic-concurrency control (409 stale_etag on mismatch). Pass `dry_run: true` to validate the batch — runs the same apply + projection accept/reject guards WITHOUT persisting, returning `{ valid, errors }` with `locator.op_index` on the first failing op. Both modes may carry `warnings[]` — non-fatal authoring advisories (e.g. a card whose html reads a CSS custom property no token defines). Warnings never block.
+ * Atomically applies an array of CompositionOps. All ops succeed or none do (transactional). A write must carry `if_match`, the composition ETag it observed (409 stale_etag on mismatch), or the stronger `concurrency` admission; with neither it is refused with 428 precondition_required. Pass `dry_run: true` to validate the batch — runs the same apply + projection accept/reject guards WITHOUT persisting, returning `{ valid, errors }` with `locator.op_index` on the first failing op. Both modes may carry `warnings[]` — non-fatal authoring advisories (e.g. a card whose html reads a CSS custom property no token defines). Warnings never block.
  * @summary Apply a batch of operations to a project's composition (or dry-run validate)
  */
 export const applyComposition = async (id: string,

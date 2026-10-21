@@ -276,7 +276,7 @@ export const ComponentUpdateRequest = zod.strictObject({
 }).optional(),
   "projectId": zod.string().min(1).optional().describe('A project whose explicitly named composition moves its placements atomically with the source write. Requires compositionId and concurrency.'),
   "compositionId": zod.string().min(1).optional().describe('The exact composition observed by the caller. Required with projectId and concurrency.'),
-  "concurrency": CompositionConcurrency.optional().describe('Caller-observed placement guard. Atomic library edits with placement changes require explicit supported invocation admission.')
+  "concurrency": CompositionConcurrency.optional().describe('Caller-observed placement guard, required with projectId and compositionId: a placement update without it is refused with 428 precondition_required. Atomic library edits with placement changes require explicit supported invocation admission.')
 }).describe('PUT /components/:id body: every writable field, all optional; an omitted field is carried forward. Org/user are server-resolved; never accepted from the body.');
 
 export type ComponentUpdateRequest = zod.input<typeof ComponentUpdateRequest>;

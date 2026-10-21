@@ -53,6 +53,6 @@ export interface ComponentPatchRequest {
      * @minLength 1
      */
   compositionId?: string;
-  /** Caller-observed placement guard. Atomic library edits with placement changes require explicit supported invocation admission. */
+  /** Caller-observed placement guard, required with projectId and compositionId: a placement update without it is refused with 428 precondition_required. Atomic library edits with placement changes require explicit supported invocation admission. */
   concurrency?: CompositionConcurrency;
 }

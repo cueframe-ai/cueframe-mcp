@@ -11,9 +11,10 @@ import type { CriticSummary } from './criticSummary';
 import type { ProfileResponseBrandKitsItem } from './profileResponseBrandKitsItem';
 import type { ProfileResponseRecentDecisionsItem } from './profileResponseRecentDecisionsItem';
 import type { ProfileResponseReferencesItem } from './profileResponseReferencesItem';
+import type { TasteEntry } from './tasteEntry';
 
 /**
- * The org's legible taste: brand + critics + references + decision log.
+ * The org's legible taste: brand + critics + references + decision log + learned taste.
  */
 export interface ProfileResponse {
   /** The org's brand kits (bind one to a project via update_project). `audio` carries the brand sound kit when set. */
@@ -22,6 +23,8 @@ export interface ProfileResponse {
   critics: CriticSummary[];
   /** The union of critic reference media — the org's visual standard, with provenance. */
   references: ProfileResponseReferencesItem[];
-  /** The last recorded checkpoint decisions — the raw taste log phase 2 will distill. */
+  /** The last recorded checkpoint decisions — the raw log learned taste is saved from. */
   recentDecisions: ProfileResponseRecentDecisionsItem[];
+  /** Learned style preferences. Advice only: the current request, its brief, the project and the brand kit, exclusions and critics all take precedence. */
+  taste: TasteEntry[];
 }

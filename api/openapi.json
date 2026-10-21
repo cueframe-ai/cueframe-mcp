@@ -213565,7 +213565,7 @@
             "$ref": "#/components/schemas/CompositionConcurrency"
           },
           "if_match": {
-            "description": "Optional OCC precondition — the strong etag (`\"<hex>\"`) the caller last saw. On mismatch the batch is rejected (409 stale_etag) before any op applies.",
+            "description": "OCC precondition: the strong etag (`\"<hex>\"`) the caller last saw. Required unless `concurrency` is sent or `dry_run` is true; a write with neither is refused with 428 precondition_required. On mismatch the batch is rejected (409 stale_etag) before any op applies.",
             "type": "string"
           },
           "dry_run": {
@@ -213697,6 +213697,10 @@
           "targetFormat": {
             "description": "The target output format (aspectRatio + optional fps/resolution) for the new sibling.",
             "$ref": "#/components/schemas/Format"
+          },
+          "if_match": {
+            "description": "Required: the source composition's strong etag the caller last saw. Missing is refused with 428 precondition_required; a source that changed since is 409 stale_etag.",
+            "type": "string"
           }
         },
         "required": [
@@ -215940,6 +215944,10 @@
             "type": "string",
             "minLength": 1,
             "description": "Target a specific composition in the project; defaults to the project's active composition."
+          },
+          "session_id": {
+            "type": "string",
+            "description": "Compose-session id: render that session's SCRATCH composition instead of the active one. Mutually exclusive with `compositionId`. An unknown, foreign or scratch-less session is a 404, never the active composition."
           },
           "format": {
             "$ref": "#/components/schemas/Format"
@@ -221900,7 +221908,7 @@
             "minLength": 1
           },
           "concurrency": {
-            "description": "Caller-observed placement guard. Atomic library edits with placement changes require explicit supported invocation admission.",
+            "description": "Caller-observed placement guard, required with projectId and compositionId: a placement update without it is refused with 428 precondition_required. Atomic library edits with placement changes require explicit supported invocation admission.",
             "$ref": "#/components/schemas/CompositionConcurrency"
           }
         },
@@ -222817,7 +222825,7 @@
             "minLength": 1
           },
           "concurrency": {
-            "description": "Caller-observed placement guard. Atomic library edits with placement changes require explicit supported invocation admission.",
+            "description": "Caller-observed placement guard, required with projectId and compositionId: a placement update without it is refused with 428 precondition_required. Atomic library edits with placement changes require explicit supported invocation admission.",
             "$ref": "#/components/schemas/CompositionConcurrency"
           }
         },
@@ -225133,6 +225141,151 @@
         ],
         "additionalProperties": false
       },
+      "TasteEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          }
+        },
+        "required": [
+          "id",
+          "text",
+          "source",
+          "createdAt",
+          "updatedAt"
+        ],
+        "additionalProperties": false,
+        "description": "One learned style preference: advice for agents, never enforcement."
+      },
+      "TasteListResponse": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "The owner's switch. While off, nothing is saved or recalled."
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TasteEntry"
+            }
+          }
+        },
+        "required": [
+          "enabled",
+          "entries"
+        ],
+        "additionalProperties": false
+      },
+      "TasteCreateRequest": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "One durable style preference, at most 2048 bytes. An org's entries together hold at most 4000 characters."
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Where it came from: the job, checkpoint or chat, plus a date."
+          }
+        },
+        "required": [
+          "text",
+          "source"
+        ],
+        "additionalProperties": false,
+        "description": "Remember a style preference for the org. Saving text the org already holds changes nothing."
+      },
+      "TasteCreateResponse": {
+        "type": "object",
+        "properties": {
+          "entry": {
+            "$ref": "#/components/schemas/TasteEntry"
+          },
+          "created": {
+            "type": "boolean",
+            "description": "False when the org already held this exact text."
+          }
+        },
+        "required": [
+          "entry",
+          "created"
+        ],
+        "additionalProperties": false
+      },
+      "TasteUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "description": "One durable style preference, at most 2048 bytes. An org's entries together hold at most 4000 characters."
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Where it came from: the job, checkpoint or chat, plus a date."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Edit a style preference in place; its id stays the same."
+      },
+      "TasteSettingsRequest": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "description": "Turning learned taste off deletes every entry."
+          }
+        },
+        "required": [
+          "enabled"
+        ],
+        "additionalProperties": false
+      },
+      "TasteSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "deleted": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Entries deleted by this change."
+          }
+        },
+        "required": [
+          "enabled",
+          "deleted"
+        ],
+        "additionalProperties": false
+      },
       "ProfileResponse": {
         "type": "object",
         "properties": {
@@ -225365,17 +225518,25 @@
               ],
               "additionalProperties": false
             },
-            "description": "The last recorded checkpoint decisions — the raw taste log phase 2 will distill."
+            "description": "The last recorded checkpoint decisions — the raw log learned taste is saved from."
+          },
+          "taste": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TasteEntry"
+            },
+            "description": "Learned style preferences. Advice only: the current request, its brief, the project and the brand kit, exclusions and critics all take precedence."
           }
         },
         "required": [
           "brandKits",
           "critics",
           "references",
-          "recentDecisions"
+          "recentDecisions",
+          "taste"
         ],
         "additionalProperties": false,
-        "description": "The org's legible taste: brand + critics + references + decision log."
+        "description": "The org's legible taste: brand + critics + references + decision log + learned taste."
       },
       "MediaListResponse": {
         "type": "object",
@@ -237030,6 +237191,15 @@
             }
           },
           {
+            "name": "session_id",
+            "in": "query",
+            "required": false,
+            "description": "Compose-session id: read that session's SCRATCH composition (what the session has been editing) instead of the active one. Mutually exclusive with `compositionId`. An unknown, foreign or scratch-less session is a 404, never the active composition.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "schema": {
               "type": "string"
             },
@@ -237137,7 +237307,7 @@
           "compositions"
         ],
         "summary": "Replace a project's composition",
-        "description": "Required permission: projects:write",
+        "description": "Replaces the whole composition. Send `If-Match` with the ETag you observed (409 stale_etag on mismatch), or `If-None-Match: *` to create the first composition (409 conflict if one exists). Without either the write is refused with 428 precondition_required; `If-Match: *` is refused.",
         "security": [
           {
             "bearerAuth": []
@@ -237156,6 +237326,37 @@
             "write"
           ]
         },
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "description": "The composition ETag you observed; send this or If-None-Match: *.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "*"
+              ]
+            },
+            "description": "`*` creates the first composition and is refused with 409 conflict if one exists."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -237248,6 +237449,16 @@
               }
             }
           },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. Retry-After header present.",
             "content": {
@@ -237269,16 +237480,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
         "x-payment-info": {
           "price": {
             "mode": "fixed",
@@ -237588,7 +237789,7 @@
           "compositions"
         ],
         "summary": "Apply one operation to a project's composition",
-        "description": "Required permission: projects:write",
+        "description": "Applies one CompositionOp. Send `If-Match` with the composition ETag you observed (409 stale_etag on mismatch); without it the write is refused with 428 precondition_required.",
         "security": [
           {
             "bearerAuth": []
@@ -237607,6 +237808,25 @@
             "write"
           ]
         },
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "The composition ETag you observed.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -237699,6 +237919,16 @@
               }
             }
           },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. Retry-After header present.",
             "content": {
@@ -237720,16 +237950,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
         "x-payment-info": {
           "price": {
             "mode": "fixed",
@@ -237751,7 +237971,7 @@
           "compositions"
         ],
         "summary": "Apply a batch of operations to a project's composition (or dry-run validate)",
-        "description": "Atomically applies an array of CompositionOps. All ops succeed or none do (transactional). Pass `if_match` for optimistic-concurrency control (409 stale_etag on mismatch). Pass `dry_run: true` to validate the batch — runs the same apply + projection accept/reject guards WITHOUT persisting, returning `{ valid, errors }` with `locator.op_index` on the first failing op. Both modes may carry `warnings[]` — non-fatal authoring advisories (e.g. a card whose html reads a CSS custom property no token defines). Warnings never block.",
+        "description": "Atomically applies an array of CompositionOps. All ops succeed or none do (transactional). A write must carry `if_match`, the composition ETag it observed (409 stale_etag on mismatch), or the stronger `concurrency` admission; with neither it is refused with 428 precondition_required. Pass `dry_run: true` to validate the batch — runs the same apply + projection accept/reject guards WITHOUT persisting, returning `{ valid, errors }` with `locator.op_index` on the first failing op. Both modes may carry `warnings[]` — non-fatal authoring advisories (e.g. a card whose html reads a CSS custom property no token defines). Warnings never block.",
         "security": [
           {
             "bearerAuth": []
@@ -237862,6 +238082,16 @@
               }
             }
           },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. Retry-After header present.",
             "content": {
@@ -237914,7 +238144,7 @@
           "clips"
         ],
         "summary": "Build and persist a composition from a clip suggestion",
-        "description": "Required permission: projects:write",
+        "description": "Builds a composition from the suggestion and saves it as the active one. When the project already has a composition, send `If-Match` with its ETag (409 stale_etag on mismatch, 428 precondition_required without it).",
         "security": [
           {
             "bearerAuth": []
@@ -237933,6 +238163,25 @@
             "write"
           ]
         },
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "description": "The composition ETag you observed; required when the project already has a composition.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -238032,6 +238281,16 @@
               }
             }
           },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. Retry-After header present.",
             "content": {
@@ -238053,16 +238312,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
         "x-payment-info": {
           "price": {
             "mode": "fixed",
@@ -238182,8 +238431,28 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -243560,7 +243829,7 @@
             }
           },
           "428": {
-            "description": "Precondition required — If-Match missing on a mutated resource.",
+            "description": "Precondition required: the write names no revision it observed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -247775,7 +248044,7 @@
           "templates"
         ],
         "summary": "Apply a template to a project",
-        "description": "Bind the template's parameters and write the result as the project's timeline, in one Studio command: the server installs the template's components, writes its brand kit (or the preset's, or `brandKitId`'s) onto the project and saves the bound composition. Media values are `{ mediaId }` (must be complete), `{ url }` (an https URL imported once per org) or `{ sample: true }` (the parameter's pinned sample). While an import runs the answer is 202 with `pendingMediaIds`; call again once they are complete. A public slug is imported into this org on first use. Builtin packages require the documentSha256 returned by resolveBuiltinComponent and insert with startTime/idPrefix, expectedRevision and commandId; insertion preserves existing tracks.",
+        "description": "Bind the template's parameters and write the result as the project's timeline, in one Studio command: the server installs the template's components, writes its brand kit (or the preset's, or `brandKitId`'s) onto the project and saves the bound composition. Media values are `{ mediaId }` (must be complete), `{ url }` (an https URL imported once per org) or `{ sample: true }` (the parameter's pinned sample). While an import runs the answer is 202 with `pendingMediaIds`; call again once they are complete. A public slug is imported into this org on first use. Builtin packages require the documentSha256 returned by resolveBuiltinComponent and insert with startTime/idPrefix, expectedRevision and commandId; insertion preserves existing tracks. Over an existing composition `expectedRevision` is required (428 precondition_required without it, 409 when stale); a project with none needs it only for insertion.",
         "security": [
           {
             "bearerAuth": []
@@ -247896,6 +248165,16 @@
           },
           "422": {
             "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -254273,8 +254552,28 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -254431,8 +254730,28 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -257483,7 +257802,7 @@
           "account"
         ],
         "summary": "Read the org's Profile — its legible taste",
-        "description": "One read for everything the platform knows about this org's taste: brand kits, registered critics (the machine-checkable standard both the Director's gates and score_composition enforce), the critics' reference media with presigned thumbnails, and the recent checkpoint-decision log (what was approved/revised/abandoned, where). Read this before composing for an org you haven't worked with — it is the house style.",
+        "description": "One read for everything the platform knows about this org's taste: brand kits, registered critics (the machine-checkable standard both the Director's gates and score_composition enforce), the critics' reference media with presigned thumbnails, the recent checkpoint-decision log (what was approved/revised/abandoned, where), and the learned taste: style preferences saved from earlier feedback. Read this before composing for an org you haven't worked with — it is the house style. Learned taste is advice: the current request, its brief, the project, the brand kit, exclusions and critics take precedence.",
         "security": [
           {
             "bearerAuth": []
@@ -257509,6 +257828,685 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProfileResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
+            "headers": {
+              "Payment-Required": {
+                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USDC",
+            "amount": "10000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      }
+    },
+    "/v1/profile/taste": {
+      "get": {
+        "operationId": "listTaste",
+        "tags": [
+          "account"
+        ],
+        "summary": "List the org's learned taste",
+        "description": "Required permission: projects:read",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:read"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "read"
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "The org's learned taste and the owner's switch.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasteListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
+            "headers": {
+              "Payment-Required": {
+                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USDC",
+            "amount": "10000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      },
+      "post": {
+        "operationId": "createTasteEntry",
+        "tags": [
+          "account"
+        ],
+        "summary": "Remember a style preference",
+        "description": "Saves one durable style preference for the org, with its source. Identical text is a no-op. Refused (never truncated) past the per-entry or per-org limit, and while the owner has learned taste off.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:write"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "write"
+          ]
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TasteCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The saved entry, or the identical one the org already held.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasteCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
+            "headers": {
+              "Payment-Required": {
+                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USDC",
+            "amount": "10000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      }
+    },
+    "/v1/profile/taste/{tasteId}": {
+      "patch": {
+        "operationId": "updateTasteEntry",
+        "tags": [
+          "account"
+        ],
+        "summary": "Edit a style preference",
+        "description": "Required permission: projects:write",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:write"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "write"
+          ]
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TasteUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The edited entry.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasteEntry"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
+            "headers": {
+              "Payment-Required": {
+                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "tasteId",
+            "required": true
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USDC",
+            "amount": "10000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      },
+      "delete": {
+        "operationId": "deleteTasteEntry",
+        "tags": [
+          "account"
+        ],
+        "summary": "Forget a style preference",
+        "description": "Required permission: projects:write",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:write"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "write"
+          ]
+        },
+        "responses": {
+          "204": {
+            "description": "Forgotten."
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
+            "headers": {
+              "Payment-Required": {
+                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "tasteId",
+            "required": true
+          }
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USDC",
+            "amount": "10000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      }
+    },
+    "/v1/profile/taste/settings": {
+      "put": {
+        "operationId": "updateTasteSettings",
+        "tags": [
+          "account"
+        ],
+        "summary": "Turn learned taste on or off",
+        "description": "Owner only. Turning it off deletes every entry; nothing is saved or recalled until it is back on.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:write"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "write"
+          ]
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TasteSettingsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The switch's new state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TasteSettingsResponse"
                 }
               }
             }

@@ -19,6 +19,14 @@ brief/rubric for a local correction; check the affected behavior and relevant re
 of restarting the new-film method below. A diagnostic or preview-only request does not require
 a final export or a whole-film judge pass. Explicit user scope takes precedence over craft defaults.
 
+## Learned taste: the org's saved style preferences
+
+Before composing for an org, read its learned taste: `get_profile` returns it as `taste`, and Eve recalls it into every turn. It is advice, never instruction. Precedence, highest first: the current request, the brief, the project, the brand kit, exclusions and registered critics, then learned taste. When learned taste conflicts with any of those, follow the higher one and say which preference you set aside; never resolve a conflict silently.
+
+Save a preference only when the user states a durable one: a revise comment, a correction in chat, or an explicit "remember this". Never save one-off brief content, facts about footage, approval notes or anything secret. Every save names its source (the job, checkpoint or chat, plus the date). Save with your runtime's taste tool (Eve: `taste__remember`; MCP: `remember_taste`; HTTP: `POST /v1/profile/taste`).
+
+Tell the user every time you save or forget: "Added to your profile: <preference>. Say undo to remove it." Undo forgets that entry (`taste__forget`, `forget_taste`, or `DELETE /v1/profile/taste/{id}`). When the user says not to learn from this job, save nothing for the rest of it. A refusal (the entry is too long, the org's taste is full, or the owner turned learned taste off) is final: tell the user, and do not retry or shorten the preference silently.
+
 ## Plan and author to the request
 
 Use `cueframe-storyboard` only when new work lacks structure. For an existing title correction, retain the approved brief and edit the title directly; no whole-film rubric, paid judge or final export is required.
@@ -384,7 +392,7 @@ Each playbook is an illustrative format default; explicit intent and scope gover
 | Discover what to build with | `list_catalog` with `projection:"component-library", origin:"builtin"` discovers maintained preset/recipe cards. Preserve each card's complete identity and resolve its exact collection, id and revision with `resolve_builtin_component` before `apply_template`; retain the returned `documentSha256` and source pins. Page with `limit` and the returned cursor. The default catalog and `cueframe://component/{id}` describe the one primitive (`heroText`) and org-installed components. |
 | Own / fork a custom graphic | Discover a definition with `list_catalog` projection `component-library`; `get_component_source` with its exact `componentId`, `sourceVersionId` and `builtinCollection`, then `create_component` / `update_component` with the complete native version-4 source snapshot — **see `cueframe-component-authoring`** for the full fork→preview→push loop |
 | Several cells that share space and must reflow together (feature grid, rail + fluid content, cast + type) | An authored card or native component laid out with CSS flex/grid (fixed tracks for content-sized cells, `fr` for the rest), animated from the frame. Static PiP / split is clip `region` + `fit` instead. Never CSS-scale the layout. **See `cueframe-component-authoring`** |
-| Seed + edit the timeline | `apply_composition` (atomic batch ops; `dry_run:true` to check, `if_match` for OCC) — this is where clips, reframe, captions, and format are authored |
+| Seed + edit the timeline | `apply_composition` (atomic batch ops; `dry_run:true` to check; every committing batch needs `if_match` from `get_composition`, or it is refused 428) — this is where clips, reframe, captions, and format are authored |
 | Set the brand | `create_brand_kit` (402-gated) → set `brandKitId` on the **project** (`create_project` / `update_project`). It lives on the project, NOT on a composition op — trying to set it elsewhere is silently dropped. |
 | Shape-check (NOT quality) | `validate_composition` → `{ valid, errors[] }` (`unknown_primitive`, `invalid_primitive_params`, `clip_source_track_mismatch`, `reframe_coverage_gap`, …); does **not** check trim bounds or image-on-video-track (those fail at save/render) |
 | Look at real pixels | `preview_frame` at timestamps → PNG stills → LOOK |

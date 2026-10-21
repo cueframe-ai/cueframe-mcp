@@ -22,6 +22,8 @@ export interface RenderCreateRequest {
      * @minLength 1
      */
   compositionId?: string;
+  /** Compose-session id: render that session's SCRATCH composition instead of the active one. Mutually exclusive with `compositionId`. An unknown, foreign or scratch-less session is a 404, never the active composition. */
+  session_id?: string;
   format?: Format;
   priority?: RenderCreateRequestPriority;
   intent?: RenderCreateRequestIntent;

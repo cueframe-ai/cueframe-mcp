@@ -29,7 +29,7 @@
   },
   "pnpm": {
     "overrides": {
-      "@cueframe/kernel": "file:artifacts/cueframe-kernel-0.7.9.tgz",
+      "@cueframe/kernel": "file:artifacts/cueframe-kernel-0.7.11.tgz",
       "@better-auth/sso": "1.6.22",
       "add-mcp>js-yaml": "4.3.2",
       "better-call": "1.3.7",

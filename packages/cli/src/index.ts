@@ -443,18 +443,18 @@ export async function main() {
     );
   composition
     .command('put')
-    .description('Replace the composition. Requires --if-match <etag> from `composition get` (or --force), so a newer save is never silently overwritten.')
+    .description('Replace the composition. Requires --if-match <etag> from `composition get` (or --create for a project with none), so a newer save is never silently overwritten.')
     .argument('<projectId>', 'Project ID')
     .option('-t, --target <target>', 'Target environment: prod (default), local. CUEFRAME_API_URL overrides the host.')
     .requiredOption('-b, --body <body>', 'Composition JSON (inline, @file.json, or @- for stdin)')
     .option('--if-match <etag>', 'ETag of the version your edit is based on (from `composition get`); a newer save fails with 409 stale_etag')
-    .option('--force', 'Send If-Match: * (unconditional overwrite, or create the first composition)')
+    .option('--create', 'Create the first composition of a project that has none (If-None-Match: *); refused 409 if one exists')
     .action(async (projectId: string, opts: any) => {
       await compositionPutCommand(projectId, {
         target: opts.target,
         body: opts.body,
         ifMatch: opts.ifMatch,
-        force: opts.force,
+        create: opts.create,
         json: globals().json,
       });
     });
@@ -466,14 +466,12 @@ export async function main() {
     .option('-t, --target <target>', 'Target environment: prod (default), local. CUEFRAME_API_URL overrides the host.')
     .option('--format <json>', 'Optional format override, e.g. \'{"aspectRatio":"9:16","fps":30,"resolution":"fhd"}\'')
     .option('--if-match <etag>', 'Use this ETag (skip the GET round-trip)')
-    .option('--force', 'Use If-Match: * (unconditional overwrite)')
     .action((projectId: string, opts: any) =>
       compositionFromSuggestionCommand(projectId, {
         target: opts.target,
         suggestionId: opts.suggestion,
         format: opts.format,
         ifMatch: opts.ifMatch,
-        force: opts.force,
         json: globals().json,
       }),
     );

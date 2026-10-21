@@ -64,8 +64,10 @@ try {
   // A project holds many compositions; the first one becomes its active default.
   const composition = await compositions.newComposition(project.id, { name: "clip" });
   const duration = item.duration;
+  // Every committing apply names the revision it edits; a write without one is refused 428.
   const applied = await compositions.applyComposition(project.id, {
     composition_id: composition.compositionId,
+    if_match: composition.etag,
     ops: [
       {
         type: "clip.add",

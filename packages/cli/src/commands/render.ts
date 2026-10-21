@@ -1,5 +1,6 @@
 import {
   ApiError,
+  normalizeEtag,
   requestRaw,
   type FormatAspectRatio,
   type FormatFps,
@@ -14,7 +15,7 @@ import { downloadOutput, watchRender } from './renderWatch.js';
 import { emitEvent, emitError, emitErrorJson, spinner as oraSpinner } from '../remote/output.js';
 import { assertCleanIdentifier } from '../remote/validate.js';
 import { canonicalJson, deriveIdempotencyKey } from '../remote/idempotency.js';
-import { compositionPath, normalizeEtag } from '../remote/compositionPath.js';
+import { compositionPath } from '../remote/compositionPath.js';
 
 async function fetchCompositionEtag(projectId: string): Promise<string> {
   let res;

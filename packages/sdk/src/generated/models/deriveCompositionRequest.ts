@@ -20,4 +20,6 @@ export interface DeriveCompositionRequest {
   fromCompositionId: string;
   /** The target output format (aspectRatio + optional fps/resolution) for the new sibling. */
   targetFormat: Format;
+  /** Required: the source composition's strong etag the caller last saw. Missing is refused with 428 precondition_required; a source that changed since is 409 stale_etag. */
+  if_match?: string;
 }
