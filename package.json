@@ -10,8 +10,9 @@
   "scripts": {
     "build": "pnpm build:plugin && pnpm -r run --if-present build",
     "build:plugin": "node scripts/plugin/sync-versions.mjs && node scripts/plugin/sync-openai-yaml.mjs",
-    "check": "pnpm check:api-inputs && pnpm check:contract-version && pnpm check:openapi-public && pnpm check:server-json && pnpm check:plugin && pnpm --filter @cueframe/api-contract check && pnpm -r run --if-present check",
+    "check": "pnpm check:api-inputs && pnpm check:contract-version && pnpm check:openapi-public && pnpm check:server-json && pnpm check:plugin && pnpm check:tool-reference && pnpm --filter @cueframe/api-contract check && pnpm -r run --if-present check",
     "check:plugin": "node scripts/plugin/validate.mjs",
+    "check:tool-reference": "node scripts/generate-tool-reference.mjs --check",
     "test": "pnpm -r run --if-present test && pnpm test:tools",
     "test:tools": "node --test tools/*.test.mjs scripts/*.test.mjs scripts/plugin/*.test.mjs",
     "check:openapi-public": "node tools/check-openapi-public.mjs",

@@ -16,7 +16,7 @@ Read the current tool contracts and project context. Do not infer a hosted sessi
 
 Hosted calls use `projectId` and the request shape declared by the live tool. `preview_component` returns a job ID: wait with `kind:"preview"`. `preview_frame` uses `kind:"preview_frame"`. `preview_clip` returns a render job: wait with `kind:"render"`, even though it is a preview. Reuse the returned job ID; do not submit duplicate jobs while waiting. Hosted evidence jobs do not require opening or warming a compose session.
 
-The local component preview compiles replacement source revisions; it is not a promise of browser HMR or zero compilation work. `commit_component_preview` commits the inspected revision with a fresh project ETag. An isolated preview does not itself edit the saved timeline. Close the preview when finished if that tool is available.
+The local component preview compiles replacement source revisions; it is not a promise of browser HMR or zero compilation work. `commit_component_preview` commits the inspected revision and returns the project's new ETag. An isolated preview does not itself edit the saved timeline. Close the preview when finished if that tool is available.
 
 ## Bound the work without changing the animation
 

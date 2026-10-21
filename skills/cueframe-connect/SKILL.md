@@ -42,7 +42,8 @@ way. Use available read-only discovery for the selected lane:
    (`new_composition`, `apply_composition`, `validate_composition`, `create_render`) alongside
    discovery reads (`list_catalog`, `list_media`, `get_account`). There are also resources
    (`cueframe://scene-shot` for 3D product shots) and workflow prompts — a flat tool list is not
-   the whole surface.
+   the whole surface. Every tool, whether it reads or writes, and the surfaces that serve it
+   are in the generated [tool reference](references/tools.md).
 2. **For hosted work, smoke-call `get_account` before spending.** It takes no arguments, costs nothing, and answers the questions
    worth knowing before you spend: which org the key is bound to, the plan, per-feature
    entitlements and — the one that matters — `balance`, not `included`. CueFrame is credit-funded,

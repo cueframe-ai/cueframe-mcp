@@ -1,0 +1,1268 @@
+{
+  "source": {
+    "package": "@cueframe/mcp",
+    "version": "0.11.0",
+    "commit": "a3fb82e597dba89d985ddab5be5864af23cd0fbe"
+  },
+  "surfaces": [
+    "hosted.api",
+    "hosted.editor",
+    "hosted.compose",
+    "desktop.director",
+    "desktop.plan",
+    "desktop.external",
+    "desktop.cli"
+  ],
+  "tools": [
+    {
+      "name": "analyze_transcript",
+      "access": "read",
+      "surfaces": [
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "apply_composition",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "apply_template",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "cancel_compose",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "cancel_export",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "cancel_job",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "cancel_render",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "check_template",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "close_component_preview",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "close_project",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "commit_component_preview",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "compose",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "consult",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "create_brand_kit",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "create_brief",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "create_checkout",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "create_component",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "create_project",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "create_render",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "create_upload",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "create_webhook",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "delete_brief",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "delete_composition",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "delete_critic",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "delete_media",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "delete_project",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "delete_webhook",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "derive_composition",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "describe_composition_ops",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "download_media",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "edit_component",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_apply",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_begin",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_create_brief",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose"
+      ]
+    },
+    {
+      "name": "editorial_create_run",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose"
+      ]
+    },
+    {
+      "name": "editorial_findings_append",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_findings_list",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_get_run",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_inspect_audio",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_inspect_source",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_inspect_transcript",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_integrate",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_list_briefs",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_list_evidence",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_list_runs",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "editorial_run_source",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose"
+      ]
+    },
+    {
+      "name": "editorial_sample_motion",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "export_project",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "extract_brand_kit",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "finalize_upload",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "forget_taste",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "generate_media",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_account",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_app_state",
+      "access": "read",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_brief",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "get_checkpoint",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "get_component_source",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_composition",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_context",
+      "access": "read",
+      "surfaces": [
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_director_state",
+      "access": "read",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "get_editor_state",
+      "access": "read",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_import_status",
+      "access": "read",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_media_context",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_media_facts",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_profile",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_project_settings",
+      "access": "read",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "get_render",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "get_scene_contract",
+      "access": "read",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_template",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_transcript",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_usage",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "import_local_media",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "import_media",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "import_resource",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "install_local_person_runtime",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "list_briefs",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "list_catalog",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "list_checkpoints",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "list_component_packages",
+      "access": "read",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "list_compositions",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "list_critics",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "list_media",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "list_plans",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "list_projects",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "list_render_fonts",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "list_taste",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "list_templates",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor"
+      ]
+    },
+    {
+      "name": "new_composition",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "open_component_preview",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "open_project",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "play_pause",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "prepare_component_library_previews",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "prepare_component_media",
+      "access": "read",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "prepare_media",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "preview_card",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose"
+      ]
+    },
+    {
+      "name": "preview_clip",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "preview_component",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "preview_frame",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "propose_plan",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "publish_component",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "read_component",
+      "access": "read",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "redo_edit",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "refresh_render_url",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "register_critic",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "remember_taste",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "rename_project",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "render_component_preview_frame",
+      "access": "read",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "repin_component",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "resolve_builtin_component",
+      "access": "read",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "resume",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "retry_render",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "save_as_template",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "score_composition",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "search_fonts",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "search_library",
+      "access": "read",
+      "surfaces": [
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "search_resources",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "seek",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "select_candidate",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "send_director_prompt",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "set_playback_rate",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "start_template",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor"
+      ]
+    },
+    {
+      "name": "submit_plan",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "suggest_briefs",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "undo_edit",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "update_brief",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "update_component",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "update_component_preview",
+      "access": "write",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "update_project",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "update_project_settings",
+      "access": "write",
+      "surfaces": [
+        "desktop.external"
+      ]
+    },
+    {
+      "name": "update_webhook",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "validate_composition",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "verify_webhook",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
+      "name": "view_asset",
+      "access": "read",
+      "surfaces": [
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "view_style_reference",
+      "access": "read",
+      "surfaces": [
+        "hosted.compose"
+      ]
+    },
+    {
+      "name": "wait_job",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    }
+  ]
+}

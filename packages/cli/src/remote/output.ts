@@ -1,6 +1,7 @@
 
 import ora, { type Ora } from 'ora';
 import pino from 'pino';
+import type { CliEvent } from './events.js';
 import { formatError } from './sdkClient.js';
 
 export interface JsonOpt {
@@ -25,7 +26,7 @@ export function spinner(text: string, json: boolean | undefined): Ora {
 
 export function emitEvent(
   opts: JsonOpt,
-  event: string,
+  event: CliEvent,
   payload: Record<string, unknown> = {},
 ): void {
   if (!opts.json) return;

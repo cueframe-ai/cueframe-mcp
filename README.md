@@ -261,6 +261,7 @@ The hosted service, desktop integration, and registry shim serve different purpo
 - `gemini-extension.json`, `skills.sh.json`, `plugin.json`: Gemini CLI, skills.sh, the portable manifest (agent-plugins.org).
 - `api/`, `packages/`, `tools/`, `scripts/`: the contract, the four npm packages, their generators and checks (`scripts/plugin/` holds the plugin's).
 - `server.json`, `glama.json`, `glama/`, `Dockerfile`: the registry files.
+- `catalog/`: the tool reference and error codes exported from the MCP catalog in cueframe-ai/cueframe (`pnpm --filter @cueframe/mcp export:tool-reference -- <this repository>/catalog` there). `skills/cueframe-connect/references/tools.md` is rendered from it, and the skills check reads it: a skill may name only a tool it lists.
 - `examples/`, `llms-install.md`: per-client setup and the agent-readable install guide.
 
 ## Development
