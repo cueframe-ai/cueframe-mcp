@@ -87,22 +87,31 @@ test('skill code blocks hold no version-3 component code', () => {
   assert.deepEqual(found, []);
 });
 
-test('skills name only tools an agent can call', () => {
-  // Hosted: the snapshot of the server's tools/list (glama/tools.json, refreshed from the MCP package).
-  const hosted = JSON.parse(read('glama/tools.json')).tools.map((tool) => tool.name);
-  // The Director's own tools, which the hosted tools/list does not serve (cueframe-public:
-  // packages/mcp/src/internalLoopTools.ts and apps/studio/src/llm/desktopToolNames.ts).
-  const director = ['render_frame', 'verify_composition', 'commit_session', 'view_style_reference', 'get_context', 'search_library',
-    'analyze_transcript', 'get_app_state', 'open_component_preview', 'update_component_preview', 'render_component_preview_frame',
-    'close_component_preview', 'commit_component_preview', 'read_component', 'edit_component', 'get_scene_contract'];
-  const known = new Set([...hosted, ...director]);
-  // A tool as skills write it: a backticked snake_case name led by a tool verb.
-  const toolName = /`((?:get|list|create|update|delete|apply|preview|search|import|generate|describe|validate|wait|cancel|retry|resolve|score|extract|prepare|select|register|new|start|verify|open|commit|close|read|edit|repin|publish|finalize|suggest|derive|view|analyze|consult|resume|render_component|render_frame)_[a-z0-9_]+)`/g;
-  const docs = skills.flatMap((skill) => {
-    const dir = new URL(`skills/${skill}/references/`, root);
-    const refs = existsSync(dir) ? readdirSync(dir).filter((name) => name.endsWith('.md')).map((name) => `skills/${skill}/references/${name}`) : [];
-    return [`skills/${skill}/SKILL.md`, ...refs];
-  });
-  const unknown = docs.flatMap((file) => [...read(file).matchAll(toolName)].map(([, name]) => name).filter((name) => !known.has(name)).map((name) => `${file}: ${name}`));
+// The catalog's tools, the error registry's codes and the CLI's events are all exported, never listed here.
+const catalogTools = new Set(JSON.parse(read('catalog/tool-reference.json')).tools.map((tool) => tool.name));
+const { CLI_EVENTS } = await import(new URL('packages/cli/src/remote/events.ts', root).href);
+const vocabulary = new Set([...JSON.parse(read('catalog/error-codes.json')).codes, ...CLI_EVENTS]);
+const toolVerbs = new Set([...catalogTools].map((name) => name.split('_')[0]));
+// A backticked or called snake_case name, with any `<connection>__` prefix removed, led by a tool verb.
+const namedTools = (text) => [...text.matchAll(/(?:`|\b)(?:[a-z][a-z0-9-]*__)*([a-z][a-z0-9]*(?:_[a-z0-9]+)+)(?=`|\s*\()/g)]
+  .map(([, name]) => name).filter((name) => toolVerbs.has(name.split('_')[0]) && !vocabulary.has(name));
+
+test('the tool-name check tells tools from events and error codes', () => {
+  const text = '`get_account`, `mcp__cueframe__apply_composition`, `cueframe-read__get_composition`, wait_job(…), `render_progress`, `render_unknown_primitive`, `get_bogus_tool`, `verify_composition`';
+  assert.deepEqual(namedTools(text).filter((name) => !catalogTools.has(name)), ['get_bogus_tool', 'verify_composition']);
+});
+
+test('skills name only tools the catalog serves', () => {
+  const docs = [];
+  const walk = (dir) => {
+    for (const entry of readdirSync(new URL(dir, root), { withFileTypes: true })) {
+      if (entry.isDirectory()) walk(`${dir}${entry.name}/`);
+      else if (entry.name.endsWith('.md') && `${dir}${entry.name}` !== 'skills/cueframe-connect/references/tools.md') docs.push(`${dir}${entry.name}`);
+    }
+  };
+  walk('skills/');
+  const references = docs.flatMap((file) => namedTools(read(file)).map((name) => ({ file, name })));
+  assert.ok(new Set(references.map(({ name }) => name)).size >= 40, 'the tool-name pattern found too few references to check');
+  const unknown = references.filter(({ name }) => !catalogTools.has(name)).map(({ file, name }) => `${file}: ${name}`);
   assert.deepEqual([...new Set(unknown)], []);
 });

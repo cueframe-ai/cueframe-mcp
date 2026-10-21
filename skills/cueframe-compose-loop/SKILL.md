@@ -56,7 +56,10 @@ before authoring custom source.
 Build/modify the working composition with the op vocabulary —
 the curated `apply_composition({ projectId, body: { ops: [...] } })`. Read
 `describe_composition_ops` for supported operations and `get_composition` for
-current revision and brand witnesses before editing. Op keys
+current revision and brand witnesses before editing. Pass that revision as `if_match`
+on every committing call. A 409 means someone saved after your read: call `get_composition`
+again, rebuild your ops against what it returns, and send them with its revision. Never resend
+the same ops with the 409's `currentEtag`; that overwrites a save you have not read. Op keys
 are `.strict()`: a typo'd key is rejected, not silently dropped, so read the
 error and fix the key. Reference faces from get_context in your reframe segments;
 time captions/overlays from the transcript word timings.

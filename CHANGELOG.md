@@ -2,6 +2,11 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/skills 0.4.1
+
+- `cueframe-connect/references/tools.md` is the tool reference: every catalog tool, whether it reads or writes, and the hosted and desktop surfaces that serve it, rendered from `catalog/tool-reference.json`, which is exported from the `@cueframe/mcp` catalog. The skills check fails on any tool-shaped name the catalog does not serve; error codes (`catalog/error-codes.json`) and the CLI's `--json` events are its separate vocabulary.
+- Composition writes are read-then-write: on a 409, read `get_composition` again and rebuild the edit; never resend it with the 409's `currentEtag`.
+
 ## @cueframe/api-contract 6.0.1
 
 - Kernel 0.7.12 provenance (it carries the public CLI agent graph). The served document is byte-identical to 6.0.0. 6.0.0 was packed but never published, so 6.0.1 is the first 6.x release and carries the 6.0.0 changes below.

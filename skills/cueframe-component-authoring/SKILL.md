@@ -116,9 +116,9 @@ properties, then the manifest's slots).
 
 Edit the draft with `update_component_preview` (exact-text `{oldText, newText, replaceAll?}`
 edits). Check exact frames with `render_component_preview_frame`, and inspect playback for motion.
-`commit_component_preview` publishes the checked source to the library and pins the clip, with a
-fresh ETag. `read_component` and `edit_component` read and edit the library directly. Close the
-preview when finished.
+`commit_component_preview` publishes the checked source to the library and pins the clip, and
+returns the project's new ETag. `read_component` and `edit_component` read and edit the library
+directly. Close the preview when finished.
 
 Media slots are image or video, declared in `component_manifest.assets` and bound to project
 media ids in `component_assets`. The template passes them to `MediaTileScene` as

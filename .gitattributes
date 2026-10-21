@@ -7,6 +7,10 @@
 # The discovery snapshot is exported, not written; collapse it in diffs.
 glama/tools.json linguist-generated=true
 
+# Exported from the public catalog and error registry, and the reference rendered from them.
+catalog/*.json linguist-generated=true
+skills/cueframe-connect/references/tools.md linguist-generated=true
+
 # Binaries — never normalised. `text=auto` already skips anything with NUL
 # bytes; these are listed so a text-looking asset can't be misdetected.
 *.png binary
