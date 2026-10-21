@@ -2,6 +2,10 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 6.0.1
+
+- Kernel 0.7.12 provenance (it carries the public CLI agent graph). The served document is byte-identical to 6.0.0. 6.0.0 was packed but never published, so 6.0.1 is the first 6.x release and carries the 6.0.0 changes below.
+
 ## @cueframe/api-contract 6.0.0
 
 - **Breaking:** composition writes name the revision they edit. `applyComposition` needs `if_match` or `concurrency` (`dry_run` is exempt); `applyCompositionOp`, `putComposition` and `deriveComposition` need `If-Match` / `if_match`; `applyTemplate` needs `expectedRevision` and `composeFromSuggestion` needs `If-Match` once the project has a composition; component placement updates need `concurrency`. A missing revision is `428 precondition_required` naming the field in `details.fields`; a stale one stays `409`.
