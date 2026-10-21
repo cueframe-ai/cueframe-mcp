@@ -18,6 +18,7 @@ import { Format } from './format.zod';
 export const RenderCreateRequest = zod.strictObject({
   "clipSuggestionId": zod.string().min(1).optional(),
   "compositionId": zod.string().min(1).optional().describe('Target a specific composition in the project; defaults to the project\'s active composition.'),
+  "session_id": zod.string().optional().describe('Compose-session id: render that session\'s SCRATCH composition instead of the active one. Mutually exclusive with `compositionId`. An unknown, foreign or scratch-less session is a 404, never the active composition.'),
   "format": Format.optional(),
   "priority": zod.enum(['interactive', 'standard', 'background']).optional(),
   "intent": zod.enum(['preview', 'final']).optional(),

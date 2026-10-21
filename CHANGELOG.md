@@ -2,6 +2,26 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 6.0.0
+
+- **Breaking:** composition writes name the revision they edit. `applyComposition` needs `if_match` or `concurrency` (`dry_run` is exempt); `applyCompositionOp`, `putComposition` and `deriveComposition` need `If-Match` / `if_match`; `applyTemplate` needs `expectedRevision` and `composeFromSuggestion` needs `If-Match` once the project has a composition; component placement updates need `concurrency`. A missing revision is `428 precondition_required` naming the field in `details.fields`; a stale one stays `409`.
+- **Breaking:** the first composition is created with `If-None-Match: *` (409 `conflict` if one exists). `If-Match: *` and a malformed `If-Match` are `validation_error`.
+- A cached job that failed or was cancelled no longer replays for an `Idempotency-Key`; an identical expensive request (render, template render, generation, compose, template instantiation) within its window returns the same job with `Idempotency-Replay: true`, and a second x402 payment for it is released.
+- `GET /v1/projects/{id}/composition` and `POST /v1/projects/{id}/renders` take `session_id` to read and render a compose session's scratch.
+- Learned taste: `/v1/profile/taste` (list, remember, edit, forget, the owner's switch) and `ProfileResponse.taste`.
+- Kernel 0.7.11 provenance.
+
+## @cueframe/sdk 0.15.0
+
+- **Breaking:** models regenerated from contract 6.0.0 (`DeriveCompositionRequest.if_match`, the `session_id` read and render parameters, learned taste).
+- `readCompositionRevision(projectId, params?)` reads a composition with the normalized ETag every guarded write takes, or `null` when the project has none yet. `normalizeEtag` is exported.
+
+## cueframe 0.11.0
+
+- **Breaking:** `composition put --force` is gone: the server no longer accepts `If-Match: *`. Pass `--if-match <etag>` from `composition get`, or `--create` to write a project's first composition (`If-None-Match: *`, refused if one exists).
+- `composition from-suggestion` and `project create --from-suggestion` send no `If-Match` when the project has no composition, and `--force` is gone there too.
+- Bundles SDK 0.15.0 and contract 6.0.0.
+
 ## cueframe 0.10.0
 
 - **Breaking:** `composition put` no longer fetches the current ETag itself. Pass `--if-match <etag>` with the ETag from the `composition get` your edit started from, or `--force` to create the first composition or overwrite deliberately; without either it exits 2 before any request. The old default read the newest ETag right before the PUT, so a save made while you were editing was silently replaced.

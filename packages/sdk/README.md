@@ -67,3 +67,18 @@ package root (`projects`, `media`, `compositions`, `renders`, `jobs`,
 `account`, `brandKits`, …). Low-level access: `request<T>(path, init)` for
 typed calls; `requestRaw(path, init)` when you need status and headers (e.g.
 reading an `ETag` to thread into a subsequent `If-Match`).
+
+### Composition revisions
+
+Every committing composition write names the revision it edits, or the server answers
+`428 precondition_required`. Read it first:
+
+```ts
+import { compositions, readCompositionRevision } from "@cueframe/sdk";
+
+const current = await readCompositionRevision(projectId); // null when the project has none yet
+await compositions.applyComposition(projectId, { if_match: current!.etag, ops });
+await compositions.putComposition(projectId, body, { headers: current ? { "If-Match": current.etag } : { "If-None-Match": "*" } });
+```
+
+A `409 stale_etag` means someone saved since your read: read again and redo the edit.

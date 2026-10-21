@@ -183,7 +183,7 @@ describe('compositionPutCommand — ETag threading', () => {
     vi.restoreAllMocks();
   });
 
-  it('refuses without --if-match or --force, before any request, naming `composition get`', async () => {
+  it('refuses without --if-match or --create, before any request, naming `composition get`', async () => {
     const spy = vi.spyOn(sdk, 'requestRaw');
     const code = await run(
       () => compositionPutCommand('proj_123', { target: 'prod', body: '{"tracks":[]}' }),
@@ -194,20 +194,20 @@ describe('compositionPutCommand — ETag threading', () => {
     const stderr = spies.errSpy.mock.calls.map((c) => c[0]).join('\n') + spies.stderrChunks.join('');
     expect(stderr).toMatch(/--if-match/);
     expect(stderr).toMatch(/composition get/);
-    expect(stderr).toMatch(/--force/);
+    expect(stderr).toMatch(/--create/);
   });
 
-  it('refuses --if-match together with --force', async () => {
+  it('refuses --if-match together with --create', async () => {
     const spy = vi.spyOn(sdk, 'requestRaw');
     const code = await run(
-      () => compositionPutCommand('proj_123', { target: 'prod', body: '{}', ifMatch: '"v1"', force: true }),
+      () => compositionPutCommand('proj_123', { target: 'prod', body: '{}', ifMatch: '"v1"', create: true }),
       spies.exitSpy,
     );
     expect(code).toBe(2);
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('--force uses If-Match: * and skips the GET round-trip', async () => {
+  it('--create sends If-None-Match: * and no If-Match, without a GET round-trip', async () => {
     const reqs: Captured[] = [];
     vi.spyOn(sdk, 'requestRaw').mockImplementation(async (url, init): Promise<RawResponse> => {
       reqs.push({ url, init: init ?? {} });
@@ -224,7 +224,7 @@ describe('compositionPutCommand — ETag threading', () => {
         compositionPutCommand('proj_123', {
           target: 'prod',
           body: '{"tracks":[]}',
-          force: true,
+          create: true,
         }),
       spies.exitSpy,
     );
@@ -232,7 +232,8 @@ describe('compositionPutCommand — ETag threading', () => {
     expect(reqs).toHaveLength(1);
     expect(reqs[0].init.method).toBe('PUT');
     const h = new Headers(reqs[0].init.headers as HeadersInit);
-    expect(h.get('if-match')).toBe('*');
+    expect(h.get('if-none-match')).toBe('*');
+    expect(h.get('if-match')).toBeNull();
   });
 
   it('--if-match <etag> uses that value and skips the GET round-trip', async () => {
@@ -302,7 +303,7 @@ describe('compositionPutCommand — ETag threading', () => {
     });
     const code = await run(
       () =>
-        compositionPutCommand('proj_123', { target: 'prod', body: '{}', force: true }),
+        compositionPutCommand('proj_123', { target: 'prod', body: '{}', ifMatch: '"v1"' }),
       spies.exitSpy,
     );
     expect(code).toBe(3);
@@ -360,6 +361,26 @@ describe('compositionFromSuggestionCommand', () => {
     expect(h.get('if-match')).toBe('"v1"');
   });
 
+  it('builds the first composition with no If-Match when the project has none', async () => {
+    const reqs: Captured[] = [];
+    vi.spyOn(sdk, 'requestRaw').mockImplementation(async (url, init): Promise<RawResponse> => {
+      reqs.push({ url, init: init ?? {} });
+      if (!init?.method || init.method === 'GET') {
+        return { status: 404, statusText: 'Not Found', headers: {}, body: { error: { code: 'not_found', message: 'none' } } };
+      }
+      return { status: 200, statusText: 'OK', headers: { etag: '"v1"' }, body: { compositionId: 'c1' } };
+    });
+    const code = await run(
+      () => compositionFromSuggestionCommand('proj_123', { target: 'prod', suggestionId: 'sug_abc' }),
+      spies.exitSpy,
+    );
+    expect(code).toBe(0);
+    expect(reqs).toHaveLength(2);
+    const h = new Headers(reqs[1].init.headers as HeadersInit);
+    expect(h.get('if-match')).toBeNull();
+    expect(h.get('if-none-match')).toBeNull();
+  });
+
   it('--format JSON is parsed and forwarded', async () => {
     const reqs: Captured[] = [];
     vi.spyOn(sdk, 'requestRaw').mockImplementation(async (url, init): Promise<RawResponse> => {
@@ -371,7 +392,7 @@ describe('compositionFromSuggestionCommand', () => {
         compositionFromSuggestionCommand('proj_123', {
           target: 'prod',
           suggestionId: 'sug_abc',
-          force: true,
+          ifMatch: '"v1"',
           format: '{"aspectRatio":"9:16","fps":30,"resolution":"fhd"}',
         }),
       spies.exitSpy,
@@ -386,7 +407,7 @@ describe('compositionFromSuggestionCommand', () => {
         compositionFromSuggestionCommand('proj_123', {
           target: 'prod',
           suggestionId: 'sug_abc',
-          force: true,
+          ifMatch: '"v1"',
           format: 'not-json',
         }),
       spies.exitSpy,

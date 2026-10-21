@@ -15,11 +15,15 @@ import {
 
 
 /**
- * Required permission: projects:write
+ * Builds a composition from the suggestion and saves it as the active one. When the project already has a composition, send `If-Match` with its ETag (409 stale_etag on mismatch, 428 precondition_required without it).
  * @summary Build and persist a composition from a clip suggestion
  */
 export const ComposeFromSuggestionParams = zod.object({
   "id": zod.string()
+})
+
+export const ComposeFromSuggestionHeader = zod.object({
+  "If-Match": zod.string().optional().describe('The composition ETag you observed; required when the project already has a composition.')
 })
 
 export const ComposeFromSuggestionBody = CompositionFromSuggestionRequest

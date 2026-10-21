@@ -25,3 +25,5 @@ export { COMPONENT_EXECUTION_VERSIONS, BLANK_COMPONENT_SOURCE_V4 } from "./gener
 export type FormatFps = NonNullable<
   import("./generated/models").Format["fps"]
 >;
+export { readCompositionRevision, normalizeEtag } from "./revision";
+export type { CompositionRevision } from "./revision";

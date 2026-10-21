@@ -26,7 +26,7 @@ export const getComposeFromSuggestionUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Builds a composition from the suggestion and saves it as the active one. When the project already has a composition, send `If-Match` with its ETag (409 stale_etag on mismatch, 428 precondition_required without it).
  * @summary Build and persist a composition from a clip suggestion
  */
 export const composeFromSuggestion = async (id: string,

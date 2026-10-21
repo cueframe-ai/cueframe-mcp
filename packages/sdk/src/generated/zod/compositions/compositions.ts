@@ -31,15 +31,21 @@ export const GetCompositionQueryParams = zod.object({
   "componentExecutionVersions": zod.union([zod.literal("3"),zod.tuple([zod.literal("3"),
 zod.literal("4")])]).optional().describe('The component execution versions this reader accepts, one parameter per version: 3, or 3 and 4 (native placements). Absent readers accept only the historical protocol.'),
   "includeDependencies": zod.enum(['true', 'false']).optional().describe('Return the immutable composition identity, project revision and shared v1 dependency expectations alongside the composition.'),
-  "compositionId": zod.string().optional().describe('Read a SPECIFIC composition instead of the project\'s active one. Omit it and the active composition is returned. Pairs with `composition_id` on the apply op: an edit you can make to a second composition is one you can read back.')
+  "compositionId": zod.string().optional().describe('Read a SPECIFIC composition instead of the project\'s active one. Omit it and the active composition is returned. Pairs with `composition_id` on the apply op: an edit you can make to a second composition is one you can read back.'),
+  "session_id": zod.string().optional().describe('Compose-session id: read that session\'s SCRATCH composition (what the session has been editing) instead of the active one. Mutually exclusive with `compositionId`. An unknown, foreign or scratch-less session is a 404, never the active composition.')
 })
 
 /**
- * Required permission: projects:write
+ * Replaces the whole composition. Send `If-Match` with the ETag you observed (409 stale_etag on mismatch), or `If-None-Match: *` to create the first composition (409 conflict if one exists). Without either the write is refused with 428 precondition_required; `If-Match: *` is refused.
  * @summary Replace a project's composition
  */
 export const PutCompositionParams = zod.object({
   "id": zod.string()
+})
+
+export const PutCompositionHeader = zod.object({
+  "If-Match": zod.string().optional().describe('The composition ETag you observed; send this or If-None-Match: *.'),
+  "If-None-Match": zod.enum(['*']).optional().describe('`*` creates the first composition and is refused with 409 conflict if one exists.')
 })
 
 export const PutCompositionBody = CompositionReplaceRequest
@@ -63,17 +69,21 @@ export const ListCompositionsParams = zod.object({
 })
 
 /**
- * Required permission: projects:write
+ * Applies one CompositionOp. Send `If-Match` with the composition ETag you observed (409 stale_etag on mismatch); without it the write is refused with 428 precondition_required.
  * @summary Apply one operation to a project's composition
  */
 export const ApplyCompositionOpParams = zod.object({
   "id": zod.string()
 })
 
+export const ApplyCompositionOpHeader = zod.object({
+  "If-Match": zod.string().describe('The composition ETag you observed.')
+})
+
 export const ApplyCompositionOpBody = CompositionOp
 
 /**
- * Atomically applies an array of CompositionOps. All ops succeed or none do (transactional). Pass `if_match` for optimistic-concurrency control (409 stale_etag on mismatch). Pass `dry_run: true` to validate the batch — runs the same apply + projection accept/reject guards WITHOUT persisting, returning `{ valid, errors }` with `locator.op_index` on the first failing op. Both modes may carry `warnings[]` — non-fatal authoring advisories (e.g. a card whose html reads a CSS custom property no token defines). Warnings never block.
+ * Atomically applies an array of CompositionOps. All ops succeed or none do (transactional). A write must carry `if_match`, the composition ETag it observed (409 stale_etag on mismatch), or the stronger `concurrency` admission; with neither it is refused with 428 precondition_required. Pass `dry_run: true` to validate the batch — runs the same apply + projection accept/reject guards WITHOUT persisting, returning `{ valid, errors }` with `locator.op_index` on the first failing op. Both modes may carry `warnings[]` — non-fatal authoring advisories (e.g. a card whose html reads a CSS custom property no token defines). Warnings never block.
  * @summary Apply a batch of operations to a project's composition (or dry-run validate)
  */
 export const ApplyCompositionParams = zod.object({

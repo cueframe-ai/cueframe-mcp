@@ -27,7 +27,7 @@ export interface CompositionApplyRequest {
   expectedBrandIdentity?: string;
   /** Version 1 shared dependency admission. Guarded requests must name the observed immutable composition with composition_id or concurrency.compositionId; changed or missing dependencies refuse the entire batch. */
   concurrency?: CompositionConcurrency;
-  /** Optional OCC precondition — the strong etag (`"<hex>"`) the caller last saw. On mismatch the batch is rejected (409 stale_etag) before any op applies. */
+  /** OCC precondition: the strong etag (`"<hex>"`) the caller last saw. Required unless `concurrency` is sent or `dry_run` is true; a write with neither is refused with 428 precondition_required. On mismatch the batch is rejected (409 stale_etag) before any op applies. */
   if_match?: string;
   /** When true, validate the batch (apply + projection accept/reject guards) WITHOUT persisting. Returns `{ valid, errors }` instead of applying. */
   dry_run?: boolean;

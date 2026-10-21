@@ -79,7 +79,6 @@ export async function projectCreateCommand(opts: {
         target: opts.target,
         suggestionId: opts.fromSuggestion,
         json: opts.json,
-        force: true, // fresh project → composition is empty → no ETag to honor
       });
     }
     if (!opts.json) {

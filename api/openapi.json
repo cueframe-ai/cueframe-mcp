@@ -213565,7 +213565,7 @@
             "$ref": "#/components/schemas/CompositionConcurrency"
           },
           "if_match": {
-            "description": "Optional OCC precondition — the strong etag (`\"<hex>\"`) the caller last saw. On mismatch the batch is rejected (409 stale_etag) before any op applies.",
+            "description": "OCC precondition: the strong etag (`\"<hex>\"`) the caller last saw. Required unless `concurrency` is sent or `dry_run` is true; a write with neither is refused with 428 precondition_required. On mismatch the batch is rejected (409 stale_etag) before any op applies.",
             "type": "string"
           },
           "dry_run": {
@@ -213697,6 +213697,10 @@
           "targetFormat": {
             "description": "The target output format (aspectRatio + optional fps/resolution) for the new sibling.",
             "$ref": "#/components/schemas/Format"
+          },
+          "if_match": {
+            "description": "Required: the source composition's strong etag the caller last saw. Missing is refused with 428 precondition_required; a source that changed since is 409 stale_etag.",
+            "type": "string"
           }
         },
         "required": [
@@ -215940,6 +215944,10 @@
             "type": "string",
             "minLength": 1,
             "description": "Target a specific composition in the project; defaults to the project's active composition."
+          },
+          "session_id": {
+            "type": "string",
+            "description": "Compose-session id: render that session's SCRATCH composition instead of the active one. Mutually exclusive with `compositionId`. An unknown, foreign or scratch-less session is a 404, never the active composition."
           },
           "format": {
             "$ref": "#/components/schemas/Format"
@@ -221900,7 +221908,7 @@
             "minLength": 1
           },
           "concurrency": {
-            "description": "Caller-observed placement guard. Atomic library edits with placement changes require explicit supported invocation admission.",
+            "description": "Caller-observed placement guard, required with projectId and compositionId: a placement update without it is refused with 428 precondition_required. Atomic library edits with placement changes require explicit supported invocation admission.",
             "$ref": "#/components/schemas/CompositionConcurrency"
           }
         },
@@ -222817,7 +222825,7 @@
             "minLength": 1
           },
           "concurrency": {
-            "description": "Caller-observed placement guard. Atomic library edits with placement changes require explicit supported invocation admission.",
+            "description": "Caller-observed placement guard, required with projectId and compositionId: a placement update without it is refused with 428 precondition_required. Atomic library edits with placement changes require explicit supported invocation admission.",
             "$ref": "#/components/schemas/CompositionConcurrency"
           }
         },
@@ -237183,6 +237191,15 @@
             }
           },
           {
+            "name": "session_id",
+            "in": "query",
+            "required": false,
+            "description": "Compose-session id: read that session's SCRATCH composition (what the session has been editing) instead of the active one. Mutually exclusive with `compositionId`. An unknown, foreign or scratch-less session is a 404, never the active composition.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "schema": {
               "type": "string"
             },
@@ -237290,7 +237307,7 @@
           "compositions"
         ],
         "summary": "Replace a project's composition",
-        "description": "Required permission: projects:write",
+        "description": "Replaces the whole composition. Send `If-Match` with the ETag you observed (409 stale_etag on mismatch), or `If-None-Match: *` to create the first composition (409 conflict if one exists). Without either the write is refused with 428 precondition_required; `If-Match: *` is refused.",
         "security": [
           {
             "bearerAuth": []
@@ -237309,6 +237326,37 @@
             "write"
           ]
         },
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "description": "The composition ETag you observed; send this or If-None-Match: *.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-None-Match",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "*"
+              ]
+            },
+            "description": "`*` creates the first composition and is refused with 409 conflict if one exists."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -237401,6 +237449,16 @@
               }
             }
           },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. Retry-After header present.",
             "content": {
@@ -237422,16 +237480,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
         "x-payment-info": {
           "price": {
             "mode": "fixed",
@@ -237741,7 +237789,7 @@
           "compositions"
         ],
         "summary": "Apply one operation to a project's composition",
-        "description": "Required permission: projects:write",
+        "description": "Applies one CompositionOp. Send `If-Match` with the composition ETag you observed (409 stale_etag on mismatch); without it the write is refused with 428 precondition_required.",
         "security": [
           {
             "bearerAuth": []
@@ -237760,6 +237808,25 @@
             "write"
           ]
         },
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "The composition ETag you observed.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -237852,6 +237919,16 @@
               }
             }
           },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. Retry-After header present.",
             "content": {
@@ -237873,16 +237950,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
         "x-payment-info": {
           "price": {
             "mode": "fixed",
@@ -237904,7 +237971,7 @@
           "compositions"
         ],
         "summary": "Apply a batch of operations to a project's composition (or dry-run validate)",
-        "description": "Atomically applies an array of CompositionOps. All ops succeed or none do (transactional). Pass `if_match` for optimistic-concurrency control (409 stale_etag on mismatch). Pass `dry_run: true` to validate the batch — runs the same apply + projection accept/reject guards WITHOUT persisting, returning `{ valid, errors }` with `locator.op_index` on the first failing op. Both modes may carry `warnings[]` — non-fatal authoring advisories (e.g. a card whose html reads a CSS custom property no token defines). Warnings never block.",
+        "description": "Atomically applies an array of CompositionOps. All ops succeed or none do (transactional). A write must carry `if_match`, the composition ETag it observed (409 stale_etag on mismatch), or the stronger `concurrency` admission; with neither it is refused with 428 precondition_required. Pass `dry_run: true` to validate the batch — runs the same apply + projection accept/reject guards WITHOUT persisting, returning `{ valid, errors }` with `locator.op_index` on the first failing op. Both modes may carry `warnings[]` — non-fatal authoring advisories (e.g. a card whose html reads a CSS custom property no token defines). Warnings never block.",
         "security": [
           {
             "bearerAuth": []
@@ -238015,6 +238082,16 @@
               }
             }
           },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. Retry-After header present.",
             "content": {
@@ -238067,7 +238144,7 @@
           "clips"
         ],
         "summary": "Build and persist a composition from a clip suggestion",
-        "description": "Required permission: projects:write",
+        "description": "Builds a composition from the suggestion and saves it as the active one. When the project already has a composition, send `If-Match` with its ETag (409 stale_etag on mismatch, 428 precondition_required without it).",
         "security": [
           {
             "bearerAuth": []
@@ -238086,6 +238163,25 @@
             "write"
           ]
         },
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "description": "The composition ETag you observed; required when the project already has a composition.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -238185,6 +238281,16 @@
               }
             }
           },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. Retry-After header present.",
             "content": {
@@ -238206,16 +238312,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
         "x-payment-info": {
           "price": {
             "mode": "fixed",
@@ -238335,8 +238431,28 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -243713,7 +243829,7 @@
             }
           },
           "428": {
-            "description": "Precondition required — If-Match missing on a mutated resource.",
+            "description": "Precondition required: the write names no revision it observed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -247928,7 +248044,7 @@
           "templates"
         ],
         "summary": "Apply a template to a project",
-        "description": "Bind the template's parameters and write the result as the project's timeline, in one Studio command: the server installs the template's components, writes its brand kit (or the preset's, or `brandKitId`'s) onto the project and saves the bound composition. Media values are `{ mediaId }` (must be complete), `{ url }` (an https URL imported once per org) or `{ sample: true }` (the parameter's pinned sample). While an import runs the answer is 202 with `pendingMediaIds`; call again once they are complete. A public slug is imported into this org on first use. Builtin packages require the documentSha256 returned by resolveBuiltinComponent and insert with startTime/idPrefix, expectedRevision and commandId; insertion preserves existing tracks.",
+        "description": "Bind the template's parameters and write the result as the project's timeline, in one Studio command: the server installs the template's components, writes its brand kit (or the preset's, or `brandKitId`'s) onto the project and saves the bound composition. Media values are `{ mediaId }` (must be complete), `{ url }` (an https URL imported once per org) or `{ sample: true }` (the parameter's pinned sample). While an import runs the answer is 202 with `pendingMediaIds`; call again once they are complete. A public slug is imported into this org on first use. Builtin packages require the documentSha256 returned by resolveBuiltinComponent and insert with startTime/idPrefix, expectedRevision and commandId; insertion preserves existing tracks. Over an existing composition `expectedRevision` is required (428 precondition_required without it, 409 when stale); a project with none needs it only for insertion.",
         "security": [
           {
             "bearerAuth": []
@@ -248049,6 +248165,16 @@
           },
           "422": {
             "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -254426,8 +254552,28 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -254584,8 +254730,28 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "422": {
             "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition required: the write names no revision it observed.",
             "content": {
               "application/json": {
                 "schema": {
