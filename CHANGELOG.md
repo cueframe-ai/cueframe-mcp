@@ -2,6 +2,10 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 6.0.2
+
+- Kernel 0.7.14 provenance (it carries public main after the 6.0.1 cut). The served document is byte-identical to 6.0.1.
+
 ## @cueframe/skills 0.4.1
 
 - `cueframe-connect/references/tools.md` is the tool reference: every catalog tool, whether it reads or writes, and the hosted and desktop surfaces that serve it, rendered from `catalog/tool-reference.json`, which is exported from the `@cueframe/mcp` catalog. The skills check fails on any tool-shaped name the catalog does not serve; error codes (`catalog/error-codes.json`) and the CLI's `--json` events are its separate vocabulary.
