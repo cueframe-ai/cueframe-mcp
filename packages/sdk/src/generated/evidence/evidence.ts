@@ -8,6 +8,8 @@
  * OpenAPI spec version: v1
  */
 import type {
+  CompareFramesRequest,
+  CompareFramesResponse,
   ComponentPreviewRequest,
   JobEnqueueResponse,
   PreviewFrameRequest,
@@ -15,6 +17,45 @@ import type {
 } from '../models';
 
 import { request } from '../../client';
+
+export const getCompareFramesUrl = (id: string,) => {
+
+
+
+
+  return `/v1/projects/${id}/compare-frames`
+}
+
+/**
+ * Returns unaligned PNG evidence at original coordinates. Resolves an existing preview; never renders the composition. Source frame numbers refer to its certified representation, not an inferred original-file timestamp.
+ * @summary Compare a certified source frame with an existing composition preview
+ */
+export const compareFrames = async (id: string,
+    compareFramesRequest: CompareFramesRequest, options?: Parameters<typeof request>[1]): Promise<CompareFramesResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<CompareFramesResponse>(getCompareFramesUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(compareFramesRequest)
+  }
+);}
+
 
 export const getScoreCompositionUrl = (id: string,) => {
 

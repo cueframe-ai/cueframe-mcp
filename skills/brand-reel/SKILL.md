@@ -5,13 +5,7 @@ description: Produces a 12–20 second 9:16 brand-identity reel — three-beat a
 
 # Brand reel
 
-## Scope and capability policy
-
-User intent and acceptance criteria override this recipe's aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
-
-Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Desktop setup: https://docs.cueframe.ai.
-
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. Edit affected content; inspect relevant frames, continuous motion and affected audio. No restarted intake, new approval pause, paid judge or final export by default. Judge only when useful; scores never override acceptance failures. Stop/report after two no-improvement passes. See [preview workflow](../cueframe-compose-loop/references/preview-workflow.md).
+Use the [project and capability policy](../composing-video/references/project-policy.md) for scope, current state and metered work.
 
 You bring a brand (a website, a kit, or just a logo and a palette) plus footage of its world;
 you get back a 12–20 second vertical reel with a three-beat arc — wordmark moment, craft/proof
@@ -68,30 +62,13 @@ affected behavior and regressions; reserve full-film judging and export for the 
    `musicMood`; place it `audioRole:"music"`, then `materializeGrid { grid:"beat" }` and land
    the three beat boundaries on the grid. A brand reel almost always wants a bed; if the brand's
    voice calls for silence, preserve that decision.
-7. **Preview each beat, then get judged.** `preview_frame` at t=0, each beat boundary, and the
-   final lockup; describe each still before scoring. `score_composition` with the brand facts as
-   `brandContext` and your arc as `editorialIntent`; fix the worst axis first, fix relevant acceptance failures.
-8. **One final render.** `create_render` → `wait_job (kind:"render")`.
+7. **Inspect the connected sequence.** `preview_frame` at t=0, each beat boundary, and the
+   final lockup, then inspect the intervening motion and relevant sound. Use `score_composition` only for useful, budgeted broader critique; fix located acceptance failures.
+8. **Export for requested final delivery.** `create_render` → `wait_job (kind:"render")`.
 
 ## What good looks like
 
-Quoted from `video-craft-standards` §3 (Brand-identity reel) — read the full section; §1's
-social-reel rules apply underneath it:
-
-> **DEFAULT** Three-beat arc: opening brand moment (wordmark treatment) → middle craft/proof beat
-> (the subject's world, with an editorial device — numbered chapter, pull-quote, stat) → closing
-> tagline lockup.
-
-> **DEFAULT** Every graphic is bespoke to the brand: its type, its palette as fields, its layout
-> system. **Consider:** any layout that would look correct with another brand's hex swapped in.
-
-> **DEFAULT** Footage color and brand palette agree — grade toward the palette or choose footage
-> that lives in it.
-
-And the cross-cutting card rule:
-
-> **DEFAULT** Brand/text graphics are AUTHORED — `kind:"card"` HTML […] **Consider:** a brand graphic
-> rendered from a catalog text primitive.
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
 
 ## Delivering
 

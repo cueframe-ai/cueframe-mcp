@@ -126,6 +126,8 @@ export { EditorialCancelRunBody as editorialCancelRunBody } from "./editorial/ed
 export { EditorialApplyCompositionParams as editorialApplyCompositionParams } from "./editorial/editorial";
 export { EditorialApplyCompositionBody as editorialApplyCompositionBody } from "./editorial/editorial";
 export * from "./evidence/evidence";
+export { CompareFramesParams as compareFramesParams } from "./evidence/evidence";
+export { CompareFramesBody as compareFramesBody } from "./evidence/evidence";
 export { ScoreCompositionParams as scoreCompositionParams } from "./evidence/evidence";
 export { ScoreCompositionBody as scoreCompositionBody } from "./evidence/evidence";
 export { PreviewFrameJobParams as previewFrameJobParams } from "./evidence/evidence";

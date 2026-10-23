@@ -1,6 +1,6 @@
 interface:
-  display_name: "Composing Video: craft for CueFrame"
-  short_description: "Use when an agent is asked to make ANY video with CueFrame — a product launch…"
+  display_name: "Composing video"
+  short_description: "Use when choosing how to author or assemble a CueFrame video from footage…"
   icon_small: "./assets/icon.svg"
   icon_large: "./assets/icon.svg"
-  default_prompt: "Use $composing-video when an agent is asked to make ANY video with CueFrame — a product launch, announcement, promo, teaser, social clip, reel, short, explainer, animated explainer, concept video, product/dev-tool demo, walkthrough, or founder/talking-head piece."
+  default_prompt: "Use $composing-video when choosing how to author or assemble a CueFrame video from footage, product actions, typography, diagrams, original motion or mixed media."

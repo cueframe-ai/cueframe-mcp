@@ -5,20 +5,14 @@ description: Retrofits a music bed (and ambience or SFX) onto an existing compos
 
 # Add a music bed
 
-## Scope and capability policy
-
-User intent and acceptance criteria override this recipe's aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
-
-Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Desktop setup: https://docs.cueframe.ai.
-
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. Edit affected content; inspect relevant frames, continuous motion and affected audio. No restarted intake, new approval pause, paid judge or final export by default. Judge only when useful; scores never override acceptance failures. Stop/report after two no-improvement passes. See [preview workflow](../cueframe-compose-loop/references/preview-workflow.md).
+Use the [project and capability policy](../composing-video/references/project-policy.md) for scope, current state and metered work.
 
 > **Stock-audio limits (verified in production):** a Freesound import lands with
 > `audioRole:"sfx"` and NO beat grid — `import_resource` takes no audioRole param, and
 > `materializeGrid grid:"beat"` will 422 `grid_unavailable` on it. Set the role yourself when
 > placing the clip (`audioRole:"music"` on the composition clip), put the bed on its own AUDIO
-> track (the judge expects a dedicated music track), and until curated music-pack discovery
-> exists, prefer fades over beat-cuts for stock beds — beat-grid cutting works with pack beds.
+> track. Discover curated music beds through `list_catalog`; use an available measured grid
+> only when it exists. A music role alone does not establish a reliable beat grid.
 
 You point at an existing composition that sounds empty; you get it back with a licensed bed that
 matches the brand's mood, sits correctly under any speech, and — where the bed drives pacing —
@@ -50,8 +44,7 @@ delivery; stills and a visual judge cannot establish the mix. Recheck visuals wh
 
 1. **Read the composition and its speech.** `list_compositions` / the composition body for
    what's on the timeline; `get_media_context` for transcripts. Speech present → the voice is
-   the rhythm authority and the bed serves it. No speech → the bed IS the rhythm authority and
-   earns beat-cuts.
+   the rhythm authority and the bed serves it. Without speech, decide whether music or the visible action should drive timing; preserve approved cuts unless retiming is requested.
 2. **Find the bed, license-aware.** Beds come from the curated music packs —
    `import_resource { kind:"music-pack" }` — honoring the brand kit's `musicMood` (mood and
    energy matched to the cut rate). For ambience or loop textures, `search_resources
@@ -81,18 +74,7 @@ and its reason in the delivery note instead of forcing a bed.
 
 ## What good looks like
 
-Quoted from `video-craft-standards` (cross-cutting rules — every artifact); this skill exists to
-satisfy the second one:
-
-> **DEFAULT** Audio is decided, never defaulted: a music bed (curated packs via
-> `import_resource {kind:"music-pack"}`) or ambience/loops (Freesound via
-> `search_resources kind:"sfx"`), honoring the brand kit's `musicMood`; cut to the beat via
-> `materializeGrid` when the bed drives pacing — OR an explicit intentional-silence decision
-> recorded in your delivery note with the reason. **Consider:** a render whose silence nobody chose.
-
-> **DEFAULT** Every stock asset's provenance is recorded (provider, id, author).
-
-And from §1: *"**SHOULD** Cuts land on the music grid when a bed exists."*
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
 
 ## Delivering
 

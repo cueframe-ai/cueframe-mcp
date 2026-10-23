@@ -7,12 +7,17 @@ const read = (file) => readFileSync(new URL(file, root), 'utf8');
 const skills = readdirSync(new URL('skills/', root), { withFileTypes: true }).filter((x) => x.isDirectory()).map((x) => x.name);
 const router = read('hooks/session-inject.md');
 
-test('all independently installed skills preserve scope, lane and metering safeguards', () => {
-  assert.equal(skills.length, 18);
+test('all skill entry points resolve the canonical project policy', () => {
+  assert.equal(skills.length, 19);
+  const policy = new URL('skills/composing-video/references/project-policy.md', root);
+  const text = readFileSync(policy, 'utf8');
+  for (const phrase of ['User intent and acceptance criteria override', 'current source revisions remain mandatory', 'preserve the chosen local/hosted lane', 'Do not silently install, authenticate, switch projects or upload local content', 'check `get_account`, entitlements, balance and quotes', 'preserve unrelated timing, media, audio and shared brand-kit state', 'No restarted intake, new approval pause, paid judge or final export by default', 'scores never override acceptance failures']) assert.ok(text.includes(phrase), `policy: missing ${phrase}`);
   for (const skill of skills) {
-    const text = read(`skills/${skill}/SKILL.md`);
-    for (const phrase of ['User intent and acceptance criteria override', 'current source revisions remain mandatory', 'preserve the chosen local/hosted lane', 'Do not silently install, authenticate, switch projects or upload local content', 'check `get_account`, entitlements, balance and quotes', 'preserve unrelated timing, media, audio and shared brand-kit state', 'No restarted intake, new approval pause, paid judge or final export by default', 'scores never override acceptance failures']) assert.ok(text.includes(phrase), `${skill}: missing ${phrase}`);
-    assert.doesNotMatch(text, /7\.5|narration first, always|standards win|checklist wins|preserve the MEANING of K1|Even a 30s piece must|if there.s no product on it, it.s slop|product\/human is the opening shot, not a title card/);
+    const entry = new URL(`skills/${skill}/SKILL.md`, root);
+    const body = readFileSync(entry, 'utf8');
+    const link = [...body.matchAll(/\[[^\]]+\]\(([^)]+project-policy\.md)\)/g)].find(([, href]) => new URL(href, entry).href === policy.href);
+    assert.ok(link, `${skill}: missing canonical project-policy link`);
+    assert.doesNotMatch(body, /7\.5|narration first, always|standards win|checklist wins|preserve the MEANING of K1|Even a 30s piece must|if there.s no product on it, it.s slop|product\/human is the opening shot, not a title card/);
   }
 });
 
@@ -41,12 +46,16 @@ test('styling preserves layout and isolated corrections cannot mutate a shared k
   assert.match(text, /rebuild only for an explicitly requested redesign/);
 });
 
-test('fixed hosted caption judge limitations do not become creative requirements', () => {
-  for (const skill of ['composing-video', 'cueframe-compose-loop', 'video-craft-standards']) {
-    const text = read(`skills/${skill}/SKILL.md`);
-    assert.match(text, /caption criterion|caption criteria/);
-    assert.match(text, /do not add captions solely|not a reason to add captions/i);
-    assert.match(text, /do not change judge behavior|does not repair the judge/);
+test('review owns the fixed caption judge limitation and craft points to review', () => {
+  const review = read('skills/cueframe-compose-loop/SKILL.md');
+  assert.match(review, /caption criterion/);
+  assert.match(review, /do not add captions solely/i);
+  assert.match(review, /do not change judge behavior/);
+  const reviewUrl = new URL('skills/cueframe-compose-loop/SKILL.md', root);
+  for (const skill of ['composing-video', 'video-craft-standards']) {
+    const entry = new URL(`skills/${skill}/SKILL.md`, root);
+    const links = [...readFileSync(entry, 'utf8').matchAll(/\[[^\]]+\]\(([^)]+)\)/g)];
+    assert.ok(links.some(([, href]) => new URL(href, entry).href === reviewUrl.href), `${skill}: missing review owner link`);
   }
 });
 

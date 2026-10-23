@@ -10,11 +10,22 @@
 import * as zod from 'zod';
 
 import {
+  CompareFramesRequest,
   ComponentPreviewRequest,
   PreviewFrameRequest,
   ScoreCompositionRequest
 } from '../models';
 
+
+/**
+ * Returns unaligned PNG evidence at original coordinates. Resolves an existing preview; never renders the composition. Source frame numbers refer to its certified representation, not an inferred original-file timestamp.
+ * @summary Compare a certified source frame with an existing composition preview
+ */
+export const CompareFramesParams = zod.object({
+  "id": zod.string()
+})
+
+export const CompareFramesBody = CompareFramesRequest
 
 /**
  * Queue the server-side judge: it samples eval beats, renders them, and grades editorial/spatial/brand/caption (0–10 + weighted composite + worst-first critique). Your REGISTERED CRITICS run too (register_critic) — rules + rubric verdicts ride the result as clientScores, exactly like the Director's gates evaluate them (evaluator-webhook critics run in the Director lane only). Returns a jobId — wait_job(kind='verify') for the result, which ALSO carries a checkpointId: the verdicts mint a durable kind:'score' Checkpoint (the same evidence noun the Director's gates produce). Stateless — nothing to open, warm or close; the compose_verify meter fires on the job's success terminal.

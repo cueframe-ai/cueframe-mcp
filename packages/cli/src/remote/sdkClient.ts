@@ -16,9 +16,9 @@ export function clientHeaders(): Record<string, string> {
   };
 }
 
-export function initSdk(target: string): void {
+export function initSdk(target: string, options: { timeoutMs?: number } = {}): void {
   const { apiKey, apiUrl } = loadAuth(target);
-  createClient({ baseUrl: apiUrl, apiKey, headers: clientHeaders() });
+  createClient({ baseUrl: apiUrl, apiKey, headers: clientHeaders(), ...options });
 }
 
 export function formatError(err: unknown): string {

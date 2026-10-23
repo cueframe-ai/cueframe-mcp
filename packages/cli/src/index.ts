@@ -23,6 +23,7 @@ import { templateRunCommand, templateStatusCommand, templateValidateCommand } fr
 import { renderWatchCommand } from './commands/renderWatch.js';
 import { loginCommand } from './commands/login.js';
 import { apiCommand } from './commands/api.js';
+import { compareCommand } from './commands/compare.js';
 import {
   compositionGetCommand,
   compositionPutCommand,
@@ -81,6 +82,23 @@ export async function main() {
     .option('--dry-run', 'Report what would happen without mutating anything; `template run` asks the API to bind the inputs without storing a template. Applies to upload, analyze, project create, render, template run.');
 
   const globals = () => program.opts<{ json?: boolean; dryRun?: boolean }>();
+
+  program
+    .command('compare')
+    .description('Compare an identified reference frame with an existing saved preview, without rendering the composition again.')
+    .argument('<projectId>', 'Project owning the saved preview')
+    .requiredOption('--reference-media <mediaId>', 'Certified reference media id')
+    .requiredOption('--reference-representation <identity>', 'Exact certified representation identity')
+    .requiredOption('--reference-frame <frame>', 'Zero-based frame in the certified representation')
+    .requiredOption('--candidate-job <jobId>', 'Succeeded preview job id')
+    .requiredOption('--candidate-artifact <artifactId>', 'Image artifact id from that job')
+    .option('--views <views>', 'Comma-separated side_by_side,overlay,difference; default side_by_side,overlay')
+    .option('--crop <rectangle>', 'Shared image coordinates: x,y,width,height')
+    .option('-o, --out <directory>', 'Save comparison PNGs; JSON output contains compact receipts, never image bytes')
+    .option('-t, --target <target>', 'Target environment: prod (default), local. CUEFRAME_API_URL overrides the host.')
+    .action((projectId: string, opts: Omit<Parameters<typeof compareCommand>[1], 'target'> & { target?: string }) =>
+      compareCommand(projectId, { ...opts, target: parseTarget(opts.target), json: globals().json }),
+    );
 
   program
     .command('install')

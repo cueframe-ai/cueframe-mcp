@@ -1,6 +1,6 @@
 interface:
-  display_name: "CueFrame component authoring (fork / customize / own)"
-  short_description: "Use when authoring, forking, or customizing a CueFrame motion-graphics…"
+  display_name: "CueFrame graphic authoring"
+  short_description: "Use when authoring or editing CueFrame HTML cards, custom motion graphics or…"
   icon_small: "./assets/icon.svg"
   icon_large: "./assets/icon.svg"
-  default_prompt: "Use $cueframe-component-authoring when authoring, forking, or customizing a CueFrame motion-graphics component/primitive/graphic — e.g. \"customize the parallax look\", \"make my own animated lower-third\", \"fork a CueFrame template and edit it\", \"author a custom graphic and render it\"."
+  default_prompt: "Use $cueframe-component-authoring when authoring or editing CueFrame HTML cards, custom motion graphics or reusable native components, including a fork of an exact catalog source."

@@ -1,20 +1,20 @@
 {
   "schemaVersion": 2,
   "kernelVersion": "0.7.14",
-  "privateCommit": "302da8adcbe918d7abfe9b84b5f4fa89c538f4d3",
+  "privateCommit": "e9cb1a6914c24890b6117eed3af9672f91c2e261",
   "privateSource": {
     "kind": "commit",
-    "baseCommit": "302da8adcbe918d7abfe9b84b5f4fa89c538f4d3",
-    "lockfileSha256": "6d604779be186f8f13f7652615d83121895ebf479fa5351ab936e198792bafda"
+    "baseCommit": "e9cb1a6914c24890b6117eed3af9672f91c2e261",
+    "lockfileSha256": "94f7b6ea6021bdcc621ef54b69a05712fb3d82336162cc6f7039f8ed9e73cb93"
   },
   "kernelArtifact": {
     "version": "0.7.14",
     "sha256": "9b47d98114f2024b4a2c8fd11491a379848e7bef36c69d9eaf4771c4f87dbd52"
   },
   "files": {
-    "openapi.json": "5f2c5a3060c4cd9232507face3060d8bc851145969a0e4fedad8755dab4a8ede",
+    "openapi.json": "ae0133d18235511034b1ea6c858c0f6f800567fc7d71921d725cea630a4d0000",
     "scene-schema.json": "dbed283643cb2a60968f7d4f5372d5b4cb9d2204ae88054e83c87366b1f8aa7c",
     "scene-examples.json": "6eca2929e8567fb804e599619363e4f3f61e4ee1d53b170266d2261ae22cd5a2"
   },
-  "contractVersion": "6.0.2"
+  "contractVersion": "6.1.0"
 }

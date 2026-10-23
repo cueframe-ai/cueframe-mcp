@@ -41,6 +41,8 @@ export * from './checkpointResponse.zod';
 export * from './checkpointResumeRequest.zod';
 export * from './checkpointResumeResponse.zod';
 export * from './checkpointStage.zod';
+export * from './compareFramesRequest.zod';
+export * from './compareFramesResponse.zod';
 export * from './componentCreateRequest.zod';
 export * from './componentExecutionRef.zod';
 export * from './componentListResponse.zod';

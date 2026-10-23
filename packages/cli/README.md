@@ -46,6 +46,14 @@ This reads your account and credit entitlements without rendering. Cloud process
 
 ## Quick start — upload → author → render
 
+To compare an exact certified reference frame with an existing composition preview:
+
+```bash
+npx -y cueframe@0.11 compare <projectId> --reference-media <mediaId> --reference-representation <identity> --reference-frame 117 --candidate-job <jobId> --candidate-artifact <artifactId> --out ./comparison --json
+```
+
+This uses the shared comparison operation without rendering the composition again. The default views are side-by-side and an unaligned 50% overlay. Select `--views overlay,difference` or one shared-coordinate `--crop x,y,width,height` when useful. `--out` saves verified PNGs; NDJSON reports compact source and image receipts. Without `--out`, receipts describe the images but do not save them. These diagnostics do not replace motion or sound review.
+
 ```bash
 # 1. Register media (video / image / audio)
 npx -y cueframe@0.11 upload ./source.mp4 --json              # → mediaItemId

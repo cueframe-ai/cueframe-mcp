@@ -11,6 +11,27 @@ import type { PreviewFrameJobResultArtifactsItemContentType } from './previewFra
 import type { PreviewFrameJobResultArtifactsItemLayers } from './previewFrameJobResultArtifactsItemLayers';
 
 export type PreviewFrameJobResultArtifactsItem = {
+  /**
+     * @minimum 0
+     * @maximum 9007199254740991
+     */
+  compositionFrame?: number;
+  /**
+     * @minimum 0
+     * @maximum 9007199254740991
+     */
+  renderFrame?: number;
+  /**
+     * @minimum 0
+     * @maximum 9007199254740991
+     */
+  introFrames?: number;
+  /** @exclusiveMinimum 0 */
+  fps?: number;
+  /** @minimum 0 */
+  actualTimeSec?: number;
+  /** @pattern ^sha256:[0-9a-f]{64}$ */
+  artifactSha256?: string;
   id: string;
   beatSec: number;
   /**

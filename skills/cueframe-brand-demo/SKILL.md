@@ -5,13 +5,7 @@ description: Use when turning a local app into a brand-consistent product demo w
 
 # CueFrame — Brand demo recipe
 
-## Scope and capability policy
-
-User intent and acceptance criteria override this recipe's aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
-
-Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Desktop setup: https://docs.cueframe.ai.
-
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. Edit affected content; inspect relevant frames, continuous motion and affected audio. No restarted intake, new approval pause, paid judge or final export by default. Judge only when useful; scores never override acceptance failures. Stop/report after two no-improvement passes. See [preview workflow](../cueframe-compose-loop/references/preview-workflow.md).
+Use the [project and capability policy](../composing-video/references/project-policy.md) for scope, current state and metered work.
 
 > **Kit truth over MCP (current limits):** kit CONTENTS are not yet inspectable over MCP (`get_profile` lists names only), so `$brand:` tokens resolve blind — verify resolved fonts/colors with a `preview_frame` still, and when the kit conflicts with an explicit client spec, the spec wins (hardcode it and note the conflict). Bind kits by the SERVER id from `get_profile` (slug binding is unreliable — it can silently bind nothing); always confirm via the project response `brandKitId`.
 

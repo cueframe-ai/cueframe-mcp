@@ -21,7 +21,7 @@ The MCP server package, `@cueframe/mcp`, is private and lives in the application
 
 ## If you are an agent pointed at this repository
 
-Read `llms-install.md` to connect the `cueframe` MCP server, then load the skill the router names. The router is `hooks/session-inject.md` (Claude Code injects it at session start; Cursor reads the same text from `rules/cueframe.mdc`). It maps the task to a skill: a new video starts with `cueframe-storyboard` then `composing-video`; clipping long footage is `clip-a-talking-head`; not connected yet is `cueframe-connect`. Call `get_account` before any metered call.
+Read `llms-install.md` to connect the `cueframe` MCP server, then load the skill the router names. The router is `hooks/session-inject.md` (Claude Code injects it at session start; Cursor reads the same text from `rules/cueframe.mdc`). It maps the task to a skill: a supplied reference uses `cueframe-reference-video`; a new video without structure starts with `cueframe-storyboard` then `composing-video`; clipping long footage is `clip-a-talking-head`; not connected yet is `cueframe-connect`. Call `get_account` before any metered call.
 
 ## Where the contract comes from
 
