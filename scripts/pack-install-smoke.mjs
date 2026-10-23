@@ -12,7 +12,9 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const PACKAGES = ["packages/api-contract", "packages/sdk", "packages/skills", "packages/cli"];
-const EXPECTED_SKILLS = 18;
+const EXPECTED_SKILLS = readdirSync(resolve(ROOT, "skills"), { withFileTypes: true })
+  .filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
+if (EXPECTED_SKILLS.length === 0) throw new Error("Canonical skills tree is empty");
 
 const run = (cmd, args, opts = {}) =>
   execFileSync(cmd, args, { encoding: "utf8", stdio: ["ignore", "pipe", "inherit"], ...opts });
@@ -104,7 +106,7 @@ try {
     const installed = nodeEval(`const { SKILLS_DIR } = await import("@cueframe/skills/dir"); console.log(SKILLS_DIR);`);
     if (!installed.startsWith(join(dir, "node_modules/@cueframe/skills/"))) throw new Error(`SKILLS_DIR=${installed}`);
     const have = readdirSync(installed, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name).sort();
-    if (JSON.stringify(have) !== JSON.stringify(want) || want.length !== EXPECTED_SKILLS) throw new Error(`installed ${JSON.stringify(have)} vs root ${JSON.stringify(want)}`);
+    if (JSON.stringify(have) !== JSON.stringify(want)) throw new Error(`installed ${JSON.stringify(have)} vs root ${JSON.stringify(want)}`);
     for (const name of want) {
       if (!readFileSync(join(rootSkills, name, "SKILL.md")).equals(readFileSync(join(installed, name, "SKILL.md")))) throw new Error(`${name}/SKILL.md differs`);
     }
@@ -116,9 +118,9 @@ try {
     if (!help.includes("install")) throw new Error(`--help output lacks "install": ${help.slice(0, 200)}`);
     return `${help.split("\n").length} lines`;
   });
-  check(`cueframe ships ${EXPECTED_SKILLS} skills`, () => {
-    const skills = readdirSync(join(dir, "node_modules/cueframe/dist/skills"), { withFileTypes: true }).filter((d) => d.isDirectory());
-    if (skills.length !== EXPECTED_SKILLS) throw new Error(`found ${skills.length}: ${skills.map((d) => d.name).join(", ")}`);
+  check(`cueframe ships all ${EXPECTED_SKILLS.length} canonical skills`, () => {
+    const skills = readdirSync(join(dir, "node_modules/cueframe/dist/skills"), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name).sort();
+    if (JSON.stringify(skills) !== JSON.stringify(EXPECTED_SKILLS)) throw new Error(`found ${JSON.stringify(skills)} vs canonical ${JSON.stringify(EXPECTED_SKILLS)}`);
     return `${skills.length} skills`;
   });
 } finally {
