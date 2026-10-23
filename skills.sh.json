@@ -1,1 +1,30 @@
-{ "$schema": "https://skills.sh/schemas/skills.sh.schema.json", "groupings": [ { "title": "CueFrame", "description": "Compose, edit and render video from an agent.", "skills": [ "add-music-bed", "brand-reel", "clip-a-talking-head", "composing-video", "cueframe-brand-demo", "cueframe-cli", "cueframe-component-authoring", "cueframe-compose-loop", "cueframe-connect", "cueframe-product-video", "cueframe-scene-shot", "cueframe-storyboard", "every-format-from-one-edit", "extracting-brand-kits", "launch-video", "make-a-social-reel", "rebrand-a-video", "video-craft-standards" ] } ] }
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "CueFrame",
+      "description": "Compose, edit and render video from an agent.",
+      "skills": [
+        "add-music-bed",
+        "brand-reel",
+        "clip-a-talking-head",
+        "composing-video",
+        "cueframe-brand-demo",
+        "cueframe-cli",
+        "cueframe-component-authoring",
+        "cueframe-compose-loop",
+        "cueframe-connect",
+        "cueframe-product-video",
+        "cueframe-reference-video",
+        "cueframe-scene-shot",
+        "cueframe-storyboard",
+        "every-format-from-one-edit",
+        "extracting-brand-kits",
+        "launch-video",
+        "make-a-social-reel",
+        "rebrand-a-video",
+        "video-craft-standards"
+      ]
+    }
+  ]
+}

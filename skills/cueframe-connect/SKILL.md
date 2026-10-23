@@ -5,13 +5,7 @@ description: Use when CueFrame is not connected yet, the user asks how to connec
 
 # Connect CueFrame
 
-## Scope and capability policy
-
-User intent and acceptance criteria override this recipe's aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
-
-Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Desktop setup: https://docs.cueframe.ai.
-
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. Edit affected content; inspect relevant frames, continuous motion and affected audio. No restarted intake, new approval pause, paid judge or final export by default. Judge only when useful; scores never override acceptance failures. Stop/report after two no-improvement passes. See [preview workflow](../cueframe-compose-loop/references/preview-workflow.md).
+Use the [project and capability policy](../composing-video/references/project-policy.md) for scope, current state and metered work.
 
 First inspect available CueFrame tools and their current project context. If the requested work is supported by an existing connection, use it without installing again. Preserve the user's chosen local or hosted lane. Local-only desktop work needs no hosted registration; desktop connection instructions are at https://docs.cueframe.ai. This public plugin connects to the hosted product at `https://api.cueframe.ai/v1/mcp`.
 

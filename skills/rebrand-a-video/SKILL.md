@@ -5,13 +5,7 @@ description: Swaps the brand kit under an existing video and re-renders — toke
 
 # Rebrand a video
 
-## Scope and capability policy
-
-User intent and acceptance criteria override this recipe's aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
-
-Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Desktop setup: https://docs.cueframe.ai.
-
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. Edit affected content; inspect relevant frames, continuous motion and affected audio. No restarted intake, new approval pause, paid judge or final export by default. Judge only when useful; scores never override acceptance failures. Stop/report after two no-improvement passes. See [preview workflow](../cueframe-compose-loop/references/preview-workflow.md).
+Use the [project and capability policy](../composing-video/references/project-policy.md) for scope, current state and metered work.
 
 You bring a finished video and a new brand (a kit, a website, or new colors/fonts/logo); you get
 the same video back wearing the new identity — everything bound to brand tokens re-themes at
@@ -72,18 +66,7 @@ keep the final re-render separate from previews used to resolve individual styli
 
 ## What good looks like
 
-Quoted from `video-craft-standards` §3 (Brand-identity reel) — the bespoke test applies to every
-card in any class:
-
-> **DEFAULT** Every graphic is bespoke to the brand: its type, its palette as fields, its layout
-> system. **Consider:** any layout that would look correct with another brand's hex swapped in.
-
-> **DEFAULT** Footage color and brand palette agree — grade toward the palette or choose footage
-> that lives in it.
-
-And cross-cutting: *"**DEFAULT** Brand/text graphics are AUTHORED — `kind:"card"` HTML (your
-typography, layout, palette-as-fields) […] **Consider:** a brand graphic rendered from a catalog text
-primitive."*
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
 
 ## Delivering
 

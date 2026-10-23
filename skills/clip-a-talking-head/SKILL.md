@@ -5,13 +5,7 @@ description: Cuts a podcast, talk, or interview into shorts that open on the str
 
 # Clip a talking head
 
-## Scope and capability policy
-
-User intent and acceptance criteria override this recipe's aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
-
-Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Desktop setup: https://docs.cueframe.ai.
-
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. Edit affected content; inspect relevant frames, continuous motion and affected audio. No restarted intake, new approval pause, paid judge or final export by default. Judge only when useful; scores never override acceptance failures. Stop/report after two no-improvement passes. See [preview workflow](../cueframe-compose-loop/references/preview-workflow.md).
+Use the [project and capability policy](../composing-video/references/project-policy.md) for scope, current state and metered work.
 
 You point at long-form footage of people talking; you get back one or more 15–60 second clips
 that each open on the strongest sentence, keep a moving camera on whoever is speaking, cut the
@@ -83,19 +77,7 @@ correction, retain the approved edit and check relevant regressions without auto
 
 ## What good looks like
 
-Quoted from `video-craft-standards` §4 (Talking-head clip) — apply the relevant defaults under the scope policy:
-
-> **DEFAULT** Hook = the strongest sentence, first. Cut TO the moment; never open on wind-up.
-
-> **DEFAULT** Active-speaker reframe (`focus: active-speaker` / `face`) — a moving camera, not a
-> static center crop.
-
-> **DEFAULT** Captions timed to the edited clip (`captions.fromComposition`); behind-speaker
-> placement where the footage allows it. **DEFAULT** Dead air and false starts cut
-> (`addExcludedRange` / `cutAndRipple`).
-
-Plus the cross-cutting audio rule: *"Audio is decided, never defaulted […] **Consider:** a render whose
-silence nobody chose."*
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
 
 ## Delivering
 

@@ -1,8 +1,8 @@
 {
   "source": {
     "package": "@cueframe/mcp",
-    "version": "0.11.0",
-    "commit": "a3fb82e597dba89d985ddab5be5864af23cd0fbe"
+    "version": "0.13.0",
+    "commit": "eb1b033583594eb09f0444589df9764a71ec2921"
   },
   "surfaces": [
     "hosted.api",
@@ -79,9 +79,12 @@
     },
     {
       "name": "check_template",
-      "access": "write",
+      "access": "read",
       "surfaces": [
-        "desktop.external"
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
       ]
     },
     {
@@ -106,6 +109,19 @@
       "access": "write",
       "surfaces": [
         "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "compare_frames",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
         "desktop.external",
         "desktop.cli"
       ]
@@ -433,7 +449,11 @@
       "surfaces": [
         "hosted.api",
         "hosted.editor",
-        "hosted.compose"
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
       ]
     },
     {
@@ -815,7 +835,11 @@
       "name": "list_render_fonts",
       "access": "read",
       "surfaces": [
-        "hosted.api"
+        "hosted.api",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
       ]
     },
     {
@@ -836,7 +860,11 @@
       "access": "read",
       "surfaces": [
         "hosted.api",
-        "hosted.editor"
+        "hosted.editor",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
       ]
     },
     {

@@ -5,13 +5,7 @@ description: Turns footage into a finished 9:16 social reel — hook inside 2 se
 
 # Make a social reel
 
-## Scope and capability policy
-
-User intent and acceptance criteria override this recipe's aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
-
-Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Desktop setup: https://docs.cueframe.ai.
-
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. Edit affected content; inspect relevant frames, continuous motion and affected audio. No restarted intake, new approval pause, paid judge or final export by default. Judge only when useful; scores never override acceptance failures. Stop/report after two no-improvement passes. See [preview workflow](../cueframe-compose-loop/references/preview-workflow.md).
+Use the [project and capability policy](../composing-video/references/project-policy.md) for scope, current state and metered work.
 
 You hand over footage (a file URL, a talk, a product moment); you get back a 9:16 reel of 8–30
 seconds that opens on its strongest image, cuts on the music, carries brand-grade type, and ends
@@ -74,29 +68,15 @@ affected window and regressions without automatically rerunning the full-film ju
    `describe_composition_ops({type:"captions.fromComposition"})`, then style via
    `setCaptionStyle` (plated, bottom, out of the mouth/eyes). Most social viewing is sound-off;
    don't karaoke a beat with no speech.
-8. **Look, then get judged.** `preview_frame` at t=0, hook-end, and every beat boundary;
-   describe each still in words before scoring it. Then `score_composition` with your one-line
-   vision as `editorialIntent` — fix the worst criterion first. Meet the applicable acceptance criteria; budget
-   up to 3–5 passes only for broader review.
-9. **One final render.** `create_render` → `wait_job (kind:"render")`. Iterate with previews,
+8. **Inspect and revise.** `preview_frame` at the important layout and transition landmarks;
+   inspect the intervening motion and relevant audio. Use `score_composition` only when broader
+   critique is useful and within budget. Fix located acceptance failures against the brief.
+9. **Export for requested final delivery.** `create_render` → `wait_job (kind:"render")`. Iterate with previews,
    not renders.
 
 ## What good looks like
 
-Quoted from `video-craft-standards` §1 (Social reel) — these are defaults for this format, subject to the scope policy above:
-
-> **DEFAULT** The hook lands inside 2 seconds: the strongest image, motion, or claim opens the
-> piece. No logo-first cold opens, no fade-in-from-black preambles.
-
-> **DEFAULT** Typography is poster-grade: composed plates/fields in the brand palette, considered
-> alignment and scale. **Consider:** centered white text floating on footage.
-
-> **DEFAULT** Pacing is cut-driven: a new visual beat at least every ~4s […] **DEFAULT** Ends on a
-> deliberate beat: tagline, logo, or CTA lockup — not a clip running out.
-
-And the cross-cutting audio rule:
-
-> **DEFAULT** Audio is decided, never defaulted […] **Consider:** a render whose silence nobody chose.
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
 
 ## Delivering
 

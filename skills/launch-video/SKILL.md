@@ -5,13 +5,7 @@ description: Turns screen recordings and product footage into a 30–90 second 1
 
 # Launch video
 
-## Scope and capability policy
-
-User intent and acceptance criteria override this recipe's aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
-
-Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Desktop setup: https://docs.cueframe.ai.
-
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. Edit affected content; inspect relevant frames, continuous motion and affected audio. No restarted intake, new approval pause, paid judge or final export by default. Judge only when useful; scores never override acceptance failures. Stop/report after two no-improvement passes. See [preview workflow](../cueframe-compose-loop/references/preview-workflow.md).
+Use the [project and capability policy](../composing-video/references/project-policy.md) for scope, current state and metered work.
 
 You bring real screen recordings or product footage plus the one outcome the feature delivers;
 you get back a 30–90 second 16:9 announcement that opens on the payoff, shows the actual product
@@ -56,8 +50,7 @@ affected window and regressions without automatically rerunning the full-film ju
    product video.
 5. **Cards for the claims and the end card.** Key lines and the closing CTA are `kind:"card"`
    HTML in the brand's type and palette, animated in its CSS or with
-   `clip.setKeyframes` in a FOLLOWING `apply_composition` call. One CTA on the end card, held
-   long enough to read, plus the date if there is one.
+   `clip.setKeyframes` in a FOLLOWING `apply_composition` call. When the brief calls for a CTA, give it a readable hold; include a date only when relevant.
 6. **Audio when requested or appropriate.** Preserve explicit silence; otherwise: `search_resources` for a bed honoring the brand kit's
    `musicMood`, energy arcing toward the reveal; place it `audioRole:"music"`,
    `materializeGrid { grid:"beat" }`, and land beat boundaries and the reveal on the grid. If
@@ -68,25 +61,12 @@ affected window and regressions without automatically rerunning the full-film ju
    call. Speech clips must have saved duration matching playable source duration divided by
    playbackRate. Re-run after later edits. Use authored word timings for generated VO without a
    transcript, and style legibly via `setCaptionStyle`. Caption narration when requested or appropriate; preserve an explicit uncaptioned format.
-8. **Preview, judge, one render.** `preview_frame` at t=0, hook-end, the reveal, and the end
-   card; describe each still — is that a REAL capture on screen? Then `score_composition` with
-   the payoff line as `editorialIntent`; fix relevant acceptance failures; `create_render` →
-   `wait_job (kind:"render")`.
+8. **Inspect and deliver.** `preview_frame` at t=0, hook-end, the reveal, and the end
+   card; inspect motion through the important handoffs and listen to changed audio. Distinguish actual captures from reconstructed artwork. Use `score_composition` only when broader critique is useful and within budget. Fix the observed acceptance failures, then export for requested final delivery.
 
 ## What good looks like
 
-Quoted from `video-craft-standards` §2 (Launch film / feature announcement) — these are format defaults:
-
-> **DEFAULT** Payoff-first hook: the OUTCOME, not the feature name ("Close the books two days
-> faster" beats "Introducing the reconciliation module"). No throat-clearing.
-
-> **DEFAULT** Narration or a bed that builds toward the reveal; pacing tightens as the payoff
-> approaches. **DEFAULT** Real product surface: actual UI/screens/output — never mocked.
-
-> **DEFAULT** End card with a single CTA. **DEFAULT** Captions present when narrated.
-
-And cross-cutting: *"Footage carries the video: real footage / real UI / real data ≥60% of
-runtime for footage-first classes."*
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
 
 ## Delivering
 
@@ -94,6 +74,6 @@ Close with the handoff, never "done":
 
 - The render link and where it lives (project + composition id).
 - Attribution for the bed and any licensed asset (provider, id, author).
-- The intentional-silence note with its reason, in the rare case silence was chosen.
+- The intentional-silence note with its reason, when relevant to the requested delivery.
 - A one-line cutdown offer: the 16:9 master can become 9:16 / 1:1 siblings for social (see
   `every-format-from-one-edit`).

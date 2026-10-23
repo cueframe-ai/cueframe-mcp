@@ -8,6 +8,8 @@ export const CLI_EVENTS = [
   'analyze_ready',
   'clips_complete',
   'clips_prepare',
+  'compare_complete',
+  'compare_prepare',
   'composition_from_suggestion_complete',
   'composition_from_suggestion_etag_retries_exhausted',
   'composition_from_suggestion_etag_retry',

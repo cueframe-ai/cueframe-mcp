@@ -5,13 +5,7 @@ description: Derives content-aware 9:16, 1:1, and 4:5 siblings from one finished
 
 # Every format from one edit
 
-## Scope and capability policy
-
-User intent and acceptance criteria override this recipe's aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
-
-Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Desktop setup: https://docs.cueframe.ai.
-
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. Edit affected content; inspect relevant frames, continuous motion and affected audio. No restarted intake, new approval pause, paid judge or final export by default. Judge only when useful; scores never override acceptance failures. Stop/report after two no-improvement passes. See [preview workflow](../cueframe-compose-loop/references/preview-workflow.md).
+Use the [project and capability policy](../composing-video/references/project-policy.md) for scope, current state and metered work.
 
 You finish ONE edit; you get back its siblings for every platform — 9:16 for
 Reels/TikTok/Shorts, 1:1 and 4:5 for feeds — derived content-aware from the master,
@@ -61,7 +55,7 @@ A correction to one sibling does not require rendering the master or the other u
    the bed is present and the silence decision, if any, still holds; the sibling's delivery
    note repeats it. If a sibling needs a different bed, `search_resources` honoring the brand
    kit's `musicMood` and swap it on that sibling only.
-6. **Judge each sibling as its own artifact.** `score_composition` per sibling with the
+6. **Inspect each sibling as its own artifact.** Use `score_composition` only when useful for broader review and within budget, with the
    master's vision as `editorialIntent`. Changing aspect ratio does not change the approved editorial intent, pacing or acceptance criteria. Fix worst-first to
    meet the applicable acceptance criteria.
 7. **Render each approved sibling.** `create_render` → `wait_job (kind:"render")` per
@@ -69,17 +63,7 @@ A correction to one sibling does not require rendering the master or the other u
 
 ## What good looks like
 
-Quoted from `video-craft-standards` (cross-cutting rules — every artifact):
-
-> **DEFAULT** Safe-area respected: no critical copy in the outer ~8% of frame.
-
-> **DEFAULT** One final render per approval; iterate with previews, not renders.
-
-> **DEFAULT** Delivery never ends with "done": the last message carries the output link and where
-> to find it, plus the intentional-silence note if any.
-
-And the class rule that governs each sibling: apply the original brief at the new dimensions; aspect ratio alone does not impose a social-reel hook or pacing. Derivation
-changes the frame, never the bar.
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
 
 ## Delivering
 

@@ -9,6 +9,7 @@ Before selecting a workflow, inspect available tool contracts and current projec
 
 Load the narrowest relevant skill before acting:
 - existing-project title, color, logo or timing correction: `cueframe-compose-loop` and its preview workflow; edit affected content directly, preserving unrelated timing, media, audio and shared brand-kit state; no new-film intake, paid judge or final export by default
+- supplied reference video or motion reconstruction: `cueframe-reference-video`; use its observed structure and acceptance anchors rather than restarting new-film intake
 - new video without structure: `cueframe-storyboard`, then applicable `composing-video` craft; choose leading material from narration, recorded speech, product action, visual/music motion or observational sequence; direct authoring uses exposed primitives, hosted Director composition is optional only when its tools are available and that lane is selected
 - recorded talk/interview clips: `clip-a-talking-head`; social cut workflow when relevant: `make-a-social-reel`
 - broader composition review/iteration or preview selection: `cueframe-compose-loop`
@@ -21,4 +22,4 @@ Load the narrowest relevant skill before acting:
 - terminal/CLI workflow: `cueframe-cli`
 - requested connection/setup or a necessary missing connection: `cueframe-connect`; reuse an existing connection first
 
-Explicit user creative intent and acceptance criteria override aesthetic defaults. Silent, typography-only, uncaptioned, slow and logo-first work are valid choices; do not impose narration, footage, CTA, fixed beat count/pacing or a score target. Tool contracts, factual fidelity, media bindings and current source revisions remain mandatory. Inspect continuous motion and affected audio when relevant. A judge score cannot approve a failed requirement. Preview scoped revisions; export for requested final delivery. Stop after two no-improvement passes and report gaps.
+Explicit user creative intent and acceptance criteria override aesthetic defaults. Silent, typography-only, uncaptioned, slow and logo-first work are valid choices; do not impose narration, footage, CTA, fixed beat count/pacing or a score target. Tool contracts, factual fidelity, media bindings and current source revisions remain mandatory. Inspect continuous motion and affected audio when relevant. A judge score cannot approve a failed requirement. Preview scoped revisions; export for requested final delivery. Use `cueframe-compose-loop` for evidence, targeted revisions and stopping decisions; report unresolved gaps honestly.

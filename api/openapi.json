@@ -230510,6 +230510,33 @@
             "items": {
               "type": "object",
               "properties": {
+                "compositionFrame": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "renderFrame": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "introFrames": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "fps": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "actualTimeSec": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "artifactSha256": {
+                  "type": "string",
+                  "pattern": "^sha256:[0-9a-f]{64}$"
+                },
                 "id": {
                   "type": "string"
                 },
@@ -230847,6 +230874,491 @@
           "jobKey",
           "kind",
           "status"
+        ],
+        "additionalProperties": false
+      },
+      "CompareFramesRequest": {
+        "type": "object",
+        "properties": {
+          "reference": {
+            "type": "object",
+            "properties": {
+              "mediaItemId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "representationIdentity": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "frame": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "mediaItemId",
+              "representationIdentity",
+              "frame"
+            ],
+            "additionalProperties": false
+          },
+          "candidate": {
+            "type": "object",
+            "properties": {
+              "jobId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "artifactId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "jobId",
+              "artifactId"
+            ],
+            "additionalProperties": false
+          },
+          "views": {
+            "minItems": 1,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "side_by_side",
+                "overlay",
+                "difference"
+              ]
+            }
+          },
+          "crop": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "y": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "width": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "height": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "x",
+              "y",
+              "width",
+              "height"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "reference",
+          "candidate"
+        ],
+        "additionalProperties": false
+      },
+      "CompareFramesResponse": {
+        "type": "object",
+        "properties": {
+          "reference": {
+            "type": "object",
+            "properties": {
+              "frame": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "width": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "height": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "artifactSha256": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "byteLength": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 16777216
+              },
+              "normalization": {
+                "type": "object",
+                "properties": {
+                  "pixelFormat": {
+                    "type": "string",
+                    "const": "rgb24"
+                  },
+                  "sampleAspectRatio": {
+                    "type": "string",
+                    "const": "1:1"
+                  },
+                  "colorConversion": {
+                    "type": "string",
+                    "const": "ffmpeg_source_metadata"
+                  },
+                  "rotation": {
+                    "type": "string",
+                    "const": "ffmpeg_autorotate"
+                  },
+                  "sourceColorSpace": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "sourceColorTransfer": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "sourceColorPrimaries": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "pixelFormat",
+                  "sampleAspectRatio",
+                  "colorConversion",
+                  "rotation",
+                  "sourceColorSpace",
+                  "sourceColorTransfer",
+                  "sourceColorPrimaries"
+                ],
+                "additionalProperties": false
+              },
+              "mediaItemId": {
+                "type": "string"
+              },
+              "sourceIdentity": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "representationIdentity": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "representationRevision": {
+                "type": "string"
+              },
+              "frameCount": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "fpsNum": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "fpsDen": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "actualTimeSec": {
+                "type": "number",
+                "minimum": 0
+              },
+              "coordinateSystem": {
+                "type": "string",
+                "const": "certified_representation"
+              }
+            },
+            "required": [
+              "frame",
+              "width",
+              "height",
+              "artifactSha256",
+              "byteLength",
+              "normalization",
+              "mediaItemId",
+              "sourceIdentity",
+              "representationIdentity",
+              "representationRevision",
+              "frameCount",
+              "fpsNum",
+              "fpsDen",
+              "actualTimeSec",
+              "coordinateSystem"
+            ],
+            "additionalProperties": false
+          },
+          "candidate": {
+            "type": "object",
+            "properties": {
+              "compositionFrame": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "renderFrame": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "introFrames": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "fps": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "actualTimeSec": {
+                "type": "number",
+                "minimum": 0
+              },
+              "artifactSha256": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "jobId": {
+                "type": "string"
+              },
+              "artifactId": {
+                "type": "string"
+              },
+              "requestedTimeSec": {
+                "type": "number",
+                "minimum": 0
+              },
+              "previewed": {
+                "type": "object",
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "inline",
+                      "scratch",
+                      "persisted"
+                    ]
+                  },
+                  "compositionId": {
+                    "type": "string"
+                  },
+                  "etag": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "source"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "compositionFrame",
+              "renderFrame",
+              "introFrames",
+              "fps",
+              "actualTimeSec",
+              "artifactSha256",
+              "jobId",
+              "artifactId",
+              "requestedTimeSec",
+              "previewed"
+            ],
+            "additionalProperties": false
+          },
+          "comparison": {
+            "type": "object",
+            "properties": {
+              "sourceWidth": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "sourceHeight": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "width": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "height": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              },
+              "referenceSha256": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "candidateSha256": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "crop": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "y": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "width": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "height": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y",
+                      "width",
+                      "height"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "alignment": {
+                "type": "string",
+                "const": "none"
+              },
+              "normalization": {
+                "type": "object",
+                "properties": {
+                  "pixelFormat": {
+                    "type": "string",
+                    "const": "rgb24"
+                  },
+                  "alpha": {
+                    "type": "string",
+                    "const": "opaque_only"
+                  },
+                  "colorConversion": {
+                    "type": "string",
+                    "const": "none_rgb_samples"
+                  }
+                },
+                "required": [
+                  "pixelFormat",
+                  "alpha",
+                  "colorConversion"
+                ],
+                "additionalProperties": false
+              },
+              "images": {
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "view": {
+                      "type": "string",
+                      "enum": [
+                        "side_by_side",
+                        "overlay",
+                        "difference"
+                      ]
+                    },
+                    "width": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "height": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "artifactSha256": {
+                      "type": "string",
+                      "pattern": "^sha256:[0-9a-f]{64}$"
+                    },
+                    "pngBase64": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 8388608
+                    },
+                    "byteLength": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 6291456
+                    }
+                  },
+                  "required": [
+                    "view",
+                    "width",
+                    "height",
+                    "artifactSha256",
+                    "pngBase64",
+                    "byteLength"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "sourceWidth",
+              "sourceHeight",
+              "width",
+              "height",
+              "referenceSha256",
+              "candidateSha256",
+              "crop",
+              "alignment",
+              "normalization",
+              "images"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "reference",
+          "candidate",
+          "comparison"
         ],
         "additionalProperties": false
       },
@@ -245082,6 +245594,11 @@
             "write"
           ]
         },
+        "x-x402": {
+          "amount": "10000",
+          "deliverable": true,
+          "maxTimeoutSeconds": 900
+        },
         "requestBody": {
           "required": true,
           "content": {
@@ -245251,6 +245768,11 @@
           "renders": [
             "write"
           ]
+        },
+        "x-x402": {
+          "amount": "10000",
+          "deliverable": true,
+          "maxTimeoutSeconds": 900
         },
         "requestBody": {
           "required": true,
@@ -245422,6 +245944,7 @@
             "write"
           ]
         },
+        "x-x402": "render",
         "requestBody": {
           "required": true,
           "content": {
@@ -245556,7 +246079,7 @@
           "price": {
             "mode": "fixed",
             "currency": "USDC",
-            "amount": "10000"
+            "amount": "500000"
           },
           "protocols": [
             {
@@ -245573,7 +246096,7 @@
           "exports"
         ],
         "summary": "Retry an export's admitted specification",
-        "description": "Create a new keyed export from the original immutable snapshot in its admitted project. Use Idempotency-Key to safely replay the HTTP request.",
+        "description": "Create a new keyed export from the original immutable snapshot in its admitted project. Use Idempotency-Key to safely replay the HTTP request. Priced like the export it repeats and charged when the retry completes.",
         "security": [
           {
             "bearerAuth": []
@@ -245592,6 +246115,7 @@
             "write"
           ]
         },
+        "x-x402": "render",
         "responses": {
           "202": {
             "description": "Export retry queued.",
@@ -245732,9 +246256,8 @@
         ],
         "x-payment-info": {
           "price": {
-            "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "mode": "dynamic",
+            "currency": "USDC"
           },
           "protocols": [
             {
@@ -253134,6 +253657,156 @@
             }
           ]
         }
+      }
+    },
+    "/v1/projects/{id}/compare-frames": {
+      "post": {
+        "operationId": "compareFrames",
+        "tags": [
+          "evidence"
+        ],
+        "summary": "Compare a certified source frame with an existing composition preview",
+        "description": "Returns unaligned PNG evidence at original coordinates. Resolves an existing preview; never renders the composition. Source frame numbers refer to its certified representation, not an inferred original-file timestamp.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "oauth2": [
+              "projects:read"
+            ]
+          },
+          {
+            "x402": []
+          }
+        ],
+        "x-permissions": {
+          "projects": [
+            "read"
+          ]
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompareFramesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Paired image evidence and exact source identities.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompareFramesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Authorization header.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable — billing_unavailable / honest-503 for runtime deps.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ]
       }
     },
     "/v1/projects/{id}/score-composition": {

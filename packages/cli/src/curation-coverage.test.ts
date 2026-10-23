@@ -34,6 +34,7 @@ function enumerateSdkOperations(): string[] {
 }
 
 const CLI_WRAPPED: Record<string, string> = {
+  compareFrames: 'compare',
   getComposition: 'composition get',
   putComposition: 'composition put',
   validateComposition: 'composition validate',

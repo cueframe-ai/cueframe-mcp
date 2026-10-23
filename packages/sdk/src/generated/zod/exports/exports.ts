@@ -45,7 +45,7 @@ export const CreateVideoClipExportParams = zod.object({
 export const CreateVideoClipExportBody = ExportCreateRequest
 
 /**
- * Create a new keyed export from the original immutable snapshot in its admitted project. Use Idempotency-Key to safely replay the HTTP request.
+ * Create a new keyed export from the original immutable snapshot in its admitted project. Use Idempotency-Key to safely replay the HTTP request. Priced like the export it repeats and charged when the retry completes.
  * @summary Retry an export's admitted specification
  */
 export const RetryExportParams = zod.object({

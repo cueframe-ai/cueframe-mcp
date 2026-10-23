@@ -120,6 +120,7 @@
     "POST /v1/media/{id}/transcript/analyze analyzeTranscript",
     "POST /v1/profile/taste createTasteEntry",
     "POST /v1/projects createProject",
+    "POST /v1/projects/{id}/compare-frames compareFrames",
     "POST /v1/projects/{id}/component-preview previewComponent",
     "POST /v1/projects/{id}/components/native-upgrade repinComponent",
     "POST /v1/projects/{id}/compose compose",

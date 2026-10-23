@@ -9,6 +9,20 @@
  */
 import * as zod from 'zod';
 
+export const previewFrameJobResultArtifactsItemCompositionFrameMin = 0;
+export const previewFrameJobResultArtifactsItemCompositionFrameMax = 9007199254740991;
+
+export const previewFrameJobResultArtifactsItemRenderFrameMin = 0;
+export const previewFrameJobResultArtifactsItemRenderFrameMax = 9007199254740991;
+
+export const previewFrameJobResultArtifactsItemIntroFramesMin = 0;
+export const previewFrameJobResultArtifactsItemIntroFramesMax = 9007199254740991;
+
+export const previewFrameJobResultArtifactsItemFpsExclusiveMin = 0;
+
+export const previewFrameJobResultArtifactsItemActualTimeSecMin = 0;
+
+export const previewFrameJobResultArtifactsItemArtifactSha256RegExp = new RegExp('^sha256:[0-9a-f]{64}$');
 export const previewFrameJobResultArtifactsItemBytesExclusiveMin = 0;
 export const previewFrameJobResultArtifactsItemBytesMax = 9007199254740991;
 
@@ -33,6 +47,12 @@ export const PreviewFrameJobResult = zod.strictObject({
 }),
   "listUsd": zod.number().optional().describe('List price charged for this delivered capture.'),
   "artifacts": zod.array(zod.strictObject({
+  "compositionFrame": zod.int().min(previewFrameJobResultArtifactsItemCompositionFrameMin).max(previewFrameJobResultArtifactsItemCompositionFrameMax).optional(),
+  "renderFrame": zod.int().min(previewFrameJobResultArtifactsItemRenderFrameMin).max(previewFrameJobResultArtifactsItemRenderFrameMax).optional(),
+  "introFrames": zod.int().min(previewFrameJobResultArtifactsItemIntroFramesMin).max(previewFrameJobResultArtifactsItemIntroFramesMax).optional(),
+  "fps": zod.number().gt(previewFrameJobResultArtifactsItemFpsExclusiveMin).optional(),
+  "actualTimeSec": zod.number().min(previewFrameJobResultArtifactsItemActualTimeSecMin).optional(),
+  "artifactSha256": zod.string().regex(previewFrameJobResultArtifactsItemArtifactSha256RegExp).optional(),
   "id": zod.string(),
   "beatSec": zod.number(),
   "bytes": zod.int().gt(previewFrameJobResultArtifactsItemBytesExclusiveMin).max(previewFrameJobResultArtifactsItemBytesMax),

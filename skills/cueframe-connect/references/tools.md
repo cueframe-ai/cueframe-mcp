@@ -1,6 +1,6 @@
 # CueFrame tool reference
 
-Generated from the @cueframe/mcp 0.11.0 catalog (commit a3fb82e59). Do not edit it by hand.
+Generated from the @cueframe/mcp 0.13.0 catalog (commit eb1b03358). Do not edit it by hand.
 
 Every CueFrame tool by its catalog name. A host may show it with a connection prefix (`mcp__cueframe__get_account`, `cueframe-read__get_account`); the name after the last `__` is the catalog name. **read** tools change no state, though some are metered; **write** tools change state, and a composition write takes the revision it edits.
 
@@ -15,10 +15,11 @@ Hosted surfaces: `api` is the MCP server at `https://api.cueframe.ai/v1/mcp`; `e
 | `cancel_export` | write | api | - |
 | `cancel_job` | write | api | - |
 | `cancel_render` | write | api | - |
-| `check_template` | write | - | external |
+| `check_template` | read | - | director, plan, external, cli |
 | `close_component_preview` | write | - | director, plan, external, cli |
 | `close_project` | write | - | external |
 | `commit_component_preview` | write | - | director, external, cli |
+| `compare_frames` | read | api, editor, compose | director, plan, external, cli |
 | `compose` | write | api | - |
 | `consult` | write | api | - |
 | `create_brand_kit` | write | api | - |
@@ -53,7 +54,7 @@ Hosted surfaces: `api` is the MCP server at `https://api.cueframe.ai/v1/mcp`; `e
 | `editorial_list_briefs` | read | api, editor, compose | director, plan, cli |
 | `editorial_list_evidence` | read | api, editor, compose | director, plan, cli |
 | `editorial_list_runs` | read | api, editor, compose | director, plan, cli |
-| `editorial_run_source` | read | api, editor, compose | - |
+| `editorial_run_source` | read | api, editor, compose | director, plan, external, cli |
 | `editorial_sample_motion` | write | api, editor, compose | director, cli |
 | `export_project` | write | - | external |
 | `extract_brand_kit` | write | api | - |
@@ -92,9 +93,9 @@ Hosted surfaces: `api` is the MCP server at `https://api.cueframe.ai/v1/mcp`; `e
 | `list_media` | read | api, editor, compose | director, plan, external, cli |
 | `list_plans` | read | api | - |
 | `list_projects` | read | api | external |
-| `list_render_fonts` | read | api | - |
+| `list_render_fonts` | read | api | director, plan, external, cli |
 | `list_taste` | read | api, editor, compose | director, plan, external, cli |
-| `list_templates` | read | api, editor | - |
+| `list_templates` | read | api, editor | director, plan, external, cli |
 | `new_composition` | write | api, editor, compose | director, external, cli |
 | `open_component_preview` | write | - | director, plan, external, cli |
 | `open_project` | write | - | external |

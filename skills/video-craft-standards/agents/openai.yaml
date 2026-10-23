@@ -1,6 +1,6 @@
 interface:
-  display_name: "Video-Craft Standards — what \"finished\" means"
-  short_description: "Craft defaults and applicable review checklists for CueFrame videos (social…"
+  display_name: "Video craft review"
+  short_description: "Use when judging whether a CueFrame video's idea, visual form, motion, timing…"
   icon_small: "./assets/icon.svg"
   icon_large: "./assets/icon.svg"
-  default_prompt: "Use $video-craft-standards to craft defaults and applicable review checklists for CueFrame videos (social reel, launch film, brand reel, talking-head clip)."
+  default_prompt: "Use $video-craft-standards when judging whether a CueFrame video's idea, visual form, motion, timing and sound meet its brief or reference."

@@ -5,13 +5,7 @@ description: Use when editing, clipping, or rendering video via the CueFrame CLI
 
 # CueFrame CLI
 
-## Scope and capability policy
-
-User intent and acceptance criteria override this recipe's aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
-
-Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Desktop setup: https://docs.cueframe.ai.
-
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. Edit affected content; inspect relevant frames, continuous motion and affected audio. No restarted intake, new approval pause, paid judge or final export by default. Judge only when useful; scores never override acceptance failures. Stop/report after two no-improvement passes. See [preview workflow](../cueframe-compose-loop/references/preview-workflow.md).
+Use the [project and capability policy](../composing-video/references/project-policy.md) for scope, current state and metered work.
 
 ## MCP is the primary surface — read this before using the CLI
 
@@ -64,6 +58,14 @@ Validate first, then use `preview_card` / `preview_component` for isolated graph
 `preview_frame` for composition stills, or `preview_clip` for a motion window. Use the available
 MCP tools or the CLI's `api` escape hatch with the live request contract. Full `render` is for
 delivery, not checking each edit. CLI validation does not replace visual evidence.
+
+To compare a certified reference frame with an existing saved preview, use `compare`:
+
+```bash
+npx -y cueframe@0.11 compare <projectId> --reference-media <mediaId> --reference-representation <identity> --reference-frame 117 --candidate-job <jobId> --candidate-artifact <artifactId> --out ./comparison --json
+```
+
+The command calls the shared comparison operation; it does not rerender the composition. `--views overlay,difference` selects diagnostics and `--crop x,y,width,height` uses one common-coordinate crop. NDJSON contains source identities and image receipts, never base64 payloads. `--out` saves verified PNGs; without it, image receipts explicitly say `metadata_only`. Inspect those images and relevant motion before judging the film.
 
 ```bash
 # 0. Always use --json for agent-driven runs (NDJSON to stdout, no spinners).
