@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -55,6 +55,48 @@ test('motion grids select exact source frames and report actual rational-rate ti
     const empty = spawnSync('bash', [script, input, join(dir, 'empty'), '--start', '0.3'], { encoding: 'utf8' });
     assert.notEqual(empty.status, 0);
     assert.match(empty.stderr, /no source frames/);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('a whole 36-second dense grid preserves all 216 source samples across pages', { skip: !available }, () => {
+  const dir = mkdtempSync(join(tmpdir(), 'cueframe-grid-long-test-'));
+  try {
+    const frameBytes = 32 * 24 * 3;
+    const pixels = Buffer.alloc(1080 * frameBytes);
+    const frameColor = (n) => [16 + n * 17 % 220, 16 + n * 73 % 220, 16 + n * 131 % 220];
+    for (let n = 0; n < 1080; n++) {
+      const rgb = frameColor(n);
+      for (let i = n * frameBytes; i < (n + 1) * frameBytes; i += 3) pixels.set(rgb, i);
+    }
+    const raw = join(dir, 'frames.rgb');
+    writeFileSync(raw, pixels);
+    const input = join(dir, 'source.nut');
+    run('ffmpeg', ['-v', 'error', '-f', 'rawvideo', '-pixel_format', 'rgb24', '-video_size', '32x24', '-framerate', '30', '-i', raw, '-c:v', 'ffv1', '-pix_fmt', 'bgr0', input]);
+    const output = join(dir, 'grid');
+    run('bash', [script, input, output, '--overview-fps', '1', '--dense-fps', '6']);
+    const rows = readFileSync(join(output, 'dense-index.tsv'), 'utf8').trim().split('\n').slice(1).map((line) => line.split('\t'));
+    assert.equal(rows.length, 216);
+    assert.deepEqual(rows.map((row) => Number(row[3])), Array.from({ length: 216 }, (_, i) => i * 5));
+    const pages = readdirSync(output).filter((file) => /^dense-\d+\.jpg$/.test(file)).sort();
+    assert.equal(pages.length, 14);
+    for (let page = 0; page < pages.length; page++) {
+      const image = run('ffmpeg', ['-v', 'error', '-i', join(output, pages[page]), '-f', 'rawvideo', '-pix_fmt', 'rgb24', 'pipe:1']);
+      for (const row of rows.slice(page * 16, (page + 1) * 16)) {
+        const cell = Number(row[1]) - 1;
+        assert.equal(Number(row[0]), page + 1);
+        const x = 8 + cell % 4 * (384 + 8) + 20;
+        const y = 8 + Math.floor(cell / 4) * (288 + 8) + 20;
+        const offset = (y * (4 * 384 + 5 * 8) + x) * 3;
+        const expected = frameColor(Number(row[3]));
+        for (let channel = 0; channel < 3; channel++) {
+          assert.ok(Math.abs(image[offset + channel] - expected[channel]) <= 8, `page ${page + 1} cell ${cell + 1} must contain source frame ${row[3]}`);
+        }
+        assert.ok(Math.abs(Number(row[2]) - Number(row[3]) / 30) < 0.000001);
+        assert.ok(Math.abs(Number(row[2]) - Number(row[6])) < 0.000001);
+      }
+    }
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

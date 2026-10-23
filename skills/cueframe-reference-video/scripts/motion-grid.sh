@@ -88,7 +88,17 @@ make_grid() {
   ' "$work_dir/frames.tsv" > "$work_dir/${label}-index.tsv" || {
     echo "no source frames in the requested interval" >&2; return 1;
   }
-  awk -F '\t' 'NR > 1 { printf "%seq(n\\,%s)", separator, $4; separator = "+" }' \
+  # FFmpeg recursively parses sums; balance them so long selections do not
+  # exhaust its expression depth while preserving the exact frame indices.
+  awk -F '\t' '
+    function selection(first, last, middle) {
+      if (first == last) return "eq(n\\," frames[first] ")"
+      middle = int((first + last) / 2)
+      return "(" selection(first, middle) "+" selection(middle + 1, last) ")"
+    }
+    NR > 1 { frames[++count] = $4 }
+    END { print selection(1, count) }
+  ' \
     "$work_dir/${label}-index.tsv" > "$work_dir/selection.txt"
   filter="select='$(cat "$work_dir/selection.txt")',scale=384:-2:flags=lanczos"
   if [[ "$has_drawtext" -eq 1 ]]; then
