@@ -31,7 +31,7 @@ not only keyframes. A scene tweak can finish with preview evidence; export for f
 
 The composition owns clip start, duration, ordering, cuts, and transitions. The scene owns objects, camera, environment, backdrop, post effects, constraints, and normalized animation. Scene clips occupy a dedicated full-frame front overlay track. Outer region, position, scale, rotation, fit, clip effects, and internal fades are refused because they would create two transform or timing owners.
 
-`referenceSize` must have the same aspect ratio as the composition. Coordinates are reference pixels with origin at frame center, +X right, +Y down, and +Z toward the viewer. Equal-aspect outputs scale uniformly.
+`referenceSize` must have the same aspect ratio as the composition. World coordinates are reference pixels with origin at frame center, +X right, +Y up, and +Z toward the default viewer. World rotations use radians in Euler XYZ order; laptop `openAngle` uses radians in [0, PI]. Equal-aspect outputs scale uniformly.
 
 Animation keyframe `at` is normalized over clip duration. Easing belongs to the keyframe it arrives at. The first keyframe has no easing; each later keyframe supplies `linear`, `hold`, or cubic `bezier` easing. Topology, bindings, text content, fonts, material roles, and object kind remain static within a shot.
 
