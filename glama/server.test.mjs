@@ -16,6 +16,8 @@ test('discovery shim preserves schemas and returns useful tool errors through th
   try {
     await client.connect(transport);
     const before=await client.listTools();
+    assert(Buffer.byteLength(JSON.stringify({jsonrpc:'2.0',id:1,result:before}))<640*1024,
+      'discovery must remain comfortably below the scanner response limit of 1 MiB');
     assert.deepEqual(before.tools,snapshot.tools);
     assert.equal(client.getInstructions(),instructions);
     // The SDK validates successful structured output once tools/list has

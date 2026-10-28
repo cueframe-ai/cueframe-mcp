@@ -3,10 +3,9 @@
 // build a Dockerfile and list tools over stdio).
 //
 // The real CueFrame MCP server is hosted at https://api.cueframe.ai/v1/mcp (Streamable
-// HTTP; OAuth in the browser or `Authorization: Bearer cf_live_…`). Its `initialize`
-// answers 401 to an anonymous client, and a registry's headless scanner cannot sign in,
-// so this shim advertises the SAME tool surface and the SAME server instructions a
-// signed-in client receives, replayed from glama/tools.json and glama/instructions.txt.
+// HTTP; OAuth in the browser or `Authorization: Bearer cf_live_…`). This shim
+// replays its tool surface and instructions from glama/tools.json and
+// glama/instructions.txt for registries that require stdio discovery.
 //
 // It is discovery only. `tools/call` executes nothing: a CueFrame call needs an account
 // and spends credits, so calling a tool here returns a pointer to the hosted server.

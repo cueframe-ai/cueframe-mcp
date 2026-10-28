@@ -4,51 +4,87 @@ CueFrame is a hosted video compose, edit and render service that agents drive ov
 
 Reference: https://docs.cueframe.ai · OpenAPI: https://api.cueframe.ai/v1/openapi.json
 
-## Step 0: if the CueFrame desktop app is open, use it
+## Step 1: choose plugin installation or manual MCP setup
 
-The desktop app already runs a local MCP server for the open project, with no account needed. Connect with the bundled binary and its connection file, then skip to Step 4.
+The hosted server uses Streamable HTTP at `https://api.cueframe.ai/v1/mcp`. Use OAuth browser sign-in for interactive clients. No API key is needed for that path.
 
-macOS:
+Plugin installation loads the bundled server definition and skills; use the host-specific install commands in [README.md](./README.md). The repository's `mcp.json` is a portable **plugin artifact**, with its own schema. It is not a native settings file to copy into every client. The plugin's `.mcp.json` and `gemini-extension.json` are also host packaging artifacts. Leave these manifests unchanged when configuring your own client.
 
+For manual registration, choose your client's native command and file below. Manual registration connects MCP tools; install the skills separately in Step 3. If the plugin already provides CueFrame, use that connection instead of adding a second registration.
+
+The CueFrame desktop app's local project server is a separate integration; see [desktop documentation](https://docs.cueframe.ai). This guide connects to the hosted service. The `glama/` discovery shim only lists tools for registries and cannot execute them.
+
+## Step 2: use the client's native settings
+
+Merge entries into existing settings; preserve other servers and preferences. Keep the server name `cueframe`. Tool name prefixes vary by client and by plugin installation; look for the CueFrame server and `get_account`, rather than relying on one universal prefix.
+
+### Codex
+
+```sh
+codex mcp add cueframe --url https://api.cueframe.ai/v1/mcp
+codex mcp login cueframe
 ```
-<CueFrame.app>/Contents/MacOS/cueframe-mcp --external --connection-file "~/Library/Application Support/ai.cueframe.studio/mcp-connection.json"
+
+Native settings are TOML in `~/.codex/config.toml` (or `.codex/config.toml` in a trusted project):
+
+```toml
+[mcp_servers.cueframe]
+url = "https://api.cueframe.ai/v1/mcp"
 ```
 
-The app's Agents settings show the exact command for each platform; copy it from there. That binary lives inside the app bundle; this repository does not publish a server.
+Check registration with `codex mcp list`, then start a new session and use `/mcp` to inspect active servers. See the [Codex example](./examples/codex/README.md) and [official Codex MCP documentation](https://developers.openai.com/codex/mcp).
 
-## Step 1: connect to the hosted server
+### Claude Code
 
-The hosted server speaks Streamable HTTP. OAuth opens in the browser on the first call; for headless use send `Authorization: Bearer cf_live_*` instead. To mint a key: `npx -y cueframe@0.11 login`, then `npx -y cueframe@0.11 keys create --name <name>` (`cueframe login` alone signs you in; it does not produce a key).
+```sh
+claude mcp add --scope project --transport http cueframe https://api.cueframe.ai/v1/mcp
+```
+
+This writes project `.mcp.json` using JSON with an explicit HTTP transport:
 
 ```json
-{ "mcpServers": { "cueframe": { "url": "https://api.cueframe.ai/v1/mcp" } } }
+{ "mcpServers": { "cueframe": { "type": "http", "url": "https://api.cueframe.ai/v1/mcp" } } }
 ```
 
-Headless, with a key:
+Start Claude Code, approve the project server if prompted, and use `/mcp` to authenticate and inspect its tools. See the [Claude Code example](./examples/claude/README.md) and [official MCP documentation](https://code.claude.com/docs/en/mcp).
+
+### Cursor
+
+Merge [examples/cursor/mcp.json](./examples/cursor/mcp.json) into project `.cursor/mcp.json` or personal `~/.cursor/mcp.json`. Its native JSON uses `mcpServers.cueframe.url`. Open Cursor's MCP settings, enable CueFrame, complete OAuth sign-in, and inspect the tool list. See [Cursor's official MCP documentation](https://cursor.com/docs/mcp).
+
+### Gemini CLI
+
+```sh
+gemini mcp add --scope user --transport http cueframe https://api.cueframe.ai/v1/mcp
+```
+
+This writes `~/.gemini/settings.json`; use `--scope project` for `.gemini/settings.json`. The native Streamable HTTP field is `httpUrl`:
 
 ```json
-{ "mcpServers": { "cueframe": { "url": "https://api.cueframe.ai/v1/mcp", "headers": { "Authorization": "Bearer cf_live_…" } } } }
+{ "mcpServers": { "cueframe": { "httpUrl": "https://api.cueframe.ai/v1/mcp" } } }
 ```
 
-A client that only speaks stdio has two options. With the desktop app installed, use its local server (Step 0). Otherwise bridge to the hosted server with `mcp-remote`, a community stdio-to-Streamable-HTTP proxy (not a CueFrame package). Without `--header` it runs the OAuth flow in the browser:
+In Gemini, use `/mcp auth cueframe` to sign in and `/mcp list` to inspect the connection and tools. See [Gemini CLI's official MCP documentation](https://geminicli.com/docs/tools/mcp-server/).
 
-```json
-{ "mcpServers": { "cueframe": { "command": "npx", "args": ["-y", "mcp-remote@0.14", "https://api.cueframe.ai/v1/mcp"] } } }
+### Hermes and OpenClaw
+
+Hermes uses YAML under `mcp_servers` in `~/.hermes/config.yaml`; merge [examples/hermes/config.yaml](./examples/hermes/config.yaml), then run `hermes mcp login cueframe` and `hermes mcp test cueframe`. Start a new session or use `/reload-mcp`. See [Hermes's official MCP documentation](https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp).
+
+OpenClaw manages native `mcp.servers` entries through its CLI or Settings → MCP. Follow the [OpenClaw example](./examples/openclaw/README.md), including OAuth sign-in and tool inspection, and [official OpenClaw documentation](https://docs.openclaw.ai/tools/mcp).
+
+### Headless authentication
+
+For unattended use, create a CueFrame API key with `npx -y cueframe@0.11 login`, then `npx -y cueframe@0.11 keys create --name <name>`. Login alone does not create a key. Keep keys outside committed config.
+
+For Codex, replace the OAuth entry with an environment-backed bearer token:
+
+```toml
+[mcp_servers.cueframe]
+url = "https://api.cueframe.ai/v1/mcp"
+bearer_token_env_var = "CUEFRAME_API_KEY"
 ```
 
-Headless, with an API key (`--header-file` keeps the key out of the process list; see mcp-remote's README):
-
-```json
-{ "mcpServers": { "cueframe": { "command": "npx", "args": ["-y", "mcp-remote@0.14", "https://api.cueframe.ai/v1/mcp", "--header", "Authorization: Bearer ${CUEFRAME_API_KEY}"], "env": { "CUEFRAME_API_KEY": "cf_live_…" } } } }
-```
-
-<!-- Verified against mcp-remote 0.14.3's documentation (--header, --header-file, OAuth); the end-to-end OAuth run against api.cueframe.ai and the API-key run are pending (no key was available when this was written). Clear this comment once both have been exercised. -->
-
-The `glama/` directory in this repository is a discovery shim for registries: it lists the tools and executes nothing, so it is not a way to connect.
-
-## Step 2: write the config
-
-Put the block from Step 1 in the client's MCP config: `.mcp.json` (Claude Code), `mcp.json` (Codex, Cursor, Gemini CLI), or the client's own settings UI. The server name must be `cueframe`; the skills refer to its tools as `mcp__cueframe__*`. Ready-made blocks for Claude Code, Cursor, Codex, Hermes and OpenClaw are in [`examples/`](./examples).
+Set `CUEFRAME_API_KEY` in the launching environment to your key (`cf_live_<YOUR_API_KEY>` is a placeholder). Other clients support an `Authorization: Bearer <YOUR_API_KEY>` header in their native remote-server entry; use their documented secret or environment interpolation syntax. Do not copy Codex TOML into a JSON client or reuse one client's interpolation syntax in another.
 
 ## Step 3: install the skills
 
@@ -62,7 +98,9 @@ Restart your agent session after installation so it can load the server and skil
 
 ## Step 4: verify
 
-Call `get_account`. It returns the org, plan, entitlements and credit balance; the skills call it before any metered operation. If the tool list has no `mcp__cueframe__*` entries, load the `cueframe-connect` skill and follow it.
+First inspect the client tool list as described above: CueFrame should be connected and expose `get_account`. A saved config alone does not prove the tools loaded. After signing in, optionally call `get_account` to check the org, plan, entitlements and credit balance before any metered operation. Tool discovery does not require creating a project or rendering. If the server or tool is missing, load `cueframe-connect` and follow it.
+
+The examples can be checked offline by parsing JSON with `JSON.parse` and TOML with Python 3.11+ `tomllib.loads`. These checks validate syntax; OAuth and live tool availability are confirmed in your client after sign-in. No credentials or paid calls are needed to review the examples.
 
 ## From code instead: the SDK
 
