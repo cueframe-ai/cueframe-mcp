@@ -87,6 +87,7 @@ jobs:
         run: |
           cd glama
           npm ci --omit=dev --no-audit --no-fund
+          node --test server.test.mjs
           printf '%s\n%s\n' \
             '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"ci","version":"0"}}}' \
             '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \

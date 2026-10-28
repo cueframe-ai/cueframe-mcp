@@ -67,6 +67,8 @@ flowchart LR
 
 The agent inspects available tools, checks your account, prepares media and the project, previews changes, and submits a render. Long-running operations return IDs; the agent waits for completion and gives you the result. You do not need to write the tool calls yourself. The [detailed quickstart](https://docs.cueframe.ai/docs/quickstart) explains the individual calls.
 
+Starting a new video or adding to an existing edit? See [when to start a template versus insert a component](examples/template-or-component.md) for discovery, media bindings, exact selection, preview and render.
+
 For your next video, describe the result and provide the inputs:
 
 > Turn this interview into a 20-second vertical clip with word-timed captions. Preview the strongest moment and show estimated costs before rendering.

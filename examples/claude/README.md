@@ -1,13 +1,19 @@
 # Claude Code
 
-Add the hosted server (the browser opens to sign in on the first call):
+Register the hosted server at project scope:
 
+```sh
+claude mcp add --scope project --transport http cueframe https://api.cueframe.ai/v1/mcp
 ```
-claude mcp add --transport http cueframe https://api.cueframe.ai/v1/mcp
+
+This writes project `.mcp.json`. Equivalent native JSON:
+
+```json
+{ "mcpServers": { "cueframe": { "type": "http", "url": "https://api.cueframe.ai/v1/mcp" } } }
 ```
 
-Then ask:
+Use `--scope user` for all projects (stored in `~/.claude.json`). Start Claude Code, approve the project server if prompted, and use `/mcp` to complete browser OAuth and inspect its tools. `claude mcp get cueframe` checks connection status. Confirm `get_account` is available; optionally call it before any metered operation.
 
-> Run get_account to confirm CueFrame is connected, then make a 9:16 social clip from https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4 with captions and give me the MP4.
+For the skills too, install the plugin (`claude plugin marketplace add cueframe-ai/cueframe-mcp && claude plugin install cueframe@cueframe`) or run `npx -y cueframe@0.11 install`. Plugin installation supplies its own server definition; choose that or manual registration.
 
-For the skills as well (storyboarding, clipping, brand kits, the quality bar), install the plugin (`claude plugin marketplace add cueframe-ai/cueframe-mcp && claude plugin install cueframe@cueframe`) or run `npx -y cueframe@0.11 install`.
+Source: [official Claude Code MCP documentation](https://code.claude.com/docs/en/mcp).
