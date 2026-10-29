@@ -253726,6 +253726,24 @@
               }
             }
           },
+          "402": {
+            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
+            "headers": {
+              "Payment-Required": {
+                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            }
+          },
           "403": {
             "description": "Forbidden — permission insufficient.",
             "content": {
@@ -253806,7 +253824,19 @@
             "name": "id",
             "required": true
           }
-        ]
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USDC",
+            "amount": "10000"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
       }
     },
     "/v1/projects/{id}/score-composition": {
