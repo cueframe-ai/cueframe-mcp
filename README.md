@@ -244,6 +244,7 @@ Root `skills/` is the single source: the plugin hosts read it from this reposito
 
 - [`server.json`](./server.json): the MCP registry entry for the hosted server (`ai.cueframe/cueframe`, remotes only). `pnpm check:server-json` validates it against the vendored registry schema; the `registry` job of the publish workflow publishes it.
 - [`glama.json`](./glama.json): the Glama listing's maintainer file.
+- [Smithery listing](https://smithery.ai/servers/cueframe/cueframe): the directory entry for the hosted server. No file here drives it; it is edited on Smithery.
 - [`glama/`](./glama) and the [`Dockerfile`](./Dockerfile): a stdio discovery shim that replays a snapshot of the hosted server's tool list and instructions for registries that introspect over stdio. It is not a server (see below).
 
 ## Hosted, desktop-local, and the discovery shim
