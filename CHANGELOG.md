@@ -2,6 +2,23 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 7.0.0
+
+- Breaking: removes `GET /v1/projects/{id}/selector/candidates` and `POST /v1/projects/{id}/selector/preview`. Neither could return anything but 404.
+- Breaking: `POST /v1/api-keys` no longer accepts x402. It already refused every wallet.
+- `x-payment-info.price` for fixed prices is decimal USD, not atomic USDC.
+- Wallets can delete their own projects. `POST /v1/media/{id}/processing-runs` costs $0.10; it, `finalize` and `mux-job` settle on delivery.
+- `compose-session` commit declares 409 when the active composition changed after the session started.
+- Every priced operation has an authored description.
+
+## @cueframe/sdk 0.17.0
+
+- Generated from contract 7.0.0. Removes `listSelectorCandidates` and `previewSelector`.
+
+## cueframe 0.11.4
+
+- Built against `@cueframe/sdk` 0.17.0.
+
 ## @cueframe/api-contract 6.1.1
 
 - Correct scene-shot world-axis and radian guidance to match the established renderer. Wire fields, schema limits and rendering policies are unchanged.
