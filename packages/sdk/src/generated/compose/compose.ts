@@ -186,7 +186,7 @@ export const getListComposeJobsUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * List up to 50 of a project's most recent compose jobs with status and timing, newest first. Call it to find a job id to inspect or to check for a job still running before starting another.
  * @summary List recent compose jobs for a project
  */
 export const listComposeJobs = async (id: string, options?: Parameters<typeof request>[1]): Promise<ComposeJobListResponse> => {
@@ -211,7 +211,7 @@ export const getGetComposeJobUrl = (id: string,
 }
 
 /**
- * Required permission: projects:read
+ * Read one compose job's full state: status, request, candidates, and per-criterion scores. Poll it after POST /v1/projects/{id}/compose to follow progress, compare candidates, and catch a job awaiting input.
  * @summary Fetch a compose job's full ensemble state
  */
 export const getComposeJob = async (id: string,

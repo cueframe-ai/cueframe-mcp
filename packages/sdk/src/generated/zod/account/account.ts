@@ -23,7 +23,7 @@ import {
 export const CreateTasteEntryBody = TasteCreateRequest
 
 /**
- * Required permission: projects:write
+ * Correct the text or source of a saved style preference while keeping its id. Call it when a preference has changed; get the tasteId from GET /v1/profile/taste.
  * @summary Edit a style preference
  */
 export const UpdateTasteEntryParams = zod.object({
@@ -33,7 +33,7 @@ export const UpdateTasteEntryParams = zod.object({
 export const UpdateTasteEntryBody = TasteUpdateRequest
 
 /**
- * Required permission: projects:write
+ * Remove one saved style preference from this org's learned taste. Call it when a preference is wrong or outdated; get the tasteId from GET /v1/profile/taste.
  * @summary Forget a style preference
  */
 export const DeleteTasteEntryParams = zod.object({

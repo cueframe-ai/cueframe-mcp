@@ -38,7 +38,7 @@ export const getListBrandKitsUrl = (params?: ListBrandKitsParams,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Page through the account's brand kits, each with its colors, fonts, and voice guidelines. Call it to find a brandKitId before attaching a brand to a project or rendering a template on brand.
  * @summary List brand kits (read-only)
  */
 export const listBrandKits = async (params?: ListBrandKitsParams, options?: Parameters<typeof request>[1]): Promise<BrandKitListResponse> => {
@@ -138,7 +138,7 @@ export const getGetBrandKitUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Read one brand kit's name, tagline, colors, fonts, and voice guidelines. Call it to match on-brand copy and graphics when authoring a composition, or to confirm what a brandKitId holds.
  * @summary Get a brand kit by id
  */
 export const getBrandKit = async (id: string, options?: Parameters<typeof request>[1]): Promise<BrandKitResponse> => {

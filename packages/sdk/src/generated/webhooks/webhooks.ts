@@ -37,7 +37,7 @@ export const getListWebhooksUrl = (params?: ListWebhooksParams,) => {
 }
 
 /**
- * Required permission: webhooks:read
+ * Page through the webhook endpoints registered on this account, with their URLs, subscribed events, and enabled state. Call it to see what already receives render, media, and compose events before adding another.
  * @summary List webhook endpoints
  */
 export const listWebhooks = async (params?: ListWebhooksParams, options?: Parameters<typeof request>[1]): Promise<WebhookListResponse> => {
@@ -123,7 +123,7 @@ export const getGetWebhookUrl = (id: string,) => {
 }
 
 /**
- * Required permission: webhooks:read
+ * Read one webhook endpoint's URL, subscribed events, settle delay, and enabled state. Call it to debug missing deliveries or to confirm which events a callback URL receives.
  * @summary Get a webhook endpoint
  */
 export const getWebhook = async (id: string, options?: Parameters<typeof request>[1]): Promise<WebhookResponse> => {
@@ -147,7 +147,7 @@ export const getPatchWebhookUrl = (id: string,) => {
 }
 
 /**
- * Required permission: webhooks:write
+ * Change a webhook endpoint's URL, events, settle delay, or enabled flag. A new URL goes back to pending and re-runs the ownership challenge; an unverified endpoint cannot be enabled here, so use POST /v1/webhooks/{id}/verify.
  * @summary Update a webhook endpoint
  */
 export const patchWebhook = async (id: string,
@@ -186,7 +186,7 @@ export const getDeleteWebhookUrl = (id: string,) => {
 }
 
 /**
- * Required permission: webhooks:write
+ * Remove a webhook endpoint so it stops being used for event deliveries. Call it when an integration is retired or its callback URL is gone; returns 204 with no body.
  * @summary Delete a webhook endpoint
  */
 export const deleteWebhook = async (id: string, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -210,7 +210,7 @@ export const getTestWebhookUrl = (id: string,) => {
 }
 
 /**
- * Required permission: webhooks:write
+ * Queue a webhook.test delivery to a registered endpoint to check your receiver before relying on render or media events. Returns a delivery id; limited to 5 per minute per key and 100 per day per endpoint.
  * @summary Fire a webhook.test delivery
  */
 export const testWebhook = async (id: string, options?: Parameters<typeof request>[1]): Promise<WebhookTestResponse> => {

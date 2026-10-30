@@ -187,8 +187,6 @@ createUploadToken:
   cancelRender: 'expert-only: cancel via cueframe api / MCP cancel_render',
   refreshRenderUrl: 'expert-only: presigned-URL refresh via cueframe api',
   streamRender: 'covered-by-render: SSE progress consumed by cueframe render / render watch',
-  listSelectorCandidates: 'expert-only: selector internals via cueframe api',
-  previewSelector: 'expert-only: selector internals via cueframe api',
   triggerMuxJob: 'covered-by-sessions: mux job triggered as part of the session flow',
   getMuxJob: 'covered-by-sessions: mux status within the session flow',
   cancelMuxJob: 'expert-only: cancel an exact mux attempt through cueframe api POST /v1/sessions/:id/mux-job/cancel; preserves the session for retry',

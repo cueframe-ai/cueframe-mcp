@@ -21,7 +21,6 @@ export * from './media/media';
 export * from './projects/projects';
 export * from './renders/renders';
 export * from './resources/resources';
-export * from './selector/selector';
 export * from './sessions/sessions';
 export * from './skills/skills';
 export * from './templates/templates';

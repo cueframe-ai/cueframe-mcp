@@ -105,7 +105,7 @@ export const getResolveBuiltinComponentUrl = (params: ResolveBuiltinComponentPar
 }
 
 /**
- * Required permission: projects:read
+ * Fetch the exact saved version of a builtin library item by collection, id, and 64-character revision hash. Call it with an identity from the component library to pin a graphic or template's source before using it.
  * @summary Resolve an exact builtin library artifact
  */
 export const resolveBuiltinComponent = async (params: ResolveBuiltinComponentParams, options?: Parameters<typeof request>[1]): Promise<BuiltinComponentResolveResponse> => {
@@ -160,7 +160,7 @@ export const getCreateComponentUrl = () => {
 }
 
 /**
- * Required permission: projects:write
+ * Add a custom motion-graphics component to this account's library from native source, ready to place in compositions. Start from GET /v1/components/blank-source; an id that already exists returns 409, so update it with PUT.
  * @summary Author (create) a component
  */
 export const createComponent = async (componentCreateRequest: ComponentCreateRequest, options?: Parameters<typeof request>[1]): Promise<ComponentResponse> => {
@@ -276,7 +276,7 @@ export const getGetComponentUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Read a component's metadata and prop schema, whether it is installed in this account or built in. Call it before placing a graphic on the timeline to see which inputs it accepts.
  * @summary Get a component entry
  */
 export const getComponent = async (id: string, options?: Parameters<typeof request>[1]): Promise<ComponentResponse> => {
@@ -308,7 +308,7 @@ export const getGetComponentSourceUrl = (id: string,
 }
 
 /**
- * Required permission: projects:read
+ * Read an installed component's source and input schema, or an exact version with sourceVersionId. Built-in sources need builtinCollection plus sourceVersionId; call it before forking or editing a graphic.
  * @summary Get a component's source
  */
 export const getComponentSource = async (id: string,

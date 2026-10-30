@@ -78,7 +78,7 @@ export const getListTemplatesUrl = (params?: ListTemplatesParams,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Page through the video templates saved in this account, newest first, as summaries without their full documents. Call it to find a template id for rendering, applying to a project, or starting a new project.
  * @summary List this org's templates
  */
 export const listTemplates = async (params?: ListTemplatesParams, options?: Parameters<typeof request>[1]): Promise<TemplateListResponse> => {
@@ -150,7 +150,7 @@ export const getInstantiateTemplateUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Create a new project from a template, binding its values and media with an optional preset and brand kit. Async: requires an Idempotency-Key header and returns 202 with a job; poll GET /v1/template-jobs/{jobId} for the project id.
  * @summary Start a new project from a pinned template
  */
 export const instantiateTemplate = async (id: string,
@@ -189,7 +189,7 @@ export const getGetTemplateJobUrl = (jobId: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Check a template preparation job's status, current stage, and project id, or its error if it failed. Poll it after POST /v1/templates/{id}/instantiate until the status is ready.
  * @summary Read template preparation status
  */
 export const getTemplateJob = async (jobId: string, options?: Parameters<typeof request>[1]): Promise<TemplateInstantiationJobResponse> => {
@@ -213,7 +213,7 @@ export const getRetryTemplateJobUrl = (jobId: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Resume a failed template preparation from the stage that failed, re-entering import if processing failed. Only failed jobs restart; a job in any other state is returned unchanged, so read its status first.
  * @summary Retry a failed template preparation
  */
 export const retryTemplateJob = async (jobId: string, options?: Parameters<typeof request>[1]): Promise<TemplateInstantiationJobResponse> => {
@@ -237,7 +237,7 @@ export const getCancelTemplateJobUrl = (jobId: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Stop a template preparation that is still running. Call it when the new project is no longer wanted; a job that is already ready, failed, or cancelled is returned unchanged.
  * @summary Cancel template preparation
  */
 export const cancelTemplateJob = async (jobId: string, options?: Parameters<typeof request>[1]): Promise<TemplateInstantiationJobResponse> => {
@@ -340,7 +340,7 @@ export const getGetTemplateRenderUrl = (id: string,
 }
 
 /**
- * Required permission: renders:read
+ * Check a template render's status and get its share link and poster URL, or its error if it failed. Poll it after POST /v1/templates/{id}/renders to learn when the video is ready to share.
  * @summary Read a template render
  */
 export const getTemplateRender = async (id: string,

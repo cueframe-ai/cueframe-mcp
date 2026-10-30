@@ -167,7 +167,7 @@ export const getGetExportUrl = (id: string,
 }
 
 /**
- * Required permission: renders:read
+ * Check an export job's status and progress from 0 to 1, and get its output URL, size, and duration once complete. Poll it after starting an FCPXML, Premiere, or video clip export.
  * @summary Get an export job
  */
 export const getExport = async (id: string,
@@ -193,7 +193,7 @@ export const getCancelExportUrl = (id: string,
 }
 
 /**
- * Required permission: renders:write
+ * Stop an export that is still running and get back the updated job. Call it when an FCPXML, Premiere, or video clip export is no longer needed; a finished export is refused, and a 503 means the cancel was not delivered, so retry.
  * @summary Cancel an in-flight export
  */
 export const cancelExport = async (id: string,

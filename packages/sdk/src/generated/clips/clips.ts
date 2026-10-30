@@ -73,7 +73,7 @@ export const getListMediaSuggestionsUrl = (id: string,
 }
 
 /**
- * Required permission: media:read
+ * Read the ranked short-form clip suggestions for a video along with the analysis status, filtered by platform, format, or topic if needed. Poll it after POST /v1/media/{id}/suggestions until the status is completed.
  * @summary List clip suggestions for a media item
  */
 export const listMediaSuggestions = async (id: string,
@@ -122,7 +122,7 @@ export const getResetMediaSuggestionsUrl = (id: string,) => {
 }
 
 /**
- * Required permission: media:write
+ * Delete all clip suggestions for a media item, cancel any analysis still in flight, and return the count removed. Call it before analyzing again, because a media item with finished suggestions refuses a new run.
  * @summary Reset clip suggestions for a media item
  */
 export const resetMediaSuggestions = async (id: string, options?: Parameters<typeof request>[1]): Promise<void> => {
