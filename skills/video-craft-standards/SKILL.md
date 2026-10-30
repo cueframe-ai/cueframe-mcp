@@ -1,6 +1,6 @@
 ---
 name: video-craft-standards
-description: "Use when judging whether a CueFrame video's idea, visual form, motion, timing and sound meet its brief or reference. For tool selection and scoped revision use cueframe-compose-loop. Triggers on \"is this good enough\", \"quality bar\", \"what should a finished reel have\", \"review my video\"."
+description: "Use when judging whether a CueFrame video's idea, visual form, motion, timing and sound meet its brief or reference (social reel, launch film, brand reel, talking-head clip). For tool selection and scoped revision use cueframe-compose-loop. Triggers on \"is this good enough\", \"quality bar\", \"what should a finished reel have\", \"review my video\", or any request to make a video when no other skill has stated the bar."
 ---
 
 # Video craft review

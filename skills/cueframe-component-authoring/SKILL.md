@@ -1,6 +1,6 @@
 ---
 name: cueframe-component-authoring
-description: "Use when authoring or editing CueFrame HTML cards, custom motion graphics or reusable native components, including a fork of an exact catalog source. For scene-shot devices and cameras use cueframe-scene-shot. Triggers on \"customize the parallax look\", \"make my own animated lower-third\", \"fork a CueFrame template and edit it\", \"author a custom graphic and render it\". Use before hand-writing a component from scratch."
+description: "Use when authoring, forking or customizing CueFrame HTML cards, motion-graphics primitives or reusable native components, including a fork of an exact catalog source. Covers cloud MCP, local desktop and CLI project paths using complete versioned source snapshots. For scene-shot devices and cameras use cueframe-scene-shot. Triggers on \"customize the parallax look\", \"make my own animated lower-third\", \"fork a CueFrame template and edit it\", \"author a custom graphic and render it\". Use before hand-writing a component from scratch: forking a built-in is usually the faster start."
 ---
 
 # CueFrame graphic authoring

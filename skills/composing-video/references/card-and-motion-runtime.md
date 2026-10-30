@@ -33,7 +33,7 @@ Chromium captures; the clock never advances). Use these instead:
 
 1. **Card motion vars (`--cf-*`)** — every card's wrapper carries frame-driven, unitless
    custom properties: `--cf-progress` (0→1 across the clip), `--cf-ease` (eased progress),
-   `--cf-enter` (0→1 over the first ~0.6s), `--cf-exit` (1→0 over the last ~0.6s), plus
+   `--cf-enter` (0→1 over the first 18 frames), `--cf-exit` (1→0 over the last 18 frames), plus
    `--cf-frame` / `--cf-t` / `--cf-fps` / `--cf-duration`. Author motion directly in card
    CSS: `opacity: var(--cf-enter)`, `transform: translateY(calc((1 - var(--cf-enter)) * 40px))`,
    an exit slide via `--cf-exit`. This supports entrance/exit choreography within the
@@ -43,7 +43,7 @@ Chromium captures; the clock never advances). Use these instead:
    Use it for entrances; author exits in-card via `--cf-exit`.
 3. **`clip.setKeyframes` op** — animate the whole clip on one channel:
    `{ type: "clip.setKeyframes", clipId, property, keyframes: [{ time, value, ease? }, …] }`
-   for `opacity`, `scale`, `rotation`, `position.x` or `position.y` (times in seconds from the
+   for `opacity`, `scale`, `rotation`, `position.x`, `position.y` or `volume` (times in seconds from the
    clip's start). For motion beyond that, author a native component with `create_component`.
 
 ---

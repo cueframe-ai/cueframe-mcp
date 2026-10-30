@@ -63,12 +63,12 @@ affected behavior and regressions; reserve full-film judging and export for the 
    the three beat boundaries on the grid. A brand reel almost always wants a bed; if the brand's
    voice calls for silence, preserve that decision.
 7. **Inspect the connected sequence.** `preview_frame` at t=0, each beat boundary, and the
-   final lockup, then inspect the intervening motion and relevant sound. Use `score_composition` only for useful, budgeted broader critique; fix located acceptance failures.
+   final lockup; describe each still, then inspect the intervening motion and relevant sound. Use `score_composition` only for useful, budgeted broader critique, with the brand facts as `brandContext` and your arc as `editorialIntent`; fix the worst axis first, then located acceptance failures.
 8. **Export for requested final delivery.** `create_render` → `wait_job (kind:"render")`.
 
 ## What good looks like
 
-Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment. For this format's defaults read section 3 (Brand-identity reel) of the [format standards](../video-craft-standards/references/format-standards.md); section 1's social-reel defaults apply underneath it.
 
 ## Delivering
 

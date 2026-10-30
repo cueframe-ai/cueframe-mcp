@@ -23,7 +23,7 @@ plus relevant regressions; do not restart the full planning/judging loop below.
 ## The loop
 
 ```
-get_context  →  author  →  scoped preview (look)  →  judge if useful
+get_media_context  →  author  →  scoped preview (look)  →  judge if useful
                    ↑                                      │
                    └──────── fix the WORST criterion ──────┘  → stop → render
 ```
@@ -34,7 +34,7 @@ Use the local live-preview tools when working in a desktop project that exposes 
 
 ## 0. Context — relevant project and source first
 
-`GET /v1/media/:id/context` (`cueframe_api_getMediaContext`) returns what you need
+`GET /v1/media/:id/context` (`get_media_context`) returns what you need
 to author well for a source:
 
 - **faces** — the subject roster per source window: `faceId` (face-0 = largest/
@@ -58,7 +58,7 @@ on every committing call. A 409 means someone saved after your read: call `get_c
 again, rebuild your ops against what it returns, and send them with its revision. Never resend
 the same ops with the 409's `currentEtag`; that overwrites a save you have not read. Op keys
 are `.strict()`: a typo'd key is rejected, not silently dropped, so read the
-error and fix the key. Reference faces from get_context in your reframe segments;
+error and fix the key. Reference faces from get_media_context in your reframe segments;
 time captions/overlays from the transcript word timings.
 
 ## 2. Preview — look at it

@@ -1,6 +1,6 @@
 ---
 name: cueframe-compose-loop
-description: "Use when previewing, reviewing or revising a CueFrame composition, including a scoped correction, reference comparison or final-delivery check. Also use when an agent should drive CueFrame to a high-quality clip itself: author, look at rendered frames, score with the judge, fix the weakest thing and repeat. Triggers on \"turn this source into a polished 9:16 clip\" or \"compose and self-correct until it scores well\"."
+description: "Use when previewing, reviewing or revising a CueFrame composition, including a scoped correction, reference comparison or final-delivery check. Also use when an agent should drive CueFrame to a high-quality clip itself: author, look at rendered frames, score with the judge, fix the weakest thing and repeat, over the primitives in the `cueframe-cli` skill. Triggers on \"turn this source into a polished 9:16 clip\" or \"compose and self-correct until it scores well\"."
 ---
 
 # CueFrame preview and revision

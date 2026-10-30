@@ -11,7 +11,7 @@ Use the [project and capability policy](../composing-video/references/project-po
 > `audioRole:"sfx"` and NO beat grid — `import_resource` takes no audioRole param, and
 > `materializeGrid grid:"beat"` will 422 `grid_unavailable` on it. Set the role yourself when
 > placing the clip (`audioRole:"music"` on the composition clip), put the bed on its own AUDIO
-> track. Discover curated music beds through `list_catalog`; use an available measured grid
+> track, kept dedicated to music. Discover curated music beds through `list_catalog`; use an available measured grid
 > only when it exists. A music role alone does not establish a reliable beat grid.
 
 You point at an existing composition that sounds empty; you get it back with a licensed bed that
@@ -44,7 +44,7 @@ delivery; stills and a visual judge cannot establish the mix. Recheck visuals wh
 
 1. **Read the composition and its speech.** `list_compositions` / the composition body for
    what's on the timeline; `get_media_context` for transcripts. Speech present → the voice is
-   the rhythm authority and the bed serves it. Without speech, decide whether music or the visible action should drive timing; preserve approved cuts unless retiming is requested.
+   the rhythm authority and the bed serves it. Without speech, the bed is the default rhythm authority and earns beat-cuts when it has a measured grid; let the visible action drive timing instead when the brief calls for it, and preserve approved cuts unless retiming is requested.
 2. **Find the bed, license-aware.** Beds come from the curated music packs —
    `import_resource { kind:"music-pack" }` — honoring the brand kit's `musicMood` (mood and
    energy matched to the cut rate). For ambience or loop textures, `search_resources
@@ -74,7 +74,7 @@ and its reason in the delivery note instead of forcing a bed.
 
 ## What good looks like
 
-Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment. This skill exists to satisfy the audio rule in the cross-cutting section of the [format standards](../video-craft-standards/references/format-standards.md), which also covers provenance for stock assets; section 1 adds cutting to the music grid when a bed exists.
 
 ## Delivering
 
