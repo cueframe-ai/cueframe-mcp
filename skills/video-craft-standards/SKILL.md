@@ -1,6 +1,6 @@
 ---
 name: video-craft-standards
-description: Use when judging whether a CueFrame video's idea, visual form, motion, timing and sound meet its brief or reference. For tool selection and scoped revision use cueframe-compose-loop.
+description: "Use when judging whether a CueFrame video's idea, visual form, motion, timing and sound meet its brief or reference. For tool selection and scoped revision use cueframe-compose-loop. Triggers on \"is this good enough\", \"quality bar\", \"what should a finished reel have\", \"review my video\"."
 ---
 
 # Video craft review
@@ -32,3 +32,7 @@ Look for accidental pauses, rushed reading windows, unexplained changes in speed
 - **Sound:** heard intelligibility, balance and event synchronization are separate from loudness or waveform measurements. Silence needs no apology when it serves the piece.
 
 A useful critique names a timestamp/window, observed problem, its consequence and a plausible correction. Prioritize failures of intent, fidelity or continuity over minor polish. Do not certify unseen motion or unheard audio, and do not substitute a score for the user's acceptance criteria.
+
+## Detailed guidance
+
+[Format standards](references/format-standards.md) has the controlling idea, the cross-cutting rules, and the checklists for social reels, launch films, brand-identity reels and talking-head clips, plus scoring discipline.
