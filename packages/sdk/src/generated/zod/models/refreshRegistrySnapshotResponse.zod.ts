@@ -11,6 +11,8 @@ import * as zod from 'zod';
 
 export const refreshRegistrySnapshotResponseCommandIdMax = 128;
 
+
+export const refreshRegistrySnapshotResponseCommandIdRegExp = new RegExp('^cf1:[0-7][0-9A-HJKMNP-TV-Z]{25}:[0-9a-f]{64}$');
 export const refreshRegistrySnapshotResponseSnapshotRegistryOriginMax = 2048;
 
 export const refreshRegistrySnapshotResponseSnapshotSourceCommitRegExp = new RegExp('^[0-9a-f]{40}$');
@@ -49,7 +51,7 @@ export const refreshRegistrySnapshotResponseDiffChangedMax = 5000;
 
 
 export const RefreshRegistrySnapshotResponse = zod.strictObject({
-  "commandId": zod.string().min(1).max(refreshRegistrySnapshotResponseCommandIdMax),
+  "commandId": zod.string().min(1).max(refreshRegistrySnapshotResponseCommandIdMax).regex(refreshRegistrySnapshotResponseCommandIdRegExp).describe('Create with boundedCommandId(ulid(), digest) from @cueframe/studio-contracts/commandIdentity, using ulid from the ulid package: cf1:<26-character uppercase ULID>:<64 lowercase hexadecimal characters>. Keep the whole original identity for every retry within the 14-day retry window. After expiry, reconcile the original outcome instead of assigning a new identity. The caller-provided digest is not checked against the request body.'),
   "snapshot": zod.strictObject({
   "registryOrigin": zod.string().min(1).max(refreshRegistrySnapshotResponseSnapshotRegistryOriginMax),
   "sourceCommit": zod.string().regex(refreshRegistrySnapshotResponseSnapshotSourceCommitRegExp),

@@ -81,6 +81,25 @@ describe('apiCommand output modes', () => {
     return code;
   }
 
+  it('preserves the SDK default timeout when the flag is omitted', async () => {
+    vi.spyOn(sdk, 'requestRaw').mockResolvedValue({ status: 200, statusText: 'OK', headers: {}, body: {} });
+    expect(await run('GET', '/v1/registry/items', { target: 'local', json: true })).toBe(0);
+    expect(sdkClient.initSdk).toHaveBeenCalledWith('local');
+  });
+
+  it.each(['1', '170000', '2147483647'])('forwards an explicit bounded timeout %s to the existing SDK', async timeoutMs => {
+    vi.spyOn(sdk, 'requestRaw').mockResolvedValue({ status: 200, statusText: 'OK', headers: {}, body: {} });
+    expect(await run('GET', '/v1/registry/items', { target: 'local', json: true, timeoutMs })).toBe(0);
+    expect(sdkClient.initSdk).toHaveBeenCalledWith('local', { timeoutMs: Number(timeoutMs) });
+  });
+
+  it.each(['0', '-1', '1.5', 'NaN', 'Infinity', '', ' 1', '1 ', '+1', '1e3', '0x10', '2147483648', '9007199254740992'])('rejects invalid timeout %s before auth or network access', async timeoutMs => {
+    const request = vi.spyOn(sdk, 'requestRaw');
+    expect(await run('GET', '/v1/registry/items', { target: 'local', json: true, timeoutMs })).toBe(2);
+    expect(sdkClient.initSdk).not.toHaveBeenCalled();
+    expect(request).not.toHaveBeenCalled();
+  });
+
   it('preserves exact builtin identity and insertion body on the CLI REST lane', async () => {
     const request = vi.spyOn(sdk, 'requestRaw').mockResolvedValue({ status: 200, statusText: 'OK', headers: {}, body: { ok: true } });
     const path = '/v1/components/builtin/resolve?collection=curated-looks&id=builtin%3Areference-component-wheel-full&revision=observed-revision';

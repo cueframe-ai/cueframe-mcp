@@ -11,6 +11,8 @@ import * as zod from 'zod';
 
 export const acquireRegistryItemResponseCommandIdMax = 128;
 
+
+export const acquireRegistryItemResponseCommandIdRegExp = new RegExp('^cf1:[0-7][0-9A-HJKMNP-TV-Z]{25}:[0-9a-f]{64}$');
 export const acquireRegistryItemResponseReceiptRefBundleSha256RegExp = new RegExp('^[a-f0-9]{64}$');
 export const acquireRegistryItemResponseReceiptRefBundleBytesExclusiveMin = 0;
 export const acquireRegistryItemResponseReceiptRefBundleBytesMax = 134217728;
@@ -3202,7 +3204,7 @@ export const acquireRegistryItemResponseWarningsMax = 100;
 
 
 export const AcquireRegistryItemResponse = zod.strictObject({
-  "commandId": zod.string().min(1).max(acquireRegistryItemResponseCommandIdMax),
+  "commandId": zod.string().min(1).max(acquireRegistryItemResponseCommandIdMax).regex(acquireRegistryItemResponseCommandIdRegExp),
   "receiptRef": zod.strictObject({
   "bundleSha256": zod.string().regex(acquireRegistryItemResponseReceiptRefBundleSha256RegExp),
   "bundleBytes": zod.int().gt(acquireRegistryItemResponseReceiptRefBundleBytesExclusiveMin).max(acquireRegistryItemResponseReceiptRefBundleBytesMax),

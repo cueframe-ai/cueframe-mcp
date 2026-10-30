@@ -14,6 +14,7 @@ export interface AcquireRegistryItemResponse {
   /**
      * @minLength 1
      * @maxLength 128
+     * @pattern ^cf1:[0-7][0-9A-HJKMNP-TV-Z]{25}:[0-9a-f]{64}$
      */
   commandId: string;
   receiptRef: AcquireRegistryItemResponseReceiptRef;

@@ -44,6 +44,12 @@ npx -y cueframe@0.11 api GET /v1/me --json
 
 This reads your account and credit entitlements without rendering. Cloud processing and rendering consume credits; see [cloud rates](https://cueframe.ai/pricing).
 
+For a bounded operation that needs a longer client wait, `api` accepts an explicit
+`--timeout-ms <milliseconds>` integer from 1 to 2147483647. Omitting it preserves
+the SDK default. This changes only the request wait; server deadlines and operation
+outcomes remain authoritative. After a timeout, inspect the saved outcome before
+retrying a write, and retain its original command identity.
+
 ## Quick start — upload → author → render
 
 To compare an exact certified reference frame with an existing composition preview:

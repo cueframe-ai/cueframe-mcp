@@ -11,8 +11,10 @@ import type { RefreshRegistrySnapshotRequestExpectedSnapshot } from './refreshRe
 
 export interface RefreshRegistrySnapshotRequest {
   /**
+     * Create with boundedCommandId(ulid(), digest) from @cueframe/studio-contracts/commandIdentity, using ulid from the ulid package: cf1:<26-character uppercase ULID>:<64 lowercase hexadecimal characters>. Keep the whole original identity for every retry within the 14-day retry window. After expiry, reconcile the original outcome instead of assigning a new identity. The caller-provided digest is not checked against the request body.
      * @minLength 1
      * @maxLength 128
+     * @pattern ^cf1:[0-7][0-9A-HJKMNP-TV-Z]{25}:[0-9a-f]{64}$
      */
   commandId: string;
   expectedSnapshot: RefreshRegistrySnapshotRequestExpectedSnapshot;

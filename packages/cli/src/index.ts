@@ -421,12 +421,14 @@ export async function main() {
     .option('-b, --body <body>', 'Request body (inline JSON, @file.json to read from disk, @- for stdin)')
     .option('-H, --header <header...>', 'Additional header (repeatable), e.g. -H "If-Match: \\"abc\\""')
     .option('-i, --include', 'Include response status line + headers in stdout (curl-style). Lets agents read ETag etc.')
+    .option('--timeout-ms <milliseconds>', 'Request timeout in milliseconds (1–2147483647); omitted uses the SDK default. Does not change server deadlines.')
     .action((method: string, path: string, opts: any) =>
       apiCommand(method, path, {
         target: opts.target,
         body: opts.body,
         header: opts.header,
         include: opts.include,
+        timeoutMs: opts.timeoutMs,
         json: globals().json,
       }),
     );
