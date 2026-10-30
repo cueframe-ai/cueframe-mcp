@@ -18,7 +18,7 @@ import {
 
 
 /**
- * Required permission: projects:read
+ * Page through the account's brand kits, each with its colors, fonts, and voice guidelines. Call it to find a brandKitId before attaching a brand to a project or rendering a template on brand.
  * @summary List brand kits (read-only)
  */
 export const listBrandKitsQueryLimitMax = 100;
@@ -43,7 +43,7 @@ export const CreateBrandKitBody = BrandKitCreateRequest
 export const ExtractBrandKitBody = ExtractBrandKitRequest
 
 /**
- * Required permission: projects:read
+ * Read one brand kit's name, tagline, colors, fonts, and voice guidelines. Call it to match on-brand copy and graphics when authoring a composition, or to confirm what a brandKitId holds.
  * @summary Get a brand kit by id
  */
 export const GetBrandKitParams = zod.object({

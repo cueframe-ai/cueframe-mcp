@@ -35,7 +35,7 @@ export const getListSessionsUrl = (params?: ListSessionsParams,) => {
 }
 
 /**
- * Required permission: sessions:read
+ * Page through this account's sessions, each a named set of media files with its mux status. Call it to find a session id for checking or retrying an audio-onto-video job.
  * @summary List sessions
  */
 export const listSessions = async (params?: ListSessionsParams, options?: Parameters<typeof request>[1]): Promise<SessionListResponse> => {
@@ -59,7 +59,7 @@ export const getCreateSessionUrl = () => {
 }
 
 /**
- * Required permission: sessions:write
+ * Group existing media into a named session by role, with one 'audio' file and any other role treated as video. This is the step before POST /v1/sessions/{id}/mux-job, which merges the audio onto each video.
  * @summary Create a session
  */
 export const createSession = async (sessionCreateRequest: SessionCreateRequest, options?: Parameters<typeof request>[1]): Promise<SessionResponse> => {
@@ -97,7 +97,7 @@ export const getGetSessionUrl = (id: string,) => {
 }
 
 /**
- * Required permission: sessions:read
+ * Read a session's files, roles, and mux state, including the media ids of any muxed outputs. Call it to confirm file roles before starting a mux or to see what a finished one produced.
  * @summary Get a session
  */
 export const getSession = async (id: string, options?: Parameters<typeof request>[1]): Promise<SessionResponse> => {
@@ -121,7 +121,7 @@ export const getDeleteSessionUrl = (id: string,) => {
 }
 
 /**
- * Required permission: sessions:write
+ * Delete a session, first cancelling any mux still running for it. Refused while a project composition references the session, so remove those references first; call it when the grouping is no longer needed.
  * @summary Delete a session
  */
 export const deleteSession = async (id: string, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -145,7 +145,7 @@ export const getTriggerMuxJobUrl = (id: string,) => {
 }
 
 /**
- * Required permission: sessions:write
+ * Merge a session's 'audio' file onto each of its video files, using one signed alignment offset per video. Async: returns 202 with a job id, then poll GET /v1/sessions/{id}/mux-job; pass retryOf to retry a failed or cancelled job.
  * @summary Trigger mux-audio-onto-video workflow
  */
 export const triggerMuxJob = async (id: string,
@@ -184,7 +184,7 @@ export const getGetMuxJobUrl = (id: string,) => {
 }
 
 /**
- * Required permission: sessions:read
+ * Check an audio-onto-video mux job's status, timing, and error, and get the media ids of the muxed videos as they publish. Poll it after POST /v1/sessions/{id}/mux-job; 404 means no mux has started.
  * @summary Poll mux job status
  */
 export const getMuxJob = async (id: string, options?: Parameters<typeof request>[1]): Promise<MuxJobResponse> => {
@@ -208,7 +208,7 @@ export const getCancelMuxJobUrl = (id: string,) => {
 }
 
 /**
- * Required permission: sessions:write
+ * Stop the named audio-onto-video mux attempt and keep the session so the job can be retried. Send its jobId; a job that is no longer current returns 409.
  * @summary Cancel one mux attempt while retaining the session
  */
 export const cancelMuxJob = async (id: string,

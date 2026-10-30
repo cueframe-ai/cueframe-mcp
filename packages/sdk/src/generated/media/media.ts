@@ -95,7 +95,7 @@ export const getStartHostedProcessingRunUrl = (id: string,) => {
 }
 
 /**
- * Required permission: media:write
+ * Process a stored media source under a caller-chosen runId, optionally setting a transcription language. Async: returns 202 with dispatch state, then poll GET /v1/media/{id}/processing-runs/{runId}; one run can be active per media item.
  * @summary Start a direct hosted processing run
  */
 export const startHostedProcessingRun = async (id: string,
@@ -135,7 +135,7 @@ export const getGetHostedProcessingRunUrl = (id: string,
 }
 
 /**
- * Required permission: media:read
+ * Check a hosted processing run's overall status, dispatch state, and each operation's attempt and artifact commit. Poll it after starting a run to learn when its artifacts can be downloaded.
  * @summary Read a scoped hosted processing run
  */
 export const getHostedProcessingRun = async (id: string,
@@ -162,7 +162,7 @@ export const getGetHostedProcessingArtifactUrl = (id: string,
 }
 
 /**
- * Required permission: media:read
+ * Get download URLs for a run's committed audio or matte artifact on the current source. The URLs last five minutes, so call it right before downloading; it returns 404 until the artifact is committed.
  * @summary Get one committed hosted processing artifact
  */
 export const getHostedProcessingArtifact = async (id: string,
@@ -189,7 +189,7 @@ export const getCancelHostedProcessingRunUrl = (id: string,
 }
 
 /**
- * Required permission: media:write
+ * Ask a hosted processing run to stop, and get back its status plus whether a remote stop was requested. A request is not proof the work stopped, so poll the run afterward; a finished run is returned unchanged.
  * @summary Request cancellation of a hosted processing run
  */
 export const cancelHostedProcessingRun = async (id: string,
@@ -214,7 +214,7 @@ export const getCreateUploadTokenUrl = () => {
 }
 
 /**
- * Required permission: media:write
+ * Get a token for the signed resumable upload lane used by browser and desktop uploaders, valid for about 30 minutes and optionally scoped to one project. API clients should use POST /v1/media for a presigned PUT instead.
  * @summary Mint a short-lived token for the signed upload lane
  */
 export const createUploadToken = async (uploadTokenRequest: UploadTokenRequest, options?: Parameters<typeof request>[1]): Promise<UploadTokenResponse> => {
@@ -252,7 +252,7 @@ export const getCreateMediaUploadUrl = () => {
 }
 
 /**
- * Required permission: media:write
+ * Reserve a media id and get a presigned URL for uploading a local video, audio, or image file of up to 5 GiB. PUT the raw bytes to that URL, then call POST /v1/media/{id}/finalize to start processing.
  * @summary Initiate a direct upload (presigned PUT URL)
  */
 export const createMediaUpload = async (mediaUploadRequest: MediaUploadRequest, options?: Parameters<typeof request>[1]): Promise<MediaDirectUploadResponse> => {
@@ -321,7 +321,7 @@ export const getFinalizeMediaUrl = (id: string,) => {
 }
 
 /**
- * Required permission: media:write
+ * Confirm the bytes reached the presigned URL and start processing, the step after POST /v1/media. Audio and video move to processing while images complete at once; optionally declare an audio role of vo, music, sfx, or ambience.
  * @summary Finalize a direct upload (trigger processing after the bytes are PUT)
  */
 export const finalizeMedia = async (id: string,
@@ -436,7 +436,7 @@ export const getDeleteMediaUrl = (id: string,) => {
 }
 
 /**
- * Required permission: media:write
+ * Delete a media item that is no longer needed. Refused with media_in_use, naming the projects and sessions involved, while anything still references it, so remove those references first.
  * @summary Delete a media item
  */
 export const deleteMedia = async (id: string, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -468,7 +468,7 @@ export const getGetMediaUrl = (id: string,
 }
 
 /**
- * Required permission: media:read
+ * Read one media item's status, processing progress, duration, dimensions, frame rate, and thumbnail URL. Poll it after an upload, import, or generation to learn when the video, audio, or image is ready to use.
  * @summary Get a media item by id
  */
 export const getMedia = async (id: string,
@@ -534,7 +534,7 @@ export const getGetMediaTranscriptUrl = (id: string,
 }
 
 /**
- * Required permission: media:read
+ * Fetch a processed video or audio item's transcript as full text and utterances, whole by default or paged with limit, after, and before. Call it to find quotes and moments for clips or captions; 404 means no transcript exists yet.
  * @summary Get a media transcript (paginated)
  */
 export const getMediaTranscript = async (id: string,
@@ -600,7 +600,7 @@ export const getTriggerSubjectDetectionUrl = (id: string,
 }
 
 /**
- * Required permission: media:write
+ * Track faces or people across a video so renders can use the subject track. Async: returns 202 with a fact id and quote, then poll GET /v1/media/{id}/facts; a detection already pending or ready is returned free of charge.
  * @summary Trigger standalone subject/face detection
  */
 export const triggerSubjectDetection = async (id: string,

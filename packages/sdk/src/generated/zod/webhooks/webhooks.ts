@@ -16,7 +16,7 @@ import {
 
 
 /**
- * Required permission: webhooks:read
+ * Page through the webhook endpoints registered on this account, with their URLs, subscribed events, and enabled state. Call it to see what already receives render, media, and compose events before adding another.
  * @summary List webhook endpoints
  */
 export const listWebhooksQueryLimitMax = 100;
@@ -35,7 +35,7 @@ export const ListWebhooksQueryParams = zod.object({
 export const CreateWebhookBody = WebhookCreateRequest
 
 /**
- * Required permission: webhooks:read
+ * Read one webhook endpoint's URL, subscribed events, settle delay, and enabled state. Call it to debug missing deliveries or to confirm which events a callback URL receives.
  * @summary Get a webhook endpoint
  */
 export const GetWebhookParams = zod.object({
@@ -43,7 +43,7 @@ export const GetWebhookParams = zod.object({
 })
 
 /**
- * Required permission: webhooks:write
+ * Change a webhook endpoint's URL, events, settle delay, or enabled flag. A new URL goes back to pending and re-runs the ownership challenge; an unverified endpoint cannot be enabled here, so use POST /v1/webhooks/{id}/verify.
  * @summary Update a webhook endpoint
  */
 export const PatchWebhookParams = zod.object({
@@ -53,7 +53,7 @@ export const PatchWebhookParams = zod.object({
 export const PatchWebhookBody = WebhookPatchRequest
 
 /**
- * Required permission: webhooks:write
+ * Remove a webhook endpoint so it stops being used for event deliveries. Call it when an integration is retired or its callback URL is gone; returns 204 with no body.
  * @summary Delete a webhook endpoint
  */
 export const DeleteWebhookParams = zod.object({
@@ -61,7 +61,7 @@ export const DeleteWebhookParams = zod.object({
 })
 
 /**
- * Required permission: webhooks:write
+ * Queue a webhook.test delivery to a registered endpoint to check your receiver before relying on render or media events. Returns a delivery id; limited to 5 per minute per key and 100 per day per endpoint.
  * @summary Fire a webhook.test delivery
  */
 export const TestWebhookParams = zod.object({

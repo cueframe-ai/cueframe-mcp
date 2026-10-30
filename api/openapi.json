@@ -115,9 +115,6 @@
       "name": "resources"
     },
     {
-      "name": "selector"
-    },
-    {
       "name": "templates"
     },
     {
@@ -229888,321 +229885,6 @@
         "additionalProperties": false,
         "description": "CueFrame-model analysis of timeline word indices. Every returned index refers to the request's words array."
       },
-      "SelectorCandidatesResponse": {
-        "type": "object",
-        "properties": {
-          "projectId": {
-            "type": "string"
-          },
-          "groupId": {
-            "type": "string"
-          },
-          "selectorVersion": {
-            "type": "string"
-          },
-          "signalVersions": {
-            "type": "object",
-            "propertyNames": {
-              "type": "string"
-            },
-            "additionalProperties": {
-              "type": "string"
-            }
-          },
-          "moments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SelectorMomentGroup"
-            }
-          },
-          "recommendation": {
-            "type": "object",
-            "properties": {
-              "cutSchedule": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SelectorCutSpan"
-                }
-              },
-              "audioBed": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/SelectorAudioSpan"
-                },
-                "description": "Best-audio bed (instance #3): the clearest mic per span."
-              },
-              "suppressedSwitches": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "atSec": {
-                      "type": "number"
-                    },
-                    "wouldHaveBeenCandidateId": {
-                      "type": "string"
-                    },
-                    "byScore": {
-                      "type": "number"
-                    },
-                    "blockedBy": {
-                      "type": "string"
-                    },
-                    "releaseAtSec": {
-                      "type": [
-                        "number",
-                        "null"
-                      ]
-                    }
-                  },
-                  "required": [
-                    "atSec",
-                    "wouldHaveBeenCandidateId",
-                    "byScore",
-                    "blockedBy",
-                    "releaseAtSec"
-                  ],
-                  "additionalProperties": false
-                },
-                "description": "Switches the stabilizer suppressed (the anti-ping-pong audit)."
-              }
-            },
-            "required": [
-              "cutSchedule",
-              "audioBed",
-              "suppressedSwitches"
-            ],
-            "additionalProperties": false
-          },
-          "divergesFromComposition": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "projectId",
-          "groupId",
-          "selectorVersion",
-          "signalVersions",
-          "moments",
-          "recommendation"
-        ],
-        "additionalProperties": false,
-        "description": "Selector (switch) candidates + recommendation for a synced-angle group. Every candidate carries score + contributions + reasons so the agent reweights from evidence; the recommendation is the lowered cut schedule + best-audio bed."
-      },
-      "SelectorMomentGroup": {
-        "type": "object",
-        "properties": {
-          "startSec": {
-            "type": "number",
-            "description": "Span start (output seconds)."
-          },
-          "endSec": {
-            "type": "number",
-            "description": "Span end (output seconds)."
-          },
-          "chosen": {
-            "type": "string",
-            "description": "The recommended candidateId, or \"__hold__\" (abstain)."
-          },
-          "pacingNote": {
-            "description": "Which mechanism produced the pick (argmax / hysteresis / override / hold …).",
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "candidates": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SelectorScoredCandidate"
-            }
-          }
-        },
-        "required": [
-          "startSec",
-          "endSec",
-          "chosen",
-          "candidates"
-        ],
-        "additionalProperties": false
-      },
-      "SelectorScoredCandidate": {
-        "type": "object",
-        "properties": {
-          "candidateId": {
-            "type": "string",
-            "description": "Stable angle/source id. An unknown id is rejected, never remapped."
-          },
-          "role": {
-            "description": "Agent-declared semantic tag (e.g. \"wide\", \"webcam\").",
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "score": {
-            "type": "number",
-            "description": "The weighted prominence score (Σ weights·signal)."
-          },
-          "contributions": {
-            "type": "object",
-            "propertyNames": {
-              "type": "string"
-            },
-            "additionalProperties": {
-              "type": "number"
-            },
-            "description": "signalKey → weighted contribution (the agent reweights from this)."
-          },
-          "reasons": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "candidateId",
-          "score",
-          "contributions",
-          "reasons"
-        ],
-        "additionalProperties": false
-      },
-      "SelectorCutSpan": {
-        "type": "object",
-        "properties": {
-          "startSec": {
-            "type": "number"
-          },
-          "endSec": {
-            "type": "number"
-          },
-          "candidateId": {
-            "type": "string"
-          },
-          "sourceInSec": {
-            "type": "number",
-            "description": "Chosen source window start (declared-offset resolved)."
-          },
-          "sourceOutSec": {
-            "type": "number"
-          },
-          "reasons": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "startSec",
-          "endSec",
-          "candidateId",
-          "sourceInSec",
-          "sourceOutSec",
-          "reasons"
-        ],
-        "additionalProperties": false
-      },
-      "SelectorAudioSpan": {
-        "type": "object",
-        "properties": {
-          "startSec": {
-            "type": "number"
-          },
-          "endSec": {
-            "type": "number"
-          },
-          "candidateId": {
-            "type": "string",
-            "description": "The chosen audio source (the clearest mic) for this span → programAudioSourceId."
-          },
-          "reasons": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        },
-        "required": [
-          "startSec",
-          "endSec",
-          "candidateId",
-          "reasons"
-        ],
-        "additionalProperties": false
-      },
-      "SelectorPreviewRequest": {
-        "type": "object",
-        "properties": {
-          "groupId": {
-            "type": "string",
-            "minLength": 1
-          },
-          "weights": {
-            "description": "Sparse prominence weights (the taste knob, non-negative). Default = DOMINANCE_WEIGHTS.",
-            "type": "object",
-            "propertyNames": {
-              "type": "string"
-            },
-            "additionalProperties": {
-              "type": "number"
-            }
-          },
-          "minHoldSec": {
-            "type": "number",
-            "exclusiveMinimum": 0
-          },
-          "enterSec": {
-            "type": "number",
-            "minimum": 0
-          },
-          "switchMargin": {
-            "type": "number",
-            "minimum": 0
-          },
-          "cooldownSec": {
-            "type": "number",
-            "minimum": 0
-          },
-          "maxHoldSec": {
-            "type": "number",
-            "exclusiveMinimum": 0
-          },
-          "lockSourceId": {
-            "description": "Pin a camera/angle for the whole timeline.",
-            "type": "string"
-          },
-          "overrides": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "startSec": {
-                  "type": "number"
-                },
-                "endSec": {
-                  "type": "number"
-                },
-                "candidateId": {
-                  "type": "string"
-                }
-              },
-              "required": [
-                "startSec",
-                "endSec",
-                "candidateId"
-              ],
-              "additionalProperties": false
-            }
-          }
-        },
-        "required": [
-          "groupId"
-        ],
-        "additionalProperties": false
-      },
       "ApiKeyCreateRequest": {
         "type": "object",
         "properties": {
@@ -230535,7 +230217,8 @@
                 },
                 "artifactSha256": {
                   "type": "string",
-                  "pattern": "^sha256:[0-9a-f]{64}$"
+                  "pattern": "^sha256:[0-9a-f]{64}$",
+                  "example": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
                 },
                 "id": {
                   "type": "string"
@@ -230890,7 +230573,8 @@
               },
               "representationIdentity": {
                 "type": "string",
-                "pattern": "^sha256:[0-9a-f]{64}$"
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "example": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
               },
               "frame": {
                 "type": "integer",
@@ -231000,7 +230684,8 @@
               },
               "artifactSha256": {
                 "type": "string",
-                "pattern": "^sha256:[0-9a-f]{64}$"
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "example": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
               },
               "byteLength": {
                 "type": "integer",
@@ -231061,11 +230746,13 @@
               },
               "sourceIdentity": {
                 "type": "string",
-                "pattern": "^sha256:[0-9a-f]{64}$"
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "example": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
               },
               "representationIdentity": {
                 "type": "string",
-                "pattern": "^sha256:[0-9a-f]{64}$"
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "example": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
               },
               "representationRevision": {
                 "type": "string"
@@ -231141,7 +230828,8 @@
               },
               "artifactSha256": {
                 "type": "string",
-                "pattern": "^sha256:[0-9a-f]{64}$"
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "example": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
               },
               "jobId": {
                 "type": "string"
@@ -231216,11 +230904,13 @@
               },
               "referenceSha256": {
                 "type": "string",
-                "pattern": "^sha256:[0-9a-f]{64}$"
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "example": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
               },
               "candidateSha256": {
                 "type": "string",
-                "pattern": "^sha256:[0-9a-f]{64}$"
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "example": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
               },
               "crop": {
                 "anyOf": [
@@ -231315,7 +231005,8 @@
                     },
                     "artifactSha256": {
                       "type": "string",
-                      "pattern": "^sha256:[0-9a-f]{64}$"
+                      "pattern": "^sha256:[0-9a-f]{64}$",
+                      "example": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
                     },
                     "pngBase64": {
                       "type": "string",
@@ -236729,8 +236420,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -236843,8 +236534,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -236861,7 +236552,7 @@
           "projects"
         ],
         "summary": "List projects",
-        "description": "Required permission: projects:read",
+        "description": "Page through the video projects this account owns to find the id that composition, media, render, and compose calls need. Call it when resuming earlier work instead of creating a new project.",
         "security": [
           {
             "bearerAuth": []
@@ -237005,8 +236696,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -237153,8 +236844,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -237171,7 +236862,7 @@
           "projects"
         ],
         "summary": "Get a project by id",
-        "description": "Required permission: projects:read",
+        "description": "Read one video project's name, output format, brand kit, active composition summary, and latest render. Call it to check settings or fetch the last render's output URL before editing or rendering again.",
         "security": [
           {
             "bearerAuth": []
@@ -237303,8 +236994,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -237319,7 +237010,7 @@
           "projects"
         ],
         "summary": "Update a project",
-        "description": "Required permission: projects:write",
+        "description": "Change a project's name, description, output format (aspect ratio, fps, resolution), or attached brand kit. Send at least one field; call it before rendering when the video needs a different format or brand.",
         "security": [
           {
             "bearerAuth": []
@@ -237461,8 +237152,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -237477,7 +237168,7 @@
           "projects"
         ],
         "summary": "Delete a project",
-        "description": "Required permission: projects:write",
+        "description": "Remove a video project that is no longer needed. Refused with 409 while renders are in flight, so cancel those first. Members need the owner or admin role; an x402 wallet can delete its own projects.",
         "security": [
           {
             "bearerAuth": []
@@ -237612,8 +237303,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -237630,7 +237321,7 @@
           "compositions"
         ],
         "summary": "Get a project's composition",
-        "description": "Required permission: projects:read",
+        "description": "Read the editable timeline of a video project, with its ETag in the response header for guarded writes. Call it before editing or rendering; pass compositionId or session_id to read a specific composition or a compose session's scratch copy.",
         "security": [
           {
             "bearerAuth": []
@@ -237803,8 +237494,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -237995,8 +237686,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -238013,7 +237704,7 @@
           "compositions"
         ],
         "summary": "Create a new composition (video) in a project",
-        "description": "Required permission: projects:write",
+        "description": "Add an empty composition to a project, for a second video or another format in the same project. Returns its id and ETag for the first edit; format defaults to the project's, and a project's first composition becomes the active one.",
         "security": [
           {
             "bearerAuth": []
@@ -238155,8 +237846,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -238171,7 +237862,7 @@
           "compositions"
         ],
         "summary": "List a project's compositions",
-        "description": "Required permission: projects:read",
+        "description": "List every composition in a project with its format, ETag, and whether it is the active one. Call it to choose which timeline to edit, preview, or render when a project holds several videos or aspect ratios.",
         "security": [
           {
             "bearerAuth": []
@@ -238283,8 +237974,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -238465,8 +238156,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -238638,8 +238329,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -238827,8 +238518,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -238845,7 +238536,7 @@
           "compositions"
         ],
         "summary": "Derive a reframed sibling composition for a new aspect (multi-format)",
-        "description": "Required permission: projects:write",
+        "description": "Create a reframed copy of a composition in another aspect ratio, such as 9:16 from 16:9, for multi-format delivery. Send the source's ETag as if_match; the copy is not made active, so pass its id when rendering.",
         "security": [
           {
             "bearerAuth": []
@@ -239007,8 +238698,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -239235,8 +238926,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -239386,8 +239077,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -239584,8 +239275,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -239602,7 +239293,7 @@
           "media"
         ],
         "summary": "Start a direct hosted processing run",
-        "description": "Required permission: media:write",
+        "description": "Process a stored media source under a caller-chosen runId, optionally setting a transcription language. Async: returns 202 with dispatch state, then poll GET /v1/media/{id}/processing-runs/{runId}; one run can be active per media item.",
         "security": [
           {
             "bearerAuth": []
@@ -239620,6 +239311,11 @@
           "media": [
             "write"
           ]
+        },
+        "x-x402": {
+          "amount": "100000",
+          "deliverable": true,
+          "maxTimeoutSeconds": 4200
         },
         "requestBody": {
           "required": true,
@@ -239757,8 +239453,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.1"
           },
           "protocols": [
             {
@@ -239775,7 +239471,7 @@
           "media"
         ],
         "summary": "Read a scoped hosted processing run",
-        "description": "Required permission: media:read",
+        "description": "Check a hosted processing run's overall status, dispatch state, and each operation's attempt and artifact commit. Poll it after starting a run to learn when its artifacts can be downloaded.",
         "security": [
           {
             "bearerAuth": []
@@ -239928,8 +239624,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -239946,7 +239642,7 @@
           "media"
         ],
         "summary": "Get one committed hosted processing artifact",
-        "description": "Required permission: media:read",
+        "description": "Get download URLs for a run's committed audio or matte artifact on the current source. The URLs last five minutes, so call it right before downloading; it returns 404 until the artifact is committed.",
         "security": [
           {
             "bearerAuth": []
@@ -240107,8 +239803,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -240125,7 +239821,7 @@
           "media"
         ],
         "summary": "Request cancellation of a hosted processing run",
-        "description": "Required permission: media:write",
+        "description": "Ask a hosted processing run to stop, and get back its status plus whether a remote stop was requested. A request is not proof the work stopped, so poll the run afterward; a finished run is returned unchanged.",
         "security": [
           {
             "bearerAuth": []
@@ -240278,8 +239974,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -240296,7 +239992,7 @@
           "media"
         ],
         "summary": "Mint a short-lived token for the signed upload lane",
-        "description": "Required permission: media:write",
+        "description": "Get a token for the signed resumable upload lane used by browser and desktop uploaders, valid for about 30 minutes and optionally scoped to one project. API clients should use POST /v1/media for a presigned PUT instead.",
         "security": [
           {
             "bearerAuth": []
@@ -240428,8 +240124,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -240446,7 +240142,7 @@
           "media"
         ],
         "summary": "Initiate a direct upload (presigned PUT URL)",
-        "description": "Required permission: media:write",
+        "description": "Reserve a media id and get a presigned URL for uploading a local video, audio, or image file of up to 5 GiB. PUT the raw bytes to that URL, then call POST /v1/media/{id}/finalize to start processing.",
         "security": [
           {
             "bearerAuth": []
@@ -240578,8 +240274,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -240789,8 +240485,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -240807,7 +240503,7 @@
           "media"
         ],
         "summary": "Finalize a direct upload (trigger processing after the bytes are PUT)",
-        "description": "Required permission: media:write",
+        "description": "Confirm the bytes reached the presigned URL and start processing, the step after POST /v1/media. Audio and video move to processing while images complete at once; optionally declare an audio role of vo, music, sfx, or ambience.",
         "security": [
           {
             "bearerAuth": []
@@ -240825,6 +240521,11 @@
           "media": [
             "write"
           ]
+        },
+        "x-x402": {
+          "amount": "10000",
+          "deliverable": true,
+          "maxTimeoutSeconds": 4200
         },
         "requestBody": {
           "required": false,
@@ -240929,8 +240630,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -241072,7 +240773,7 @@
         "x-payment-info": {
           "price": {
             "mode": "dynamic",
-            "currency": "USDC"
+            "currency": "USD"
           },
           "protocols": [
             {
@@ -241222,8 +240923,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -241240,7 +240941,7 @@
           "media"
         ],
         "summary": "Delete a media item",
-        "description": "Required permission: media:write",
+        "description": "Delete a media item that is no longer needed. Refused with media_in_use, naming the projects and sessions involved, while anything still references it, so remove those references first.",
         "security": [
           {
             "bearerAuth": []
@@ -241365,8 +241066,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -241381,7 +241082,7 @@
           "media"
         ],
         "summary": "Get a media item by id",
-        "description": "Required permission: media:read",
+        "description": "Read one media item's status, processing progress, duration, dimensions, frame rate, and thumbnail URL. Poll it after an upload, import, or generation to learn when the video, audio, or image is ready to use.",
         "security": [
           {
             "bearerAuth": []
@@ -241522,8 +241223,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -241681,8 +241382,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -241699,7 +241400,7 @@
           "media"
         ],
         "summary": "Get a media transcript (paginated)",
-        "description": "Required permission: media:read",
+        "description": "Fetch a processed video or audio item's transcript as full text and utterances, whole by default or paged with limit, after, and before. Call it to find quotes and moments for clips or captions; 404 means no transcript exists yet.",
         "security": [
           {
             "bearerAuth": []
@@ -241860,8 +241561,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -242030,8 +241731,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -242048,7 +241749,7 @@
           "clips"
         ],
         "summary": "List clip suggestions for a media item",
-        "description": "Required permission: media:read",
+        "description": "Read the ranked short-form clip suggestions for a video along with the analysis status, filtered by platform, format, or topic if needed. Poll it after POST /v1/media/{id}/suggestions until the status is completed.",
         "security": [
           {
             "bearerAuth": []
@@ -242227,8 +241928,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -242386,7 +242087,7 @@
         "x-payment-info": {
           "price": {
             "mode": "dynamic",
-            "currency": "USDC"
+            "currency": "USD"
           },
           "protocols": [
             {
@@ -242401,7 +242102,7 @@
           "clips"
         ],
         "summary": "Reset clip suggestions for a media item",
-        "description": "Required permission: media:write",
+        "description": "Delete all clip suggestions for a media item, cancel any analysis still in flight, and return the count removed. Call it before analyzing again, because a media item with finished suggestions refuses a new run.",
         "security": [
           {
             "bearerAuth": []
@@ -242526,8 +242227,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -242544,7 +242245,7 @@
           "media"
         ],
         "summary": "Trigger standalone subject/face detection",
-        "description": "Required permission: media:write",
+        "description": "Track faces or people across a video so renders can use the subject track. Async: returns 202 with a fact id and quote, then poll GET /v1/media/{id}/facts; a detection already pending or ready is returned free of charge.",
         "security": [
           {
             "bearerAuth": []
@@ -242702,8 +242403,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "100000"
+            "currency": "USD",
+            "amount": "0.1"
           },
           "protocols": [
             {
@@ -242874,8 +242575,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -243045,8 +242746,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -243216,8 +242917,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "100000"
+            "currency": "USD",
+            "amount": "0.1"
           },
           "protocols": [
             {
@@ -243381,7 +243082,7 @@
         "x-payment-info": {
           "price": {
             "mode": "dynamic",
-            "currency": "USDC"
+            "currency": "USD"
           },
           "protocols": [
             {
@@ -243525,7 +243226,7 @@
         "x-payment-info": {
           "price": {
             "mode": "dynamic",
-            "currency": "USDC"
+            "currency": "USD"
           },
           "protocols": [
             {
@@ -243668,8 +243369,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -243808,8 +243509,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -243961,8 +243662,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -244091,8 +243792,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -244201,8 +243902,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -244394,7 +244095,7 @@
         "x-payment-info": {
           "price": {
             "mode": "dynamic",
-            "currency": "USDC"
+            "currency": "USD"
           },
           "protocols": [
             {
@@ -244409,7 +244110,7 @@
           "renders"
         ],
         "summary": "List renders for a project",
-        "description": "Required permission: renders:read",
+        "description": "Page through a project's render jobs, optionally filtered by status such as error or cancelled. Call it to find a finished video, review failures, or recover a render id.",
         "security": [
           {
             "bearerAuth": []
@@ -244570,8 +244271,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -244747,8 +244448,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "50000"
+            "currency": "USD",
+            "amount": "0.05"
           },
           "protocols": [
             {
@@ -244765,7 +244466,7 @@
           "renders"
         ],
         "summary": "Get a render job",
-        "description": "Required permission: renders:read",
+        "description": "Check a render job's status and progress, and get its video output URL once complete, or the error and error code if it failed. Poll it after starting a render to know when the video is ready to download.",
         "security": [
           {
             "bearerAuth": []
@@ -244905,8 +244606,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -244923,7 +244624,7 @@
           "renders"
         ],
         "summary": "Cancel a render",
-        "description": "Required permission: renders:write",
+        "description": "Stop a queued or running render job and get back its updated state. Call it when a render is no longer wanted; a render that already finished is refused, and a 503 means the cancel did not reach the worker, so retry.",
         "security": [
           {
             "bearerAuth": []
@@ -245073,8 +244774,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -245252,7 +244953,7 @@
         "x-payment-info": {
           "price": {
             "mode": "dynamic",
-            "currency": "USDC"
+            "currency": "USD"
           },
           "protocols": [
             {
@@ -245269,7 +244970,7 @@
           "renders"
         ],
         "summary": "Refresh a render's output URL",
-        "description": "Required permission: renders:write",
+        "description": "Issue a new download URL for a complete render whose outputUrl has expired, and return it with its expiry. Call it instead of rendering the video again; it fails for renders that are not complete.",
         "security": [
           {
             "bearerAuth": []
@@ -245409,8 +245110,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -245557,8 +245258,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -245732,8 +245433,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -245907,8 +245608,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -246078,8 +245779,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "500000"
+            "currency": "USD",
+            "amount": "0.5"
           },
           "protocols": [
             {
@@ -246257,7 +245958,7 @@
         "x-payment-info": {
           "price": {
             "mode": "dynamic",
-            "currency": "USDC"
+            "currency": "USD"
           },
           "protocols": [
             {
@@ -246274,7 +245975,7 @@
           "exports"
         ],
         "summary": "Get an export job",
-        "description": "Required permission: renders:read",
+        "description": "Check an export job's status and progress from 0 to 1, and get its output URL, size, and duration once complete. Poll it after starting an FCPXML, Premiere, or video clip export.",
         "security": [
           {
             "bearerAuth": []
@@ -246414,8 +246115,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -246432,7 +246133,7 @@
           "exports"
         ],
         "summary": "Cancel an in-flight export",
-        "description": "Required permission: renders:write",
+        "description": "Stop an export that is still running and get back the updated job. Call it when an FCPXML, Premiere, or video clip export is no longer needed; a finished export is refused, and a 503 means the cancel was not delivered, so retry.",
         "security": [
           {
             "bearerAuth": []
@@ -246582,8 +246283,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -246600,7 +246301,7 @@
           "brand-kits"
         ],
         "summary": "List brand kits (read-only)",
-        "description": "Required permission: projects:read",
+        "description": "Page through the account's brand kits, each with its colors, fonts, and voice guidelines. Call it to find a brandKitId before attaching a brand to a project or rendering a template on brand.",
         "security": [
           {
             "bearerAuth": []
@@ -246744,8 +246445,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -246874,8 +246575,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -247014,8 +246715,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -247032,7 +246733,7 @@
           "brand-kits"
         ],
         "summary": "Get a brand kit by id",
-        "description": "Required permission: projects:read",
+        "description": "Read one brand kit's name, tagline, colors, fonts, and voice guidelines. Call it to match on-brand copy and graphics when authoring a composition, or to confirm what a brandKitId holds.",
         "security": [
           {
             "bearerAuth": []
@@ -247144,8 +246845,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -247304,8 +247005,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -247434,8 +247135,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -247615,8 +247316,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -247631,7 +247332,7 @@
           "templates"
         ],
         "summary": "List this org's templates",
-        "description": "Required permission: projects:read",
+        "description": "Page through the video templates saved in this account, newest first, as summaries without their full documents. Call it to find a template id for rendering, applying to a project, or starting a new project.",
         "security": [
           {
             "bearerAuth": []
@@ -247775,8 +247476,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -247915,8 +247616,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -248037,8 +247738,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -248055,7 +247756,7 @@
           "templates"
         ],
         "summary": "Start a new project from a pinned template",
-        "description": "Required permission: projects:write",
+        "description": "Create a new project from a template, binding its values and media with an optional preset and brand kit. Async: requires an Idempotency-Key header and returns 202 with a job; poll GET /v1/template-jobs/{jobId} for the project id.",
         "security": [
           {
             "bearerAuth": []
@@ -248218,8 +247919,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -248236,7 +247937,7 @@
           "templates"
         ],
         "summary": "Read template preparation status",
-        "description": "Required permission: projects:read",
+        "description": "Check a template preparation job's status, current stage, and project id, or its error if it failed. Poll it after POST /v1/templates/{id}/instantiate until the status is ready.",
         "security": [
           {
             "bearerAuth": []
@@ -248328,8 +248029,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -248346,7 +248047,7 @@
           "templates"
         ],
         "summary": "Retry a failed template preparation",
-        "description": "Required permission: projects:write",
+        "description": "Resume a failed template preparation from the stage that failed, re-entering import if processing failed. Only failed jobs restart; a job in any other state is returned unchanged, so read its status first.",
         "security": [
           {
             "bearerAuth": []
@@ -248439,8 +248140,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -248457,7 +248158,7 @@
           "templates"
         ],
         "summary": "Cancel template preparation",
-        "description": "Required permission: projects:write",
+        "description": "Stop a template preparation that is still running. Call it when the new project is no longer wanted; a job that is already ready, failed, or cancelled is returned unchanged.",
         "security": [
           {
             "bearerAuth": []
@@ -248549,8 +248250,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -248750,8 +248451,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -248923,8 +248624,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "500000"
+            "currency": "USD",
+            "amount": "0.5"
           },
           "protocols": [
             {
@@ -248941,7 +248642,7 @@
           "templates"
         ],
         "summary": "Read a template render",
-        "description": "Required permission: renders:read",
+        "description": "Check a template render's status and get its share link and poster URL, or its error if it failed. Poll it after POST /v1/templates/{id}/renders to learn when the video is ready to share.",
         "security": [
           {
             "bearerAuth": []
@@ -249061,8 +248762,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -249219,8 +248920,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -249357,8 +249058,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -249507,8 +249208,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -249680,8 +249381,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -249698,7 +249399,7 @@
           "briefs"
         ],
         "summary": "Get a brief by id",
-        "description": "Required permission: projects:read",
+        "description": "Read one video brief's goal, audience, platform, and other creative direction, along with its cost quote. Call it to review the plan and relay the estimated compose and render cost before composing.",
         "security": [
           {
             "bearerAuth": []
@@ -249810,8 +249511,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -249978,8 +249679,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -249994,7 +249695,7 @@
           "briefs"
         ],
         "summary": "Delete a brief",
-        "description": "Required permission: projects:write",
+        "description": "Remove a video brief the account no longer plans to compose, returning 204 on success. Call it to clear abandoned plans so the project's brief list stays focused on current work.",
         "security": [
           {
             "bearerAuth": []
@@ -250109,8 +249810,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -250127,7 +249828,7 @@
           "editorial"
         ],
         "summary": "Read a shared authored brief",
-        "description": "Required permission: projects:read",
+        "description": "Read an editorial brief's goal, audience, format, and other creative direction, plus its current revision. Call it before starting an editorial run, or to get the revision an update must send.",
         "security": [
           {
             "bearerAuth": []
@@ -250262,8 +249963,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -250278,7 +249979,7 @@
           "editorial"
         ],
         "summary": "Update a shared authored brief",
-        "description": "Required permission: projects:write",
+        "description": "Replace an editorial brief's goal, audience, format, and other fields. Send its current revision as expectedRevision and the same id in the path and body; call it to refine direction before starting a new run.",
         "security": [
           {
             "bearerAuth": []
@@ -250423,8 +250124,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -250441,7 +250142,7 @@
           "editorial"
         ],
         "summary": "List shared briefs for a project",
-        "description": "Required permission: projects:read",
+        "description": "List a project's editorial briefs, up to 20 per page with a cursor; projectId is required. Call it to find a brief to reuse or update before starting an editorial run.",
         "security": [
           {
             "bearerAuth": []
@@ -250596,8 +250297,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -250612,7 +250313,7 @@
           "editorial"
         ],
         "summary": "Create a shared authored brief",
-        "description": "Required permission: projects:write",
+        "description": "Write the creative direction for a video edit: goal, audience, platform, duration, tone, and more. This is the first step of an editorial run, which needs the returned brief id; a commandId makes retries safe.",
         "security": [
           {
             "bearerAuth": []
@@ -250747,8 +250448,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -250765,7 +250466,7 @@
           "editorial"
         ],
         "summary": "Adopt a legacy authored brief into the shared owner",
-        "description": "Required permission: projects:write",
+        "description": "Move an older brief made through POST /v1/briefs into the editorial flow under the same id, so editorial runs can use it. Clip-derived briefs are not eligible, and adopting a brief twice is a conflict.",
         "security": [
           {
             "bearerAuth": []
@@ -250910,8 +250611,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -250928,7 +250629,7 @@
           "editorial"
         ],
         "summary": "Read the certified decode representation for a project source",
-        "description": "Required permission: projects:read",
+        "description": "Get the constant-frame-rate representation of a project's video source: identity, revision, frame rate, and frame count. Call it before POST /v1/editorial/runs to build frame ranges; it is null when none is certified.",
         "security": [
           {
             "bearerAuth": []
@@ -251073,8 +250774,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -251091,7 +250792,7 @@
           "editorial"
         ],
         "summary": "Create a shared editorial run",
-        "description": "Required permission: projects:write",
+        "description": "Start an editorial pass that pins a brief, source frame ranges, and a beat outline. Later inspections, findings, and the final edit stay inside those ranges; call it after creating the brief and reading the source.",
         "security": [
           {
             "bearerAuth": []
@@ -251226,8 +250927,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -251242,7 +250943,7 @@
           "editorial"
         ],
         "summary": "List shared editorial runs for a project",
-        "description": "Required permission: projects:read",
+        "description": "List a project's editorial runs, up to 20 per page with a cursor; projectId is required. Call it to find an active run to continue or to review earlier editing passes.",
         "security": [
           {
             "bearerAuth": []
@@ -251397,8 +251098,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -251415,7 +251116,7 @@
           "editorial"
         ],
         "summary": "Read a shared editorial run",
-        "description": "Required permission: projects:read",
+        "description": "Read an editorial run's state, pinned inputs, outline, integration, and current revision. Call it to resume work or to get the revision that integrate, cancel, and apply calls must send.",
         "security": [
           {
             "bearerAuth": []
@@ -251550,8 +251251,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -251568,7 +251269,7 @@
           "editorial"
         ],
         "summary": "List delivered evidence for a run",
-        "description": "Required permission: projects:read",
+        "description": "Page through the frames, motion samples, audio, and transcript spans already delivered in an editorial run, up to 100 at a time. Call it to find the evidence ids a finding must cite and to see inspection coverage.",
         "security": [
           {
             "bearerAuth": []
@@ -251722,8 +251423,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -251740,7 +251441,7 @@
           "editorial"
         ],
         "summary": "Deliver an exact certified source frame",
-        "description": "Required permission: projects:read",
+        "description": "Look at one exact video frame as a base64 JPEG, with an evidence id for citing it in findings. Call it during an active editorial run; the frame must fall inside the run's pinned source ranges.",
         "security": [
           {
             "bearerAuth": []
@@ -251885,8 +251586,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -251903,7 +251604,7 @@
           "editorial"
         ],
         "summary": "Deliver bounded sampled motion frames",
-        "description": "Required permission: projects:read",
+        "description": "See how a shot moves: returns two or three JPEG frames sampled across a frame range, with an evidence id and coverage receipt. Call it during an active editorial run for a range inside the pinned inputs.",
         "security": [
           {
             "bearerAuth": []
@@ -252048,8 +251749,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -252066,7 +251767,7 @@
           "editorial"
         ],
         "summary": "Deliver bounded audio from a certified source interval",
-        "description": "Required permission: projects:read",
+        "description": "Listen to part of a source: returns up to eight seconds of 16 kHz mono WAV audio as base64, with an evidence id. Call it during an active editorial run for a range inside the pinned inputs.",
         "security": [
           {
             "bearerAuth": []
@@ -252211,8 +251912,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -252229,7 +251930,7 @@
           "editorial"
         ],
         "summary": "Deliver a verified transcript word span",
-        "description": "Required permission: projects:read",
+        "description": "Read up to 100 consecutive transcript words with their mapped frame range and an evidence id. Call it during an active editorial run to verify a quote; the words must fall inside the requested range.",
         "security": [
           {
             "bearerAuth": []
@@ -252374,8 +252075,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -252391,8 +252092,8 @@
         "tags": [
           "editorial"
         ],
-        "summary": "editorialFindingsAppend",
-        "description": "Required permission: projects:write",
+        "summary": "Record an evidence-backed finding on an editorial run",
+        "description": "Save an observation about a source range during an active run, citing 1 to 12 evidence ids and an outcome of useful, nothing_useful, or uncertain. Findings feed the integrate step, which selects or omits them.",
         "security": [
           {
             "bearerAuth": []
@@ -252537,8 +252238,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -252553,7 +252254,7 @@
           "editorial"
         ],
         "summary": "List bounded findings for an editorial run",
-        "description": "Required permission: projects:read",
+        "description": "Page through the findings recorded on an editorial run, up to 100 at a time. Call it before integrating to review what was observed and collect the finding ids to select or omit.",
         "security": [
           {
             "bearerAuth": []
@@ -252707,8 +252408,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -252724,8 +252425,8 @@
         "tags": [
           "editorial"
         ],
-        "summary": "editorialIntegrate",
-        "description": "Required permission: projects:write",
+        "summary": "Record the integration decision for an editorial run",
+        "description": "Record which findings the edit uses, why others were omitted, and any unresolved gaps, once inspection is done. This changes no composition: send expectedRevision, then commit with POST /v1/editorial/runs/{runId}/apply.",
         "security": [
           {
             "bearerAuth": []
@@ -252870,8 +252571,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -252887,8 +252588,8 @@
         "tags": [
           "editorial"
         ],
-        "summary": "editorialCancelRun",
-        "description": "Required permission: projects:write",
+        "summary": "Cancel an active editorial run",
+        "description": "End an editorial run that will not be applied, leaving the composition unchanged. Send the run's expectedRevision; only active runs can be cancelled, and continuing the work needs a new run.",
         "security": [
           {
             "bearerAuth": []
@@ -253033,8 +252734,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -253051,7 +252752,7 @@
           "editorial"
         ],
         "summary": "Commit an integrated editorial edit to the saved project composition",
-        "description": "Required permission: projects:write",
+        "description": "Apply timeline operations and complete the run in one atomic step, the last step of an editorial run. It needs a prior integrate call and the current run revision; further edits need a new run.",
         "security": [
           {
             "bearerAuth": []
@@ -253196,8 +252897,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -253366,8 +253067,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -253496,8 +253197,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -253648,8 +253349,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -253722,6 +253423,24 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
+            "headers": {
+              "Payment-Required": {
+                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
                 }
               }
             }
@@ -253806,7 +253525,19 @@
             "name": "id",
             "required": true
           }
-        ]
+        ],
+        "x-payment-info": {
+          "price": {
+            "mode": "fixed",
+            "currency": "USD",
+            "amount": "0.01"
+          },
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
       }
     },
     "/v1/projects/{id}/score-composition": {
@@ -253955,8 +253686,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "100000"
+            "currency": "USD",
+            "amount": "0.1"
           },
           "protocols": [
             {
@@ -254112,8 +253843,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "20000"
+            "currency": "USD",
+            "amount": "0.02"
           },
           "protocols": [
             {
@@ -254269,8 +254000,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "20000"
+            "currency": "USD",
+            "amount": "0.02"
           },
           "protocols": [
             {
@@ -254429,8 +254160,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -254519,8 +254250,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -254537,7 +254268,7 @@
           "components"
         ],
         "summary": "Resolve an exact builtin library artifact",
-        "description": "Required permission: projects:read",
+        "description": "Fetch the exact saved version of a builtin library item by collection, id, and 64-character revision hash. Call it with an identity from the component library to pin a graphic or template's source before using it.",
         "security": [
           {
             "bearerAuth": []
@@ -254668,8 +254399,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -254961,8 +254692,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -254977,7 +254708,7 @@
           "components"
         ],
         "summary": "Author (create) a component",
-        "description": "Required permission: projects:write",
+        "description": "Add a custom motion-graphics component to this account's library from native source, ready to place in compositions. Start from GET /v1/components/blank-source; an id that already exists returns 409, so update it with PUT.",
         "security": [
           {
             "bearerAuth": []
@@ -255109,8 +254840,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -255289,8 +255020,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -255467,8 +255198,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -255483,7 +255214,7 @@
           "components"
         ],
         "summary": "Get a component entry",
-        "description": "Required permission: projects:read",
+        "description": "Read a component's metadata and prop schema, whether it is installed in this account or built in. Call it before placing a graphic on the timeline to see which inputs it accepts.",
         "security": [
           {
             "bearerAuth": []
@@ -255615,8 +255346,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -255633,7 +255364,7 @@
           "components"
         ],
         "summary": "Get a component's source",
-        "description": "Required permission: projects:read",
+        "description": "Read an installed component's source and input schema, or an exact version with sourceVersionId. Built-in sources need builtinCollection plus sourceVersionId; call it before forking or editing a graphic.",
         "security": [
           {
             "bearerAuth": []
@@ -255786,8 +255517,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -255804,7 +255535,7 @@
           "sessions"
         ],
         "summary": "List sessions",
-        "description": "Required permission: sessions:read",
+        "description": "Page through this account's sessions, each a named set of media files with its mux status. Call it to find a session id for checking or retrying an audio-onto-video job.",
         "security": [
           {
             "bearerAuth": []
@@ -255948,8 +255679,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -255964,7 +255695,7 @@
           "sessions"
         ],
         "summary": "Create a session",
-        "description": "Required permission: sessions:write",
+        "description": "Group existing media into a named session by role, with one 'audio' file and any other role treated as video. This is the step before POST /v1/sessions/{id}/mux-job, which merges the audio onto each video.",
         "security": [
           {
             "bearerAuth": []
@@ -256096,8 +255827,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -256114,7 +255845,7 @@
           "sessions"
         ],
         "summary": "Get a session",
-        "description": "Required permission: sessions:read",
+        "description": "Read a session's files, roles, and mux state, including the media ids of any muxed outputs. Call it to confirm file roles before starting a mux or to see what a finished one produced.",
         "security": [
           {
             "bearerAuth": []
@@ -256246,8 +255977,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -256262,7 +255993,7 @@
           "sessions"
         ],
         "summary": "Delete a session",
-        "description": "Required permission: sessions:write",
+        "description": "Delete a session, first cancelling any mux still running for it. Refused while a project composition references the session, so remove those references first; call it when the grouping is no longer needed.",
         "security": [
           {
             "bearerAuth": []
@@ -256387,8 +256118,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -256405,7 +256136,7 @@
           "sessions"
         ],
         "summary": "Trigger mux-audio-onto-video workflow",
-        "description": "Required permission: sessions:write",
+        "description": "Merge a session's 'audio' file onto each of its video files, using one signed alignment offset per video. Async: returns 202 with a job id, then poll GET /v1/sessions/{id}/mux-job; pass retryOf to retry a failed or cancelled job.",
         "security": [
           {
             "bearerAuth": []
@@ -256425,7 +256156,9 @@
           ]
         },
         "x-x402": {
-          "amount": "100000"
+          "amount": "100000",
+          "deliverable": true,
+          "maxTimeoutSeconds": 1800
         },
         "requestBody": {
           "required": true,
@@ -256560,8 +256293,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "100000"
+            "currency": "USD",
+            "amount": "0.1"
           },
           "protocols": [
             {
@@ -256576,7 +256309,7 @@
           "sessions"
         ],
         "summary": "Poll mux job status",
-        "description": "Required permission: sessions:read",
+        "description": "Check an audio-onto-video mux job's status, timing, and error, and get the media ids of the muxed videos as they publish. Poll it after POST /v1/sessions/{id}/mux-job; 404 means no mux has started.",
         "security": [
           {
             "bearerAuth": []
@@ -256708,8 +256441,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -256726,7 +256459,7 @@
           "sessions"
         ],
         "summary": "Cancel one mux attempt while retaining the session",
-        "description": "Required permission: sessions:write",
+        "description": "Stop the named audio-onto-video mux attempt and keep the session so the job can be retried. Send its jobId; a job that is no longer current returns 409.",
         "security": [
           {
             "bearerAuth": []
@@ -256888,8 +256621,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -256906,7 +256639,7 @@
           "webhooks"
         ],
         "summary": "List webhook endpoints",
-        "description": "Required permission: webhooks:read",
+        "description": "Page through the webhook endpoints registered on this account, with their URLs, subscribed events, and enabled state. Call it to see what already receives render, media, and compose events before adding another.",
         "security": [
           {
             "bearerAuth": []
@@ -257050,8 +256783,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -257201,8 +256934,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "20000"
+            "currency": "USD",
+            "amount": "0.02"
           },
           "protocols": [
             {
@@ -257341,8 +257074,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -257359,7 +257092,7 @@
           "webhooks"
         ],
         "summary": "Get a webhook endpoint",
-        "description": "Required permission: webhooks:read",
+        "description": "Read one webhook endpoint's URL, subscribed events, settle delay, and enabled state. Call it to debug missing deliveries or to confirm which events a callback URL receives.",
         "security": [
           {
             "bearerAuth": []
@@ -257491,8 +257224,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -257507,7 +257240,7 @@
           "webhooks"
         ],
         "summary": "Update a webhook endpoint",
-        "description": "Required permission: webhooks:write",
+        "description": "Change a webhook endpoint's URL, events, settle delay, or enabled flag. A new URL goes back to pending and re-runs the ownership challenge; an unverified endpoint cannot be enabled here, so use POST /v1/webhooks/{id}/verify.",
         "security": [
           {
             "bearerAuth": []
@@ -257649,8 +257382,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -257665,7 +257398,7 @@
           "webhooks"
         ],
         "summary": "Delete a webhook endpoint",
-        "description": "Required permission: webhooks:write",
+        "description": "Remove a webhook endpoint so it stops being used for event deliveries. Call it when an integration is retired or its callback URL is gone; returns 204 with no body.",
         "security": [
           {
             "bearerAuth": []
@@ -257780,8 +257513,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -257798,7 +257531,7 @@
           "webhooks"
         ],
         "summary": "Fire a webhook.test delivery",
-        "description": "Required permission: webhooks:write",
+        "description": "Queue a webhook.test delivery to a registered endpoint to check your receiver before relying on render or media events. Returns a delivery id; limited to 5 per minute per key and 100 per day per endpoint.",
         "security": [
           {
             "bearerAuth": []
@@ -257923,8 +257656,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "20000"
+            "currency": "USD",
+            "amount": "0.02"
           },
           "protocols": [
             {
@@ -258066,8 +257799,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "20000"
+            "currency": "USD",
+            "amount": "0.02"
           },
           "protocols": [
             {
@@ -258084,7 +257817,7 @@
           "critics"
         ],
         "summary": "Register a compose critic",
-        "description": "Required permission: projects:write",
+        "description": "Add a custom quality check to the compose loop as rules, a scoring rubric, or your own HTTPS evaluator. A score below its floor routes a refine; re-registering a criticId updates it, and an evaluator's signing secret is returned once.",
         "security": [
           {
             "bearerAuth": []
@@ -258206,8 +257939,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -258324,8 +258057,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -258342,7 +258075,7 @@
           "critics"
         ],
         "summary": "Delete a registered critic",
-        "description": "Required permission: projects:write",
+        "description": "Remove a registered compose critic by its criticId. Call it when a custom rule, rubric, or evaluator should no longer judge this org's compositions; an unknown id returns 404.",
         "security": [
           {
             "bearerAuth": []
@@ -258457,8 +258190,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -258577,8 +258310,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -258595,7 +258328,7 @@
           "account"
         ],
         "summary": "List the org's learned taste",
-        "description": "Required permission: projects:read",
+        "description": "Read the style preferences saved for this org and whether learned taste is switched on. Call it before composing to apply the org's preferences, or to find the id needed to edit or forget an entry.",
         "security": [
           {
             "bearerAuth": []
@@ -258697,8 +258430,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -258835,8 +258568,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -258853,7 +258586,7 @@
           "account"
         ],
         "summary": "Edit a style preference",
-        "description": "Required permission: projects:write",
+        "description": "Correct the text or source of a saved style preference while keeping its id. Call it when a preference has changed; get the tasteId from GET /v1/profile/taste.",
         "security": [
           {
             "bearerAuth": []
@@ -258995,8 +258728,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -259011,7 +258744,7 @@
           "account"
         ],
         "summary": "Forget a style preference",
-        "description": "Required permission: projects:write",
+        "description": "Remove one saved style preference from this org's learned taste. Call it when a preference is wrong or outdated; get the tasteId from GET /v1/profile/taste.",
         "security": [
           {
             "bearerAuth": []
@@ -259126,8 +258859,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -259256,318 +258989,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
-          },
-          "protocols": [
-            {
-              "x402": {}
-            }
-          ]
-        }
-      }
-    },
-    "/v1/projects/{id}/selector/candidates": {
-      "get": {
-        "operationId": "listSelectorCandidates",
-        "tags": [
-          "selector"
-        ],
-        "summary": "List switch (multicam) candidates + recommendation for a synced-angle group",
-        "description": "Required permission: media:read",
-        "security": [
-          {
-            "bearerAuth": []
-          },
-          {
-            "oauth2": [
-              "media:read"
-            ]
-          },
-          {
-            "x402": []
-          }
-        ],
-        "x-permissions": {
-          "media": [
-            "read"
-          ]
-        },
-        "parameters": [
-          {
-            "name": "groupId",
-            "in": "query",
-            "required": true,
-            "description": "The synced-angle group to score.",
-            "schema": {
-              "type": "string",
-              "minLength": 1
-            }
-          },
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Per-moment scored candidates + the recommended cut schedule + best-audio bed.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SelectorCandidatesResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid Authorization header.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "402": {
-            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
-            "headers": {
-              "Payment-Required": {
-                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/X402PaymentRequired"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden — permission insufficient.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Resource not found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. Retry-After header present.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "x-payment-info": {
-          "price": {
-            "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
-          },
-          "protocols": [
-            {
-              "x402": {}
-            }
-          ]
-        }
-      }
-    },
-    "/v1/projects/{id}/selector/preview": {
-      "post": {
-        "operationId": "previewSelector",
-        "tags": [
-          "selector"
-        ],
-        "summary": "Re-resolve a switch advisory under a hand-supplied policy (A/B taste; not persisted)",
-        "description": "Required permission: media:read",
-        "security": [
-          {
-            "bearerAuth": []
-          },
-          {
-            "oauth2": [
-              "media:read"
-            ]
-          },
-          {
-            "x402": []
-          }
-        ],
-        "x-permissions": {
-          "media": [
-            "read"
-          ]
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SelectorPreviewRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "The re-resolved advisory under the supplied policy.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SelectorCandidatesResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid Authorization header.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "402": {
-            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
-            "headers": {
-              "Payment-Required": {
-                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/X402PaymentRequired"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden — permission insufficient.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Resource not found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. Retry-After header present.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ],
-        "x-payment-info": {
-          "price": {
-            "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -259729,7 +259152,7 @@
         "x-payment-info": {
           "price": {
             "mode": "dynamic",
-            "currency": "USDC"
+            "currency": "USD"
           },
           "protocols": [
             {
@@ -259876,8 +259299,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -260054,8 +259477,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -260202,8 +259625,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -260370,8 +259793,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -260388,7 +259811,7 @@
           "compose"
         ],
         "summary": "List recent compose jobs for a project",
-        "description": "Required permission: projects:read",
+        "description": "List up to 50 of a project's most recent compose jobs with status and timing, newest first. Call it to find a job id to inspect or to check for a job still running before starting another.",
         "security": [
           {
             "bearerAuth": []
@@ -260510,8 +259933,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -260528,7 +259951,7 @@
           "compose"
         ],
         "summary": "Fetch a compose job's full ensemble state",
-        "description": "Required permission: projects:read",
+        "description": "Read one compose job's full state: status, request, candidates, and per-criterion scores. Poll it after POST /v1/projects/{id}/compose to follow progress, compare candidates, and catch a job awaiting input.",
         "security": [
           {
             "bearerAuth": []
@@ -260658,8 +260081,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -260821,7 +260244,7 @@
         "x-payment-info": {
           "price": {
             "mode": "dynamic",
-            "currency": "USDC"
+            "currency": "USD"
           },
           "protocols": [
             {
@@ -260980,8 +260403,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -261115,8 +260538,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -261133,7 +260556,7 @@
           "compose-session"
         ],
         "summary": "Close a compose session",
-        "description": "Required permission: projects:write",
+        "description": "End a compose session and discard its uncommitted scratch composition when the work is finished or abandoned. Scratch also closes on its idle timeout; commit first if the edits should be kept.",
         "security": [
           {
             "bearerAuth": []
@@ -261252,8 +260675,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -261270,7 +260693,7 @@
           "compose-session"
         ],
         "summary": "Commit the session scratch onto the project's active composition",
-        "description": "Required permission: projects:write",
+        "description": "Save a compose session's scratch edits as the project's active composition and return the new ETag. Call it once previews look right; the scratch is then removed from the session. Refused with 409 if the active composition changed after the session started.",
         "security": [
           {
             "bearerAuth": []
@@ -261357,6 +260780,16 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal error.",
             "content": {
@@ -261389,8 +260822,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -261539,8 +260972,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -261689,8 +261122,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -261861,8 +261294,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "20000"
+            "currency": "USD",
+            "amount": "0.02"
           },
           "protocols": [
             {
@@ -261879,15 +261312,13 @@
           "api-keys"
         ],
         "summary": "Create a scoped API key (session credential only)",
+        "description": "Mint an API key with chosen resource permissions and an optional expiry for scripts and integrations; the secret is shown once. Requires a signed-in session, so API keys are refused with 403.",
         "security": [
           {
             "bearerAuth": []
           },
           {
             "oauth2": []
-          },
-          {
-            "x402": []
           }
         ],
         "x-permissions": {},
@@ -261932,24 +261363,6 @@
               }
             }
           },
-          "402": {
-            "description": "Payment required. Returned when the caller presents no API key on a priced operation: the body AND the `Payment-Required` header carry the x402 v2 challenge (accepted scheme, network, USDC asset, amount, payTo). Sign the EIP-3009 authorization and retry with a `PAYMENT-SIGNATURE` header. A KEYED caller sees this status instead when their plan lacks or has exhausted the feature (`billing_required`).",
-            "headers": {
-              "Payment-Required": {
-                "description": "Base64 x402 v2 PaymentRequired envelope — the same challenge as the body, for clients that read it off the header.",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/X402PaymentRequired"
-                }
-              }
-            }
-          },
           "403": {
             "description": "Forbidden — permission insufficient.",
             "content": {
@@ -261980,18 +261393,6 @@
               }
             }
           }
-        },
-        "x-payment-info": {
-          "price": {
-            "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
-          },
-          "protocols": [
-            {
-              "x402": {}
-            }
-          ]
         }
       }
     },
@@ -262166,8 +261567,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -262280,8 +261681,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -262420,8 +261821,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {
@@ -262575,8 +261976,8 @@
         "x-payment-info": {
           "price": {
             "mode": "fixed",
-            "currency": "USDC",
-            "amount": "10000"
+            "currency": "USD",
+            "amount": "0.01"
           },
           "protocols": [
             {

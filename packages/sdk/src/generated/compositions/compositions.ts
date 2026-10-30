@@ -76,7 +76,7 @@ export const getGetCompositionUrl = (id: string,
 }
 
 /**
- * Required permission: projects:read
+ * Read the editable timeline of a video project, with its ETag in the response header for guarded writes. Call it before editing or rendering; pass compositionId or session_id to read a specific composition or a compose session's scratch copy.
  * @summary Get a project's composition
  */
 export const getComposition = async (id: string,
@@ -140,7 +140,7 @@ export const getNewCompositionUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Add an empty composition to a project, for a second video or another format in the same project. Returns its id and ETag for the first edit; format defaults to the project's, and a project's first composition becomes the active one.
  * @summary Create a new composition (video) in a project
  */
 export const newComposition = async (id: string,
@@ -179,7 +179,7 @@ export const getListCompositionsUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * List every composition in a project with its format, ETag, and whether it is the active one. Call it to choose which timeline to edit, preview, or render when a project holds several videos or aspect ratios.
  * @summary List a project's compositions
  */
 export const listCompositions = async (id: string, options?: Parameters<typeof request>[1]): Promise<CompositionListResponse> => {
@@ -281,7 +281,7 @@ export const getDeriveCompositionUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Create a reframed copy of a composition in another aspect ratio, such as 9:16 from 16:9, for multi-format delivery. Send the source's ETag as if_match; the copy is not made active, so pass its id when rendering.
  * @summary Derive a reframed sibling composition for a new aspect (multi-format)
  */
 export const deriveComposition = async (id: string,

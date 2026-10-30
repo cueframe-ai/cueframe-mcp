@@ -92,7 +92,7 @@ export const getCloseComposeSessionUrl = (id: string,
 }
 
 /**
- * Required permission: projects:write
+ * End a compose session and discard its uncommitted scratch composition when the work is finished or abandoned. Scratch also closes on its idle timeout; commit first if the edits should be kept.
  * @summary Close a compose session
  */
 export const closeComposeSession = async (id: string,
@@ -118,7 +118,7 @@ export const getCommitComposeSessionUrl = (id: string,
 }
 
 /**
- * Required permission: projects:write
+ * Save a compose session's scratch edits as the project's active composition and return the new ETag. Call it once previews look right; the scratch is then removed from the session. Refused with 409 if the active composition changed after the session started.
  * @summary Commit the session scratch onto the project's active composition
  */
 export const commitComposeSession = async (id: string,

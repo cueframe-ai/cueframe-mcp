@@ -15,13 +15,13 @@ import {
 
 
 /**
- * Required permission: projects:write
+ * Add a custom quality check to the compose loop as rules, a scoring rubric, or your own HTTPS evaluator. A score below its floor routes a refine; re-registering a criticId updates it, and an evaluator's signing secret is returned once.
  * @summary Register a compose critic
  */
 export const CreateCriticBody = CriticCreateRequest
 
 /**
- * Required permission: projects:write
+ * Remove a registered compose critic by its criticId. Call it when a custom rule, rubric, or evaluator should no longer judge this org's compositions; an unknown id returns 404.
  * @summary Delete a registered critic
  */
 export const DeleteCriticParams = zod.object({

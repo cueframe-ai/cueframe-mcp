@@ -37,7 +37,7 @@ export const ListBriefsQueryParams = zod.object({
 })
 
 /**
- * Required permission: projects:read
+ * Read one video brief's goal, audience, platform, and other creative direction, along with its cost quote. Call it to review the plan and relay the estimated compose and render cost before composing.
  * @summary Get a brief by id
  */
 export const GetBriefParams = zod.object({
@@ -55,7 +55,7 @@ export const UpdateBriefParams = zod.object({
 export const UpdateBriefBody = BriefPatchRequest
 
 /**
- * Required permission: projects:write
+ * Remove a video brief the account no longer plans to compose, returning 204 on success. Call it to clear abandoned plans so the project's brief list stays focused on current work.
  * @summary Delete a brief
  */
 export const DeleteBriefParams = zod.object({
