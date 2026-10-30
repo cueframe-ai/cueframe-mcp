@@ -106,6 +106,18 @@ const toolVerbs = new Set([...catalogTools].map((name) => name.split('_')[0]));
 const namedTools = (text) => [...text.matchAll(/(?:`|\b)(?:[a-z][a-z0-9-]*__)*([a-z][a-z0-9]*(?:_[a-z0-9]+)+)(?=`|\s*\()/g)]
   .map(([, name]) => name).filter((name) => toolVerbs.has(name.split('_')[0]) && !vocabulary.has(name));
 
+test('the two-pass stop rule reaches every always-loaded surface and the shared policy', () => {
+  for (const file of ['hooks/session-inject.md', 'rules/cueframe.mdc', 'skills/composing-video/references/project-policy.md']) {
+    assert.match(read(file), /two no-improvement passes/, file);
+  }
+});
+
+test('format recipes reach the standards file directly, not through another skill', () => {
+  for (const skill of ['make-a-social-reel', 'launch-video', 'brand-reel', 'clip-a-talking-head', 'rebrand-a-video', 'every-format-from-one-edit', 'add-music-bed']) {
+    assert.ok(read(`skills/${skill}/SKILL.md`).includes('](../video-craft-standards/references/format-standards.md)'), skill);
+  }
+});
+
 test('the tool-name check tells tools from events and error codes', () => {
   const text = '`get_account`, `mcp__cueframe__apply_composition`, `cueframe-read__get_composition`, wait_job(…), `render_progress`, `render_unknown_primitive`, `get_bogus_tool`, `verify_composition`';
   assert.deepEqual(namedTools(text).filter((name) => !catalogTools.has(name)), ['get_bogus_tool', 'verify_composition']);
@@ -124,6 +136,7 @@ test('skills name only tools the catalog serves', () => {
   assert.ok(new Set(references.map(({ name }) => name)).size >= 40, 'the tool-name pattern found too few references to check');
   const unknown = references.filter(({ name }) => !catalogTools.has(name)).map(({ file, name }) => `${file}: ${name}`);
   assert.deepEqual([...new Set(unknown)], []);
+  assert.deepEqual(docs.filter((file) => read(file).includes('cueframe_api_')), [], 'expert-only tool names do not belong in skills');
 });
 
 

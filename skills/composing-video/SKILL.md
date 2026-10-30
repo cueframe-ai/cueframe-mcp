@@ -1,6 +1,6 @@
 ---
 name: composing-video
-description: Use when choosing how to author or assemble a CueFrame video from footage, product actions, typography, diagrams, original motion or mixed media. For a supplied film use cueframe-reference-video; for a narrow existing edit use cueframe-compose-loop.
+description: "Use when choosing how to author or assemble a CueFrame video from footage, product actions, typography, diagrams, original motion or mixed media. For a supplied film use cueframe-reference-video; for a narrow existing edit use cueframe-compose-loop. Also use when an agent is asked to make any video with CueFrame: a product launch, announcement, promo, teaser, social clip, reel, short, explainer, animated explainer, concept video, product or dev-tool demo, walkthrough, or founder/talking-head piece. Triggers on \"make a video\", \"launch video\", \"promo\", \"teaser\", \"reel\", \"short\", \"explainer\", \"demo video\", \"talking-head\", or turning long-form footage into clips."
 ---
 
 # Composing video
@@ -40,3 +40,20 @@ A useful handoff gives a peer the project/composition IDs, relevant sources and 
 Use the observed revision for each atomic batch. After a conflict, reread and reconcile the changed fields with the intended edit; preserve concurrent human work. Never attach a fresh ETag to an old whole-document replacement. Exact revision checks remain appropriate for shared timing or other semantic dependencies; partial guards cover only what the deployed contract explicitly supports.
 
 Inspect connected boundaries together, including parent transforms, backgrounds, masks and sound. A reviewer can help find a weak choice, but the integrated film still needs examination. [cueframe-compose-loop](../cueframe-compose-loop/SKILL.md) owns that evidence and revision loop; `video-craft-standards` supplies brief-specific review questions. Deliver the requested artifact with the remaining limitations stated plainly.
+
+## Detailed guidance
+
+Read only what the task needs.
+
+| When | Read |
+|---|---|
+| Planning a new film or choosing its spine | [film planning](references/film-planning.md) |
+| Writing a card or animating anything you author | [card tokens and the motion runtime](references/card-and-motion-runtime.md) |
+| Choosing or placing sound effects | [SFX pack](references/sfx-pack.md) |
+| Designing music, voice and sound together | [audio design](references/audio-design.md) |
+| Making a launch, social clip, explainer, SaaS demo or founder piece | [format playbooks](references/format-playbooks.md) |
+| Finding which tool or primitive delivers an effect | [craft to tool map](references/tool-map.md) |
+| Looking for a visual grammar or craft default | [craft principles](references/craft-principles.md) |
+| Stating acceptance criteria for new work | [acceptance template](references/acceptance-template.md) |
+
+A card token key `x` is read as `var(--cf-x)`. Never put dashes in the key: `var(--plate)` then resolves to nothing, and CSS silently renders a transparent background with black text.

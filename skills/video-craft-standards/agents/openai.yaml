@@ -3,4 +3,4 @@ interface:
   short_description: "Use when judging whether a CueFrame video's idea, visual form, motion, timing…"
   icon_small: "./assets/icon.svg"
   icon_large: "./assets/icon.svg"
-  default_prompt: "Use $video-craft-standards when judging whether a CueFrame video's idea, visual form, motion, timing and sound meet its brief or reference."
+  default_prompt: "Use $video-craft-standards when judging whether a CueFrame video's idea, visual form, motion, timing and sound meet its brief or reference (social reel, launch film, brand reel, talking-head clip)."
