@@ -1,6 +1,6 @@
 ---
 name: cueframe-component-authoring
-description: Use when authoring or editing CueFrame HTML cards, custom motion graphics or reusable native components, including a fork of an exact catalog source. For scene-shot devices and cameras use cueframe-scene-shot.
+description: "Use when authoring, forking or customizing CueFrame HTML cards, motion-graphics primitives or reusable native components, including a fork of an exact catalog source. Covers cloud MCP, local desktop and CLI project paths using complete versioned source snapshots. For scene-shot devices and cameras use cueframe-scene-shot. Triggers on \"customize the parallax look\", \"make my own animated lower-third\", \"fork a CueFrame template and edit it\", \"author a custom graphic and render it\". Use before hand-writing a component from scratch: forking a built-in is usually the faster start."
 ---
 
 # CueFrame graphic authoring
@@ -31,3 +31,8 @@ Expose likely revisions as meaningful inputs rather than unrelated constants. A 
 Keep the same owned component ID while updating its complete source. Saving creates a new immutable source version; existing placements keep their old pins unless explicitly repinned in the intended composition. An isolated preview is not a saved timeline edit. The workflow reference explains scoped repinning and local preview commits.
 
 Use [cueframe-compose-loop](../cueframe-compose-loop/SKILL.md) for isolated, integrated and final evidence. Preserve production duration when previewing duration-dependent motion. Check the relationship that could fail, including screen corners, overlap, pointer contact and the complete ending, rather than only a pleasing middle still. For `needsUpgrade`, use [retired-source recovery](references/retired-projects.md) and replace only the reported clips.
+
+## Detailed guidance
+
+- [Authoring paths](references/authoring-paths.md): the MCP path step by step, when no filesystem is available.
+- [Forking and layout](references/forking-and-layout.md): what to fork, flex and grid inside a component, and what to avoid.

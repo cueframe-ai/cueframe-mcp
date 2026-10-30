@@ -63,7 +63,7 @@ A correction to one sibling does not require rendering the master or the other u
 
 ## What good looks like
 
-Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment. The cross-cutting rules in the [format standards](../video-craft-standards/references/format-standards.md) apply to every sibling. Apply the original brief at the new dimensions: aspect ratio alone does not impose a social-reel hook or pacing, and derivation changes the frame, never the bar.
 
 ## Delivering
 

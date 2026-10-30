@@ -1,6 +1,6 @@
 ---
 name: cueframe-compose-loop
-description: Use when previewing, reviewing or revising a CueFrame composition, including a scoped correction, reference comparison or final-delivery check.
+description: "Use when previewing, reviewing or revising a CueFrame composition, including a scoped correction, reference comparison or final-delivery check. Also use when an agent should drive CueFrame to a high-quality clip itself: author, look at rendered frames, score with the judge, fix the weakest thing and repeat, over the primitives in the `cueframe-cli` skill. Triggers on \"turn this source into a polished 9:16 clip\" or \"compose and self-correct until it scores well\"."
 ---
 
 # CueFrame preview and revision
@@ -24,3 +24,7 @@ A timing change can affect more than the edited clip: backing plates, screen mas
 `score_composition` can supply broader editorial, spatial, brand and caption critique when useful and within budget. Its fixed caption criterion can penalize intentionally uncaptioned work; do not add captions solely to improve a score. These instructions do not change judge behavior. A failed brief requirement remains a failure regardless of a numerical score.
 
 Continue while evidence suggests a useful correction within the task's time/cost scope. If progress stalls, change the diagnosed cause or report the remaining gap; repeated scores alone are not progress. A scoped edit can finish with verified previews. For a finished-video request, export the saved revision and inspect the resulting artifact. Report the output, what was actually reviewed, and unresolved limitations.
+
+## Detailed guidance
+
+[The convergence loop](references/convergence-loop.md) has the step-by-step author, preview, score, fix and stop procedure for an agent driving a clip to quality.

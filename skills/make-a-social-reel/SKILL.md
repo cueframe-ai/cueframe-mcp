@@ -69,14 +69,15 @@ affected window and regressions without automatically rerunning the full-film ju
    `setCaptionStyle` (plated, bottom, out of the mouth/eyes). Most social viewing is sound-off;
    don't karaoke a beat with no speech.
 8. **Inspect and revise.** `preview_frame` at the important layout and transition landmarks;
-   inspect the intervening motion and relevant audio. Use `score_composition` only when broader
-   critique is useful and within budget. Fix located acceptance failures against the brief.
+   describe each still in words, then inspect the intervening motion and relevant audio. Use
+   `score_composition` only when broader critique is useful and within budget, with your one-line
+   vision as `editorialIntent`, and fix the worst criterion first. Fix located acceptance failures against the brief.
 9. **Export for requested final delivery.** `create_render` → `wait_job (kind:"render")`. Iterate with previews,
    not renders.
 
 ## What good looks like
 
-Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment. For this format's defaults read section 1 (Social reel) of the [format standards](../video-craft-standards/references/format-standards.md).
 
 ## Delivering
 

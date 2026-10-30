@@ -1,10 +1,10 @@
 # Project and capability policy
 
-User intent and acceptance criteria override aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
+User intent and acceptance criteria override aesthetic defaults. Silent, typography-only, uncaptioned and slow work are valid; no universal narration, footage, CTA, beat count or score target. Contracts, factual fidelity, media bindings and current source revisions remain mandatory.
 
 Read available tools and current project; preserve the chosen local/hosted lane. Supported local work needs no hosted registration. Do not silently install, authenticate, switch projects or upload local content. Before metered hosted work, check `get_account`, entitlements, balance and quotes. Use existing authorization; a skill is not an extra approval gate. Desktop setup is documented at https://docs.cueframe.ai.
 
-For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. No restarted intake, new approval pause, paid judge or final export by default. Edit and inspect the affected behavior and relevant regressions. Judge only when useful; scores never override acceptance failures. The [preview workflow](../../cueframe-compose-loop/references/preview-workflow.md) owns evidence and delivery decisions.
+For scoped revisions, preserve unrelated timing, media, audio and shared brand-kit state. No restarted intake, new approval pause, paid judge or final export by default. Edit and inspect the affected behavior and relevant regressions. Judge only when useful; scores never override acceptance failures. Stop and report gaps after two no-improvement passes. The [preview workflow](../../cueframe-compose-loop/references/preview-workflow.md) owns evidence and delivery decisions.
 
 Use the current tool schema for exact envelopes, operation names and capability readiness. A source pin or requested artifact is not evidence it was rendered or seen. Keep source revision, target composition, frame/window and job identity attached to observations. Respect explicit errors and missing capabilities instead of pretending an approximate substitute is equivalent.
 

@@ -50,7 +50,7 @@ affected window and regressions without automatically rerunning the full-film ju
    product video.
 5. **Cards for the claims and the end card.** Key lines and the closing CTA are `kind:"card"`
    HTML in the brand's type and palette, animated in its CSS or with
-   `clip.setKeyframes` in a FOLLOWING `apply_composition` call. When the brief calls for a CTA, give it a readable hold; include a date only when relevant.
+   `clip.setKeyframes` in a FOLLOWING `apply_composition` call. When the brief calls for a CTA, use one, on the end card, held long enough to read; include a date only when relevant.
 6. **Audio when requested or appropriate.** Preserve explicit silence; otherwise: `search_resources` for a bed honoring the brand kit's
    `musicMood`, energy arcing toward the reveal; place it `audioRole:"music"`,
    `materializeGrid { grid:"beat" }`, and land beat boundaries and the reveal on the grid. If
@@ -62,11 +62,11 @@ affected window and regressions without automatically rerunning the full-film ju
    playbackRate. Re-run after later edits. Use authored word timings for generated VO without a
    transcript, and style legibly via `setCaptionStyle`. Caption narration when requested or appropriate; preserve an explicit uncaptioned format.
 8. **Inspect and deliver.** `preview_frame` at t=0, hook-end, the reveal, and the end
-   card; inspect motion through the important handoffs and listen to changed audio. Distinguish actual captures from reconstructed artwork. Use `score_composition` only when broader critique is useful and within budget. Fix the observed acceptance failures, then export for requested final delivery.
+   card; describe each still and ask whether a real capture is on screen; distinguish actual captures from reconstructed artwork. Inspect motion through the important handoffs and listen to changed audio. Use `score_composition` only when broader critique is useful and within budget, with the payoff line as `editorialIntent`. Fix the observed acceptance failures, then export for requested final delivery.
 
 ## What good looks like
 
-Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment. For this format's defaults read section 2 (Launch film) of the [format standards](../video-craft-standards/references/format-standards.md).
 
 ## Delivering
 

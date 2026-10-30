@@ -77,7 +77,7 @@ correction, retain the approved edit and check relevant regressions without auto
 
 ## What good looks like
 
-Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment.
+Use the relevant [craft review questions](../video-craft-standards/SKILL.md) and the [preview workflow](../cueframe-compose-loop/references/preview-workflow.md). Judge the brief's actual intent, visual relationships, timing and sound; format suggestions do not override the requested treatment. For this format's defaults read section 4 (Talking-head clip) of the [format standards](../video-craft-standards/references/format-standards.md).
 
 ## Delivering
 
