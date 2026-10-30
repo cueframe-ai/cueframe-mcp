@@ -127,6 +127,17 @@ export const componentPatchRequestSourceDefinitionPreviewMediaBindingsItemTwoFra
 
 export const componentPatchRequestSourceDefinitionPreviewMediaBindingsItemTwoDurationSecExclusiveMin = 0;
 
+export const componentPatchRequestRegistryProvenanceReceiptRefBundleSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentPatchRequestRegistryProvenanceReceiptRefBundleBytesExclusiveMin = 0;
+export const componentPatchRequestRegistryProvenanceReceiptRefBundleBytesMax = 134217728;
+
+export const componentPatchRequestRegistryProvenanceReceiptRefReceiptIdMax = 128;
+
+export const componentPatchRequestRegistryProvenanceAdaptationReceiptRefSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentPatchRequestRegistryProvenanceAdaptationReceiptRefByteLengthExclusiveMin = 0;
+export const componentPatchRequestRegistryProvenanceAdaptationReceiptRefByteLengthMax = 134217728;
+
+export const componentPatchRequestExpectedHeadVersionIdRegExp = new RegExp('^[a-f0-9]{64}$');
 
 
 
@@ -274,6 +285,20 @@ export const ComponentPatchRequest = zod.strictObject({
 }).optional()
 })
 }).optional(),
+  "registryProvenance": zod.strictObject({
+  "receiptRef": zod.strictObject({
+  "bundleSha256": zod.string().regex(componentPatchRequestRegistryProvenanceReceiptRefBundleSha256RegExp),
+  "bundleBytes": zod.int().gt(componentPatchRequestRegistryProvenanceReceiptRefBundleBytesExclusiveMin).max(componentPatchRequestRegistryProvenanceReceiptRefBundleBytesMax),
+  "format": zod.literal("cueframe-registry-provenance-v1"),
+  "receiptId": zod.string().min(1).max(componentPatchRequestRegistryProvenanceReceiptRefReceiptIdMax)
+}),
+  "adaptationReceiptRef": zod.strictObject({
+  "format": zod.literal("cueframe-registry-adaptation-v1"),
+  "sha256": zod.string().regex(componentPatchRequestRegistryProvenanceAdaptationReceiptRefSha256RegExp),
+  "byteLength": zod.int().gt(componentPatchRequestRegistryProvenanceAdaptationReceiptRefByteLengthExclusiveMin).max(componentPatchRequestRegistryProvenanceAdaptationReceiptRefByteLengthMax)
+}).optional()
+}).optional(),
+  "expectedHeadVersionId": zod.string().regex(componentPatchRequestExpectedHeadVersionIdRegExp).optional().describe('Exact source head observed before adoption, editing or rollback. A changed head refuses the write; project placements remain pinned unless explicitly guarded below.'),
   "projectId": zod.string().min(1).optional().describe('A project whose explicitly named composition moves its placements atomically with the source write. Requires compositionId and concurrency.'),
   "compositionId": zod.string().min(1).optional().describe('The exact composition observed by the caller. Required with projectId and concurrency.'),
   "concurrency": CompositionConcurrency.optional().describe('Caller-observed placement guard, required with projectId and compositionId: a placement update without it is refused with 428 precondition_required. Atomic library edits with placement changes require explicit supported invocation admission.')

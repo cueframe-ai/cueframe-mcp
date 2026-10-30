@@ -6,13 +6,30 @@ Choose the path exposed by the current host. Request schemas and the Component C
 
 Use the live tool schema for request envelopes; hosted write fields are normally under `body`. When `get_composition` advertises `clipIds` and `response`, use selected clip IDs with `response:"full"` to retrieve the complete sources you need without pulling every large HTML body. Treat a projection as a partial read, never a replacement composition. Compact apply receipts retain the saved revision and warnings; reread relevant state before a dependent edit. Desktop surfaces may expose different fields.
 
-1. **Discover and read a built-in:** call `list_catalog` with
-   `projection: "component-library", origin: "builtin", libraryKind: "definition"`.
-   Select the intended card and preserve its complete scoped source reference. Call
-   `get_component_source` with that reference's `componentId`, `sourceVersionId`,
-   `builtinCollection` (its scope collection).
-   ID-only builtin reads are unsupported. An unavailable exact pin is a refusal; never
-   retry another scope or an unpinned head.
+1. **Discover the right kind:** call `list_catalog` with
+   `projection:"component-library", origin:"builtin"` and an optional concrete `q` such as
+   `card`, `shuffle` or `carousel`. Do not start with `libraryKind:"definition"`: a saved
+   example may be a preset or recipe. Matching uses literal substrings. Org `origin:"library"`
+   currently refuses filters; page that serving home honestly instead of implying a search ran.
+   Preserve the selected card's exact identity, presentation and pins.
+   - **Preset or recipe (hosted editor/API):** call `resolve_builtin_component` with its exact `collection`, `id`
+     and `revision`. Read the returned complete document, preset values and member sources.
+     A source-only read cannot reconstruct those selected values. Check `previewDelivery`:
+     only `delivered` means poster bytes reached this call; unavailable or hash mismatch is
+     explicit missing evidence. Open `previewMedia.videoUrl` through a supported media viewer;
+     a URL alone is not observed motion. If useful, insert with hosted `apply_template`:
+     `template:<selected id>, body:{projectId,documentSha256:<resolved digest>,
+     insert:{startTime:<chosen seconds>,idPrefix:<unique>},media:<your bindings>,values:<explicit edits>}`.
+     Read required media/parameter declarations, preserve nonempty-project contents, then inspect
+     the saved insertion. The desktop bridge does not expose this resolver; use its advertised
+     package/template path and current schema. Report missing exact document access rather
+     than guessing selected values or invoking an unavailable tool.
+   - **Definition:** call `get_component_source` with its exact `componentId`,
+     `sourceVersionId` and `builtinCollection`. ID-only builtin reads are unsupported.
+   An unavailable exact pin never authorizes a head or another scope. Inspect unfamiliar
+   construction and required capabilities before promising an adaptation. If no maintained
+   mechanism fits the inputs/layout/material or runtime, explain the concrete no-fit limitation.
+   The source fork and custom-authoring steps below apply when an editable definition is needed.
 2. **Author/own it:** edit the complete native `sourceSnapshot`; use your chosen owned ID
    consistently in its `componentId` and the request. Send it as `body.source` to
    `create_component`, with required metadata. Preserve its definition, capability

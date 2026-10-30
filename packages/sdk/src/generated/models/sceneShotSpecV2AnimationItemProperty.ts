@@ -29,4 +29,8 @@ export const SceneShotSpecV2AnimationItemProperty = {
   distance: 'distance',
   range: 'range',
   maxBlur: 'maxBlur',
+  strength: 'strength',
+  threshold: 'threshold',
+  smoothing: 'smoothing',
+  radius: 'radius',
 } as const;

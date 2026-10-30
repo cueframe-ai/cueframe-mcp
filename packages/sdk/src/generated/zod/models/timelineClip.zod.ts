@@ -134,6 +134,68 @@ export const timelineClipTweensItemKeyframesKeyframesMin = 2;
 
 export const timelineClipAutomationLanesItemPointsMin = 2;
 
+export const timelineClipColorGradeExposureMin = -4;
+export const timelineClipColorGradeExposureMax = 4;
+
+export const timelineClipColorGradeContrastMin = -1;
+export const timelineClipColorGradeContrastMax = 1;
+
+export const timelineClipColorGradeHighlightsMin = -1;
+export const timelineClipColorGradeHighlightsMax = 1;
+
+export const timelineClipColorGradeShadowsMin = -1;
+export const timelineClipColorGradeShadowsMax = 1;
+
+export const timelineClipColorGradeWhitesMin = -1;
+export const timelineClipColorGradeWhitesMax = 1;
+
+export const timelineClipColorGradeBlacksMin = -1;
+export const timelineClipColorGradeBlacksMax = 1;
+
+export const timelineClipColorGradeTemperatureMin = -1;
+export const timelineClipColorGradeTemperatureMax = 1;
+
+export const timelineClipColorGradeTintMin = -1;
+export const timelineClipColorGradeTintMax = 1;
+
+export const timelineClipColorGradeVibranceMin = -1;
+export const timelineClipColorGradeVibranceMax = 1;
+
+export const timelineClipColorGradeSaturationMin = -1;
+export const timelineClipColorGradeSaturationMax = 1;
+
+export const timelineClipColorLooksMax = 2;
+
+export const timelineClipColorCreativeStrengthMin = 0;
+export const timelineClipColorCreativeStrengthMax = 1;
+
+export const timelineClipColorHalationAmountMin = 0;
+export const timelineClipColorHalationAmountMax = 0.5;
+
+export const timelineClipColorHalationRadiusMin = 0.0005;
+export const timelineClipColorHalationRadiusMax = 0.02;
+
+export const timelineClipColorHalationThresholdMin = 0;
+export const timelineClipColorHalationThresholdMax = 16;
+
+export const timelineClipColorHalationTint0ItemMin = 0;
+export const timelineClipColorHalationTint0ItemMax = 1;
+
+export const timelineClipColorHalationTint1ItemMin = 0;
+export const timelineClipColorHalationTint1ItemMax = 1;
+
+export const timelineClipColorHalationTint2ItemMin = 0;
+export const timelineClipColorHalationTint2ItemMax = 1;
+
+export const timelineClipColorGrainAmountMin = 0;
+export const timelineClipColorGrainAmountMax = 2;
+
+export const timelineClipColorGrainSizeMin = 0.5;
+export const timelineClipColorGrainSizeMax = 4;
+
+export const timelineClipColorGrainSeedMin = 0;
+export const timelineClipColorGrainSeedMax = 4294967295;
+
 
 
 export const TimelineClip = zod.strictObject({
@@ -156,12 +218,12 @@ export const TimelineClip = zod.strictObject({
   "muted": zod.boolean().optional(),
   "playbackRate": zod.number().gt(timelineClipSourceOnePlaybackRateExclusiveMin).optional(),
   "sync": zod.enum(['video', 'independent']).optional(),
-  "kenBurns": zod.enum(['in', 'out', 'pan-l', 'pan-r', 'none']).optional(),
+  "kenBurns": zod.enum(['in', 'out', 'pan-l', 'pan-r', 'none']).optional().describe('Still-image motion. When unset, an image clip slowly pushes in (`in`) unless its fit is `contain` or it keyframes scale, position or rotation, so a keyframed clip renders exactly its keyframed values; set `none` for a still that holds.'),
   "volumeDb": zod.number().optional(),
   "fadeInMs": zod.number().min(timelineClipSourceOneFadeInMsMin).optional(),
   "fadeOutMs": zod.number().min(timelineClipSourceOneFadeOutMsMin).optional(),
   "loop": zod.boolean().optional(),
-  "audioRole": zod.enum(['sfx', 'music', 'vo', 'ambience']).optional(),
+  "audioRole": zod.enum(['sfx', 'music', 'vo', 'ambience']).optional().describe('Mix role. A role sets the clip\'s default gain when it has no `volume` or `volumeDb`: vo 0 dB, sfx -6 dB, music -8 dB (-16 dB when any vo clip exists), ambience -22 dB. Set `volumeDb: 0` to keep a role and play the source at its own level.'),
   "duck": zod.strictObject({
   "duckDb": zod.number().max(timelineClipSourceOneDuckDuckDbMax),
   "attackMs": zod.number().min(timelineClipSourceOneDuckAttackMsMin),
@@ -244,8 +306,8 @@ export const TimelineClip = zod.strictObject({
   "params": zod.record(zod.string(), zod.unknown()).optional()
 }),zod.strictObject({
   "kind": zod.literal("card"),
-  "html": zod.string().min(1),
-  "tokens": zod.record(zod.string(), zod.string()).optional(),
+  "html": zod.string().min(1).describe('Self-contained card markup sized to the format\'s pixel frame. Motion comes from frame-driven vars, never @keyframes or transition: --cf-frame, --cf-t (seconds), --cf-fps, --cf-duration, --cf-progress, --cf-ease, --cf-enter, --cf-exit. Visible copy goes in the html as plain text. Wrap a run in <span data-cf-split="words"> or "chars" and each unit becomes its own span carrying --cf-i (its index, the group carries --cf-n), so one rule staggers it (in chars, spaces count as units), e.g. opacity:clamp(0,calc(var(--cf-t)*4 - var(--cf-i)*.3),1). save_as_template binds that copy with textParams match.'),
+  "tokens": zod.record(zod.string(), zod.string()).optional().describe('Style values the html reads as CSS custom properties: key x becomes --cf-x, so never put dashes in a key. Use tokens for colours and sizes, not visible copy.'),
   "zPlane": zod.literal("front").optional()
 }),zod.strictObject({
   "kind": zod.literal("composition"),
@@ -268,7 +330,7 @@ export const TimelineClip = zod.strictObject({
   "y": zod.number().min(timelineClipRegionYMin).max(timelineClipRegionYMax),
   "w": zod.number().gt(timelineClipRegionWExclusiveMin).max(timelineClipRegionWMax),
   "h": zod.number().gt(timelineClipRegionHExclusiveMin).max(timelineClipRegionHMax)
-}).optional(),
+}).optional().describe('A window in the frame that the clip draws into and is clipped to (top-left corner and size, each a frame fraction). Inside a region, `position` and `scale` act relative to that window, so content moved past its edge is cut off. Omit it to place the clip against the whole frame.'),
   "fit": zod.enum(['cover', 'contain']).optional(),
   "captionVisibility": zod.enum(['visible', 'hidden']).optional().describe('Video media clip only. Hide native captions while this clip is topmost and covers the lower picture, or when an opaque, effect-free clip has an explicitly full-frame region, even with fit:contain. Caption words and timings remain stored and resume when another visible clip takes over.'),
   "effects": zod.array(zod.strictObject({
@@ -315,6 +377,58 @@ export const TimelineClip = zod.strictObject({
   "v": zod.number()
 })).min(timelineClipAutomationLanesItemPointsMin)
 }))
+}).optional(),
+  "color": zod.strictObject({
+  "version": zod.literal(1),
+  "enabled": zod.boolean(),
+  "grade": zod.strictObject({
+  "exposure": zod.number().min(timelineClipColorGradeExposureMin).max(timelineClipColorGradeExposureMax),
+  "contrast": zod.number().min(timelineClipColorGradeContrastMin).max(timelineClipColorGradeContrastMax),
+  "highlights": zod.number().min(timelineClipColorGradeHighlightsMin).max(timelineClipColorGradeHighlightsMax),
+  "shadows": zod.number().min(timelineClipColorGradeShadowsMin).max(timelineClipColorGradeShadowsMax),
+  "whites": zod.number().min(timelineClipColorGradeWhitesMin).max(timelineClipColorGradeWhitesMax),
+  "blacks": zod.number().min(timelineClipColorGradeBlacksMin).max(timelineClipColorGradeBlacksMax),
+  "temperature": zod.number().min(timelineClipColorGradeTemperatureMin).max(timelineClipColorGradeTemperatureMax),
+  "tint": zod.number().min(timelineClipColorGradeTintMin).max(timelineClipColorGradeTintMax),
+  "vibrance": zod.number().min(timelineClipColorGradeVibranceMin).max(timelineClipColorGradeVibranceMax),
+  "saturation": zod.number().min(timelineClipColorGradeSaturationMin).max(timelineClipColorGradeSaturationMax)
+}),
+  "looks": zod.array(zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean()
+})).max(timelineClipColorLooksMax),
+  "display": zod.union([zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean()
+}),zod.strictObject({
+  "bundled": zod.enum(['daylight-negative', 'tungsten-negative', 'soft-negative', 'slide', 'black-and-white']),
+  "enabled": zod.boolean()
+})]).optional(),
+  "creative": zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean(),
+  "strength": zod.number().min(timelineClipColorCreativeStrengthMin).max(timelineClipColorCreativeStrengthMax)
+}).optional(),
+  "halation": zod.strictObject({
+  "enabled": zod.boolean(),
+  "amount": zod.number().min(timelineClipColorHalationAmountMin).max(timelineClipColorHalationAmountMax),
+  "radius": zod.number().min(timelineClipColorHalationRadiusMin).max(timelineClipColorHalationRadiusMax),
+  "threshold": zod.number().min(timelineClipColorHalationThresholdMin).max(timelineClipColorHalationThresholdMax),
+  "tint": zod.tuple([zod.number().min(timelineClipColorHalationTint0ItemMin).max(timelineClipColorHalationTint0ItemMax),
+zod.number().min(timelineClipColorHalationTint1ItemMin).max(timelineClipColorHalationTint1ItemMax),
+zod.number().min(timelineClipColorHalationTint2ItemMin).max(timelineClipColorHalationTint2ItemMax)])
+}).optional(),
+  "grain": zod.strictObject({
+  "enabled": zod.boolean(),
+  "profile": zod.enum(['daylight-negative', 'tungsten-negative', 'soft-negative', 'slide', 'black-and-white']),
+  "gauge": zod.enum(['super8', 'super16', 'super35', '65mm']),
+  "amount": zod.number().min(timelineClipColorGrainAmountMin).max(timelineClipColorGrainAmountMax),
+  "size": zod.number().min(timelineClipColorGrainSizeMin).max(timelineClipColorGrainSizeMax),
+  "seed": zod.int().min(timelineClipColorGrainSeedMin).max(timelineClipColorGrainSeedMax)
+}).optional()
 }).optional(),
   "legacyKeyframes": zod.strictObject({
   "needsUpgrade": zod.literal(true),

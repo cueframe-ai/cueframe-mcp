@@ -141,6 +141,68 @@ export const compositionOpFourPatchTweensItemKeyframesKeyframesMin = 2;
 
 export const compositionOpFourPatchAutomationLanesItemPointsMin = 2;
 
+export const compositionOpFourPatchColorGradeExposureMin = -4;
+export const compositionOpFourPatchColorGradeExposureMax = 4;
+
+export const compositionOpFourPatchColorGradeContrastMin = -1;
+export const compositionOpFourPatchColorGradeContrastMax = 1;
+
+export const compositionOpFourPatchColorGradeHighlightsMin = -1;
+export const compositionOpFourPatchColorGradeHighlightsMax = 1;
+
+export const compositionOpFourPatchColorGradeShadowsMin = -1;
+export const compositionOpFourPatchColorGradeShadowsMax = 1;
+
+export const compositionOpFourPatchColorGradeWhitesMin = -1;
+export const compositionOpFourPatchColorGradeWhitesMax = 1;
+
+export const compositionOpFourPatchColorGradeBlacksMin = -1;
+export const compositionOpFourPatchColorGradeBlacksMax = 1;
+
+export const compositionOpFourPatchColorGradeTemperatureMin = -1;
+export const compositionOpFourPatchColorGradeTemperatureMax = 1;
+
+export const compositionOpFourPatchColorGradeTintMin = -1;
+export const compositionOpFourPatchColorGradeTintMax = 1;
+
+export const compositionOpFourPatchColorGradeVibranceMin = -1;
+export const compositionOpFourPatchColorGradeVibranceMax = 1;
+
+export const compositionOpFourPatchColorGradeSaturationMin = -1;
+export const compositionOpFourPatchColorGradeSaturationMax = 1;
+
+export const compositionOpFourPatchColorLooksMax = 2;
+
+export const compositionOpFourPatchColorCreativeStrengthMin = 0;
+export const compositionOpFourPatchColorCreativeStrengthMax = 1;
+
+export const compositionOpFourPatchColorHalationAmountMin = 0;
+export const compositionOpFourPatchColorHalationAmountMax = 0.5;
+
+export const compositionOpFourPatchColorHalationRadiusMin = 0.0005;
+export const compositionOpFourPatchColorHalationRadiusMax = 0.02;
+
+export const compositionOpFourPatchColorHalationThresholdMin = 0;
+export const compositionOpFourPatchColorHalationThresholdMax = 16;
+
+export const compositionOpFourPatchColorHalationTint0ItemMin = 0;
+export const compositionOpFourPatchColorHalationTint0ItemMax = 1;
+
+export const compositionOpFourPatchColorHalationTint1ItemMin = 0;
+export const compositionOpFourPatchColorHalationTint1ItemMax = 1;
+
+export const compositionOpFourPatchColorHalationTint2ItemMin = 0;
+export const compositionOpFourPatchColorHalationTint2ItemMax = 1;
+
+export const compositionOpFourPatchColorGrainAmountMin = 0;
+export const compositionOpFourPatchColorGrainAmountMax = 2;
+
+export const compositionOpFourPatchColorGrainSizeMin = 0.5;
+export const compositionOpFourPatchColorGrainSizeMax = 4;
+
+export const compositionOpFourPatchColorGrainSeedMin = 0;
+export const compositionOpFourPatchColorGrainSeedMax = 4294967295;
+
 
 export const compositionOpSevenMarkerStartTimeMin = 0;
 
@@ -183,58 +245,67 @@ export const compositionOpOneoneEffectsItemWindowStartTimeMin = 0;
 export const compositionOpOneoneEffectsItemWindowDurationExclusiveMin = 0;
 
 
+export const compositionOpOnethreeColorOneGradeExposureMin = -4;
+export const compositionOpOnethreeColorOneGradeExposureMax = 4;
 
-export const compositionOpOnetwoStyleFontSizeMax = 15;
+export const compositionOpOnethreeColorOneGradeContrastMin = -1;
+export const compositionOpOnethreeColorOneGradeContrastMax = 1;
 
-export const compositionOpOnetwoStyleFontWeightMin = 100;
-export const compositionOpOnetwoStyleFontWeightMax = 900;
+export const compositionOpOnethreeColorOneGradeHighlightsMin = -1;
+export const compositionOpOnethreeColorOneGradeHighlightsMax = 1;
 
+export const compositionOpOnethreeColorOneGradeShadowsMin = -1;
+export const compositionOpOnethreeColorOneGradeShadowsMax = 1;
 
+export const compositionOpOnethreeColorOneGradeWhitesMin = -1;
+export const compositionOpOnethreeColorOneGradeWhitesMax = 1;
 
-export const compositionOpOnetwoStyleRegionXMin = 0;
-export const compositionOpOnetwoStyleRegionXMax = 1;
+export const compositionOpOnethreeColorOneGradeBlacksMin = -1;
+export const compositionOpOnethreeColorOneGradeBlacksMax = 1;
 
-export const compositionOpOnetwoStyleRegionYMin = 0;
-export const compositionOpOnetwoStyleRegionYMax = 1;
+export const compositionOpOnethreeColorOneGradeTemperatureMin = -1;
+export const compositionOpOnethreeColorOneGradeTemperatureMax = 1;
 
-export const compositionOpOnetwoStyleRegionWExclusiveMin = 0;
-export const compositionOpOnetwoStyleRegionWMax = 1;
+export const compositionOpOnethreeColorOneGradeTintMin = -1;
+export const compositionOpOnethreeColorOneGradeTintMax = 1;
 
-export const compositionOpOnetwoStyleRegionHExclusiveMin = 0;
-export const compositionOpOnetwoStyleRegionHMax = 1;
+export const compositionOpOnethreeColorOneGradeVibranceMin = -1;
+export const compositionOpOnethreeColorOneGradeVibranceMax = 1;
 
-export const compositionOpOnetwoStyleLetterSpacingMin = -5;
-export const compositionOpOnetwoStyleLetterSpacingMax = 20;
+export const compositionOpOnethreeColorOneGradeSaturationMin = -1;
+export const compositionOpOnethreeColorOneGradeSaturationMax = 1;
 
-export const compositionOpOnetwoStyleWordGapEmMin = 0;
-export const compositionOpOnetwoStyleWordGapEmMax = 2;
+export const compositionOpOnethreeColorOneLooksMax = 2;
 
-export const compositionOpOnetwoStyleLineGapEmMin = 0;
-export const compositionOpOnetwoStyleLineGapEmMax = 2;
+export const compositionOpOnethreeColorOneCreativeStrengthMin = 0;
+export const compositionOpOnethreeColorOneCreativeStrengthMax = 1;
 
-export const compositionOpOnetwoStyleEmphasisScaleExclusiveMin = 0;
+export const compositionOpOnethreeColorOneHalationAmountMin = 0;
+export const compositionOpOnethreeColorOneHalationAmountMax = 0.5;
 
-export const compositionOpOnetwoStyleEmphasisFontWeightMin = 100;
-export const compositionOpOnetwoStyleEmphasisFontWeightMax = 900;
+export const compositionOpOnethreeColorOneHalationRadiusMin = 0.0005;
+export const compositionOpOnethreeColorOneHalationRadiusMax = 0.02;
 
-export const compositionOpOnetwoStyleEntranceMsMin = 0;
+export const compositionOpOnethreeColorOneHalationThresholdMin = 0;
+export const compositionOpOnethreeColorOneHalationThresholdMax = 16;
 
-export const compositionOpOnetwoStyleEntranceStaggerMsMin = 0;
+export const compositionOpOnethreeColorOneHalationTint0ItemMin = 0;
+export const compositionOpOnethreeColorOneHalationTint0ItemMax = 1;
 
-export const compositionOpOnetwoStyleExitMsMin = 0;
+export const compositionOpOnethreeColorOneHalationTint1ItemMin = 0;
+export const compositionOpOnethreeColorOneHalationTint1ItemMax = 1;
 
-export const compositionOpOnetwoStyleEmphasisPlateRadiusMin = 0;
+export const compositionOpOnethreeColorOneHalationTint2ItemMin = 0;
+export const compositionOpOnethreeColorOneHalationTint2ItemMax = 1;
 
-export const compositionOpOnetwoStyleAnnotationStrokeWidthMin = 0.5;
-export const compositionOpOnetwoStyleAnnotationStrokeWidthMax = 12;
+export const compositionOpOnethreeColorOneGrainAmountMin = 0;
+export const compositionOpOnethreeColorOneGrainAmountMax = 2;
 
-export const compositionOpOnetwoStyleMaxWidthPercentExclusiveMin = 0;
-export const compositionOpOnetwoStyleMaxWidthPercentMax = 100;
+export const compositionOpOnethreeColorOneGrainSizeMin = 0.5;
+export const compositionOpOnethreeColorOneGrainSizeMax = 4;
 
-
-export const compositionOpOnefourSegmentsItemWordsItemStartMsMin = 0;
-
-export const compositionOpOnefourSegmentsItemWordsItemEndMsMin = 0;
+export const compositionOpOnethreeColorOneGrainSeedMin = 0;
+export const compositionOpOnethreeColorOneGrainSeedMax = 4294967295;
 
 
 export const compositionOpOnefourStyleFontSizeMax = 15;
@@ -284,116 +355,170 @@ export const compositionOpOnefourStyleAnnotationStrokeWidthMax = 12;
 export const compositionOpOnefourStyleMaxWidthPercentExclusiveMin = 0;
 export const compositionOpOnefourStyleMaxWidthPercentMax = 100;
 
-export const compositionOpOnefiveLayoutsItemSegmentIndexMin = 0;
-export const compositionOpOnefiveLayoutsItemSegmentIndexMax = 9007199254740991;
 
-export const compositionOpOnefiveLayoutsItemWordStartIndexMin = 0;
-export const compositionOpOnefiveLayoutsItemWordStartIndexMax = 9007199254740991;
+export const compositionOpOnesixSegmentsItemWordsItemStartMsMin = 0;
 
-export const compositionOpOnefiveLayoutsItemWordEndIndexExclusiveMin = 0;
-export const compositionOpOnefiveLayoutsItemWordEndIndexMax = 9007199254740991;
-
-export const compositionOpOnefiveLayoutsItemRegionXMin = 0;
-export const compositionOpOnefiveLayoutsItemRegionXMax = 1;
-
-export const compositionOpOnefiveLayoutsItemRegionYMin = 0;
-export const compositionOpOnefiveLayoutsItemRegionYMax = 1;
-
-export const compositionOpOnefiveLayoutsItemRegionWExclusiveMin = 0;
-export const compositionOpOnefiveLayoutsItemRegionWMax = 1;
-
-export const compositionOpOnefiveLayoutsItemRegionHExclusiveMin = 0;
-export const compositionOpOnefiveLayoutsItemRegionHMax = 1;
-
-export const compositionOpOnefiveLayoutsItemScaleMin = 0.25;
-export const compositionOpOnefiveLayoutsItemScaleMax = 4;
-
-export const compositionOpOnefiveLayoutsItemRotationMin = -45;
-export const compositionOpOnefiveLayoutsItemRotationMax = 45;
+export const compositionOpOnesixSegmentsItemWordsItemEndMsMin = 0;
 
 
-export const compositionOpOnefiveLayoutsItemStyleFontSizeMax = 15;
+export const compositionOpOnesixStyleFontSizeMax = 15;
 
-export const compositionOpOnefiveLayoutsItemStyleFontWeightMin = 100;
-export const compositionOpOnefiveLayoutsItemStyleFontWeightMax = 900;
+export const compositionOpOnesixStyleFontWeightMin = 100;
+export const compositionOpOnesixStyleFontWeightMax = 900;
 
 
 
-export const compositionOpOnefiveLayoutsItemStyleLetterSpacingMin = -5;
-export const compositionOpOnefiveLayoutsItemStyleLetterSpacingMax = 20;
+export const compositionOpOnesixStyleRegionXMin = 0;
+export const compositionOpOnesixStyleRegionXMax = 1;
 
-export const compositionOpOnefiveLayoutsItemStyleWordGapEmMin = 0;
-export const compositionOpOnefiveLayoutsItemStyleWordGapEmMax = 2;
+export const compositionOpOnesixStyleRegionYMin = 0;
+export const compositionOpOnesixStyleRegionYMax = 1;
 
-export const compositionOpOnefiveLayoutsItemStyleLineGapEmMin = 0;
-export const compositionOpOnefiveLayoutsItemStyleLineGapEmMax = 2;
+export const compositionOpOnesixStyleRegionWExclusiveMin = 0;
+export const compositionOpOnesixStyleRegionWMax = 1;
 
-export const compositionOpOnefiveLayoutsItemStyleEmphasisScaleExclusiveMin = 0;
+export const compositionOpOnesixStyleRegionHExclusiveMin = 0;
+export const compositionOpOnesixStyleRegionHMax = 1;
 
-export const compositionOpOnefiveLayoutsItemStyleEmphasisFontWeightMin = 100;
-export const compositionOpOnefiveLayoutsItemStyleEmphasisFontWeightMax = 900;
+export const compositionOpOnesixStyleLetterSpacingMin = -5;
+export const compositionOpOnesixStyleLetterSpacingMax = 20;
 
-export const compositionOpOnefiveLayoutsItemStyleEmphasisPlateRadiusMin = 0;
+export const compositionOpOnesixStyleWordGapEmMin = 0;
+export const compositionOpOnesixStyleWordGapEmMax = 2;
 
-export const compositionOpOnefiveLayoutsItemStyleAnnotationStrokeWidthMin = 0.5;
-export const compositionOpOnefiveLayoutsItemStyleAnnotationStrokeWidthMax = 12;
+export const compositionOpOnesixStyleLineGapEmMin = 0;
+export const compositionOpOnesixStyleLineGapEmMax = 2;
 
-export const compositionOpOnefiveLayoutsItemStyleEntranceMsMin = 0;
+export const compositionOpOnesixStyleEmphasisScaleExclusiveMin = 0;
 
-export const compositionOpOnefiveLayoutsItemStyleEntranceStaggerMsMin = 0;
+export const compositionOpOnesixStyleEmphasisFontWeightMin = 100;
+export const compositionOpOnesixStyleEmphasisFontWeightMax = 900;
 
-export const compositionOpOnefiveLayoutsItemStyleExitMsMin = 0;
+export const compositionOpOnesixStyleEntranceMsMin = 0;
 
-export const compositionOpOnefiveLayoutsItemHoldThroughWordIndexMin = 0;
-export const compositionOpOnefiveLayoutsItemHoldThroughWordIndexMax = 9007199254740991;
+export const compositionOpOnesixStyleEntranceStaggerMsMin = 0;
 
-export const compositionOpOnefiveLayoutsItemWordMarksItemWordIndexMin = 0;
-export const compositionOpOnefiveLayoutsItemWordMarksItemWordIndexMax = 9007199254740991;
+export const compositionOpOnesixStyleExitMsMin = 0;
 
+export const compositionOpOnesixStyleEmphasisPlateRadiusMin = 0;
 
+export const compositionOpOnesixStyleAnnotationStrokeWidthMin = 0.5;
+export const compositionOpOnesixStyleAnnotationStrokeWidthMax = 12;
 
+export const compositionOpOnesixStyleMaxWidthPercentExclusiveMin = 0;
+export const compositionOpOnesixStyleMaxWidthPercentMax = 100;
 
-export const compositionOpOnesixStartTimeMin = 0;
+export const compositionOpOnesevenLayoutsItemSegmentIndexMin = 0;
+export const compositionOpOnesevenLayoutsItemSegmentIndexMax = 9007199254740991;
 
-export const compositionOpOnesixDurationExclusiveMin = 0;
+export const compositionOpOnesevenLayoutsItemWordStartIndexMin = 0;
+export const compositionOpOnesevenLayoutsItemWordStartIndexMax = 9007199254740991;
 
+export const compositionOpOnesevenLayoutsItemWordEndIndexExclusiveMin = 0;
+export const compositionOpOnesevenLayoutsItemWordEndIndexMax = 9007199254740991;
 
-export const compositionOpOnesixTransitionInDurationExclusiveMin = 0;
+export const compositionOpOnesevenLayoutsItemRegionXMin = 0;
+export const compositionOpOnesevenLayoutsItemRegionXMax = 1;
 
+export const compositionOpOnesevenLayoutsItemRegionYMin = 0;
+export const compositionOpOnesevenLayoutsItemRegionYMax = 1;
 
+export const compositionOpOnesevenLayoutsItemRegionWExclusiveMin = 0;
+export const compositionOpOnesevenLayoutsItemRegionWMax = 1;
 
+export const compositionOpOnesevenLayoutsItemRegionHExclusiveMin = 0;
+export const compositionOpOnesevenLayoutsItemRegionHMax = 1;
 
+export const compositionOpOnesevenLayoutsItemScaleMin = 0.25;
+export const compositionOpOnesevenLayoutsItemScaleMax = 4;
 
-
-export const compositionOpOnesevenStartTimeMin = 0;
-
-export const compositionOpOnesevenDurationExclusiveMin = 0;
-
-
-export const compositionOpOnesevenTransitionInDurationExclusiveMin = 0;
-
-
-
-
-
-export const compositionOpOneeightMaxMarkersExclusiveMin = 0;
-export const compositionOpOneeightMaxMarkersMax = 2000;
-
-
-export const compositionOpOnenineWindowStartSecMin = 0;
-
-export const compositionOpOnenineWindowEndSecExclusiveMin = 0;
-
-
-export const compositionOpTwofourUpdatesVolumeMin = 0;
-export const compositionOpTwofourUpdatesVolumeMax = 4;
+export const compositionOpOnesevenLayoutsItemRotationMin = -45;
+export const compositionOpOnesevenLayoutsItemRotationMax = 45;
 
 
-export const compositionOpThreetwoFromRegExp = new RegExp('^[a-f0-9]{64}$');
-export const compositionOpThreetwoToRegExp = new RegExp('^[a-f0-9]{64}$');
+export const compositionOpOnesevenLayoutsItemStyleFontSizeMax = 15;
+
+export const compositionOpOnesevenLayoutsItemStyleFontWeightMin = 100;
+export const compositionOpOnesevenLayoutsItemStyleFontWeightMax = 900;
 
 
-export const compositionOpThreetwoChangesMax = 512;
+
+export const compositionOpOnesevenLayoutsItemStyleLetterSpacingMin = -5;
+export const compositionOpOnesevenLayoutsItemStyleLetterSpacingMax = 20;
+
+export const compositionOpOnesevenLayoutsItemStyleWordGapEmMin = 0;
+export const compositionOpOnesevenLayoutsItemStyleWordGapEmMax = 2;
+
+export const compositionOpOnesevenLayoutsItemStyleLineGapEmMin = 0;
+export const compositionOpOnesevenLayoutsItemStyleLineGapEmMax = 2;
+
+export const compositionOpOnesevenLayoutsItemStyleEmphasisScaleExclusiveMin = 0;
+
+export const compositionOpOnesevenLayoutsItemStyleEmphasisFontWeightMin = 100;
+export const compositionOpOnesevenLayoutsItemStyleEmphasisFontWeightMax = 900;
+
+export const compositionOpOnesevenLayoutsItemStyleEmphasisPlateRadiusMin = 0;
+
+export const compositionOpOnesevenLayoutsItemStyleAnnotationStrokeWidthMin = 0.5;
+export const compositionOpOnesevenLayoutsItemStyleAnnotationStrokeWidthMax = 12;
+
+export const compositionOpOnesevenLayoutsItemStyleEntranceMsMin = 0;
+
+export const compositionOpOnesevenLayoutsItemStyleEntranceStaggerMsMin = 0;
+
+export const compositionOpOnesevenLayoutsItemStyleExitMsMin = 0;
+
+export const compositionOpOnesevenLayoutsItemHoldThroughWordIndexMin = 0;
+export const compositionOpOnesevenLayoutsItemHoldThroughWordIndexMax = 9007199254740991;
+
+export const compositionOpOnesevenLayoutsItemWordMarksItemWordIndexMin = 0;
+export const compositionOpOnesevenLayoutsItemWordMarksItemWordIndexMax = 9007199254740991;
+
+
+
+
+export const compositionOpOneeightStartTimeMin = 0;
+
+export const compositionOpOneeightDurationExclusiveMin = 0;
+
+
+export const compositionOpOneeightTransitionInDurationExclusiveMin = 0;
+
+
+
+
+
+
+export const compositionOpOnenineStartTimeMin = 0;
+
+export const compositionOpOnenineDurationExclusiveMin = 0;
+
+
+export const compositionOpOnenineTransitionInDurationExclusiveMin = 0;
+
+
+
+
+
+export const compositionOpTwozeroMaxMarkersExclusiveMin = 0;
+export const compositionOpTwozeroMaxMarkersMax = 2000;
+
+
+export const compositionOpTwooneWindowStartSecMin = 0;
+
+export const compositionOpTwooneWindowEndSecExclusiveMin = 0;
+
+
+export const compositionOpTwosixUpdatesVolumeMin = 0;
+export const compositionOpTwosixUpdatesVolumeMax = 4;
+
+
+
+export const compositionOpThreefiveFromRegExp = new RegExp('^[a-f0-9]{64}$');
+export const compositionOpThreefiveToRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const compositionOpThreefiveChangesMax = 512;
 
 
 
@@ -403,7 +528,7 @@ export const CompositionOp = zod.union([zod.strictObject({
   "trackId": zod.string().optional(),
   "newTrack": zod.boolean().optional(),
   "newTrackId": zod.string().optional()
-}).describe('Add a clip to the timeline. The clip self-routes to a track by FAMILY (`clip.kind`, else derived from `source.kind`, else the target track) — a `media` clip MUST carry `kind` (video|audio|image) or a `trackId`, else it is rejected as ambiguous. `trackId` targets an existing SAME-family track; `newTrack:true` (with optional pinned `newTrackId`) creates a fresh track of that family.'),zod.strictObject({
+}).describe('Add a clip to the timeline. The clip self-routes to a track by FAMILY (`clip.kind`, else derived from `source.kind`, else the target track) — a `media` clip MUST carry `kind` (video|audio|image) or a `trackId`, else it is rejected as ambiguous. `trackId` targets an existing SAME-family track; `newTrack:true` (with optional pinned `newTrackId`) creates a fresh track of that family, appended at the BACK (the highest index, painted under every other track); raise it with `reorderTracks` (index 0 is the top layer).'),zod.strictObject({
   "type": zod.literal("clip.remove"),
   "clipId": zod.string()
 }).describe('Remove a clip by id (located across every track).'),zod.strictObject({
@@ -438,12 +563,12 @@ export const CompositionOp = zod.union([zod.strictObject({
   "muted": zod.boolean().optional(),
   "playbackRate": zod.number().gt(compositionOpFourPatchSourceOnePlaybackRateExclusiveMin).optional(),
   "sync": zod.enum(['video', 'independent']).optional(),
-  "kenBurns": zod.enum(['in', 'out', 'pan-l', 'pan-r', 'none']).optional(),
+  "kenBurns": zod.enum(['in', 'out', 'pan-l', 'pan-r', 'none']).optional().describe('Still-image motion. When unset, an image clip slowly pushes in (`in`) unless its fit is `contain` or it keyframes scale, position or rotation, so a keyframed clip renders exactly its keyframed values; set `none` for a still that holds.'),
   "volumeDb": zod.number().optional(),
   "fadeInMs": zod.number().min(compositionOpFourPatchSourceOneFadeInMsMin).optional(),
   "fadeOutMs": zod.number().min(compositionOpFourPatchSourceOneFadeOutMsMin).optional(),
   "loop": zod.boolean().optional(),
-  "audioRole": zod.enum(['sfx', 'music', 'vo', 'ambience']).optional(),
+  "audioRole": zod.enum(['sfx', 'music', 'vo', 'ambience']).optional().describe('Mix role. A role sets the clip\'s default gain when it has no `volume` or `volumeDb`: vo 0 dB, sfx -6 dB, music -8 dB (-16 dB when any vo clip exists), ambience -22 dB. Set `volumeDb: 0` to keep a role and play the source at its own level.'),
   "duck": zod.strictObject({
   "duckDb": zod.number().max(compositionOpFourPatchSourceOneDuckDuckDbMax),
   "attackMs": zod.number().min(compositionOpFourPatchSourceOneDuckAttackMsMin),
@@ -526,8 +651,8 @@ export const CompositionOp = zod.union([zod.strictObject({
   "params": zod.record(zod.string(), zod.unknown()).optional()
 }),zod.strictObject({
   "kind": zod.literal("card"),
-  "html": zod.string().min(1),
-  "tokens": zod.record(zod.string(), zod.string()).optional(),
+  "html": zod.string().min(1).describe('Self-contained card markup sized to the format\'s pixel frame. Motion comes from frame-driven vars, never @keyframes or transition: --cf-frame, --cf-t (seconds), --cf-fps, --cf-duration, --cf-progress, --cf-ease, --cf-enter, --cf-exit. Visible copy goes in the html as plain text. Wrap a run in <span data-cf-split="words"> or "chars" and each unit becomes its own span carrying --cf-i (its index, the group carries --cf-n), so one rule staggers it (in chars, spaces count as units), e.g. opacity:clamp(0,calc(var(--cf-t)*4 - var(--cf-i)*.3),1). save_as_template binds that copy with textParams match.'),
+  "tokens": zod.record(zod.string(), zod.string()).optional().describe('Style values the html reads as CSS custom properties: key x becomes --cf-x, so never put dashes in a key. Use tokens for colours and sizes, not visible copy.'),
   "zPlane": zod.literal("front").optional()
 }),zod.strictObject({
   "kind": zod.literal("composition"),
@@ -550,7 +675,7 @@ export const CompositionOp = zod.union([zod.strictObject({
   "y": zod.number().min(compositionOpFourPatchRegionYMin).max(compositionOpFourPatchRegionYMax),
   "w": zod.number().gt(compositionOpFourPatchRegionWExclusiveMin).max(compositionOpFourPatchRegionWMax),
   "h": zod.number().gt(compositionOpFourPatchRegionHExclusiveMin).max(compositionOpFourPatchRegionHMax)
-}).optional(),
+}).optional().describe('A window in the frame that the clip draws into and is clipped to (top-left corner and size, each a frame fraction). Inside a region, `position` and `scale` act relative to that window, so content moved past its edge is cut off. Omit it to place the clip against the whole frame.'),
   "fit": zod.enum(['cover', 'contain']).optional(),
   "captionVisibility": zod.enum(['visible', 'hidden']).optional().describe('Video media clip only. Hide native captions while this clip is topmost and covers the lower picture, or when an opaque, effect-free clip has an explicitly full-frame region, even with fit:contain. Caption words and timings remain stored and resume when another visible clip takes over.'),
   "effects": zod.array(zod.strictObject({
@@ -597,6 +722,58 @@ export const CompositionOp = zod.union([zod.strictObject({
   "v": zod.number()
 })).min(compositionOpFourPatchAutomationLanesItemPointsMin)
 }))
+}).optional(),
+  "color": zod.strictObject({
+  "version": zod.literal(1),
+  "enabled": zod.boolean(),
+  "grade": zod.strictObject({
+  "exposure": zod.number().min(compositionOpFourPatchColorGradeExposureMin).max(compositionOpFourPatchColorGradeExposureMax),
+  "contrast": zod.number().min(compositionOpFourPatchColorGradeContrastMin).max(compositionOpFourPatchColorGradeContrastMax),
+  "highlights": zod.number().min(compositionOpFourPatchColorGradeHighlightsMin).max(compositionOpFourPatchColorGradeHighlightsMax),
+  "shadows": zod.number().min(compositionOpFourPatchColorGradeShadowsMin).max(compositionOpFourPatchColorGradeShadowsMax),
+  "whites": zod.number().min(compositionOpFourPatchColorGradeWhitesMin).max(compositionOpFourPatchColorGradeWhitesMax),
+  "blacks": zod.number().min(compositionOpFourPatchColorGradeBlacksMin).max(compositionOpFourPatchColorGradeBlacksMax),
+  "temperature": zod.number().min(compositionOpFourPatchColorGradeTemperatureMin).max(compositionOpFourPatchColorGradeTemperatureMax),
+  "tint": zod.number().min(compositionOpFourPatchColorGradeTintMin).max(compositionOpFourPatchColorGradeTintMax),
+  "vibrance": zod.number().min(compositionOpFourPatchColorGradeVibranceMin).max(compositionOpFourPatchColorGradeVibranceMax),
+  "saturation": zod.number().min(compositionOpFourPatchColorGradeSaturationMin).max(compositionOpFourPatchColorGradeSaturationMax)
+}),
+  "looks": zod.array(zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean()
+})).max(compositionOpFourPatchColorLooksMax),
+  "display": zod.union([zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean()
+}),zod.strictObject({
+  "bundled": zod.enum(['daylight-negative', 'tungsten-negative', 'soft-negative', 'slide', 'black-and-white']),
+  "enabled": zod.boolean()
+})]).optional(),
+  "creative": zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean(),
+  "strength": zod.number().min(compositionOpFourPatchColorCreativeStrengthMin).max(compositionOpFourPatchColorCreativeStrengthMax)
+}).optional(),
+  "halation": zod.strictObject({
+  "enabled": zod.boolean(),
+  "amount": zod.number().min(compositionOpFourPatchColorHalationAmountMin).max(compositionOpFourPatchColorHalationAmountMax),
+  "radius": zod.number().min(compositionOpFourPatchColorHalationRadiusMin).max(compositionOpFourPatchColorHalationRadiusMax),
+  "threshold": zod.number().min(compositionOpFourPatchColorHalationThresholdMin).max(compositionOpFourPatchColorHalationThresholdMax),
+  "tint": zod.tuple([zod.number().min(compositionOpFourPatchColorHalationTint0ItemMin).max(compositionOpFourPatchColorHalationTint0ItemMax),
+zod.number().min(compositionOpFourPatchColorHalationTint1ItemMin).max(compositionOpFourPatchColorHalationTint1ItemMax),
+zod.number().min(compositionOpFourPatchColorHalationTint2ItemMin).max(compositionOpFourPatchColorHalationTint2ItemMax)])
+}).optional(),
+  "grain": zod.strictObject({
+  "enabled": zod.boolean(),
+  "profile": zod.enum(['daylight-negative', 'tungsten-negative', 'soft-negative', 'slide', 'black-and-white']),
+  "gauge": zod.enum(['super8', 'super16', 'super35', '65mm']),
+  "amount": zod.number().min(compositionOpFourPatchColorGrainAmountMin).max(compositionOpFourPatchColorGrainAmountMax),
+  "size": zod.number().min(compositionOpFourPatchColorGrainSizeMin).max(compositionOpFourPatchColorGrainSizeMax),
+  "seed": zod.int().min(compositionOpFourPatchColorGrainSeedMin).max(compositionOpFourPatchColorGrainSeedMax)
+}).optional()
 }).optional(),
   "legacyKeyframes": zod.strictObject({
   "needsUpgrade": zod.literal(true),
@@ -680,66 +857,78 @@ export const CompositionOp = zod.union([zod.strictObject({
   "params": zod.record(zod.string(), zod.unknown()).optional()
 }))
 }).describe('Set (or CLEAR, with `effects: []`) a clip\'s EFFECT channel — the pinned component clip wrappers stacked onto that clip, each `{id, component, window}`: a unique `id`, the wrapper component\'s execution pin as `component`, and `window: {startTime, duration}` in seconds. The built-in primitive effects were removed: a stored one reads, and save and render refuse it (`effect_retired`), so clear it with `effects: []`. WHOLESALE: the array REPLACES the clip\'s current effects, so send the full stack (read the clip first to add one). This is the ONLY way to change effects on an existing clip — do NOT reach for a `clip.update` patch, whose top-level merge is the source-clobbering footgun documented above.'),zod.strictObject({
+  "type": zod.literal("setMediaInputTransform"),
+  "mediaId": zod.string(),
+  "inputTransform": zod.union([zod.strictObject({
+  "version": zod.literal(1),
+  "id": zod.enum(['rec709', 'insta360-ilog', 'custom-lut', 'apple-log']),
+  "table": zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean()
+}).optional(),
+  "ycbcr": zod.strictObject({
+  "matrix": zod.enum(['bt709', 'bt2020', 'bt601']),
+  "range": zod.enum(['limited', 'full'])
+}).optional()
+}),zod.null()])
+}).describe('Set (or CLEAR, with `inputTransform: null`) how a MEDIA\'s pixels are decoded into the working color space, for every clip of that media: `{version: 1, id, table?, ycbcr?}` with `id` one of rec709, insta360-ilog, custom-lut, apple-log. `custom-lut` is a camera LUT (log → Rec.709, e.g. DJI\'s D-Log M LUT): it requires `table: {mediaId, sha256, enabled}` naming an uploaded .cube LUT, and its output is read as Rec.709 footage; the others take no table. `ycbcr: {matrix, range}` overrides the source\'s signalled YCbCr matrix and range. The entry lives in the composition\'s `media` map; the media must be used by a clip in this composition, and removing its last clip removes the entry. To set a camera input for many media, send one `setMediaInputTransform` per media in a single `apply_composition` call.'),zod.strictObject({
+  "type": zod.literal("setClipColor"),
+  "clipId": zod.string(),
+  "color": zod.union([zod.strictObject({
+  "version": zod.literal(1),
+  "enabled": zod.boolean(),
+  "grade": zod.strictObject({
+  "exposure": zod.number().min(compositionOpOnethreeColorOneGradeExposureMin).max(compositionOpOnethreeColorOneGradeExposureMax),
+  "contrast": zod.number().min(compositionOpOnethreeColorOneGradeContrastMin).max(compositionOpOnethreeColorOneGradeContrastMax),
+  "highlights": zod.number().min(compositionOpOnethreeColorOneGradeHighlightsMin).max(compositionOpOnethreeColorOneGradeHighlightsMax),
+  "shadows": zod.number().min(compositionOpOnethreeColorOneGradeShadowsMin).max(compositionOpOnethreeColorOneGradeShadowsMax),
+  "whites": zod.number().min(compositionOpOnethreeColorOneGradeWhitesMin).max(compositionOpOnethreeColorOneGradeWhitesMax),
+  "blacks": zod.number().min(compositionOpOnethreeColorOneGradeBlacksMin).max(compositionOpOnethreeColorOneGradeBlacksMax),
+  "temperature": zod.number().min(compositionOpOnethreeColorOneGradeTemperatureMin).max(compositionOpOnethreeColorOneGradeTemperatureMax),
+  "tint": zod.number().min(compositionOpOnethreeColorOneGradeTintMin).max(compositionOpOnethreeColorOneGradeTintMax),
+  "vibrance": zod.number().min(compositionOpOnethreeColorOneGradeVibranceMin).max(compositionOpOnethreeColorOneGradeVibranceMax),
+  "saturation": zod.number().min(compositionOpOnethreeColorOneGradeSaturationMin).max(compositionOpOnethreeColorOneGradeSaturationMax)
+}),
+  "looks": zod.array(zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean()
+})).max(compositionOpOnethreeColorOneLooksMax),
+  "display": zod.union([zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean()
+}),zod.strictObject({
+  "bundled": zod.enum(['daylight-negative', 'tungsten-negative', 'soft-negative', 'slide', 'black-and-white']),
+  "enabled": zod.boolean()
+})]).optional(),
+  "creative": zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean(),
+  "strength": zod.number().min(compositionOpOnethreeColorOneCreativeStrengthMin).max(compositionOpOnethreeColorOneCreativeStrengthMax)
+}).optional(),
+  "halation": zod.strictObject({
+  "enabled": zod.boolean(),
+  "amount": zod.number().min(compositionOpOnethreeColorOneHalationAmountMin).max(compositionOpOnethreeColorOneHalationAmountMax),
+  "radius": zod.number().min(compositionOpOnethreeColorOneHalationRadiusMin).max(compositionOpOnethreeColorOneHalationRadiusMax),
+  "threshold": zod.number().min(compositionOpOnethreeColorOneHalationThresholdMin).max(compositionOpOnethreeColorOneHalationThresholdMax),
+  "tint": zod.tuple([zod.number().min(compositionOpOnethreeColorOneHalationTint0ItemMin).max(compositionOpOnethreeColorOneHalationTint0ItemMax),
+zod.number().min(compositionOpOnethreeColorOneHalationTint1ItemMin).max(compositionOpOnethreeColorOneHalationTint1ItemMax),
+zod.number().min(compositionOpOnethreeColorOneHalationTint2ItemMin).max(compositionOpOnethreeColorOneHalationTint2ItemMax)])
+}).optional(),
+  "grain": zod.strictObject({
+  "enabled": zod.boolean(),
+  "profile": zod.enum(['daylight-negative', 'tungsten-negative', 'soft-negative', 'slide', 'black-and-white']),
+  "gauge": zod.enum(['super8', 'super16', 'super35', '65mm']),
+  "amount": zod.number().min(compositionOpOnethreeColorOneGrainAmountMin).max(compositionOpOnethreeColorOneGrainAmountMax),
+  "size": zod.number().min(compositionOpOnethreeColorOneGrainSizeMin).max(compositionOpOnethreeColorOneGrainSizeMax),
+  "seed": zod.int().min(compositionOpOnethreeColorOneGrainSeedMin).max(compositionOpOnethreeColorOneGrainSeedMax)
+}).optional()
+}),zod.null()])
+}).describe('Set (or CLEAR, with `color: null`) a video media clip\'s color correction, WHOLESALE: `{version: 1, enabled, grade, looks, display?, creative?}`. `grade` holds every primary control: `exposure` in stops (-4..4) and `contrast`, `highlights`, `shadows`, `whites`, `blacks`, `temperature`, `tint`, `vibrance`, `saturation` each -1..1 (0 = neutral). `looks` (at most 2), `display` and `creative` name uploaded .cube LUTs as `{mediaId, sha256, enabled}`; `creative` adds `strength` 0..1. `display` may instead name a bundled film look as `{bundled, enabled}`, `bundled` one of daylight-negative, tungsten-negative, soft-negative, slide, black-and-white. `halation?: {enabled, amount 0..0.5, radius (picture heights) 0.0005..0.02, threshold 0..16, tint [r,g,b] 0..1}`; `grain?: {enabled, profile (a film look id), gauge super8|super16|super35|65mm, amount 0..2, size 0.5..4, seed uint32}`. Film presets are whole values, applied by replacing `display`, `halation` and `grain` with exactly what the preset names (absent = removed), writing only the grade keys it names, `display` as `{bundled, enabled: true}`, `halation`/`grain` with `enabled: true`, and grain `seed` kept or any uint32. Presets: {"id":"daylight-negative","name":"Daylight Negative","display":"daylight-negative","halation":{"amount":0.015,"radius":0.0026795284030010718,"threshold":0,"tint":[1,0.33333333333333337,0]},"grain":{"profile":"daylight-negative","gauge":"super35","amount":1,"size":1}}; {"id":"tungsten-negative","name":"Tungsten Negative","display":"tungsten-negative","halation":{"amount":0.015,"radius":0.0026795284030010718,"threshold":0,"tint":[1,0.33333333333333337,0]},"grain":{"profile":"tungsten-negative","gauge":"super35","amount":1,"size":1}}; {"id":"soft-negative","name":"Soft Negative","display":"soft-negative","halation":{"amount":0.015,"radius":0.0034833869239013935,"threshold":0,"tint":[1,0.33333333333333337,0]},"grain":{"profile":"soft-negative","gauge":"super35","amount":1,"size":1}}; {"id":"slide","name":"Slide","display":"slide","halation":{"amount":0.015,"radius":0.0034833869239013935,"threshold":0,"tint":[1,0.33333333333333337,0]},"grain":{"profile":"slide","gauge":"super35","amount":1,"size":1}}; {"id":"black-and-white","name":"Black and White","display":"black-and-white","halation":{"amount":0.015,"radius":0.0026795284030010718,"threshold":0,"tint":[1,0.33333333333333337,0]},"grain":{"profile":"black-and-white","gauge":"super35","amount":1,"size":1}}; {"id":"grain-only-fine","name":"Fine grain","grain":{"profile":"daylight-negative","gauge":"65mm","amount":1,"size":1}}; {"id":"halation-only","name":"Halation","halation":{"amount":0.08,"radius":0.0026795284030010718,"threshold":0,"tint":[1,0.25,0]}}. `enabled: false` bypasses the whole correction. Only a media clip on a video track takes color.'),zod.strictObject({
   "type": zod.literal("setCaptionStyle"),
-  "style": zod.strictObject({
-  "fontFamily": zod.string().min(1).optional(),
-  "fontSize": zod.number().min(1).max(compositionOpOnetwoStyleFontSizeMax).optional().describe('Font size as % of composition height (1-15, default 5). NOT px.'),
-  "fontWeight": zod.int().min(compositionOpOnetwoStyleFontWeightMin).max(compositionOpOnetwoStyleFontWeightMax).optional(),
-  "color": zod.string().min(1).optional(),
-  "highlightColor": zod.string().min(1).optional(),
-  "backgroundColor": zod.string().optional(),
-  "plate": zod.enum(['glass', 'solid', 'none']).optional(),
-  "position": zod.enum(['top', 'center', 'bottom']).optional(),
-  "region": zod.strictObject({
-  "x": zod.number().min(compositionOpOnetwoStyleRegionXMin).max(compositionOpOnetwoStyleRegionXMax),
-  "y": zod.number().min(compositionOpOnetwoStyleRegionYMin).max(compositionOpOnetwoStyleRegionYMax),
-  "w": zod.number().gt(compositionOpOnetwoStyleRegionWExclusiveMin).max(compositionOpOnetwoStyleRegionWMax),
-  "h": zod.number().gt(compositionOpOnetwoStyleRegionHExclusiveMin).max(compositionOpOnetwoStyleRegionHMax)
-}).optional().describe('Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height.'),
-  "textTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
-  "letterSpacing": zod.number().min(compositionOpOnetwoStyleLetterSpacingMin).max(compositionOpOnetwoStyleLetterSpacingMax).optional().describe('Base caption glyph spacing in pixels.'),
-  "wordGapEm": zod.number().min(compositionOpOnetwoStyleWordGapEmMin).max(compositionOpOnetwoStyleWordGapEmMax).optional().describe('Gap between caption runs as a multiple of base font size; default 0.35.'),
-  "lineGapEm": zod.number().min(compositionOpOnetwoStyleLineGapEmMin).max(compositionOpOnetwoStyleLineGapEmMax).optional().describe('Gap between caption lines as a multiple of base font size; default 0.25.'),
-  "emphasisColor": zod.string().optional(),
-  "emphasisGradient": zod.string().optional(),
-  "emphasisScale": zod.number().gt(compositionOpOnetwoStyleEmphasisScaleExclusiveMin).optional(),
-  "emphasisFontFamily": zod.string().optional(),
-  "emphasisFontWeight": zod.int().min(compositionOpOnetwoStyleEmphasisFontWeightMin).max(compositionOpOnetwoStyleEmphasisFontWeightMax).optional(),
-  "emphasisTextTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
-  "emphasisLetterSpacing": zod.number().optional(),
-  "emphasisFontStyle": zod.enum(['normal', 'italic']).optional(),
-  "entrance": zod.enum(['none', 'fade', 'word-pop', 'stagger-up']).optional(),
-  "entranceMs": zod.number().min(compositionOpOnetwoStyleEntranceMsMin).optional(),
-  "entranceStaggerMs": zod.number().min(compositionOpOnetwoStyleEntranceStaggerMsMin).optional(),
-  "exitMs": zod.number().min(compositionOpOnetwoStyleExitMsMin).optional(),
-  "emphasisPlate": zod.boolean().optional(),
-  "emphasisPlateColor": zod.string().optional(),
-  "emphasisPlateTextColor": zod.string().optional(),
-  "emphasisPlateAltColor": zod.string().optional(),
-  "emphasisPlateAltTextColor": zod.string().optional(),
-  "emphasisPlateRadius": zod.number().min(compositionOpOnetwoStyleEmphasisPlateRadiusMin).optional(),
-  "emphasisPlatePadX": zod.number().optional(),
-  "emphasisPlatePadY": zod.number().optional(),
-  "emphasisPlateReveal": zod.boolean().optional().describe('Grow a shared emphasis plate as saved words appear while reserving its final layout width.'),
-  "annotationColor": zod.string().optional(),
-  "annotationStrokeWidth": zod.number().min(compositionOpOnetwoStyleAnnotationStrokeWidthMin).max(compositionOpOnetwoStyleAnnotationStrokeWidthMax).optional().describe('Annotation stroke width in its 100×100 SVG coordinate system; default 4.'),
-  "annotationTexture": zod.enum(['clean', 'pencil']).optional().describe('Native annotation stroke finish; default clean.'),
-  "maxWidthPercent": zod.number().gt(compositionOpOnetwoStyleMaxWidthPercentExclusiveMin).max(compositionOpOnetwoStyleMaxWidthPercentMax).optional()
-})
-}).describe('Merge style overrides (font/color/position/emphasis) onto the composition\'s caption layer. Partial — omitted fields keep their current value; creates the caption container if absent.'),zod.strictObject({
-  "type": zod.literal("setCaptionDepth"),
-  "zPlane": zod.enum(['front', 'behind-subject'])
-}).describe('Set the caption compositing plane. Use `behind-subject` to place captions behind the segmented foreground subject; use `front` for conventional captions above all video layers.'),zod.strictObject({
-  "type": zod.literal("setCaptions"),
-  "segments": zod.array(zod.strictObject({
-  "words": zod.array(zod.strictObject({
-  "text": zod.string().min(1),
-  "startMs": zod.number().min(compositionOpOnefourSegmentsItemWordsItemStartMsMin).describe('Word start on the composition timeline, in milliseconds.'),
-  "endMs": zod.number().min(compositionOpOnefourSegmentsItemWordsItemEndMsMin).describe('Word end on the composition timeline, in milliseconds.'),
-  "emphasis": zod.boolean().optional(),
-  "annotate": zod.enum(['circle', 'underline']).optional()
-}))
-})),
   "style": zod.strictObject({
   "fontFamily": zod.string().min(1).optional(),
   "fontSize": zod.number().min(1).max(compositionOpOnefourStyleFontSizeMax).optional().describe('Font size as % of composition height (1-15, default 5). NOT px.'),
@@ -784,37 +973,96 @@ export const CompositionOp = zod.union([zod.strictObject({
   "annotationStrokeWidth": zod.number().min(compositionOpOnefourStyleAnnotationStrokeWidthMin).max(compositionOpOnefourStyleAnnotationStrokeWidthMax).optional().describe('Annotation stroke width in its 100×100 SVG coordinate system; default 4.'),
   "annotationTexture": zod.enum(['clean', 'pencil']).optional().describe('Native annotation stroke finish; default clean.'),
   "maxWidthPercent": zod.number().gt(compositionOpOnefourStyleMaxWidthPercentExclusiveMin).max(compositionOpOnefourStyleMaxWidthPercentMax).optional()
+})
+}).describe('Merge style overrides (font/color/position/emphasis) onto the composition\'s caption layer. Partial — omitted fields keep their current value; creates the caption container if absent.'),zod.strictObject({
+  "type": zod.literal("setCaptionDepth"),
+  "zPlane": zod.enum(['front', 'behind-subject'])
+}).describe('Set the caption compositing plane. Use `behind-subject` to place captions behind the segmented foreground subject; use `front` for conventional captions above all video layers.'),zod.strictObject({
+  "type": zod.literal("setCaptions"),
+  "segments": zod.array(zod.strictObject({
+  "words": zod.array(zod.strictObject({
+  "text": zod.string().min(1),
+  "startMs": zod.number().min(compositionOpOnesixSegmentsItemWordsItemStartMsMin).describe('Word start on the composition timeline, in milliseconds.'),
+  "endMs": zod.number().min(compositionOpOnesixSegmentsItemWordsItemEndMsMin).describe('Word end on the composition timeline, in milliseconds.'),
+  "emphasis": zod.boolean().optional(),
+  "annotate": zod.enum(['circle', 'underline']).optional()
+}))
+})),
+  "style": zod.strictObject({
+  "fontFamily": zod.string().min(1).optional(),
+  "fontSize": zod.number().min(1).max(compositionOpOnesixStyleFontSizeMax).optional().describe('Font size as % of composition height (1-15, default 5). NOT px.'),
+  "fontWeight": zod.int().min(compositionOpOnesixStyleFontWeightMin).max(compositionOpOnesixStyleFontWeightMax).optional(),
+  "color": zod.string().min(1).optional(),
+  "highlightColor": zod.string().min(1).optional(),
+  "backgroundColor": zod.string().optional(),
+  "plate": zod.enum(['glass', 'solid', 'none']).optional(),
+  "position": zod.enum(['top', 'center', 'bottom']).optional(),
+  "region": zod.strictObject({
+  "x": zod.number().min(compositionOpOnesixStyleRegionXMin).max(compositionOpOnesixStyleRegionXMax),
+  "y": zod.number().min(compositionOpOnesixStyleRegionYMin).max(compositionOpOnesixStyleRegionYMax),
+  "w": zod.number().gt(compositionOpOnesixStyleRegionWExclusiveMin).max(compositionOpOnesixStyleRegionWMax),
+  "h": zod.number().gt(compositionOpOnesixStyleRegionHExclusiveMin).max(compositionOpOnesixStyleRegionHMax)
+}).optional().describe('Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height.'),
+  "textTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
+  "letterSpacing": zod.number().min(compositionOpOnesixStyleLetterSpacingMin).max(compositionOpOnesixStyleLetterSpacingMax).optional().describe('Base caption glyph spacing in pixels.'),
+  "wordGapEm": zod.number().min(compositionOpOnesixStyleWordGapEmMin).max(compositionOpOnesixStyleWordGapEmMax).optional().describe('Gap between caption runs as a multiple of base font size; default 0.35.'),
+  "lineGapEm": zod.number().min(compositionOpOnesixStyleLineGapEmMin).max(compositionOpOnesixStyleLineGapEmMax).optional().describe('Gap between caption lines as a multiple of base font size; default 0.25.'),
+  "emphasisColor": zod.string().optional(),
+  "emphasisGradient": zod.string().optional(),
+  "emphasisScale": zod.number().gt(compositionOpOnesixStyleEmphasisScaleExclusiveMin).optional(),
+  "emphasisFontFamily": zod.string().optional(),
+  "emphasisFontWeight": zod.int().min(compositionOpOnesixStyleEmphasisFontWeightMin).max(compositionOpOnesixStyleEmphasisFontWeightMax).optional(),
+  "emphasisTextTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
+  "emphasisLetterSpacing": zod.number().optional(),
+  "emphasisFontStyle": zod.enum(['normal', 'italic']).optional(),
+  "entrance": zod.enum(['none', 'fade', 'word-pop', 'stagger-up']).optional(),
+  "entranceMs": zod.number().min(compositionOpOnesixStyleEntranceMsMin).optional(),
+  "entranceStaggerMs": zod.number().min(compositionOpOnesixStyleEntranceStaggerMsMin).optional(),
+  "exitMs": zod.number().min(compositionOpOnesixStyleExitMsMin).optional(),
+  "emphasisPlate": zod.boolean().optional(),
+  "emphasisPlateColor": zod.string().optional(),
+  "emphasisPlateTextColor": zod.string().optional(),
+  "emphasisPlateAltColor": zod.string().optional(),
+  "emphasisPlateAltTextColor": zod.string().optional(),
+  "emphasisPlateRadius": zod.number().min(compositionOpOnesixStyleEmphasisPlateRadiusMin).optional(),
+  "emphasisPlatePadX": zod.number().optional(),
+  "emphasisPlatePadY": zod.number().optional(),
+  "emphasisPlateReveal": zod.boolean().optional().describe('Grow a shared emphasis plate as saved words appear while reserving its final layout width.'),
+  "annotationColor": zod.string().optional(),
+  "annotationStrokeWidth": zod.number().min(compositionOpOnesixStyleAnnotationStrokeWidthMin).max(compositionOpOnesixStyleAnnotationStrokeWidthMax).optional().describe('Annotation stroke width in its 100×100 SVG coordinate system; default 4.'),
+  "annotationTexture": zod.enum(['clean', 'pencil']).optional().describe('Native annotation stroke finish; default clean.'),
+  "maxWidthPercent": zod.number().gt(compositionOpOnesixStyleMaxWidthPercentExclusiveMin).max(compositionOpOnesixStyleMaxWidthPercentMax).optional()
 }).optional()
 }).describe('Replace the caption SEGMENTS wholesale — author the word-timed caption layer directly (each segment = one sentence/page of `words` with timeline-ms `startMs`/`endMs`, optional `emphasis`). This is how a client with its OWN word timings (e.g. a generated VO take) gets word-synced captions without a source transcript; the compose lane\'s transcript slice writes the same layer. `style`, when given, merges with setCaptionStyle semantics; an omitted style keeps the existing one. Renderer paginates within a segment and never pools words across two — keep segments sentence-bounded.'),zod.strictObject({
   "type": zod.literal("setCaptionLayouts"),
   "layouts": zod.array(zod.strictObject({
-  "segmentIndex": zod.int().min(compositionOpOnefiveLayoutsItemSegmentIndexMin).max(compositionOpOnefiveLayoutsItemSegmentIndexMax),
-  "wordStartIndex": zod.int().min(compositionOpOnefiveLayoutsItemWordStartIndexMin).max(compositionOpOnefiveLayoutsItemWordStartIndexMax),
-  "wordEndIndex": zod.int().gt(compositionOpOnefiveLayoutsItemWordEndIndexExclusiveMin).max(compositionOpOnefiveLayoutsItemWordEndIndexMax).describe('Exclusive word index in the saved caption segment.'),
+  "segmentIndex": zod.int().min(compositionOpOnesevenLayoutsItemSegmentIndexMin).max(compositionOpOnesevenLayoutsItemSegmentIndexMax),
+  "wordStartIndex": zod.int().min(compositionOpOnesevenLayoutsItemWordStartIndexMin).max(compositionOpOnesevenLayoutsItemWordStartIndexMax),
+  "wordEndIndex": zod.int().gt(compositionOpOnesevenLayoutsItemWordEndIndexExclusiveMin).max(compositionOpOnesevenLayoutsItemWordEndIndexMax).describe('Exclusive word index in the saved caption segment.'),
   "region": zod.strictObject({
-  "x": zod.number().min(compositionOpOnefiveLayoutsItemRegionXMin).max(compositionOpOnefiveLayoutsItemRegionXMax),
-  "y": zod.number().min(compositionOpOnefiveLayoutsItemRegionYMin).max(compositionOpOnefiveLayoutsItemRegionYMax),
-  "w": zod.number().gt(compositionOpOnefiveLayoutsItemRegionWExclusiveMin).max(compositionOpOnefiveLayoutsItemRegionWMax),
-  "h": zod.number().gt(compositionOpOnefiveLayoutsItemRegionHExclusiveMin).max(compositionOpOnefiveLayoutsItemRegionHMax)
+  "x": zod.number().min(compositionOpOnesevenLayoutsItemRegionXMin).max(compositionOpOnesevenLayoutsItemRegionXMax),
+  "y": zod.number().min(compositionOpOnesevenLayoutsItemRegionYMin).max(compositionOpOnesevenLayoutsItemRegionYMax),
+  "w": zod.number().gt(compositionOpOnesevenLayoutsItemRegionWExclusiveMin).max(compositionOpOnesevenLayoutsItemRegionWMax),
+  "h": zod.number().gt(compositionOpOnesevenLayoutsItemRegionHExclusiveMin).max(compositionOpOnesevenLayoutsItemRegionHMax)
 }),
-  "scale": zod.number().min(compositionOpOnefiveLayoutsItemScaleMin).max(compositionOpOnefiveLayoutsItemScaleMax).optional(),
-  "rotation": zod.number().min(compositionOpOnefiveLayoutsItemRotationMin).max(compositionOpOnefiveLayoutsItemRotationMax).optional(),
+  "scale": zod.number().min(compositionOpOnesevenLayoutsItemScaleMin).max(compositionOpOnesevenLayoutsItemScaleMax).optional(),
+  "rotation": zod.number().min(compositionOpOnesevenLayoutsItemRotationMin).max(compositionOpOnesevenLayoutsItemRotationMax).optional(),
   "style": zod.strictObject({
   "fontFamily": zod.string().min(1).optional(),
-  "fontSize": zod.number().min(1).max(compositionOpOnefiveLayoutsItemStyleFontSizeMax).optional().describe('Font size as % of composition height (1-15, default 5). NOT px.'),
-  "fontWeight": zod.int().min(compositionOpOnefiveLayoutsItemStyleFontWeightMin).max(compositionOpOnefiveLayoutsItemStyleFontWeightMax).optional(),
+  "fontSize": zod.number().min(1).max(compositionOpOnesevenLayoutsItemStyleFontSizeMax).optional().describe('Font size as % of composition height (1-15, default 5). NOT px.'),
+  "fontWeight": zod.int().min(compositionOpOnesevenLayoutsItemStyleFontWeightMin).max(compositionOpOnesevenLayoutsItemStyleFontWeightMax).optional(),
   "color": zod.string().min(1).optional(),
   "highlightColor": zod.string().min(1).optional(),
   "backgroundColor": zod.string().optional(),
   "plate": zod.enum(['glass', 'solid', 'none']).optional(),
   "textTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
-  "letterSpacing": zod.number().min(compositionOpOnefiveLayoutsItemStyleLetterSpacingMin).max(compositionOpOnefiveLayoutsItemStyleLetterSpacingMax).optional().describe('Base caption glyph spacing in pixels.'),
-  "wordGapEm": zod.number().min(compositionOpOnefiveLayoutsItemStyleWordGapEmMin).max(compositionOpOnefiveLayoutsItemStyleWordGapEmMax).optional().describe('Gap between caption runs as a multiple of base font size; default 0.35.'),
-  "lineGapEm": zod.number().min(compositionOpOnefiveLayoutsItemStyleLineGapEmMin).max(compositionOpOnefiveLayoutsItemStyleLineGapEmMax).optional().describe('Gap between caption lines as a multiple of base font size; default 0.25.'),
+  "letterSpacing": zod.number().min(compositionOpOnesevenLayoutsItemStyleLetterSpacingMin).max(compositionOpOnesevenLayoutsItemStyleLetterSpacingMax).optional().describe('Base caption glyph spacing in pixels.'),
+  "wordGapEm": zod.number().min(compositionOpOnesevenLayoutsItemStyleWordGapEmMin).max(compositionOpOnesevenLayoutsItemStyleWordGapEmMax).optional().describe('Gap between caption runs as a multiple of base font size; default 0.35.'),
+  "lineGapEm": zod.number().min(compositionOpOnesevenLayoutsItemStyleLineGapEmMin).max(compositionOpOnesevenLayoutsItemStyleLineGapEmMax).optional().describe('Gap between caption lines as a multiple of base font size; default 0.25.'),
   "emphasisColor": zod.string().optional(),
-  "emphasisScale": zod.number().gt(compositionOpOnefiveLayoutsItemStyleEmphasisScaleExclusiveMin).optional(),
+  "emphasisScale": zod.number().gt(compositionOpOnesevenLayoutsItemStyleEmphasisScaleExclusiveMin).optional(),
   "emphasisFontFamily": zod.string().optional(),
-  "emphasisFontWeight": zod.int().min(compositionOpOnefiveLayoutsItemStyleEmphasisFontWeightMin).max(compositionOpOnefiveLayoutsItemStyleEmphasisFontWeightMax).optional(),
+  "emphasisFontWeight": zod.int().min(compositionOpOnesevenLayoutsItemStyleEmphasisFontWeightMin).max(compositionOpOnesevenLayoutsItemStyleEmphasisFontWeightMax).optional(),
   "emphasisTextTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
   "emphasisLetterSpacing": zod.number().optional(),
   "emphasisFontStyle": zod.enum(['normal', 'italic']).optional(),
@@ -823,21 +1071,21 @@ export const CompositionOp = zod.union([zod.strictObject({
   "emphasisPlateTextColor": zod.string().optional(),
   "emphasisPlateAltColor": zod.string().optional(),
   "emphasisPlateAltTextColor": zod.string().optional(),
-  "emphasisPlateRadius": zod.number().min(compositionOpOnefiveLayoutsItemStyleEmphasisPlateRadiusMin).optional(),
+  "emphasisPlateRadius": zod.number().min(compositionOpOnesevenLayoutsItemStyleEmphasisPlateRadiusMin).optional(),
   "emphasisPlatePadX": zod.number().optional(),
   "emphasisPlatePadY": zod.number().optional(),
   "emphasisPlateReveal": zod.boolean().optional().describe('Grow a shared emphasis plate as saved words appear while reserving its final layout width.'),
   "annotationColor": zod.string().optional(),
-  "annotationStrokeWidth": zod.number().min(compositionOpOnefiveLayoutsItemStyleAnnotationStrokeWidthMin).max(compositionOpOnefiveLayoutsItemStyleAnnotationStrokeWidthMax).optional().describe('Annotation stroke width in its 100×100 SVG coordinate system; default 4.'),
+  "annotationStrokeWidth": zod.number().min(compositionOpOnesevenLayoutsItemStyleAnnotationStrokeWidthMin).max(compositionOpOnesevenLayoutsItemStyleAnnotationStrokeWidthMax).optional().describe('Annotation stroke width in its 100×100 SVG coordinate system; default 4.'),
   "annotationTexture": zod.enum(['clean', 'pencil']).optional().describe('Native annotation stroke finish; default clean.'),
   "entrance": zod.enum(['none', 'fade', 'word-pop', 'stagger-up']).optional(),
-  "entranceMs": zod.number().min(compositionOpOnefiveLayoutsItemStyleEntranceMsMin).optional(),
-  "entranceStaggerMs": zod.number().min(compositionOpOnefiveLayoutsItemStyleEntranceStaggerMsMin).optional(),
-  "exitMs": zod.number().min(compositionOpOnefiveLayoutsItemStyleExitMsMin).optional()
+  "entranceMs": zod.number().min(compositionOpOnesevenLayoutsItemStyleEntranceMsMin).optional(),
+  "entranceStaggerMs": zod.number().min(compositionOpOnesevenLayoutsItemStyleEntranceStaggerMsMin).optional(),
+  "exitMs": zod.number().min(compositionOpOnesevenLayoutsItemStyleExitMsMin).optional()
 }).optional(),
-  "holdThroughWordIndex": zod.int().min(compositionOpOnefiveLayoutsItemHoldThroughWordIndexMin).max(compositionOpOnefiveLayoutsItemHoldThroughWordIndexMax).optional().describe('Inclusive saved-word index in this segment. The layout stays visible until that word ends.'),
+  "holdThroughWordIndex": zod.int().min(compositionOpOnesevenLayoutsItemHoldThroughWordIndexMin).max(compositionOpOnesevenLayoutsItemHoldThroughWordIndexMax).optional().describe('Inclusive saved-word index in this segment. The layout stays visible until that word ends.'),
   "wordMarks": zod.array(zod.strictObject({
-  "wordIndex": zod.int().min(compositionOpOnefiveLayoutsItemWordMarksItemWordIndexMin).max(compositionOpOnefiveLayoutsItemWordMarksItemWordIndexMax),
+  "wordIndex": zod.int().min(compositionOpOnesevenLayoutsItemWordMarksItemWordIndexMin).max(compositionOpOnesevenLayoutsItemWordMarksItemWordIndexMax),
   "emphasis": zod.boolean().optional(),
   "annotate": zod.union([zod.enum(['circle', 'underline']),zod.null()]).optional()
 })).optional()
@@ -848,11 +1096,11 @@ export const CompositionOp = zod.union([zod.strictObject({
   "trackId": zod.string().min(1).optional(),
   "newTrack": zod.boolean().optional(),
   "newTrackId": zod.string().min(1).optional(),
-  "startTime": zod.number().min(compositionOpOnesixStartTimeMin),
-  "duration": zod.number().gt(compositionOpOnesixDurationExclusiveMin),
+  "startTime": zod.number().min(compositionOpOneeightStartTimeMin),
+  "duration": zod.number().gt(compositionOpOneeightDurationExclusiveMin),
   "transitionIn": zod.strictObject({
   "type": zod.string().min(1),
-  "duration": zod.number().gt(compositionOpOnesixTransitionInDurationExclusiveMin),
+  "duration": zod.number().gt(compositionOpOneeightTransitionInDurationExclusiveMin),
   "id": zod.string().min(1).optional(),
   "component": ComponentExecutionRef.optional(),
   "fromClipId": zod.string().min(1).optional(),
@@ -861,14 +1109,14 @@ export const CompositionOp = zod.union([zod.strictObject({
 }).optional(),
   "scene": SceneShotSpecV2,
   "assets": zod.record(zod.string(), zod.string().min(1))
-}).describe('Author a scene shot and place it on a dedicated overlay track. The host validates the scene, generates and registers an immutable wrapper component source, and emits the ordinary track/clip operations carrying `props.componentRef` — you edit a scene SPEC, never wrapper TSX or a source hash. Registration and the composition update are ONE undoable edit; a failure publishes nothing and leaves no clip pointing at an unresolved source. Pass EXACTLY ONE of `trackId` (an existing dedicated scene track) or `newTrack: true` (mint one). That track holds scene-shot clips and gaps only — no generic component/primitive/media clips in v1 — and existing generic overlay tracks are unaffected. Scene clips use front zPlane and full-frame placement: outer per-clip `region`, `position`, `scale`, `rotation`, `fit`, `effects`, keyframes (`tweens`/`automation`), `params.transition`, `params.sequenceGroup` and internal fadeIn/fadeOut are REFUSED with a path, because the shot\'s own layer transforms are the single transform owner. TEXT: `space: "screen"` text is composed above the world result, stays fixed in the frame and stays sharp through focus; `space: "world"` text is rasterized into the 3D scene, moves with the camera and is occluded by geometry. Screenshots and world text are UNLIT and colour-managed so product UI colours are not tinted by the studio lighting, while device bodies are lit and cast shadows; an unlit surface still occludes. SCOPE GAP (pre-existing, neither closed nor changed by scene shots): global wrap effects — composition-level grades and camera effects — do not reach front-overlay clips, so they do not affect a scene shot. Author the look INSIDE the shot (`post.grain`, `post.vignette`, `post.focus`, `backdrop`, `environment`) instead. DISCOVERY: there is no built-in scene primitive to look up in list_catalog; the wrapper this operation registers appears afterwards as an ordinary INSTALLED component under the existing catalog rules. ASSETS: `assets` binds each slot name a layer references to a media id in the same project, and the slot\'s declared KIND decides what it admits — an image slot takes PNG, JPEG or WebP, a video slot MP4 or WebM. Binding the wrong kind is refused with the slot\'s path.'),zod.strictObject({
+}).describe('Author a scene shot and place it on a dedicated overlay track. The host validates the scene, generates and registers an immutable wrapper component source, and emits the ordinary track/clip operations carrying `props.componentRef` — you edit a scene SPEC, never wrapper TSX or a source hash. Registration and the composition update are ONE undoable edit; a failure publishes nothing and leaves no clip pointing at an unresolved source. REQUIRED: `clipId`, `startTime`, `duration`, `scene` and `assets` (send `{}` when no layer references a slot), plus EXACTLY ONE of `trackId` (an existing dedicated scene track) or `newTrack: true` (mint one). A minted scene track is appended at the BACK like every new track, so it paints under existing tracks; raise it with `reorderTracks` (index 0 is the top layer). That track holds scene-shot clips and gaps only — no generic component/primitive/media clips in v1 — and existing generic overlay tracks are unaffected. Scene clips use front zPlane and full-frame placement: outer per-clip `region`, `position`, `scale`, `rotation`, `fit`, `effects`, keyframes (`tweens`/`automation`), `params.transition`, `params.sequenceGroup` and internal fadeIn/fadeOut are REFUSED with a path, because the shot\'s own layer transforms are the single transform owner. TEXT: `space: "screen"` text is composed above the world result, stays fixed in the frame and stays sharp through focus; `space: "world"` text is rasterized into the 3D scene, moves with the camera and is occluded by geometry. Screenshots and world text are UNLIT and colour-managed so product UI colours are not tinted by the studio lighting, while device bodies are lit and cast shadows; an unlit surface still occludes. SCOPE GAP (pre-existing, neither closed nor changed by scene shots): global wrap effects — composition-level grades and camera effects — do not reach front-overlay clips, so they do not affect a scene shot. Author the look INSIDE the shot (`post.grain`, `post.vignette`, `post.focus`, `backdrop`, `environment`) instead. DISCOVERY: there is no built-in scene primitive to look up in list_catalog; the wrapper this operation registers appears afterwards as an ordinary INSTALLED component under the existing catalog rules. ASSETS: `assets` binds each slot name a layer references to a media id in the same project, and the slot\'s declared KIND decides what it admits — an image slot takes PNG, JPEG or WebP, a video slot MP4 or WebM. Binding the wrong kind is refused with the slot\'s path.'),zod.strictObject({
   "type": zod.literal("scene.update"),
   "clipId": zod.string().min(1),
-  "startTime": zod.number().min(compositionOpOnesevenStartTimeMin).optional(),
-  "duration": zod.number().gt(compositionOpOnesevenDurationExclusiveMin).optional(),
+  "startTime": zod.number().min(compositionOpOnenineStartTimeMin).optional(),
+  "duration": zod.number().gt(compositionOpOnenineDurationExclusiveMin).optional(),
   "transitionIn": zod.strictObject({
   "type": zod.string().min(1),
-  "duration": zod.number().gt(compositionOpOnesevenTransitionInDurationExclusiveMin),
+  "duration": zod.number().gt(compositionOpOnenineTransitionInDurationExclusiveMin),
   "id": zod.string().min(1).optional(),
   "component": ComponentExecutionRef.optional(),
   "fromClipId": zod.string().min(1).optional(),
@@ -881,13 +1129,13 @@ export const CompositionOp = zod.union([zod.strictObject({
   "type": zod.literal("materializeGrid"),
   "clipId": zod.string(),
   "grid": zod.enum(['beat', 'word', 'shot']),
-  "maxMarkers": zod.int().gt(compositionOpOneeightMaxMarkersExclusiveMin).max(compositionOpOneeightMaxMarkersMax).optional()
+  "maxMarkers": zod.int().gt(compositionOpTwozeroMaxMarkersExclusiveMin).max(compositionOpTwozeroMaxMarkersMax).optional()
 }).describe('Materialize a clip\'s SOURCE-media temporal GRID as timeline markers — the rhythm authority you cut to. `grid:"beat"` reads a MUSIC bed\'s beat map (get_media_context.beatGrid), `grid:"word"` the VO word onsets (wordGrid); each grid point is projected from media time to TIMELINE time through the clip\'s placement (startTime, trim, playbackRate, excludedRanges) and written as a `kind:"beat"|"word"` marker (`metadata.sourceClipId` set). Points outside the clip\'s visible window are skipped. Re-running REPLACES the prior markers from the same clip+grid (idempotent). Land cuts and transition MIDPOINTS on the markers (a 0.5s transition starts 0.25s before its marker). `maxMarkers` (default 500, ceiling 2000) — exceeding it fails loud with the count. `grid:"shot"` is not yet exposed (shot_grid_unavailable). The target must be a media clip; absent evidence fails loud (grid_unavailable) naming how to get it (declare audioRole:"music" at ingest / transcribe).'),zod.strictObject({
   "type": zod.literal("captions.fromTranscript"),
   "mediaId": zod.string().min(1),
   "window": zod.strictObject({
-  "startSec": zod.number().min(compositionOpOnenineWindowStartSecMin),
-  "endSec": zod.number().gt(compositionOpOnenineWindowEndSecExclusiveMin)
+  "startSec": zod.number().min(compositionOpTwooneWindowStartSecMin),
+  "endSec": zod.number().gt(compositionOpTwooneWindowEndSecExclusiveMin)
 }).optional()
 }).describe('Attach caption CONTENT from the media\'s cached transcript — no pasting words. ROUTE-MATERIALIZED like materializeGrid: the server slices the word-timed transcript to `window` (source seconds; absent = the whole media), rebases times, sentence-splits into segments, and applies it as `setCaptions`. 422 media_no_transcript when the media has no transcript or no words in the window. For your OWN word timings use setCaptions directly. For edited multi-clip timelines, use captions.fromComposition after saving the edits; that operation projects all selected track clips, trims, exclusions, and placements.'),zod.strictObject({
   "type": zod.literal("captions.fromComposition"),
@@ -904,7 +1152,7 @@ export const CompositionOp = zod.union([zod.strictObject({
   "kind": zod.enum(['video', 'audio', 'image', 'overlay', 'effect']),
   "name": zod.string().optional(),
   "id": zod.string().optional()
-}).describe('Add an EMPTY track of a given family (video|audio|image|overlay|effect). Optional pinned `id`. The new track is appended, so it starts at the BACK: index 0 is the top layer and higher indices are further back (see `reorderTracks`). Track order only ranks clips on the same plane — every overlay draws above the video lane unless its `zPlane` is `behind-subject`, whatever its track index.'),zod.strictObject({
+}).describe('Add an EMPTY track of a given family (video|audio|image|overlay|effect). Optional pinned `id`. The new track is appended, so it starts at the BACK: index 0 is the top layer and higher indices are further back (see `reorderTracks`). Track order is the paint order for every family: a card on a track behind a video or image track draws behind it.'),zod.strictObject({
   "type": zod.literal("removeTrack"),
   "trackId": zod.string()
 }).describe('Remove a track AND all its clips by id.'),zod.strictObject({
@@ -913,13 +1161,13 @@ export const CompositionOp = zod.union([zod.strictObject({
   "updates": zod.strictObject({
   "name": zod.string().optional(),
   "enabled": zod.boolean().optional(),
-  "volume": zod.number().min(compositionOpTwofourUpdatesVolumeMin).max(compositionOpTwofourUpdatesVolumeMax).optional()
+  "volume": zod.number().min(compositionOpTwosixUpdatesVolumeMin).max(compositionOpTwosixUpdatesVolumeMax).optional()
 })
 }).describe('Patch a track\'s `name` / `enabled` by id. Track volume is retired: set each clip\'s own volume.'),zod.strictObject({
   "type": zod.literal("reorderTracks"),
   "fromIndex": zod.number(),
   "toIndex": zod.number()
-}).describe('Move a track from one index to another. ORDER: index 0 is the TOP layer, not the bottom — moving a backdrop to index 0 puts it in FRONT of everything and hides the composition. Higher index = further back. PRECEDENCE: track order decides compositing only among clips on the same plane. Overlays are composited in a lane ABOVE the video lane whatever their track index; the one exception is `zPlane:"behind-subject"`, which moves the overlay inside its host clip, behind the segmented foreground. So if reordering tracks does not change what you see, the plane split already decided it.'),zod.strictObject({
+}).describe('Move a track from one index to another. ORDER: index 0 is the TOP layer, not the bottom — moving a backdrop to index 0 puts it in FRONT of everything and hides the composition. Higher index = further back. Track order is the paint order for every family, so cards, overlays, images and video interleave by index: a backdrop card, a screenshot and a foreground card on three tracks stack in that order. The one exception is `zPlane:"behind-subject"`, which moves the overlay inside its host clip, behind the segmented foreground.'),zod.strictObject({
   "type": zod.literal("moveClipToTrack"),
   "clipId": zod.string(),
   "targetTrackId": zod.string(),
@@ -932,7 +1180,13 @@ export const CompositionOp = zod.union([zod.strictObject({
   "type": zod.literal("cutAndRipple"),
   "start": zod.number(),
   "end": zod.number()
-}).describe('Server-authoritative: delete the [start,end] time window (seconds) and ripple every downstream clip/marker/caption earlier to close the gap.'),zod.strictObject({
+}).describe('Server-authoritative: delete the [start,end] time window (seconds) and ripple every downstream clip/marker/caption earlier to close the gap. Cuts apply sequentially in TIMELINE seconds: each cut moves everything after it, so a later cut\'s coordinates go stale once an earlier one lands. Plan several cuts back to front (latest first), or send them as one `cutRanges`. To drop spans inside one clip, `addExcludedRange` takes SOURCE seconds and is order-independent.'),zod.strictObject({
+  "type": zod.literal("cutRanges"),
+  "ranges": zod.array(zod.strictObject({
+  "start": zod.number(),
+  "end": zod.number()
+})).min(1)
+}).describe('Server-authoritative: delete several [start,end] windows (seconds) in one atomic edit, one undo step. Every range is in timeline seconds of the composition as it is BEFORE this op, in any order; overlapping and touching ranges merge. Each must satisfy 0 <= start < end <= the timeline\'s end. The cuts apply back to front with exactly `cutAndRipple`\'s ripple (every track, markers and derived captions move earlier), so no coordinate goes stale.'),zod.strictObject({
   "type": zod.literal("ripple"),
   "time": zod.number(),
   "amount": zod.number()
@@ -942,21 +1196,21 @@ export const CompositionOp = zod.union([zod.strictObject({
   "sourceStart": zod.number(),
   "sourceEnd": zod.number(),
   "reason": zod.string().optional()
-}).describe('Server-authoritative: exclude a [sourceStart,sourceEnd] span (seconds) of a clip\'s SOURCE (an internal trim) and ripple downstream — the preferred way to drop a sub-range vs a source patch.'),zod.strictObject({
+}).describe('Server-authoritative: exclude a [sourceStart,sourceEnd] span (seconds) of a clip\'s SOURCE (an internal trim) and ripple downstream — the preferred way to drop a sub-range vs a source patch. Coordinates are SOURCE seconds, which a cut or another exclusion never shifts, so several exclusions on one clip can be sent in any order.'),zod.strictObject({
   "type": zod.literal("removeExcludedRange"),
   "clipId": zod.string(),
   "rangeIdx": zod.number()
 }).describe('Server-authoritative: remove a clip\'s previously-added excluded range by index (re-includes that span, ripples downstream).'),zod.strictObject({
   "type": zod.literal("component.repin-v3"),
   "componentId": zod.string().min(1),
-  "from": zod.string().regex(compositionOpThreetwoFromRegExp),
-  "to": zod.string().regex(compositionOpThreetwoToRegExp),
+  "from": zod.string().regex(compositionOpThreefiveFromRegExp),
+  "to": zod.string().regex(compositionOpThreefiveToRegExp),
   "expectedCompositionEtag": zod.string().min(1),
   "changes": zod.array(zod.strictObject({
   "placementId": zod.string().min(1),
   "before": ComponentExecutionRef,
   "after": ComponentExecutionRef
-})).min(1).max(compositionOpThreetwoChangesMax)
+})).min(1).max(compositionOpThreefiveChangesMax)
 }).describe('Atomically repin explicit version3 invocations using complete before/after execution references and an exact composition etag. Persistence must canonically admit scoped source hashes, destination input schemas and every resulting target context before applying, including replay/undo. Never infer a latest head, downgrade versions or accept an admitted flag.')]).describe('One scoped composition operation. Discriminated by `type` — `clip.add` / `clip.remove` / `clip.update` patch clips across any family; the rest cover markers, reframe, effects, captions, format, tracks, and the server-authoritative ripple recomputes. Every variant is `.strict()`: an unknown field is refused, not ignored.');
 
 export type CompositionOp = zod.input<typeof CompositionOp>;

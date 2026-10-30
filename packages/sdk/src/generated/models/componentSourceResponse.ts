@@ -11,6 +11,7 @@ import type { ComponentManifest } from './componentManifest';
 import type { ComponentSourceResponseExamplesItem } from './componentSourceResponseExamplesItem';
 import type { ComponentSourceResponseOrigin } from './componentSourceResponseOrigin';
 import type { ComponentSourceResponsePropSchema } from './componentSourceResponsePropSchema';
+import type { ComponentSourceResponseRegistryProvenance } from './componentSourceResponseRegistryProvenance';
 import type { ComponentSourceResponseSource } from './componentSourceResponseSource';
 import type { ComponentSourceResponseSourceSnapshot } from './componentSourceResponseSourceSnapshot';
 import type { ComponentSourceResponseTokens } from './componentSourceResponseTokens';
@@ -44,6 +45,14 @@ export interface ComponentSourceResponse {
   metadataStatus?: 'unresolved';
   /** Exact immutable source pin; distinct from bundle revisions. */
   sourceVersionId: string;
+  /**
+     * Exact owned source history row; equal source hashes can have different ancestry.
+     * @minLength 1
+     * @maxLength 128
+     */
+  componentVersionId?: string;
+  /** Server-derived acquisition ancestry for this exact source row; pending is not captured qualification or portable closure. */
+  registryProvenance?: ComponentSourceResponseRegistryProvenance;
   /** Immutable source snapshot: a version 4 template, a retired version 3 TSX module, or the historical version 2 source of a component stored before versioned sources (read-only; it never executes). source remains provenance. */
   sourceSnapshot: ComponentSourceResponseSourceSnapshot;
 }

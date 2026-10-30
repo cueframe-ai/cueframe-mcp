@@ -29,6 +29,18 @@ export const sceneShotSpecV2EnvironmentOneShadowOpacityDefault = 0.5;
 export const sceneShotSpecV2EnvironmentOneShadowOpacityMin = 0;
 export const sceneShotSpecV2EnvironmentOneShadowOpacityMax = 1;
 
+export const sceneShotSpecV2EnvironmentThreeAssetSlotMax = 64;
+
+
+export const sceneShotSpecV2EnvironmentThreeAssetSlotRegExp = new RegExp('^[A-Za-z_][A-Za-z0-9_-]*$');
+export const sceneShotSpecV2EnvironmentThreeIntensityDefault = 1;
+export const sceneShotSpecV2EnvironmentThreeIntensityMin = 0;
+export const sceneShotSpecV2EnvironmentThreeIntensityMax = 100;
+
+export const sceneShotSpecV2EnvironmentThreeRotationDefault = 0;
+export const sceneShotSpecV2EnvironmentThreeRotationMin = -6.283185307179586;
+export const sceneShotSpecV2EnvironmentThreeRotationMax = 6.283185307179586;
+
 export const sceneShotSpecV2EnvironmentDefault = { "lightingProfile": "studio" as const, "preset": "soft" as const, "intensity": 1 as const, "floorY": -420 as const, "shadowOpacity": 0.5 as const };
 export const sceneShotSpecV2BackdropTwoColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
 export const sceneShotSpecV2BackdropThreeAngleDefault = 0;
@@ -91,7 +103,25 @@ export const sceneShotSpecV2PostFocusOneMaxBlurMin = 0;
 export const sceneShotSpecV2PostFocusOneMaxBlurMax = 64;
 
 export const sceneShotSpecV2PostFocusDefault = null;
-export const sceneShotSpecV2PostDefault = { "grain": 0 as const, "vignette": 0 as const, "focus": null };
+export const sceneShotSpecV2PostBloomOneProfileDefault = `display-linear-bloom-v1`;
+export const sceneShotSpecV2PostBloomOneStrengthDefault = 0.3;
+export const sceneShotSpecV2PostBloomOneStrengthMin = 0;
+export const sceneShotSpecV2PostBloomOneStrengthMax = 1;
+
+export const sceneShotSpecV2PostBloomOneThresholdDefault = 0.8;
+export const sceneShotSpecV2PostBloomOneThresholdMin = 0;
+export const sceneShotSpecV2PostBloomOneThresholdMax = 1;
+
+export const sceneShotSpecV2PostBloomOneSmoothingDefault = 0.03;
+export const sceneShotSpecV2PostBloomOneSmoothingExclusiveMin = 0;
+export const sceneShotSpecV2PostBloomOneSmoothingMax = 1;
+
+export const sceneShotSpecV2PostBloomOneRadiusDefault = 0.85;
+export const sceneShotSpecV2PostBloomOneRadiusMin = 0;
+export const sceneShotSpecV2PostBloomOneRadiusMax = 1;
+
+export const sceneShotSpecV2PostBloomDefault = null;
+export const sceneShotSpecV2PostDefault = { "grain": 0 as const, "vignette": 0 as const, "focus": null, "bloom": null };
 export const sceneShotSpecV2ConstraintsItemObjectsItemMax = 64;
 
 
@@ -126,6 +156,11 @@ zod.number()]).optional(),
   "shadowOpacity": zod.number().min(sceneShotSpecV2EnvironmentOneShadowOpacityMin).max(sceneShotSpecV2EnvironmentOneShadowOpacityMax).default(sceneShotSpecV2EnvironmentOneShadowOpacityDefault)
 }),zod.strictObject({
   "kind": zod.literal("photographic-studio-v1")
+}),zod.strictObject({
+  "kind": zod.literal("owned-hdr-v1"),
+  "assetSlot": zod.string().min(1).max(sceneShotSpecV2EnvironmentThreeAssetSlotMax).regex(sceneShotSpecV2EnvironmentThreeAssetSlotRegExp).describe('Image asset slot name bound by the clip assets map; never a URL.'),
+  "intensity": zod.number().min(sceneShotSpecV2EnvironmentThreeIntensityMin).max(sceneShotSpecV2EnvironmentThreeIntensityMax).default(sceneShotSpecV2EnvironmentThreeIntensityDefault),
+  "rotation": zod.number().min(sceneShotSpecV2EnvironmentThreeRotationMin).max(sceneShotSpecV2EnvironmentThreeRotationMax).default(sceneShotSpecV2EnvironmentThreeRotationDefault)
 })]).default(sceneShotSpecV2EnvironmentDefault),
   "backdrop": zod.union([zod.strictObject({
   "kind": zod.literal("transparent")
@@ -159,8 +194,10 @@ zod.number().min(sceneShotSpecV2BackdropFourAt1ItemMin).max(sceneShotSpecV2Backd
   "kind": zod.literal("environment")
 }),zod.strictObject({
   "kind": zod.literal("focus")
+}),zod.strictObject({
+  "kind": zod.literal("bloom")
 })]),
-  "property": zod.enum(['positionX', 'positionY', 'positionZ', 'rotationX', 'rotationY', 'rotationZ', 'fov', 'scale', 'opacity', 'openAngle', 'x', 'y', 'rotation', 'intensity', 'distance', 'range', 'maxBlur']),
+  "property": zod.enum(['positionX', 'positionY', 'positionZ', 'rotationX', 'rotationY', 'rotationZ', 'fov', 'scale', 'opacity', 'openAngle', 'x', 'y', 'rotation', 'intensity', 'distance', 'range', 'maxBlur', 'strength', 'threshold', 'smoothing', 'radius']),
   "keyframes": zod.array(zod.strictObject({
   "at": zod.number().min(sceneShotSpecV2AnimationItemKeyframesItemAtMin).max(sceneShotSpecV2AnimationItemKeyframesItemAtMax),
   "value": zod.number(),
@@ -184,14 +221,21 @@ zod.number().min(sceneShotSpecV2BackdropFourAt1ItemMin).max(sceneShotSpecV2Backd
   "distance": zod.number().gt(sceneShotSpecV2PostFocusOneDistanceExclusiveMin),
   "range": zod.number().gt(sceneShotSpecV2PostFocusOneRangeExclusiveMin),
   "maxBlur": zod.number().min(sceneShotSpecV2PostFocusOneMaxBlurMin).max(sceneShotSpecV2PostFocusOneMaxBlurMax)
-}),zod.null()]).default(sceneShotSpecV2PostFocusDefault)
+}),zod.null()]).default(sceneShotSpecV2PostFocusDefault),
+  "bloom": zod.union([zod.strictObject({
+  "profile": zod.literal("display-linear-bloom-v1").default(sceneShotSpecV2PostBloomOneProfileDefault),
+  "strength": zod.number().min(sceneShotSpecV2PostBloomOneStrengthMin).max(sceneShotSpecV2PostBloomOneStrengthMax).default(sceneShotSpecV2PostBloomOneStrengthDefault),
+  "threshold": zod.number().min(sceneShotSpecV2PostBloomOneThresholdMin).max(sceneShotSpecV2PostBloomOneThresholdMax).default(sceneShotSpecV2PostBloomOneThresholdDefault),
+  "smoothing": zod.number().gt(sceneShotSpecV2PostBloomOneSmoothingExclusiveMin).max(sceneShotSpecV2PostBloomOneSmoothingMax).default(sceneShotSpecV2PostBloomOneSmoothingDefault),
+  "radius": zod.number().min(sceneShotSpecV2PostBloomOneRadiusMin).max(sceneShotSpecV2PostBloomOneRadiusMax).default(sceneShotSpecV2PostBloomOneRadiusDefault)
+}),zod.null()]).default(sceneShotSpecV2PostBloomDefault)
 }).default(sceneShotSpecV2PostDefault),
   "constraints": zod.array(zod.strictObject({
   "kind": zod.literal("minSeparation"),
   "objects": zod.array(zod.string().min(1).max(sceneShotSpecV2ConstraintsItemObjectsItemMax).regex(sceneShotSpecV2ConstraintsItemObjectsItemRegExp)).min(sceneShotSpecV2ConstraintsItemObjectsMin),
   "gap": zod.number().gt(sceneShotSpecV2ConstraintsItemGapExclusiveMin)
 })).default(sceneShotSpecV2ConstraintsDefault)
-}).describe('A version-2 scene shot: a self-contained 3D world-object shot that scene.add / scene.update materializes into an ordinary component clip. The shot owns its layers, camera, lighting, backdrop and normalized local animation; the composition owns start, duration, ordering, cuts and transitions. Coordinates are REFERENCE PIXELS: origin at frame centre, +X right, +Y down, +Z toward the viewer. referenceSize must have the SAME aspect ratio as the composition format; mismatch fails instead of cropping. At equal aspect ratio the shot scales uniformly by outputWidth/referenceWidth. A segment\'s easing belongs to the keyframe it ARRIVES at; the first keyframe has no easing. Authoring limits: 32 layers, 4 devices, 16 distinct image slots, 256 keyframes per channel, 2048 keyframes per shot. Version 2 supports nested groups, procedural slab/page/phone/laptop objects, screen- and world-space text, admitted image/component/video surfaces, fixed photographic and generated studio environments, transparent/solid/linear/radial backdrops, constraints, focus, grain and vignette. Raw HTML, custom shader props, imported GLB models, arbitrary external HDR environments, skeletal animation and physics are refused with an exact field path.');
+}).describe('A version-2 scene shot: a self-contained 3D world-object shot that scene.add / scene.update materializes into an ordinary component clip. The shot owns its layers, camera, lighting, backdrop and normalized local animation; the composition owns start, duration, ordering, cuts and transitions. World coordinates are REFERENCE PIXELS: origin at frame centre, +X right, +Y up, +Z toward the viewer. World rotations, camera fov and laptop openAngle are radians. referenceSize must have the SAME aspect ratio as the composition format; mismatch fails instead of cropping. At equal aspect ratio the shot scales uniformly by outputWidth/referenceWidth. A segment\'s easing belongs to the keyframe it ARRIVES at; the first keyframe has no easing. Authoring limits: 32 layers, 4 devices, 16 distinct image slots, 256 keyframes per channel, 2048 keyframes per shot. Version 2 supports nested groups, procedural slab/page/phone/laptop objects and owned static GLB models with bounded embedded PNG/JPEG textures (static-glb-untextured-v1 or static-glb-textured-v1; model-level transforms and digest-scoped scalar material edits), screen- and world-space text, admitted image/component/video surfaces, fixed photographic, generated studio and owned RGBE 1024x512 environment data assets (up to 8 MiB encoded; intensity 0–100 and rotation ±2π radians), transparent/solid/linear/radial backdrops, constraints, focus, bounded display-linear-bloom-v1 before grain/vignette, measured single-camera half-float/MSAA4 physical transmission, and opaque stateless-fragment-display-linear-v1 mesh.shader fields. mesh.shader owns vec3 field(vec2 uv, vec3 localPosition), at most32 finite typed uniforms and4 owned PNG/JPEG image samplers, deterministic cfFrame/cfRate/cfTime/cfSeed/cfResolution inputs; source is parsed and locally compiled/drawn before first playback or exact frame. It requires non-instanced UV geometry and effective world opacity1. Raw HTML, arbitrary custom shader props or full GLSL, loops/recursion/macros/extensions/derivatives/scene sampling/feedback/depth writes, animated/compressed/skeletal GLB profiles, subnode editing, arbitrary external HDR environments, skeletal animation and physics are refused with an exact field path.');
 
 export type SceneShotSpecV2 = zod.input<typeof SceneShotSpecV2>;
 export type SceneShotSpecV2Output = zod.output<typeof SceneShotSpecV2>;

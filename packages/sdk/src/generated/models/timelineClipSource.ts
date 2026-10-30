@@ -34,6 +34,7 @@ export type TimelineClipSource = {
   /** @exclusiveMinimum 0 */
   playbackRate?: number;
   sync?: 'video' | 'independent';
+  /** Still-image motion. When unset, an image clip slowly pushes in (`in`) unless its fit is `contain` or it keyframes scale, position or rotation, so a keyframed clip renders exactly its keyframed values; set `none` for a still that holds. */
   kenBurns?: 'in' | 'out' | 'pan-l' | 'pan-r' | 'none';
   volumeDb?: number;
   /** @minimum 0 */
@@ -41,6 +42,7 @@ export type TimelineClipSource = {
   /** @minimum 0 */
   fadeOutMs?: number;
   loop?: boolean;
+  /** Mix role. A role sets the clip's default gain when it has no `volume` or `volumeDb`: vo 0 dB, sfx -6 dB, music -8 dB (-16 dB when any vo clip exists), ambience -22 dB. Set `volumeDb: 0` to keep a role and play the source at its own level. */
   audioRole?: 'sfx' | 'music' | 'vo' | 'ambience';
   duck?: {
   /** @maximum 0 */
@@ -203,8 +205,12 @@ export type TimelineClipSource = {
   params?: {[key: string]: unknown};
 } | {
   kind: 'card';
-  /** @minLength 1 */
+  /**
+     * Self-contained card markup sized to the format's pixel frame. Motion comes from frame-driven vars, never @keyframes or transition: --cf-frame, --cf-t (seconds), --cf-fps, --cf-duration, --cf-progress, --cf-ease, --cf-enter, --cf-exit. Visible copy goes in the html as plain text. Wrap a run in <span data-cf-split="words"> or "chars" and each unit becomes its own span carrying --cf-i (its index, the group carries --cf-n), so one rule staggers it (in chars, spaces count as units), e.g. opacity:clamp(0,calc(var(--cf-t)*4 - var(--cf-i)*.3),1). save_as_template binds that copy with textParams match.
+     * @minLength 1
+     */
   html: string;
+  /** Style values the html reads as CSS custom properties: key x becomes --cf-x, so never put dashes in a key. Use tokens for colours and sizes, not visible copy. */
   tokens?: {[key: string]: string};
   zPlane?: 'front';
 } | {

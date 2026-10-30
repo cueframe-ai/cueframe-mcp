@@ -7,6 +7,8 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
+import type { TemplateInstantiationJobResponseMode } from './templateInstantiationJobResponseMode';
+import type { TemplateInstantiationJobResponsePackage } from './templateInstantiationJobResponsePackage';
 import type { TemplateInstantiationJobResponseStage } from './templateInstantiationJobResponseStage';
 import type { TemplateInstantiationJobResponseStatus } from './templateInstantiationJobResponseStatus';
 
@@ -14,6 +16,15 @@ export interface TemplateInstantiationJobResponse {
   jobId: string;
   /** @nullable */
   projectId: string | null;
+  mode?: TemplateInstantiationJobResponseMode;
+  sourceProjectId?: string;
+  templateId?: string;
+  /**
+     * @maximum 9007199254740991
+     * @exclusiveMinimum 0
+     */
+  templateVersion?: number;
+  package?: TemplateInstantiationJobResponsePackage;
   status: TemplateInstantiationJobResponseStatus;
   stage: TemplateInstantiationJobResponseStage;
   templateRef: string;

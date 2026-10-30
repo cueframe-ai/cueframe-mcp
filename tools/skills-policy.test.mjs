@@ -1,5 +1,6 @@
 // Static instruction regressions and evaluation-case integrity; not model behavior evaluations.
 import { test } from 'node:test';
+import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 const root = new URL('../', import.meta.url);
@@ -123,4 +124,36 @@ test('skills name only tools the catalog serves', () => {
   assert.ok(new Set(references.map(({ name }) => name)).size >= 40, 'the tool-name pattern found too few references to check');
   const unknown = references.filter(({ name }) => !catalogTools.has(name)).map(({ file, name }) => `${file}: ${name}`);
   assert.deepEqual([...new Set(unknown)], []);
+});
+
+
+test('packaged parented study keeps bounded named inputs and its exact linked source pin', () => {
+  const path = 'skills/cueframe-component-authoring/references/';
+  const sourceBytes = read(`${path}parented-device-card.json`);
+  const source = JSON.parse(sourceBytes);
+  const guide = read(`${path}worked-examples.md`);
+  assert.equal(source.kind, 'card');
+  assert.ok(guide.includes(createHash('sha256').update(sourceBytes).digest('hex')), 'worked example source pin must match packaged bytes');
+  const records = JSON.parse(/```json\n([\s\S]*?)\n```/.exec(guide)[1]);
+  for (const record of Object.values(records)) {
+    assert.deepEqual(Object.keys(record).sort(), ['accent', 'contactSec', 'holder']);
+    assert.ok(Number(record.contactSec) > Number(source.tokens.approachSec));
+    assert.ok(Number(record.contactSec) + Number(source.tokens.responseSec) < 4);
+    assert.equal(typeof JSON.parse(record.holder), 'string', 'CSS content token must remain a quoted string');
+    assert.match(record.accent, /^#[0-9a-f]{6}$/i);
+    const effective = {...source.tokens, ...record};
+    for (const key of ['settleSec','tiltDeg','approachSec','responseSec']) assert.equal(effective[key], source.tokens[key]);
+  }
+  assert.equal(Number(records.A.contactSec) * 30, 60);
+  assert.equal(Number(records.B.contactSec) * 30, 75);
+  assert.equal(records.retimed.contactSec, records.B.contactSec);
+  assert.equal(records.retimed.holder, records.A.holder);
+  assert.equal(records.retimed.accent, records.A.accent);
+  assert.deepEqual(Object.keys(records.retimed).filter(key => records.retimed[key] !== records.A[key]), ['contactSec']);
+  const phone = /\.phone\{([^}]+)\}/.exec(source.html)[1];
+  assert.doesNotMatch(phone, /contactSec|holder|accent/);
+  assert.match(source.html, /\.holder\{[^}]*right:22px[^}]*overflow-wrap:anywhere/);
+  assert.doesNotMatch(source.html, /<script|https?:|@font-face|@keyframes|animation:/i);
+  const reference = new URL(`${path}parented-motion.md`, root);
+  for (const [, href] of read(`${path}parented-motion.md`).matchAll(/\[[^\]]+\]\(([^)]+)\)/g)) assert.ok(existsSync(new URL(href,reference)), `missing packaged link ${href}`);
 });

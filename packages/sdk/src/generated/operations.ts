@@ -20,6 +20,7 @@ export * as health from "./health/health";
 export * as jobs from "./jobs/jobs";
 export * as media from "./media/media";
 export * as projects from "./projects/projects";
+export * as registry from "./registry/registry";
 export * as renders from "./renders/renders";
 export * as resources from "./resources/resources";
 export * as selector from "./selector/selector";

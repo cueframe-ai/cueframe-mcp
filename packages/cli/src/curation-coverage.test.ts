@@ -71,6 +71,16 @@ const CLI_WRAPPED: Record<string, string> = {
 };
 
 const CLI_EXEMPT: Record<string, string> = {
+  createTemplatePackageUpload: 'expert-only: reserve exact ZIP digest/length through generated SDK or cueframe api POST /v1/templates/package-uploads --json; the signed upload grant is not an imported template',
+  importTemplatePackage: 'expert-only: consume an owned upload reservation through generated SDK or cueframe api POST /v1/templates/import --json, then poll template status; no first-class CLI archive import verb',
+  exportProjectTemplatePackage: 'expert-only: export an exact saved project revision through generated SDK or cueframe api POST /v1/projects/:id/template-package --json, then poll template status; no caller-authored composition replacement',
+  getTemplatePackageDownload: 'expert-only: refresh an owned retained package receipt download grant through generated SDK or cueframe api GET /v1/templates/packages/:receiptId --json; project editors need their exact ready export job',
+  searchRegistryItems: 'expert-only: scoped registry discovery via SDK, MCP search_registry_items or cueframe api GET /v1/registry/items --json; no first-class registry CLI verb',
+  getRegistryItem: 'expert-only: exact upstream snapshot inspection via SDK, MCP get_registry_item or cueframe api GET /v1/registry/items/:name --json; never substitute the latest head',
+  acquireRegistryItem: 'expert-only: exact-snapshot source/license acquisition receipt via SDK, MCP acquire_registry_item or cueframe api POST /v1/registry/acquisitions --json; acquisition does not install executable source',
+  getRegistryAcquisition: 'expert-only: owned retained acquisition receipt/source grants via SDK, MCP get_registry_acquisition or cueframe api GET /v1/registry/acquisitions/:receiptId --json; not a foreign live locator',
+  refreshRegistrySnapshot: 'expert-only: guarded registry discovery-pointer refresh via SDK, MCP refresh_registry_snapshot or cueframe api POST /v1/registry/refresh --json; requires expected snapshot/revision and never adopts customer placements',
+
   createVideoClipExport: 'expert-only: direct MP4 export via generated SDK or cueframe api POST /v1/projects/:id/exports/videoClip; render remains the ordinary CLI video command',
   retryExport: 'expert-only: retry the admitted export snapshot via generated SDK or cueframe api POST /v1/projects/:id/exports/:exportId/retry; classified alongside cancelExport',
   startHostedProcessingRun: 'expert-only: configured processing admission via SDK or cueframe api POST /v1/media/:id/processing-runs; upload owns the ordinary ingest lane',

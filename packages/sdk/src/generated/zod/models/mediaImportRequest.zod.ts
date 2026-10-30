@@ -21,7 +21,7 @@ export const mediaImportRequestSizeMax = 10737418240;
 export const MediaImportRequest = zod.strictObject({
   "url": zod.url().max(mediaImportRequestUrlMax),
   "filename": zod.string().min(1).max(mediaImportRequestFilenameMax),
-  "contentType": zod.enum(['video/mp4', 'video/quicktime', 'video/x-matroska', 'video/webm', 'audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/mp4', 'audio/aac', 'image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml', 'application/json', 'font/ttf', 'font/otf', 'font/woff', 'font/woff2']),
+  "contentType": zod.enum(['video/mp4', 'video/quicktime', 'video/x-matroska', 'video/webm', 'audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/mp4', 'audio/aac', 'image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml', 'image/vnd.radiance', 'model/gltf-binary', 'application/json', 'font/ttf', 'font/otf', 'font/woff', 'font/woff2', 'application/x-cube']),
   "size": zod.int().gt(mediaImportRequestSizeExclusiveMin).max(mediaImportRequestSizeMax).optional(),
   "audioRole": zod.enum(['vo', 'music', 'sfx', 'ambience']).optional().describe('Declared audio role: \'vo\' (narration), \'music\' (bed that ducks under speech), \'sfx\' (one-shot hit), \'ambience\' (a bed that HOLDS under VO — never ducks).')
 }).describe('POST /media/import body.');

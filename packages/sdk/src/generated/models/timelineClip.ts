@@ -9,6 +9,7 @@
  */
 import type { TimelineClipAutomation } from './timelineClipAutomation';
 import type { TimelineClipCaptionVisibility } from './timelineClipCaptionVisibility';
+import type { TimelineClipColor } from './timelineClipColor';
 import type { TimelineClipEffectsItem } from './timelineClipEffectsItem';
 import type { TimelineClipFit } from './timelineClipFit';
 import type { TimelineClipKind } from './timelineClipKind';
@@ -38,6 +39,7 @@ export interface TimelineClip {
   rotation?: number;
   /** Clip CENTRE as a fraction of the frame: {x:0.5,y:0.5} is dead centre, 0 to 1 is inside the frame, and a little overshoot (down to -1, up to 2) is how an entrance starts off-canvas. NOT pixels: the renderer maps x to `left: x*100%`, so `x: 180` sits 180 frame-widths away and draws nothing. */
   position?: TimelineClipPosition;
+  /** A window in the frame that the clip draws into and is clipped to (top-left corner and size, each a frame fraction). Inside a region, `position` and `scale` act relative to that window, so content moved past its edge is cut off. Omit it to place the clip against the whole frame. */
   region?: TimelineClipRegion;
   fit?: TimelineClipFit;
   /** Video media clip only. Hide native captions while this clip is topmost and covers the lower picture, or when an opaque, effect-free clip has an explicitly full-frame region, even with fit:contain. Caption words and timings remain stored and resume when another visible clip takes over. */
@@ -48,5 +50,6 @@ export interface TimelineClip {
   linkGroupId?: string;
   tweens?: TimelineClipTweensItem[];
   automation?: TimelineClipAutomation;
+  color?: TimelineClipColor;
   legacyKeyframes?: TimelineClipLegacyKeyframes;
 }

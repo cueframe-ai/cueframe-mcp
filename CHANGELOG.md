@@ -2,6 +2,10 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/api-contract 6.1.1
+
+- Correct scene-shot world-axis and radian guidance to match the established renderer. Wire fields, schema limits and rendering policies are unchanged.
+
 ## @cueframe/api-contract 6.0.2
 
 - Kernel 0.7.14 provenance (it carries public main after the 6.0.1 cut). The served document is byte-identical to 6.0.1.

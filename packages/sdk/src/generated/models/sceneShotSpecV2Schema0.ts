@@ -123,6 +123,28 @@ export type SceneShotSpecV2Schema0 = {
      * @maximum 1
      */
   reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
 })[];
   surfaces?: {[key: string]: {
   source: 'image';
@@ -263,6 +285,28 @@ export type SceneShotSpecV2Schema0 = {
      * @maximum 1
      */
   reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
 })[];
   surfaces?: {[key: string]: {
   source: 'image';
@@ -418,6 +462,28 @@ export type SceneShotSpecV2Schema0 = {
      * @maximum 1
      */
   reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
 })[];
   surfaces?: {[key: string]: {
   source: 'image';
@@ -567,6 +633,28 @@ export type SceneShotSpecV2Schema0 = {
      * @maximum 1
      */
   reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
 })[];
   surfaces: {[key: string]: {
   source: 'image';
@@ -630,6 +718,315 @@ export type SceneShotSpecV2Schema0 = {
      */
   endFrame?: number;
 }};
+} | {
+  kind: 'mesh';
+  /**
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z0-9][A-Za-z0-9_-]*$
+     */
+  id: string;
+  transform?: {
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  position?: [number, number, number];
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  rotation?: [number, number, number];
+  /** @exclusiveMinimum 0 */
+  scale?: number;
+};
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  opacity?: number;
+  geometry: {
+  kind: 'buffer';
+  /**
+     * @minItems 9
+     * @maxItems 196605
+     * @items.minimum -1000000
+     * @items.maximum 1000000
+     */
+  positions: number[];
+  /**
+     * @minItems 9
+     * @maxItems 196605
+     * @items.minimum -1
+     * @items.maximum 1
+     */
+  normals: number[];
+  /**
+     * @minItems 6
+     * @maxItems 131070
+     * @items.minimum -1000000
+     * @items.maximum 1000000
+     */
+  uvs: number[];
+  /**
+     * @minItems 3
+     * @maxItems 750000
+     * @items.minimum 0
+     * @items.maximum 9007199254740991
+     */
+  indices: number[];
+} | {
+  kind: 'tube';
+  /**
+     * @minItems 2
+     * @maxItems 256
+     * @items.minItems 3
+     * @items.maxItems 3
+     */
+  points: [number, number, number][];
+  /**
+     * @maximum 1000000
+     * @exclusiveMinimum 0
+     */
+  radius: number;
+  closed: boolean;
+  /**
+     * @minimum 1
+     * @maximum 1024
+     */
+  tubularSegments: number;
+  /**
+     * @minimum 3
+     * @maximum 64
+     */
+  radialSegments: number;
+};
+  /** @maxItems 16 */
+  materials?: ({
+  /**
+     * @minLength 1
+     * @maxLength 64
+     */
+  role: string;
+  type: 'physical' | 'unlit';
+  color?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  roughness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  metalness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  clearcoat?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  clearcoatRoughness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  anisotropy?: number;
+  anisotropyRotation?: number;
+  /**
+     * @minimum 1
+     * @maximum 2.333
+     */
+  ior?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
+})[];
+  shader?: {
+  profile?: 'stateless-fragment-display-linear-v1';
+  /**
+     * @minLength 1
+     * @maxLength 32768
+     */
+  source: string;
+  uniforms?: {[key: string]: {
+  type: 'float' | 'int' | 'uint' | 'bool' | 'vec2' | 'vec3' | 'vec4' | 'mat2' | 'mat3' | 'mat4';
+  value: number | boolean | number[];
+}};
+  samplers?: {[key: string]: {
+  /**
+     * Image asset slot name bound by the clip assets map; never a URL.
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z_][A-Za-z0-9_-]*$
+     */
+  assetSlot: string;
+  colorSpace: 'srgb' | 'data';
+}};
+};
+  /**
+     * @minItems 1
+     * @maxItems 1024
+     */
+  instances?: {
+  /**
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z0-9][A-Za-z0-9_-]*$
+     */
+  id: string;
+  transform?: {
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  position?: [number, number, number];
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  rotation?: [number, number, number];
+  /** @exclusiveMinimum 0 */
+  scale?: number;
+};
+}[];
+} | {
+  kind: 'model';
+  profile?: 'static-glb-untextured-v1' | 'static-glb-textured-v1';
+  /**
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z0-9][A-Za-z0-9_-]*$
+     */
+  id: string;
+  transform?: {
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  position?: [number, number, number];
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  rotation?: [number, number, number];
+  /** @exclusiveMinimum 0 */
+  scale?: number;
+};
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  opacity?: number;
+  /**
+     * Image asset slot name bound by the clip assets map; never a URL.
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z_][A-Za-z0-9_-]*$
+     */
+  assetSlot: string;
+  /**
+     * @maximum 1000000
+     * @exclusiveMinimum 0
+     */
+  size: number;
+  /** @maxItems 16 */
+  materials?: ({
+  /**
+     * @minLength 1
+     * @maxLength 64
+     */
+  role: string;
+  type: 'physical' | 'unlit';
+  color?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  roughness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  metalness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  clearcoat?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  clearcoatRoughness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  anisotropy?: number;
+  anisotropyRotation?: number;
+  /**
+     * @minimum 1
+     * @maximum 2.333
+     */
+  ior?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
+})[];
+  /** @pattern ^[a-f0-9]{64}$ */
+  materialSourceSha256?: string;
 } | {
   /**
      * @minLength 1

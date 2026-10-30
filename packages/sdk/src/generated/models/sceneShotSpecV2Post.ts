@@ -7,6 +7,7 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
+import type { SceneShotSpecV2PostBloom } from './sceneShotSpecV2PostBloom';
 import type { SceneShotSpecV2PostFocus } from './sceneShotSpecV2PostFocus';
 
 export type SceneShotSpecV2Post = {
@@ -21,4 +22,5 @@ export type SceneShotSpecV2Post = {
      */
   vignette?: number;
   focus?: SceneShotSpecV2PostFocus;
+  bloom?: SceneShotSpecV2PostBloom;
 };

@@ -69,6 +69,7 @@ export type CompositionOp = {
   /** @exclusiveMinimum 0 */
   playbackRate?: number;
   sync?: 'video' | 'independent';
+  /** Still-image motion. When unset, an image clip slowly pushes in (`in`) unless its fit is `contain` or it keyframes scale, position or rotation, so a keyframed clip renders exactly its keyframed values; set `none` for a still that holds. */
   kenBurns?: 'in' | 'out' | 'pan-l' | 'pan-r' | 'none';
   volumeDb?: number;
   /** @minimum 0 */
@@ -76,6 +77,7 @@ export type CompositionOp = {
   /** @minimum 0 */
   fadeOutMs?: number;
   loop?: boolean;
+  /** Mix role. A role sets the clip's default gain when it has no `volume` or `volumeDb`: vo 0 dB, sfx -6 dB, music -8 dB (-16 dB when any vo clip exists), ambience -22 dB. Set `volumeDb: 0` to keep a role and play the source at its own level. */
   audioRole?: 'sfx' | 'music' | 'vo' | 'ambience';
   duck?: {
   /** @maximum 0 */
@@ -238,8 +240,12 @@ export type CompositionOp = {
   params?: {[key: string]: unknown};
 } | {
   kind: 'card';
-  /** @minLength 1 */
+  /**
+     * Self-contained card markup sized to the format's pixel frame. Motion comes from frame-driven vars, never @keyframes or transition: --cf-frame, --cf-t (seconds), --cf-fps, --cf-duration, --cf-progress, --cf-ease, --cf-enter, --cf-exit. Visible copy goes in the html as plain text. Wrap a run in <span data-cf-split="words"> or "chars" and each unit becomes its own span carrying --cf-i (its index, the group carries --cf-n), so one rule staggers it (in chars, spaces count as units), e.g. opacity:clamp(0,calc(var(--cf-t)*4 - var(--cf-i)*.3),1). save_as_template binds that copy with textParams match.
+     * @minLength 1
+     */
   html: string;
+  /** Style values the html reads as CSS custom properties: key x becomes --cf-x, so never put dashes in a key. Use tokens for colours and sizes, not visible copy. */
   tokens?: {[key: string]: string};
   zPlane?: 'front';
 } | {
@@ -275,6 +281,7 @@ export type CompositionOp = {
      */
   y: number;
 };
+  /** A window in the frame that the clip draws into and is clipped to (top-left corner and size, each a frame fraction). Inside a region, `position` and `scale` act relative to that window, so content moved past its edge is cut off. Omit it to place the clip against the whole frame. */
   region?: {
   /**
      * @minimum 0
@@ -358,6 +365,129 @@ export type CompositionOp = {
   v: number;
 }[];
 }[];
+};
+  color?: {
+  version: 1;
+  enabled: boolean;
+  grade: {
+  /**
+     * @minimum -4
+     * @maximum 4
+     */
+  exposure: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  contrast: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  highlights: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  shadows: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  whites: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  blacks: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  temperature: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  tint: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  vibrance: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  saturation: number;
+};
+  /** @maxItems 2 */
+  looks: {
+  mediaId: string;
+  sha256: string;
+  enabled: boolean;
+}[];
+  display?: {
+  mediaId: string;
+  sha256: string;
+  enabled: boolean;
+} | {
+  bundled: 'daylight-negative' | 'tungsten-negative' | 'soft-negative' | 'slide' | 'black-and-white';
+  enabled: boolean;
+};
+  creative?: {
+  mediaId: string;
+  sha256: string;
+  enabled: boolean;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  strength: number;
+};
+  halation?: {
+  enabled: boolean;
+  /**
+     * @minimum 0
+     * @maximum 0.5
+     */
+  amount: number;
+  /**
+     * @minimum 0.0005
+     * @maximum 0.02
+     */
+  radius: number;
+  /**
+     * @minimum 0
+     * @maximum 16
+     */
+  threshold: number;
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  tint: [number, number, number];
+};
+  grain?: {
+  enabled: boolean;
+  profile: 'daylight-negative' | 'tungsten-negative' | 'soft-negative' | 'slide' | 'black-and-white';
+  gauge: 'super8' | 'super16' | 'super35' | '65mm';
+  /**
+     * @minimum 0
+     * @maximum 2
+     */
+  amount: number;
+  /**
+     * @minimum 0.5
+     * @maximum 4
+     */
+  size: number;
+  /**
+     * @minimum 0
+     * @maximum 4294967295
+     */
+  seed: number;
+};
 };
   legacyKeyframes?: {
   needsUpgrade: true;
@@ -496,6 +626,148 @@ export type CompositionOp = {
   primitiveId?: string;
   params?: {[key: string]: unknown};
 }[];
+} | {
+  type: 'setMediaInputTransform';
+  mediaId: string;
+  inputTransform: {
+  version: 1;
+  id: 'rec709' | 'insta360-ilog' | 'custom-lut' | 'apple-log';
+  table?: {
+  mediaId: string;
+  sha256: string;
+  enabled: boolean;
+};
+  ycbcr?: {
+  matrix: 'bt709' | 'bt2020' | 'bt601';
+  range: 'limited' | 'full';
+};
+} | null;
+} | {
+  type: 'setClipColor';
+  clipId: string;
+  color: {
+  version: 1;
+  enabled: boolean;
+  grade: {
+  /**
+     * @minimum -4
+     * @maximum 4
+     */
+  exposure: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  contrast: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  highlights: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  shadows: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  whites: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  blacks: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  temperature: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  tint: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  vibrance: number;
+  /**
+     * @minimum -1
+     * @maximum 1
+     */
+  saturation: number;
+};
+  /** @maxItems 2 */
+  looks: {
+  mediaId: string;
+  sha256: string;
+  enabled: boolean;
+}[];
+  display?: {
+  mediaId: string;
+  sha256: string;
+  enabled: boolean;
+} | {
+  bundled: 'daylight-negative' | 'tungsten-negative' | 'soft-negative' | 'slide' | 'black-and-white';
+  enabled: boolean;
+};
+  creative?: {
+  mediaId: string;
+  sha256: string;
+  enabled: boolean;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  strength: number;
+};
+  halation?: {
+  enabled: boolean;
+  /**
+     * @minimum 0
+     * @maximum 0.5
+     */
+  amount: number;
+  /**
+     * @minimum 0.0005
+     * @maximum 0.02
+     */
+  radius: number;
+  /**
+     * @minimum 0
+     * @maximum 16
+     */
+  threshold: number;
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  tint: [number, number, number];
+};
+  grain?: {
+  enabled: boolean;
+  profile: 'daylight-negative' | 'tungsten-negative' | 'soft-negative' | 'slide' | 'black-and-white';
+  gauge: 'super8' | 'super16' | 'super35' | '65mm';
+  /**
+     * @minimum 0
+     * @maximum 2
+     */
+  amount: number;
+  /**
+     * @minimum 0.5
+     * @maximum 4
+     */
+  size: number;
+  /**
+     * @minimum 0
+     * @maximum 4294967295
+     */
+  seed: number;
+};
+} | null;
 } | {
   type: 'setCaptionStyle';
   style: {
@@ -1005,6 +1277,13 @@ export type CompositionOp = {
   type: 'cutAndRipple';
   start: number;
   end: number;
+} | {
+  type: 'cutRanges';
+  /** @minItems 1 */
+  ranges: {
+  start: number;
+  end: number;
+}[];
 } | {
   type: 'ripple';
   time: number;

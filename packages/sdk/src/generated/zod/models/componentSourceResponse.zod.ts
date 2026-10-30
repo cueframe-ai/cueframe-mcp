@@ -20,6 +20,48 @@ export const componentSourceResponseEjectedFromMax = 200;
 
 export const componentSourceResponseDurationInFramesExclusiveMin = 0;
 
+export const componentSourceResponseComponentVersionIdMax = 128;
+
+export const componentSourceResponseRegistryProvenanceOneOrgIdMax = 128;
+
+export const componentSourceResponseRegistryProvenanceOneReceiptRefBundleSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentSourceResponseRegistryProvenanceOneReceiptRefBundleBytesExclusiveMin = 0;
+export const componentSourceResponseRegistryProvenanceOneReceiptRefBundleBytesMax = 134217728;
+
+export const componentSourceResponseRegistryProvenanceOneReceiptRefReceiptIdMax = 128;
+
+export const componentSourceResponseRegistryProvenanceOneArtifactOneComponentIdMax = 128;
+
+
+export const componentSourceResponseRegistryProvenanceOneArtifactOneComponentIdRegExp = new RegExp('^[a-zA-Z0-9][a-zA-Z0-9._-]*$');
+export const componentSourceResponseRegistryProvenanceOneArtifactOneComponentVersionIdMax = 128;
+
+export const componentSourceResponseRegistryProvenanceOneArtifactOneSourceVersionIdRegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentSourceResponseRegistryProvenanceOneArtifactTwoTemplateIdMax = 128;
+
+export const componentSourceResponseRegistryProvenanceOneArtifactTwoDocumentSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentSourceResponseRegistryProvenanceTwoOrgIdMax = 128;
+
+export const componentSourceResponseRegistryProvenanceTwoReceiptRefBundleSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentSourceResponseRegistryProvenanceTwoReceiptRefBundleBytesExclusiveMin = 0;
+export const componentSourceResponseRegistryProvenanceTwoReceiptRefBundleBytesMax = 134217728;
+
+export const componentSourceResponseRegistryProvenanceTwoReceiptRefReceiptIdMax = 128;
+
+export const componentSourceResponseRegistryProvenanceTwoArtifactOneComponentIdMax = 128;
+
+
+export const componentSourceResponseRegistryProvenanceTwoArtifactOneComponentIdRegExp = new RegExp('^[a-zA-Z0-9][a-zA-Z0-9._-]*$');
+export const componentSourceResponseRegistryProvenanceTwoArtifactOneComponentVersionIdMax = 128;
+
+export const componentSourceResponseRegistryProvenanceTwoArtifactOneSourceVersionIdRegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentSourceResponseRegistryProvenanceTwoArtifactTwoTemplateIdMax = 128;
+
+export const componentSourceResponseRegistryProvenanceTwoArtifactTwoDocumentSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentSourceResponseRegistryProvenanceTwoAdaptationReceiptRefSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentSourceResponseRegistryProvenanceTwoAdaptationReceiptRefByteLengthExclusiveMin = 0;
+export const componentSourceResponseRegistryProvenanceTwoAdaptationReceiptRefByteLengthMax = 134217728;
+
 export const componentSourceResponseSourceSnapshotOneOneComponentIdMax = 128;
 
 
@@ -270,6 +312,51 @@ export const ComponentSourceResponse = zod.strictObject({
   "source": zod.enum(['default', 'installed']),
   "metadataStatus": zod.literal("unresolved").optional().describe('Historical source-only reads omit unavailable discovery name/description instead of borrowing current metadata.'),
   "sourceVersionId": zod.string().describe('Exact immutable source pin; distinct from bundle revisions.'),
+  "componentVersionId": zod.string().min(1).max(componentSourceResponseComponentVersionIdMax).optional().describe('Exact owned source history row; equal source hashes can have different ancestry.'),
+  "registryProvenance": zod.union([zod.strictObject({
+  "orgId": zod.string().min(1).max(componentSourceResponseRegistryProvenanceOneOrgIdMax),
+  "receiptRef": zod.strictObject({
+  "bundleSha256": zod.string().regex(componentSourceResponseRegistryProvenanceOneReceiptRefBundleSha256RegExp),
+  "bundleBytes": zod.int().gt(componentSourceResponseRegistryProvenanceOneReceiptRefBundleBytesExclusiveMin).max(componentSourceResponseRegistryProvenanceOneReceiptRefBundleBytesMax),
+  "format": zod.literal("cueframe-registry-provenance-v1"),
+  "receiptId": zod.string().min(1).max(componentSourceResponseRegistryProvenanceOneReceiptRefReceiptIdMax)
+}),
+  "artifact": zod.union([zod.strictObject({
+  "kind": zod.literal("component-version"),
+  "componentId": zod.string().max(componentSourceResponseRegistryProvenanceOneArtifactOneComponentIdMax).regex(componentSourceResponseRegistryProvenanceOneArtifactOneComponentIdRegExp),
+  "componentVersionId": zod.string().min(1).max(componentSourceResponseRegistryProvenanceOneArtifactOneComponentVersionIdMax),
+  "sourceVersionId": zod.string().regex(componentSourceResponseRegistryProvenanceOneArtifactOneSourceVersionIdRegExp)
+}),zod.strictObject({
+  "kind": zod.literal("template-document"),
+  "templateId": zod.string().min(1).max(componentSourceResponseRegistryProvenanceOneArtifactTwoTemplateIdMax),
+  "documentSha256": zod.string().regex(componentSourceResponseRegistryProvenanceOneArtifactTwoDocumentSha256RegExp)
+})]),
+  "status": zod.literal("pending")
+}),zod.strictObject({
+  "orgId": zod.string().min(1).max(componentSourceResponseRegistryProvenanceTwoOrgIdMax),
+  "receiptRef": zod.strictObject({
+  "bundleSha256": zod.string().regex(componentSourceResponseRegistryProvenanceTwoReceiptRefBundleSha256RegExp),
+  "bundleBytes": zod.int().gt(componentSourceResponseRegistryProvenanceTwoReceiptRefBundleBytesExclusiveMin).max(componentSourceResponseRegistryProvenanceTwoReceiptRefBundleBytesMax),
+  "format": zod.literal("cueframe-registry-provenance-v1"),
+  "receiptId": zod.string().min(1).max(componentSourceResponseRegistryProvenanceTwoReceiptRefReceiptIdMax)
+}),
+  "artifact": zod.union([zod.strictObject({
+  "kind": zod.literal("component-version"),
+  "componentId": zod.string().max(componentSourceResponseRegistryProvenanceTwoArtifactOneComponentIdMax).regex(componentSourceResponseRegistryProvenanceTwoArtifactOneComponentIdRegExp),
+  "componentVersionId": zod.string().min(1).max(componentSourceResponseRegistryProvenanceTwoArtifactOneComponentVersionIdMax),
+  "sourceVersionId": zod.string().regex(componentSourceResponseRegistryProvenanceTwoArtifactOneSourceVersionIdRegExp)
+}),zod.strictObject({
+  "kind": zod.literal("template-document"),
+  "templateId": zod.string().min(1).max(componentSourceResponseRegistryProvenanceTwoArtifactTwoTemplateIdMax),
+  "documentSha256": zod.string().regex(componentSourceResponseRegistryProvenanceTwoArtifactTwoDocumentSha256RegExp)
+})]),
+  "status": zod.literal("captured"),
+  "adaptationReceiptRef": zod.strictObject({
+  "format": zod.literal("cueframe-registry-adaptation-v1"),
+  "sha256": zod.string().regex(componentSourceResponseRegistryProvenanceTwoAdaptationReceiptRefSha256RegExp),
+  "byteLength": zod.int().gt(componentSourceResponseRegistryProvenanceTwoAdaptationReceiptRefByteLengthExclusiveMin).max(componentSourceResponseRegistryProvenanceTwoAdaptationReceiptRefByteLengthMax)
+})
+})]).optional().describe('Server-derived acquisition ancestry for this exact source row; pending is not captured qualification or portable closure.'),
   "sourceSnapshot": zod.union([zod.union([zod.strictObject({
   "version": zod.literal(3),
   "componentId": zod.string().min(1).max(componentSourceResponseSourceSnapshotOneOneComponentIdMax).regex(componentSourceResponseSourceSnapshotOneOneComponentIdRegExp),

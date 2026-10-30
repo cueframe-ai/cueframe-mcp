@@ -10,11 +10,13 @@
 import type { BuiltinComponentResolveResponseCard } from './builtinComponentResolveResponseCard';
 import type { BuiltinComponentResolveResponseDocument } from './builtinComponentResolveResponseDocument';
 import type { BuiltinComponentResolveResponsePreset } from './builtinComponentResolveResponsePreset';
+import type { BuiltinComponentResolveResponsePreviewMedia } from './builtinComponentResolveResponsePreviewMedia';
 import type { BuiltinComponentResolveResponseSource } from './builtinComponentResolveResponseSource';
 import type { BuiltinComponentResolveResponseSourcesItem } from './builtinComponentResolveResponseSourcesItem';
 
 export interface BuiltinComponentResolveResponse {
   card: BuiltinComponentResolveResponseCard;
+  previewMedia?: BuiltinComponentResolveResponsePreviewMedia;
   document?: BuiltinComponentResolveResponseDocument;
   documentText?: string;
   /** @pattern ^[a-f0-9]{64}$ */

@@ -13,6 +13,7 @@ import type { CompositionReadCaptions } from './compositionReadCaptions';
 import type { CompositionReadLicense } from './compositionReadLicense';
 import type { CompositionReadLicenseVerification } from './compositionReadLicenseVerification';
 import type { CompositionReadMarkersItem } from './compositionReadMarkersItem';
+import type { CompositionReadMedia } from './compositionReadMedia';
 import type { CompositionReadTracksItem } from './compositionReadTracksItem';
 import type { CompositionUpgradeNeed } from './compositionUpgradeNeed';
 import type { Format } from './format';
@@ -32,5 +33,6 @@ export interface CompositionRead {
   accessibility?: CompositionReadAccessibility;
   readonly ownerOrgId?: string;
   readonly acl?: CompositionReadAcl;
+  media?: CompositionReadMedia;
   needsUpgrade?: CompositionUpgradeNeed[];
 }

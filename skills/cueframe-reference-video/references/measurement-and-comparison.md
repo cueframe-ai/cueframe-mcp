@@ -22,6 +22,12 @@ Record findings as `time/window · observed mismatch → intended correction · 
 
 A complete delivery can include a small set of fidelity anchors, critical motion comparisons, actual movie identity, asset/source provenance and unresolved differences. Audio signal measurements establish technical properties, not a listening verdict. Reusing the reference mix can isolate picture timing, but it does not demonstrate an authored score; reordering visuals may require reconsidering that mix.
 
+## Handoff and review continuity
+
+Use the existing brief, ledger or review notes for continuity. For reference work, supply inspectable reference media/frames and their identities and relevant timestamps. Once a candidate exists, include its evidence, saved composition and pinned source versions, and the current finding with its intended correction. Include consecutive motion where a still cannot establish behavior. Confirm the receiving author can access and has inspected this evidence before dependent authoring; a coordinator's inspection, ID, path or verbal summary does not establish receipt. If evidence is missing, recover it through supported tools and continue independent work. A busy render slot does not prevent sharing existing artifacts, and analysis-only reference media need not be added to the authored output.
+
+Keep the full delivery goal distinct from the latest scoped amendment. After resumption or delegation, recover both and the current saved review state before acting. Route failed saved comparisons back to their author or name a successor with that continuity. Source-only changes leave an open review until the saved result is reinspected. Tie each review verdict to the inspected window and composition/source versions: preserve unrelated review results, and recheck windows affected by changed source or timing.
+
 ## Worked correction: title spacing and a list thumbnail
 
 In a 1920×1080, 30 fps reference study, the title at frame 117 had a 34px gap from its left word to a central mark and a 41px gap from that mark to the right word. The saved reproduction measured about 3px and 22px. Its type group was also narrower: 1021px against 1304px. These were visible glyph bounds in the output, not the HTML elements' CSS widths.

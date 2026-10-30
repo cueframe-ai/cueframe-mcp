@@ -1,7 +1,7 @@
 {
   "source": {
     "package": "@cueframe/errors",
-    "commit": "eb1b033583594eb09f0444589df9764a71ec2921"
+    "commit": "7448f95b9c8a3d48643c9221cc238553be847355"
   },
   "codes": [
     "active_composition_invariant",

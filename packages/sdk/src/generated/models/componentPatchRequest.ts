@@ -11,6 +11,7 @@ import type { ComponentPatchRequestCategory } from './componentPatchRequestCateg
 import type { ComponentPatchRequestExamplesItem } from './componentPatchRequestExamplesItem';
 import type { ComponentPatchRequestOrigin } from './componentPatchRequestOrigin';
 import type { ComponentPatchRequestPropSchema } from './componentPatchRequestPropSchema';
+import type { ComponentPatchRequestRegistryProvenance } from './componentPatchRequestRegistryProvenance';
 import type { ComponentPatchRequestSource } from './componentPatchRequestSource';
 import type { ComponentPatchRequestTokens } from './componentPatchRequestTokens';
 import type { CompositionConcurrency } from './compositionConcurrency';
@@ -43,6 +44,12 @@ export interface ComponentPatchRequest {
   /** @exclusiveMinimum 0 */
   durationInFrames?: number;
   source?: ComponentPatchRequestSource;
+  registryProvenance?: ComponentPatchRequestRegistryProvenance;
+  /**
+     * Exact source head observed before adoption, editing or rollback. A changed head refuses the write; project placements remain pinned unless explicitly guarded below.
+     * @pattern ^[a-f0-9]{64}$
+     */
+  expectedHeadVersionId?: string;
   /**
      * A project whose explicitly named composition moves its placements atomically with the source write. Requires compositionId and concurrency.
      * @minLength 1

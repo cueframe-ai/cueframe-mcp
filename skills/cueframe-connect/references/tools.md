@@ -1,6 +1,6 @@
 # CueFrame tool reference
 
-Generated from the @cueframe/mcp 0.13.0 catalog (commit eb1b03358). Do not edit it by hand.
+Generated from the @cueframe/mcp 0.13.2-ea20261029.3 catalog (commit 7448f95b9). Do not edit it by hand.
 
 Every CueFrame tool by its catalog name. A host may show it with a connection prefix (`mcp__cueframe__get_account`, `cueframe-read__get_account`); the name after the last `__` is the catalog name. **read** tools change no state, though some are metered; **write** tools change state, and a composition write takes the revision it edits.
 
@@ -8,6 +8,7 @@ Hosted surfaces: `api` is the MCP server at `https://api.cueframe.ai/v1/mcp`; `e
 
 | Tool | Access | Hosted | Desktop |
 | --- | --- | --- | --- |
+| `acquire_registry_item` | write | api, editor, compose | director, external, cli |
 | `analyze_transcript` | read | editor, compose | director, plan, external, cli |
 | `apply_composition` | write | api, editor, compose | director, external, cli |
 | `apply_template` | write | api, editor | director, external, cli |
@@ -28,6 +29,7 @@ Hosted surfaces: `api` is the MCP server at `https://api.cueframe.ai/v1/mcp`; `e
 | `create_component` | write | api, editor, compose | director, external, cli |
 | `create_project` | write | api | external |
 | `create_render` | write | api, editor, compose | director, external, cli |
+| `create_template_package_upload` | write | api | - |
 | `create_upload` | write | api | - |
 | `create_webhook` | write | api | - |
 | `delete_brief` | write | api | - |
@@ -38,7 +40,7 @@ Hosted surfaces: `api` is the MCP server at `https://api.cueframe.ai/v1/mcp`; `e
 | `delete_webhook` | write | api | - |
 | `derive_composition` | write | api, editor, compose | director, external, cli |
 | `describe_composition_ops` | read | api, editor, compose | director, plan, external, cli |
-| `download_media` | read | api | - |
+| `download_media` | read | api, editor | - |
 | `edit_component` | write | - | director, external, cli |
 | `editorial_apply` | write | api, editor, compose | director, cli |
 | `editorial_begin` | write | - | director, cli |
@@ -57,6 +59,7 @@ Hosted surfaces: `api` is the MCP server at `https://api.cueframe.ai/v1/mcp`; `e
 | `editorial_run_source` | read | api, editor, compose | director, plan, external, cli |
 | `editorial_sample_motion` | write | api, editor, compose | director, cli |
 | `export_project` | write | - | external |
+| `export_template_package` | write | api, editor | - |
 | `extract_brand_kit` | write | api | - |
 | `finalize_upload` | write | api | - |
 | `forget_taste` | write | api, editor, compose | director, external, cli |
@@ -75,14 +78,19 @@ Hosted surfaces: `api` is the MCP server at `https://api.cueframe.ai/v1/mcp`; `e
 | `get_media_facts` | read | api | director, plan, external, cli |
 | `get_profile` | read | api, editor, compose | director, plan, external, cli |
 | `get_project_settings` | read | - | external |
+| `get_registry_acquisition` | read | api, editor, compose | director, plan, external, cli |
+| `get_registry_item` | read | api, editor, compose | director, plan, external, cli |
 | `get_render` | read | api | - |
 | `get_scene_contract` | read | - | director, plan, external, cli |
 | `get_template` | read | api, editor | director, plan, external, cli |
+| `get_template_job` | read | api, editor | - |
+| `get_template_package_download` | read | api, editor | - |
 | `get_transcript` | read | api, editor, compose | director, plan, external, cli |
 | `get_usage` | read | api, editor, compose | director, plan, external, cli |
 | `import_local_media` | write | - | director, external, cli |
 | `import_media` | write | api, editor, compose | director, external, cli |
 | `import_resource` | write | api, editor, compose | director, external, cli |
+| `import_template_package` | write | api | - |
 | `install_local_person_runtime` | write | - | director, external, cli |
 | `list_briefs` | read | api | - |
 | `list_catalog` | read | api, editor, compose | director, plan, external, cli |
@@ -93,7 +101,7 @@ Hosted surfaces: `api` is the MCP server at `https://api.cueframe.ai/v1/mcp`; `e
 | `list_media` | read | api, editor, compose | director, plan, external, cli |
 | `list_plans` | read | api | - |
 | `list_projects` | read | api | external |
-| `list_render_fonts` | read | api | director, plan, external, cli |
+| `list_render_fonts` | read | api, editor | director, plan, external, cli |
 | `list_taste` | read | api, editor, compose | director, plan, external, cli |
 | `list_templates` | read | api, editor | director, plan, external, cli |
 | `new_composition` | write | api, editor, compose | director, external, cli |
@@ -111,19 +119,21 @@ Hosted surfaces: `api` is the MCP server at `https://api.cueframe.ai/v1/mcp`; `e
 | `publish_component` | write | - | external |
 | `read_component` | read | - | director, plan, external, cli |
 | `redo_edit` | write | - | external |
+| `refresh_registry_snapshot` | write | api, editor, compose | director, external, cli |
 | `refresh_render_url` | write | api | - |
 | `register_critic` | write | api | - |
 | `remember_taste` | write | api, editor, compose | director, external, cli |
 | `rename_project` | write | - | external |
 | `render_component_preview_frame` | read | - | director, plan, external, cli |
 | `repin_component` | write | api | director, external, cli |
-| `resolve_builtin_component` | read | api | - |
+| `resolve_builtin_component` | read | api, editor | - |
 | `resume` | write | api | - |
 | `retry_render` | write | api | - |
 | `save_as_template` | write | - | director, external, cli |
 | `score_composition` | write | api, editor, compose | director, external, cli |
 | `search_fonts` | read | api, editor, compose | director, plan, external, cli |
 | `search_library` | read | editor, compose | director, plan, external, cli |
+| `search_registry_items` | read | api, editor, compose | director, plan, external, cli |
 | `search_resources` | read | api, editor, compose | director, plan, external, cli |
 | `seek` | write | - | director, plan, external, cli |
 | `select_candidate` | write | api | - |
