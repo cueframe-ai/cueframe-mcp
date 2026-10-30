@@ -1,0 +1,212 @@
+{
+  "version": 2,
+  "referenceSize": {
+    "width": 1280,
+    "height": 720
+  },
+  "environment": {
+    "kind": "photographic-studio-v1"
+  },
+  "backdrop": {
+    "kind": "solid",
+    "color": "#03040a"
+  },
+  "layers": [
+    {
+      "kind": "mesh",
+      "id": "field",
+      "transform": {
+        "position": [
+          0,
+          0,
+          -160
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "scale": 1
+      },
+      "opacity": 1,
+      "geometry": {
+        "kind": "buffer",
+        "positions": [
+          -960,
+          -540,
+          0,
+          960,
+          -540,
+          0,
+          960,
+          540,
+          0,
+          -960,
+          540,
+          0
+        ],
+        "normals": [
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1,
+          0,
+          0,
+          1
+        ],
+        "uvs": [
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1
+        ],
+        "indices": [
+          0,
+          1,
+          2,
+          0,
+          2,
+          3
+        ]
+      },
+      "shader": {
+        "profile": "stateless-fragment-display-linear-v1",
+        "source": "float strand(vec2 q, float index, float clock) {\n  float jitter = sin(index * 12.9898 + filamentSeed * 0.73) * variation;\n  float curve = 0.12 * sin(q.x * 6.283185 + clock) + (index - 2.5) * spread + jitter;\n  float d = abs(q.y - curve);\n  float core = exp(-d * d / (coreWidth * coreWidth));\n  float fieldGlow = exp(-d * d / (falloff * falloff));\n  return coreIntensity * core + fieldIntensity * fieldGlow;\n}\nvec3 field(vec2 uv, vec3 localPosition) {\n  vec2 q = uv - vec2(0.5) - fieldOffset;\n  float clock = cfTime * clockRate + phase;\n  float bundle = strand(q, 0.0, clock) + strand(q, 1.0, clock) + strand(q, 2.0, clock) + strand(q, 3.0, clock) + strand(q, 4.0, clock) + strand(q, 5.0, clock);\n  float envelope = exp(-q.x * q.x * 3.0);\n  return vec3(0.002, 0.003, 0.008) + tint * bundle * envelope;\n}",
+        "uniforms": {
+          "fieldOffset": {
+            "type": "vec2",
+            "value": [
+              0,
+              0
+            ]
+          },
+          "tint": {
+            "type": "vec3",
+            "value": [
+              0.12,
+              0.4,
+              0.95
+            ]
+          },
+          "spread": {
+            "type": "float",
+            "value": 0.018
+          },
+          "variation": {
+            "type": "float",
+            "value": 0.008
+          },
+          "filamentSeed": {
+            "type": "float",
+            "value": 7
+          },
+          "coreWidth": {
+            "type": "float",
+            "value": 0.0025
+          },
+          "coreIntensity": {
+            "type": "float",
+            "value": 0.52
+          },
+          "fieldIntensity": {
+            "type": "float",
+            "value": 0.025
+          },
+          "falloff": {
+            "type": "float",
+            "value": 0.045
+          },
+          "clockRate": {
+            "type": "float",
+            "value": 1
+          },
+          "phase": {
+            "type": "float",
+            "value": 0
+          }
+        },
+        "samplers": {}
+      }
+    },
+    {
+      "kind": "slab",
+      "id": "pill",
+      "transform": {
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0.08,
+          0.18,
+          -0.08
+        ],
+        "scale": 1
+      },
+      "width": 420,
+      "height": 140,
+      "thickness": 60,
+      "cornerRadius": 70,
+      "edgeRadius": 20,
+      "materials": [
+        {
+          "role": "body",
+          "type": "physical",
+          "color": "#ffffff",
+          "roughness": 0.12,
+          "transmission": 1,
+          "thickness": 60,
+          "ior": 1.5
+        }
+      ]
+    },
+    {
+      "kind": "text",
+      "id": "title",
+      "space": "screen",
+      "x": 0,
+      "y": 250,
+      "lines": [
+        {
+          "runs": [
+            {
+              "text": "LIGHT / THROUGH"
+            }
+          ]
+        }
+      ],
+      "fontFamily": "Inter",
+      "fontWeight": 400,
+      "fontStyle": "normal",
+      "fontSize": 32,
+      "lineHeight": 1.2,
+      "letterSpacing": 2,
+      "align": "center",
+      "maxWidth": 900,
+      "color": "#dce8ff"
+    }
+  ],
+  "animation": [],
+  "post": {
+    "grain": 0,
+    "vignette": 0,
+    "focus": null,
+    "bloom": {
+      "profile": "display-linear-bloom-v1",
+      "strength": 0.22,
+      "threshold": 0.65,
+      "smoothing": 0.08,
+      "radius": 0.65
+    }
+  }
+}

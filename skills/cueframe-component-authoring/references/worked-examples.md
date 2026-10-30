@@ -39,9 +39,11 @@ Hosted insertion uses the resolved exact document pin, current project revision/
 
 These IDs belong to the existing 22-brief plan. Its provisional editorial timings are not API values. Record source/asset identity, cold/warm state, mechanical assertions, creative verdict and the declared timing bar per journey; retain failures and unknown charges. The normal-author browser harness records actual tools/skills/images and saved context; injected MCP headers are contract testing only.
 
-## Seed 3 remains experimental
+## Seed 3: experimental optical pill study
 
-No optics implementation is supplied or certified here. EA09 must select and implement its supported source/document representation and qualify editable field position/color, filament distribution, pill coupling, type and clock. An experimental guide or generic mesh/material test cannot prove the ring/phone result. Keep EA07 and the related EA09 creative obligations open until the integrated candidate is frozen and the required source, motion, two-input and final-scale review evidence exists.
+Implementation: [complete canonical scene](optical-pill-study.scene.json) and [bounded inputs, clock and closure](optical-pill-study.md). It combines an existing bounded shader field, physical transmission slab and canonical screen text in SceneShotSpecV2; use `scene.add` / `scene.update`, not a native component wrapper. The guide defines independent field/pill controls and two input records with 15→45→15 clock checks, exact bundled Inter font facts and separate rights notices.
+
+The complete source passes canonical parsing and combined production Node preparation seals its plan. Actual normal-product two-input motion, received pixels, runtime resolved font, portable successor reuse and final-scale review are still required. No ring/phone fidelity or completed creative result is asserted. EA07 and the related EA09 creative obligations remain open until the integrated candidate is frozen and those runtime/creative gates pass.
 
 ## Engineering harness handoff
 

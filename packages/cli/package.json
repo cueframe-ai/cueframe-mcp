@@ -1,6 +1,6 @@
 {
   "name": "cueframe",
-  "version": "0.11.4-ea20261029.7",
+  "version": "0.11.4-ea20261029.8",
   "description": "CueFrame video editing CLI: manage media, edit compositions and render MP4s from terminals and scripts.",
   "keywords": [
     "cueframe",

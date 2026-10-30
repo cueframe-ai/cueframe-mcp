@@ -45,9 +45,9 @@ export async function compositionGetCommand(projectId: string, opts: GetOpts) {
 
   const rawEtag = raw.headers['etag'];
   const etag = rawEtag ? normalizeEtag(rawEtag) : rawEtag;
-  emitEvent(opts, 'composition_get_complete', { projectId, etag, status: raw.status });
+  emitEvent(opts, 'composition_get_complete', { projectId, etag, status: raw.status, composition: raw.body });
 
-  emitResult(opts, { etag, composition: raw.body }, () => {
+  if (!opts.json) emitResult(opts, { etag, composition: raw.body }, () => {
     if (etag) console.log(`# ETag: ${etag}`);
     console.log(JSON.stringify(raw.body, null, 2));
   });

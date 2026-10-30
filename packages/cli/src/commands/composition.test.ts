@@ -72,21 +72,42 @@ describe('compositionGetCommand', () => {
     expect(joined).toMatch(/"tracks":/);
   });
 
-  it('--json emits the {etag, composition} structured event', async () => {
+  it('--json writes only prepare/complete NDJSON with the complete composition and ETag', async () => {
+    vi.resetModules();
+    const sdk = await import('@cueframe/sdk');
+    const currentClient = await import('../remote/sdkClient.js');
+    vi.spyOn(currentClient, 'initSdk').mockImplementation(() => {});
+    const { compositionGetCommand } = await import('./composition');
+    const composition = { tracks: [{ kind: 'video', title: 'two\nlines' }], metadata: { '$schema': 'kept' } };
     vi.spyOn(sdk, 'requestRaw').mockResolvedValueOnce({
-      status: 200,
-      statusText: 'OK',
-      headers: { etag: '"xyz"' },
-      body: { tracks: [{ kind: 'video' }] },
+      status: 200, statusText: 'OK', headers: { etag: '\"xyz\"' }, body: composition,
     });
     const code = await run(
-      () => compositionGetCommand('proj_123', { target: 'prod', json: true }),
-      spies.exitSpy,
+      () => compositionGetCommand('proj_123', { target: 'prod', json: true }), spies.exitSpy,
     );
     expect(code).toBe(0);
-    const stdout = spies.logSpy.mock.calls.map((c) => c[0]).join('\n');
-    expect(stdout).toMatch(/"etag":\s*"\\"xyz\\""/);
-    expect(stdout).toMatch(/"composition":/);
+    expect(spies.logSpy).not.toHaveBeenCalled();
+    const events = spies.stdoutChunks.join('').trim().split('\n').map((line) => JSON.parse(line));
+    expect(events.map((event) => event.event)).toEqual(['composition_get_prepare', 'composition_get_complete']);
+    expect(events.every((event) => event.schemaVersion === 'v1')).toBe(true);
+    expect(events[1]).toMatchObject({ projectId: 'proj_123', etag: '\"xyz\"', status: 200, composition });
+  });
+
+  it('--json 404 emits a structured error without a complete/result payload', async () => {
+    vi.resetModules();
+    const sdk = await import('@cueframe/sdk');
+    const currentClient = await import('../remote/sdkClient.js');
+    vi.spyOn(currentClient, 'initSdk').mockImplementation(() => {});
+    const { compositionGetCommand } = await import('./composition');
+    vi.spyOn(sdk, 'requestRaw').mockResolvedValueOnce({
+      status: 404, statusText: 'Not Found', headers: {},
+      body: { error: { code: 'not_found', message: 'Composition not found' } },
+    });
+    expect(await run(() => compositionGetCommand('proj_123', { target: 'prod', json: true }), spies.exitSpy)).toBe(3);
+    expect(spies.logSpy).not.toHaveBeenCalled();
+    const events = spies.stdoutChunks.join('').trim().split('\n').map((line) => JSON.parse(line));
+    expect(events.map((event) => event.event)).toEqual(['composition_get_prepare', 'error']);
+    expect(events[1]).toMatchObject({ code: 'not_found', exitCode: 3 });
   });
 
   it('maps 404 → ApiClientError (3) with the advice line on stderr', async () => {
