@@ -600,3 +600,50 @@ describe('composition reads negotiate every component execution version the cont
     expect(raw.mock.calls[0][1]).toMatchObject({ method: 'GET' });
   });
 });
+
+describe('composition completion output preserves authoritative verdicts', () => {
+  let spies: ReturnType<typeof setupSpies>;
+  beforeEach(() => { spies = setupSpies(); });
+  afterEach(() => { vi.restoreAllMocks(); });
+  async function fresh() {
+    vi.resetModules();
+    const sdk = await import('@cueframe/sdk');
+    const client = await import('../remote/sdkClient.js');
+    vi.spyOn(client, 'initSdk').mockImplementation(() => {});
+    const commands = await import('./composition');
+    return { sdk, commands };
+  }
+  it.each(['put', 'from-suggestion', 'validate'] as const)('%s --json emits only lifecycle NDJSON and retains the full response', async kind => {
+    const { sdk, commands } = await fresh();
+    const response = { valid: true, contract: 'exact-contract', errors: [], advisories: [{ detail: 'retained' }], quote: { thisStepUsd: 0 } };
+    vi.spyOn(sdk, 'requestRaw').mockResolvedValue({ status: 200, statusText: 'OK', headers: { etag: '"saved"' }, body: response });
+    const invoke = kind === 'put'
+      ? () => commands.compositionPutCommand('proj_123', { target: 'prod', json: true, body: '{}', ifMatch: '"old"' })
+      : kind === 'from-suggestion'
+        ? () => commands.compositionFromSuggestionCommand('proj_123', { target: 'prod', json: true, suggestionId: 'suggestion', ifMatch: '"old"' })
+        : () => commands.compositionValidateCommand({ target: 'prod', json: true, body: '{}' });
+    expect(await run(invoke, spies.exitSpy)).toBe(0);
+    expect(spies.logSpy).not.toHaveBeenCalled();
+    const events = spies.stdoutChunks.join('').trim().split('\n').map(line => JSON.parse(line));
+    const prefix = 'composition_' + kind.replaceAll('-', '_');
+    expect(events.map(event => event.event)).toEqual([prefix + '_prepare', prefix + '_complete']);
+    expect(events[1].response).toEqual(response);
+  });
+  it.each([true, false])('preserves invalid HTTP200 verdict and exits2 (json=%s)', async json => {
+    const { sdk, commands } = await fresh();
+    const verdict = { valid: false, contract: 'exact-contract', errors: [{ code: 'validation_error', message: 'duration must be positive' }], advisories: [], quote: { thisStepUsd: 0 } };
+    vi.spyOn(sdk, 'requestRaw').mockResolvedValue({ status: 200, statusText: 'OK', headers: {}, body: verdict });
+    expect(await run(() => commands.compositionValidateCommand({ target: 'prod', json, body: '{}' }), spies.exitSpy)).toBe(2);
+    if (json) {
+      expect(spies.logSpy).not.toHaveBeenCalled();
+      const events = spies.stdoutChunks.join('').trim().split('\n').map(line => JSON.parse(line));
+      expect(events.map(event => event.event)).toEqual(['composition_validate_prepare', 'composition_validate_complete']);
+      expect(events[1]).toMatchObject({ status: 200, valid: false, response: verdict });
+    } else {
+      const output = spies.logSpy.mock.calls.map(call => call[0]).join('\n');
+      expect(output).toContain('Composition is invalid.');
+      expect(output).toContain('duration must be positive');
+      expect(output).not.toContain('Composition is valid.');
+    }
+  });
+});
