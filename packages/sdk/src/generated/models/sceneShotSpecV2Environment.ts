@@ -22,4 +22,23 @@ export type SceneShotSpecV2Environment = {
   shadowOpacity?: number;
 } | {
   kind: 'photographic-studio-v1';
+} | {
+  kind: 'owned-hdr-v1';
+  /**
+     * Image asset slot name bound by the clip assets map; never a URL.
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z_][A-Za-z0-9_-]*$
+     */
+  assetSlot: string;
+  /**
+     * @minimum 0
+     * @maximum 100
+     */
+  intensity?: number;
+  /**
+     * @minimum -6.283185307179586
+     * @maximum 6.283185307179586
+     */
+  rotation?: number;
 };

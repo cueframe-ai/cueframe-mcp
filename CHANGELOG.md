@@ -2,6 +2,15 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
+## @cueframe/skills 0.4.5-ea20261029.6
+
+- Add an experimental editable optical scene study with bounded field, transmission, text and clock controls through the existing scene contract.
+
+## cueframe 0.11.4-ea20261029.8
+
+- Emit composition and ETag inside the completion event for `composition get --json`, keeping every output line valid NDJSON.
+- Include the updated skills and experimental optical scene study.
+
 ## @cueframe/api-contract 7.0.0
 
 - Breaking: removes `GET /v1/projects/{id}/selector/candidates` and `POST /v1/projects/{id}/selector/preview`. Neither could return anything but 404.
@@ -18,6 +27,10 @@ One entry per package per release. Versions follow each package's `package.json`
 ## cueframe 0.11.4
 
 - Built against `@cueframe/sdk` 0.17.0.
+
+## @cueframe/api-contract 6.1.1
+
+- Correct scene-shot world-axis and radian guidance to match the established renderer. Wire fields, schema limits and rendering policies are unchanged.
 
 ## @cueframe/api-contract 6.0.2
 

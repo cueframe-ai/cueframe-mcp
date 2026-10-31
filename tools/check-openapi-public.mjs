@@ -122,6 +122,29 @@ function actualOperations(document) {
   return operations.sort();
 }
 
+// Public upstream registry selectors are not private build provenance. Keep this list tied
+// to reviewed named schema positions; an unrelated sourceCommit or example still refuses.
+const PUBLIC_REGISTRY_SNAPSHOT_PROPERTY_PATHS = new Set([
+  '$.components.schemas.AcquireRegistryItemRequest.properties.snapshot.properties',
+  '$.components.schemas.AcquireRegistryItemResponse.properties.candidate.properties.snapshot.properties',
+  '$.components.schemas.ExternalRegistryCandidate.properties.snapshot.properties',
+  '$.components.schemas.GetRegistryAcquisitionResponse.properties.candidate.properties.snapshot.properties',
+  '$.components.schemas.RefreshRegistrySnapshotRequest.properties.expectedSnapshot.anyOf[0].properties',
+  '$.components.schemas.RefreshRegistrySnapshotResponse.properties.snapshot.properties',
+  '$.components.schemas.RefreshRegistrySnapshotResponse.properties.previousSnapshot.anyOf[0].properties',
+  '$.components.schemas.RegistrySearchResponse.properties.snapshot.properties',
+  '$.components.schemas.RegistrySearchResponse.properties.items.items.properties.snapshot.properties',
+]);
+function isPublicUpstreamCommit(key, schema, siblings, path) {
+  if (key !== 'sourceCommit' || !PUBLIC_REGISTRY_SNAPSHOT_PROPERTY_PATHS.has(path)) return false;
+  if (!isObject(schema) || schema.type !== 'string' || schema.pattern !== '^[0-9a-f]{40}$') return false;
+  if (Object.keys(schema).some(key => !['type', 'pattern'].includes(key))) return false;
+  // Require the reviewed selector beside the commit, not a private field merely renamed into its slot.
+  if (Object.keys(siblings).sort().join(',') !== 'cliArtifactSha256,inventorySha256,registryOrigin,sourceCommit') return false;
+  return siblings.registryOrigin?.type === 'string' && siblings.registryOrigin.minLength === 1 && siblings.registryOrigin.maxLength === 2048 &&
+    ['inventorySha256', 'cliArtifactSha256'].every(name => siblings[name]?.type === 'string' && siblings[name].pattern === '^[a-f0-9]{64}$');
+}
+
 function assertSafeStructure(value, path = "$") {
   if (Array.isArray(value)) {
     return value.forEach((child, index) => assertSafeStructure(child, `${path}[${index}]`));
@@ -132,7 +155,7 @@ function assertSafeStructure(value, path = "$") {
     if (key.startsWith("x-") && !ALLOWED_EXTENSIONS.has(key)) {
       throw new Error(`Unapproved extension at ${path}.${key}`);
     }
-    if (FORBIDDEN_STRUCTURAL_KEYS.some((pattern) => pattern.test(key))) {
+    if (FORBIDDEN_STRUCTURAL_KEYS.some((pattern) => pattern.test(key)) && !isPublicUpstreamCommit(key, child, value, path)) {
       throw new Error(`Private structural key at ${path}.${key}`);
     }
     assertSafeStructure(child, `${path}.${key}`);

@@ -11,6 +11,7 @@ import type { ComponentCreateRequestCategory } from './componentCreateRequestCat
 import type { ComponentCreateRequestExamplesItem } from './componentCreateRequestExamplesItem';
 import type { ComponentCreateRequestOrigin } from './componentCreateRequestOrigin';
 import type { ComponentCreateRequestPropSchema } from './componentCreateRequestPropSchema';
+import type { ComponentCreateRequestRegistryProvenance } from './componentCreateRequestRegistryProvenance';
 import type { ComponentCreateRequestSource } from './componentCreateRequestSource';
 import type { ComponentCreateRequestTokens } from './componentCreateRequestTokens';
 
@@ -42,4 +43,5 @@ export interface ComponentCreateRequest {
   /** @exclusiveMinimum 0 */
   durationInFrames?: number;
   source: ComponentCreateRequestSource;
+  registryProvenance?: ComponentCreateRequestRegistryProvenance;
 }

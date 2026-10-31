@@ -113,10 +113,12 @@ try {
     if (!existsSync(join(dir, "node_modules/@cueframe/skills/skills-dir.d.ts"))) throw new Error("skills-dir.d.ts not shipped");
     return `${have.length} skills`;
   });
-  check("npx --no-install cueframe --help mentions install", () => {
-    const help = run("npx", ["--no-install", "cueframe", "--help"], { cwd: dir });
-    if (!help.includes("install")) throw new Error(`--help output lacks "install": ${help.slice(0, 200)}`);
-    return `${help.split("\n").length} lines`;
+  check("npx --no-install cueframe describe --json includes install", () => {
+    const output = run("npx", ["--no-install", "cueframe", "describe", "--json"], { cwd: dir });
+    const events = output.trim().split("\n").map((line) => JSON.parse(line));
+    const described = events.find((event) => event.schemaVersion === "v1" && event.event === "describe_complete");
+    if (!described?.commands.some((command) => command.name === "install")) throw new Error("describe_complete lacks install");
+    return `${described.commands.length} commands`;
   });
   check(`cueframe ships all ${EXPECTED_SKILLS.length} canonical skills`, () => {
     const skills = readdirSync(join(dir, "node_modules/cueframe/dist/skills"), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name).sort();

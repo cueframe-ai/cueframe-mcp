@@ -516,6 +516,14 @@ export const BuiltinComponentResolveResponse = zod.strictObject({
 })).min(1),
   "equivalence": zod.enum(['unproven', 'verified'])
 })]),
+  "previewMedia": zod.union([zod.strictObject({
+  "status": zod.literal("available"),
+  "posterUrl": zod.url(),
+  "videoUrl": zod.url()
+}),zod.strictObject({
+  "status": zod.literal("unavailable"),
+  "reason": zod.enum(['showcase_missing', 'showcase_stale', 'base_unconfigured', 'invalid_media'])
+})]).optional(),
   "document": zod.record(zod.string(), zod.unknown()).optional(),
   "documentText": zod.string().optional(),
   "documentSha256": zod.string().regex(builtinComponentResolveResponseDocumentSha256RegExp).optional(),

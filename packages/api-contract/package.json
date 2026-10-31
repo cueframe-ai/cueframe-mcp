@@ -1,6 +1,6 @@
 {
   "name": "@cueframe/api-contract",
-  "version": "7.0.1",
+  "version": "7.0.2-ea20261031.1",
   "description": "Versioned OpenAPI contract and composition schemas for the CueFrame video editing and rendering API.",
   "type": "module",
   "license": "Apache-2.0",
@@ -54,6 +54,6 @@
     "url": "https://github.com/cueframe-ai/cueframe-mcp/issues"
   },
   "devDependencies": {
-    "@cueframe/kernel": "0.7.14"
+    "@cueframe/kernel": "0.7.15-ea20261029.19"
   }
 }

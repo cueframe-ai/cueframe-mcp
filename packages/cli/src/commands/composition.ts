@@ -45,9 +45,9 @@ export async function compositionGetCommand(projectId: string, opts: GetOpts) {
 
   const rawEtag = raw.headers['etag'];
   const etag = rawEtag ? normalizeEtag(rawEtag) : rawEtag;
-  emitEvent(opts, 'composition_get_complete', { projectId, etag, status: raw.status });
+  emitEvent(opts, 'composition_get_complete', { projectId, etag, status: raw.status, composition: raw.body });
 
-  emitResult(opts, { etag, composition: raw.body }, () => {
+  if (!opts.json) emitResult(opts, { etag, composition: raw.body }, () => {
     if (etag) console.log(`# ETag: ${etag}`);
     console.log(JSON.stringify(raw.body, null, 2));
   });
@@ -93,7 +93,7 @@ export async function compositionPutCommand(projectId: string, opts: PutOpts) {
     response: raw.body,
   });
 
-  emitResult(opts, { etag, response: raw.body }, () => {
+  if (!opts.json) emitResult(opts, { etag, response: raw.body }, () => {
     console.log(`Composition saved (ETag: ${etag ?? 'unknown'}).`);
     if (raw.body && typeof raw.body === 'object') {
       console.log(JSON.stringify(raw.body, null, 2));
@@ -183,7 +183,7 @@ export async function compositionFromSuggestionCommand(projectId: string, opts: 
     attempts,
   });
 
-  emitResult(opts, { etag, response: raw.body }, () => {
+  if (!opts.json) emitResult(opts, { etag, response: raw.body }, () => {
     console.log(`Composition built from suggestion ${opts.suggestionId} (ETag: ${etag ?? 'unknown'}).`);
     if (raw.body && typeof raw.body === 'object') {
       console.log(JSON.stringify(raw.body, null, 2));
@@ -217,13 +217,20 @@ export async function compositionValidateCommand(opts: ValidateOpts) {
     exitWith(exitCodeForStatus(raw.status));
   }
 
-  emitEvent(opts, 'composition_validate_complete', { status: raw.status });
+  const verdict = raw.body;
+  if (!verdict || typeof verdict !== 'object' || !('valid' in verdict) || typeof verdict.valid !== 'boolean') {
+    emitError(opts, 'composition_validate', new Error('The server returned an invalid composition validation verdict.'), ExitCode.ApiServerError);
+    exitWith(ExitCode.ApiServerError);
+  }
+  emitEvent(opts, 'composition_validate_complete', { status: raw.status, valid: verdict.valid, response: verdict });
 
-  emitResult(opts, { valid: true }, () => {
-    console.log('✓ Composition is valid.');
+  if (!opts.json) emitResult(opts, verdict, () => {
+    console.log(verdict.valid ? '✓ Composition is valid.' : '✗ Composition is invalid.');
+    if (!verdict.valid) console.log(JSON.stringify(verdict, null, 2));
   });
 
-  return { valid: true as const };
+  if (!verdict.valid) exitWith(ExitCode.UserError);
+  return verdict;
 }
 
 

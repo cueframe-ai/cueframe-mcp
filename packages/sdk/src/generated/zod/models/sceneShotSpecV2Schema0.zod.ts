@@ -63,6 +63,19 @@ export const sceneShotSpecV2Schema0TwoMaterialsItemIorMax = 2.333;
 export const sceneShotSpecV2Schema0TwoMaterialsItemReflectivityMin = 0;
 export const sceneShotSpecV2Schema0TwoMaterialsItemReflectivityMax = 1;
 
+export const sceneShotSpecV2Schema0TwoMaterialsItemEmissiveOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0TwoMaterialsItemEmissiveIntensityMin = 0;
+
+export const sceneShotSpecV2Schema0TwoMaterialsItemTransmissionMin = 0;
+export const sceneShotSpecV2Schema0TwoMaterialsItemTransmissionMax = 1;
+
+export const sceneShotSpecV2Schema0TwoMaterialsItemThicknessMin = 0;
+
+export const sceneShotSpecV2Schema0TwoMaterialsItemAttenuationColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0TwoMaterialsItemAttenuationDistanceExclusiveMin = 0;
+
+export const sceneShotSpecV2Schema0TwoMaterialsItemDispersionMin = 0;
+
 export const sceneShotSpecV2Schema0TwoMaterialsMax = 16;
 
 export const sceneShotSpecV2Schema0TwoSurfacesOneAssetSlotMax = 64;
@@ -127,6 +140,19 @@ export const sceneShotSpecV2Schema0ThreeMaterialsItemIorMax = 2.333;
 
 export const sceneShotSpecV2Schema0ThreeMaterialsItemReflectivityMin = 0;
 export const sceneShotSpecV2Schema0ThreeMaterialsItemReflectivityMax = 1;
+
+export const sceneShotSpecV2Schema0ThreeMaterialsItemEmissiveOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0ThreeMaterialsItemEmissiveIntensityMin = 0;
+
+export const sceneShotSpecV2Schema0ThreeMaterialsItemTransmissionMin = 0;
+export const sceneShotSpecV2Schema0ThreeMaterialsItemTransmissionMax = 1;
+
+export const sceneShotSpecV2Schema0ThreeMaterialsItemThicknessMin = 0;
+
+export const sceneShotSpecV2Schema0ThreeMaterialsItemAttenuationColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0ThreeMaterialsItemAttenuationDistanceExclusiveMin = 0;
+
+export const sceneShotSpecV2Schema0ThreeMaterialsItemDispersionMin = 0;
 
 export const sceneShotSpecV2Schema0ThreeMaterialsMax = 16;
 
@@ -207,6 +233,19 @@ export const sceneShotSpecV2Schema0FourMaterialsItemIorMax = 2.333;
 export const sceneShotSpecV2Schema0FourMaterialsItemReflectivityMin = 0;
 export const sceneShotSpecV2Schema0FourMaterialsItemReflectivityMax = 1;
 
+export const sceneShotSpecV2Schema0FourMaterialsItemEmissiveOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0FourMaterialsItemEmissiveIntensityMin = 0;
+
+export const sceneShotSpecV2Schema0FourMaterialsItemTransmissionMin = 0;
+export const sceneShotSpecV2Schema0FourMaterialsItemTransmissionMax = 1;
+
+export const sceneShotSpecV2Schema0FourMaterialsItemThicknessMin = 0;
+
+export const sceneShotSpecV2Schema0FourMaterialsItemAttenuationColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0FourMaterialsItemAttenuationDistanceExclusiveMin = 0;
+
+export const sceneShotSpecV2Schema0FourMaterialsItemDispersionMin = 0;
+
 export const sceneShotSpecV2Schema0FourMaterialsMax = 16;
 
 export const sceneShotSpecV2Schema0FourSurfacesOneAssetSlotMax = 64;
@@ -279,6 +318,19 @@ export const sceneShotSpecV2Schema0FiveMaterialsItemIorMax = 2.333;
 export const sceneShotSpecV2Schema0FiveMaterialsItemReflectivityMin = 0;
 export const sceneShotSpecV2Schema0FiveMaterialsItemReflectivityMax = 1;
 
+export const sceneShotSpecV2Schema0FiveMaterialsItemEmissiveOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0FiveMaterialsItemEmissiveIntensityMin = 0;
+
+export const sceneShotSpecV2Schema0FiveMaterialsItemTransmissionMin = 0;
+export const sceneShotSpecV2Schema0FiveMaterialsItemTransmissionMax = 1;
+
+export const sceneShotSpecV2Schema0FiveMaterialsItemThicknessMin = 0;
+
+export const sceneShotSpecV2Schema0FiveMaterialsItemAttenuationColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0FiveMaterialsItemAttenuationDistanceExclusiveMin = 0;
+
+export const sceneShotSpecV2Schema0FiveMaterialsItemDispersionMin = 0;
+
 export const sceneShotSpecV2Schema0FiveMaterialsMax = 16;
 
 export const sceneShotSpecV2Schema0FiveSurfacesOneAssetSlotMax = 64;
@@ -311,86 +363,257 @@ export const sceneShotSpecV2Schema0SixIdMax = 64;
 
 
 export const sceneShotSpecV2Schema0SixIdRegExp = new RegExp('^[A-Za-z0-9][A-Za-z0-9_-]*$');
+export const sceneShotSpecV2Schema0SixTransformScaleDefault = 1;
+export const sceneShotSpecV2Schema0SixTransformScaleExclusiveMin = 0;
+
 export const sceneShotSpecV2Schema0SixOpacityDefault = 1;
 export const sceneShotSpecV2Schema0SixOpacityMin = 0;
 export const sceneShotSpecV2Schema0SixOpacityMax = 1;
 
-export const sceneShotSpecV2Schema0SixLinesItemRunsItemTextMax = 512;
+export const sceneShotSpecV2Schema0SixGeometryOnePositionsItemMin = -1000000;
+export const sceneShotSpecV2Schema0SixGeometryOnePositionsItemMax = 1000000;
+
+export const sceneShotSpecV2Schema0SixGeometryOnePositionsMin = 9;
+export const sceneShotSpecV2Schema0SixGeometryOnePositionsMax = 196605;
+
+export const sceneShotSpecV2Schema0SixGeometryOneNormalsItemMin = -1;
+export const sceneShotSpecV2Schema0SixGeometryOneNormalsItemMax = 1;
+
+export const sceneShotSpecV2Schema0SixGeometryOneNormalsMin = 9;
+export const sceneShotSpecV2Schema0SixGeometryOneNormalsMax = 196605;
+
+export const sceneShotSpecV2Schema0SixGeometryOneUvsItemMin = -1000000;
+export const sceneShotSpecV2Schema0SixGeometryOneUvsItemMax = 1000000;
+
+export const sceneShotSpecV2Schema0SixGeometryOneUvsMin = 6;
+export const sceneShotSpecV2Schema0SixGeometryOneUvsMax = 131070;
+
+export const sceneShotSpecV2Schema0SixGeometryOneIndicesItemMin = 0;
+export const sceneShotSpecV2Schema0SixGeometryOneIndicesItemMax = 9007199254740991;
+
+export const sceneShotSpecV2Schema0SixGeometryOneIndicesMin = 3;
+export const sceneShotSpecV2Schema0SixGeometryOneIndicesMax = 750000;
+
+export const sceneShotSpecV2Schema0SixGeometryTwoPointsItem0ItemMin = -1000000;
+export const sceneShotSpecV2Schema0SixGeometryTwoPointsItem0ItemMax = 1000000;
+
+export const sceneShotSpecV2Schema0SixGeometryTwoPointsItem1ItemMin = -1000000;
+export const sceneShotSpecV2Schema0SixGeometryTwoPointsItem1ItemMax = 1000000;
+
+export const sceneShotSpecV2Schema0SixGeometryTwoPointsItem2ItemMin = -1000000;
+export const sceneShotSpecV2Schema0SixGeometryTwoPointsItem2ItemMax = 1000000;
+
+export const sceneShotSpecV2Schema0SixGeometryTwoPointsMin = 2;
+export const sceneShotSpecV2Schema0SixGeometryTwoPointsMax = 256;
+
+export const sceneShotSpecV2Schema0SixGeometryTwoRadiusExclusiveMin = 0;
+export const sceneShotSpecV2Schema0SixGeometryTwoRadiusMax = 1000000;
+
+export const sceneShotSpecV2Schema0SixGeometryTwoTubularSegmentsMax = 1024;
+
+export const sceneShotSpecV2Schema0SixGeometryTwoRadialSegmentsMin = 3;
+export const sceneShotSpecV2Schema0SixGeometryTwoRadialSegmentsMax = 64;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemRoleMax = 64;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0SixMaterialsItemRoughnessMin = 0;
+export const sceneShotSpecV2Schema0SixMaterialsItemRoughnessMax = 1;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemMetalnessMin = 0;
+export const sceneShotSpecV2Schema0SixMaterialsItemMetalnessMax = 1;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemClearcoatMin = 0;
+export const sceneShotSpecV2Schema0SixMaterialsItemClearcoatMax = 1;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemClearcoatRoughnessMin = 0;
+export const sceneShotSpecV2Schema0SixMaterialsItemClearcoatRoughnessMax = 1;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemAnisotropyMin = 0;
+export const sceneShotSpecV2Schema0SixMaterialsItemAnisotropyMax = 1;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemIorMax = 2.333;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemReflectivityMin = 0;
+export const sceneShotSpecV2Schema0SixMaterialsItemReflectivityMax = 1;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemEmissiveOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0SixMaterialsItemEmissiveIntensityMin = 0;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemTransmissionMin = 0;
+export const sceneShotSpecV2Schema0SixMaterialsItemTransmissionMax = 1;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemThicknessMin = 0;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemAttenuationColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0SixMaterialsItemAttenuationDistanceExclusiveMin = 0;
+
+export const sceneShotSpecV2Schema0SixMaterialsItemDispersionMin = 0;
+
+export const sceneShotSpecV2Schema0SixMaterialsMax = 16;
+
+export const sceneShotSpecV2Schema0SixShaderProfileDefault = `stateless-fragment-display-linear-v1`;
+export const sceneShotSpecV2Schema0SixShaderSourceMax = 32768;
+
+export const sceneShotSpecV2Schema0SixShaderUniformsValueThreeMax = 16;
+
+export const sceneShotSpecV2Schema0SixShaderUniformsDefault = {};
+export const sceneShotSpecV2Schema0SixShaderSamplersAssetSlotMax = 64;
 
 
-export const sceneShotSpecV2Schema0SixLinesItemRunsItemTextRegExp = new RegExp('^[^\\r\\n]+$');
-export const sceneShotSpecV2Schema0SixLinesItemRunsItemColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
-export const sceneShotSpecV2Schema0SixLinesItemRunsMax = 16;
-
-export const sceneShotSpecV2Schema0SixLinesMax = 24;
-
-export const sceneShotSpecV2Schema0SixFontFamilyOneMax = 128;
+export const sceneShotSpecV2Schema0SixShaderSamplersAssetSlotRegExp = new RegExp('^[A-Za-z_][A-Za-z0-9_-]*$');
+export const sceneShotSpecV2Schema0SixShaderSamplersDefault = {};
+export const sceneShotSpecV2Schema0SixInstancesItemIdMax = 64;
 
 
-export const sceneShotSpecV2Schema0SixFontFamilyOneRegExp = new RegExp('^[A-Za-z0-9][A-Za-z0-9 _.\\-]*$');
-export const sceneShotSpecV2Schema0SixFontWeightMin = 100;
-export const sceneShotSpecV2Schema0SixFontWeightMax = 900;
+export const sceneShotSpecV2Schema0SixInstancesItemIdRegExp = new RegExp('^[A-Za-z0-9][A-Za-z0-9_-]*$');
+export const sceneShotSpecV2Schema0SixInstancesItemTransformScaleDefault = 1;
+export const sceneShotSpecV2Schema0SixInstancesItemTransformScaleExclusiveMin = 0;
 
-export const sceneShotSpecV2Schema0SixFontSizeMin = 8;
-export const sceneShotSpecV2Schema0SixFontSizeMax = 800;
+export const sceneShotSpecV2Schema0SixInstancesMax = 1024;
 
-export const sceneShotSpecV2Schema0SixLineHeightDefault = 1.2;
-export const sceneShotSpecV2Schema0SixLineHeightMin = 0.6;
-export const sceneShotSpecV2Schema0SixLineHeightMax = 3;
-
-export const sceneShotSpecV2Schema0SixLetterSpacingDefault = 0;
-export const sceneShotSpecV2Schema0SixLetterSpacingMin = -20;
-export const sceneShotSpecV2Schema0SixLetterSpacingMax = 40;
-
-export const sceneShotSpecV2Schema0SixAlignDefault = `center`;
-export const sceneShotSpecV2Schema0SixMaxWidthExclusiveMin = 0;
-
-export const sceneShotSpecV2Schema0SixColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
-export const sceneShotSpecV2Schema0SixTransformScaleDefault = 1;
-export const sceneShotSpecV2Schema0SixTransformScaleExclusiveMin = 0;
-
+export const sceneShotSpecV2Schema0SevenProfileDefault = `static-glb-untextured-v1`;
 export const sceneShotSpecV2Schema0SevenIdMax = 64;
 
 
 export const sceneShotSpecV2Schema0SevenIdRegExp = new RegExp('^[A-Za-z0-9][A-Za-z0-9_-]*$');
+export const sceneShotSpecV2Schema0SevenTransformScaleDefault = 1;
+export const sceneShotSpecV2Schema0SevenTransformScaleExclusiveMin = 0;
+
 export const sceneShotSpecV2Schema0SevenOpacityDefault = 1;
 export const sceneShotSpecV2Schema0SevenOpacityMin = 0;
 export const sceneShotSpecV2Schema0SevenOpacityMax = 1;
 
-export const sceneShotSpecV2Schema0SevenLinesItemRunsItemTextMax = 512;
+export const sceneShotSpecV2Schema0SevenAssetSlotMax = 64;
 
 
-export const sceneShotSpecV2Schema0SevenLinesItemRunsItemTextRegExp = new RegExp('^[^\\r\\n]+$');
-export const sceneShotSpecV2Schema0SevenLinesItemRunsItemColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
-export const sceneShotSpecV2Schema0SevenLinesItemRunsMax = 16;
+export const sceneShotSpecV2Schema0SevenAssetSlotRegExp = new RegExp('^[A-Za-z_][A-Za-z0-9_-]*$');
+export const sceneShotSpecV2Schema0SevenSizeExclusiveMin = 0;
+export const sceneShotSpecV2Schema0SevenSizeMax = 1000000;
 
-export const sceneShotSpecV2Schema0SevenLinesMax = 24;
+export const sceneShotSpecV2Schema0SevenMaterialsItemRoleMax = 64;
 
-export const sceneShotSpecV2Schema0SevenFontFamilyOneMax = 128;
+export const sceneShotSpecV2Schema0SevenMaterialsItemColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0SevenMaterialsItemRoughnessMin = 0;
+export const sceneShotSpecV2Schema0SevenMaterialsItemRoughnessMax = 1;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemMetalnessMin = 0;
+export const sceneShotSpecV2Schema0SevenMaterialsItemMetalnessMax = 1;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemClearcoatMin = 0;
+export const sceneShotSpecV2Schema0SevenMaterialsItemClearcoatMax = 1;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemClearcoatRoughnessMin = 0;
+export const sceneShotSpecV2Schema0SevenMaterialsItemClearcoatRoughnessMax = 1;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemAnisotropyMin = 0;
+export const sceneShotSpecV2Schema0SevenMaterialsItemAnisotropyMax = 1;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemIorMax = 2.333;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemReflectivityMin = 0;
+export const sceneShotSpecV2Schema0SevenMaterialsItemReflectivityMax = 1;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemEmissiveOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0SevenMaterialsItemEmissiveIntensityMin = 0;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemTransmissionMin = 0;
+export const sceneShotSpecV2Schema0SevenMaterialsItemTransmissionMax = 1;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemThicknessMin = 0;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemAttenuationColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0SevenMaterialsItemAttenuationDistanceExclusiveMin = 0;
+
+export const sceneShotSpecV2Schema0SevenMaterialsItemDispersionMin = 0;
+
+export const sceneShotSpecV2Schema0SevenMaterialsMax = 16;
+
+export const sceneShotSpecV2Schema0SevenMaterialSourceSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const sceneShotSpecV2Schema0EightIdMax = 64;
 
 
-export const sceneShotSpecV2Schema0SevenFontFamilyOneRegExp = new RegExp('^[A-Za-z0-9][A-Za-z0-9 _.\\-]*$');
-export const sceneShotSpecV2Schema0SevenFontWeightMin = 100;
-export const sceneShotSpecV2Schema0SevenFontWeightMax = 900;
+export const sceneShotSpecV2Schema0EightIdRegExp = new RegExp('^[A-Za-z0-9][A-Za-z0-9_-]*$');
+export const sceneShotSpecV2Schema0EightOpacityDefault = 1;
+export const sceneShotSpecV2Schema0EightOpacityMin = 0;
+export const sceneShotSpecV2Schema0EightOpacityMax = 1;
 
-export const sceneShotSpecV2Schema0SevenFontSizeMin = 8;
-export const sceneShotSpecV2Schema0SevenFontSizeMax = 800;
+export const sceneShotSpecV2Schema0EightLinesItemRunsItemTextMax = 512;
 
-export const sceneShotSpecV2Schema0SevenLineHeightDefault = 1.2;
-export const sceneShotSpecV2Schema0SevenLineHeightMin = 0.6;
-export const sceneShotSpecV2Schema0SevenLineHeightMax = 3;
 
-export const sceneShotSpecV2Schema0SevenLetterSpacingDefault = 0;
-export const sceneShotSpecV2Schema0SevenLetterSpacingMin = -20;
-export const sceneShotSpecV2Schema0SevenLetterSpacingMax = 40;
+export const sceneShotSpecV2Schema0EightLinesItemRunsItemTextRegExp = new RegExp('^[^\\r\\n]+$');
+export const sceneShotSpecV2Schema0EightLinesItemRunsItemColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0EightLinesItemRunsMax = 16;
 
-export const sceneShotSpecV2Schema0SevenAlignDefault = `center`;
-export const sceneShotSpecV2Schema0SevenMaxWidthExclusiveMin = 0;
+export const sceneShotSpecV2Schema0EightLinesMax = 24;
 
-export const sceneShotSpecV2Schema0SevenColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
-export const sceneShotSpecV2Schema0SevenRotationDefault = 0;
-export const sceneShotSpecV2Schema0SevenScaleDefault = 1;
-export const sceneShotSpecV2Schema0SevenScaleExclusiveMin = 0;
+export const sceneShotSpecV2Schema0EightFontFamilyOneMax = 128;
+
+
+export const sceneShotSpecV2Schema0EightFontFamilyOneRegExp = new RegExp('^[A-Za-z0-9][A-Za-z0-9 _.\\-]*$');
+export const sceneShotSpecV2Schema0EightFontWeightMin = 100;
+export const sceneShotSpecV2Schema0EightFontWeightMax = 900;
+
+export const sceneShotSpecV2Schema0EightFontSizeMin = 8;
+export const sceneShotSpecV2Schema0EightFontSizeMax = 800;
+
+export const sceneShotSpecV2Schema0EightLineHeightDefault = 1.2;
+export const sceneShotSpecV2Schema0EightLineHeightMin = 0.6;
+export const sceneShotSpecV2Schema0EightLineHeightMax = 3;
+
+export const sceneShotSpecV2Schema0EightLetterSpacingDefault = 0;
+export const sceneShotSpecV2Schema0EightLetterSpacingMin = -20;
+export const sceneShotSpecV2Schema0EightLetterSpacingMax = 40;
+
+export const sceneShotSpecV2Schema0EightAlignDefault = `center`;
+export const sceneShotSpecV2Schema0EightMaxWidthExclusiveMin = 0;
+
+export const sceneShotSpecV2Schema0EightColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0EightTransformScaleDefault = 1;
+export const sceneShotSpecV2Schema0EightTransformScaleExclusiveMin = 0;
+
+export const sceneShotSpecV2Schema0NineIdMax = 64;
+
+
+export const sceneShotSpecV2Schema0NineIdRegExp = new RegExp('^[A-Za-z0-9][A-Za-z0-9_-]*$');
+export const sceneShotSpecV2Schema0NineOpacityDefault = 1;
+export const sceneShotSpecV2Schema0NineOpacityMin = 0;
+export const sceneShotSpecV2Schema0NineOpacityMax = 1;
+
+export const sceneShotSpecV2Schema0NineLinesItemRunsItemTextMax = 512;
+
+
+export const sceneShotSpecV2Schema0NineLinesItemRunsItemTextRegExp = new RegExp('^[^\\r\\n]+$');
+export const sceneShotSpecV2Schema0NineLinesItemRunsItemColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0NineLinesItemRunsMax = 16;
+
+export const sceneShotSpecV2Schema0NineLinesMax = 24;
+
+export const sceneShotSpecV2Schema0NineFontFamilyOneMax = 128;
+
+
+export const sceneShotSpecV2Schema0NineFontFamilyOneRegExp = new RegExp('^[A-Za-z0-9][A-Za-z0-9 _.\\-]*$');
+export const sceneShotSpecV2Schema0NineFontWeightMin = 100;
+export const sceneShotSpecV2Schema0NineFontWeightMax = 900;
+
+export const sceneShotSpecV2Schema0NineFontSizeMin = 8;
+export const sceneShotSpecV2Schema0NineFontSizeMax = 800;
+
+export const sceneShotSpecV2Schema0NineLineHeightDefault = 1.2;
+export const sceneShotSpecV2Schema0NineLineHeightMin = 0.6;
+export const sceneShotSpecV2Schema0NineLineHeightMax = 3;
+
+export const sceneShotSpecV2Schema0NineLetterSpacingDefault = 0;
+export const sceneShotSpecV2Schema0NineLetterSpacingMin = -20;
+export const sceneShotSpecV2Schema0NineLetterSpacingMax = 40;
+
+export const sceneShotSpecV2Schema0NineAlignDefault = `center`;
+export const sceneShotSpecV2Schema0NineMaxWidthExclusiveMin = 0;
+
+export const sceneShotSpecV2Schema0NineColorOneRegExp = new RegExp('^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$');
+export const sceneShotSpecV2Schema0NineRotationDefault = 0;
+export const sceneShotSpecV2Schema0NineScaleDefault = 1;
+export const sceneShotSpecV2Schema0NineScaleExclusiveMin = 0;
 
 
 
@@ -508,6 +731,28 @@ export type SceneShotSpecV2Schema0 = {
      * @maximum 1
      */
   reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
 })[];
   surfaces?: {[key: string]: {
   source: 'image';
@@ -648,6 +893,28 @@ export type SceneShotSpecV2Schema0 = {
      * @maximum 1
      */
   reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
 })[];
   surfaces?: {[key: string]: {
   source: 'image';
@@ -803,6 +1070,28 @@ export type SceneShotSpecV2Schema0 = {
      * @maximum 1
      */
   reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
 })[];
   surfaces?: {[key: string]: {
   source: 'image';
@@ -952,6 +1241,28 @@ export type SceneShotSpecV2Schema0 = {
      * @maximum 1
      */
   reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
 })[];
   surfaces: {[key: string]: {
   source: 'image';
@@ -1015,6 +1326,315 @@ export type SceneShotSpecV2Schema0 = {
      */
   endFrame?: number;
 }};
+} | {
+  kind: 'mesh';
+  /**
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z0-9][A-Za-z0-9_-]*$
+     */
+  id: string;
+  transform?: {
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  position?: [number, number, number];
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  rotation?: [number, number, number];
+  /** @exclusiveMinimum 0 */
+  scale?: number;
+};
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  opacity?: number;
+  geometry: {
+  kind: 'buffer';
+  /**
+     * @minItems 9
+     * @maxItems 196605
+     * @items.minimum -1000000
+     * @items.maximum 1000000
+     */
+  positions: number[];
+  /**
+     * @minItems 9
+     * @maxItems 196605
+     * @items.minimum -1
+     * @items.maximum 1
+     */
+  normals: number[];
+  /**
+     * @minItems 6
+     * @maxItems 131070
+     * @items.minimum -1000000
+     * @items.maximum 1000000
+     */
+  uvs: number[];
+  /**
+     * @minItems 3
+     * @maxItems 750000
+     * @items.minimum 0
+     * @items.maximum 9007199254740991
+     */
+  indices: number[];
+} | {
+  kind: 'tube';
+  /**
+     * @minItems 2
+     * @maxItems 256
+     * @items.minItems 3
+     * @items.maxItems 3
+     */
+  points: [number, number, number][];
+  /**
+     * @maximum 1000000
+     * @exclusiveMinimum 0
+     */
+  radius: number;
+  closed: boolean;
+  /**
+     * @minimum 1
+     * @maximum 1024
+     */
+  tubularSegments: number;
+  /**
+     * @minimum 3
+     * @maximum 64
+     */
+  radialSegments: number;
+};
+  /** @maxItems 16 */
+  materials?: ({
+  /**
+     * @minLength 1
+     * @maxLength 64
+     */
+  role: string;
+  type: 'physical' | 'unlit';
+  color?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  roughness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  metalness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  clearcoat?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  clearcoatRoughness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  anisotropy?: number;
+  anisotropyRotation?: number;
+  /**
+     * @minimum 1
+     * @maximum 2.333
+     */
+  ior?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
+})[];
+  shader?: {
+  profile?: 'stateless-fragment-display-linear-v1';
+  /**
+     * @minLength 1
+     * @maxLength 32768
+     */
+  source: string;
+  uniforms?: {[key: string]: {
+  type: 'float' | 'int' | 'uint' | 'bool' | 'vec2' | 'vec3' | 'vec4' | 'mat2' | 'mat3' | 'mat4';
+  value: number | boolean | number[];
+}};
+  samplers?: {[key: string]: {
+  /**
+     * Image asset slot name bound by the clip assets map; never a URL.
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z_][A-Za-z0-9_-]*$
+     */
+  assetSlot: string;
+  colorSpace: 'srgb' | 'data';
+}};
+};
+  /**
+     * @minItems 1
+     * @maxItems 1024
+     */
+  instances?: {
+  /**
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z0-9][A-Za-z0-9_-]*$
+     */
+  id: string;
+  transform?: {
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  position?: [number, number, number];
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  rotation?: [number, number, number];
+  /** @exclusiveMinimum 0 */
+  scale?: number;
+};
+}[];
+} | {
+  kind: 'model';
+  profile?: 'static-glb-untextured-v1' | 'static-glb-textured-v1';
+  /**
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z0-9][A-Za-z0-9_-]*$
+     */
+  id: string;
+  transform?: {
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  position?: [number, number, number];
+  /**
+     * @minItems 3
+     * @maxItems 3
+     */
+  rotation?: [number, number, number];
+  /** @exclusiveMinimum 0 */
+  scale?: number;
+};
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  opacity?: number;
+  /**
+     * Image asset slot name bound by the clip assets map; never a URL.
+     * @minLength 1
+     * @maxLength 64
+     * @pattern ^[A-Za-z_][A-Za-z0-9_-]*$
+     */
+  assetSlot: string;
+  /**
+     * @maximum 1000000
+     * @exclusiveMinimum 0
+     */
+  size: number;
+  /** @maxItems 16 */
+  materials?: ({
+  /**
+     * @minLength 1
+     * @maxLength 64
+     */
+  role: string;
+  type: 'physical' | 'unlit';
+  color?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  roughness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  metalness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  clearcoat?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  clearcoatRoughness?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  anisotropy?: number;
+  anisotropyRotation?: number;
+  /**
+     * @minimum 1
+     * @maximum 2.333
+     */
+  ior?: number;
+  /**
+     * @minimum 0
+     * @maximum 1
+     */
+  reflectivity?: number;
+  emissive?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /** @minimum 0 */
+  emissiveIntensity?: number;
+  /**
+     * Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.
+     * @minimum 0
+     * @maximum 1
+     */
+  transmission?: number;
+  /**
+     * Optical thickness in scene reference pixels.
+     * @minimum 0
+     */
+  thickness?: number;
+  attenuationColor?: string | '$brand:colors.background' | '$brand:colors.surface' | '$brand:colors.text' | '$brand:colors.textMuted' | '$brand:colors.accent' | '$brand:colors.accentStrong' | '$brand:colors.accentSoft' | '$brand:colors.success' | '$brand:colors.warning' | '$brand:colors.danger';
+  /**
+     * Attenuation distance in scene reference pixels.
+     * @exclusiveMinimum 0
+     */
+  attenuationDistance?: number;
+  /** @minimum 0 */
+  dispersion?: number;
+})[];
+  /** @pattern ^[a-f0-9]{64}$ */
+  materialSourceSha256?: string;
 } | {
   /**
      * @minLength 1
@@ -1196,7 +1816,14 @@ zod.number()]).default([0, 0, 0]),
   "anisotropy": zod.number().min(sceneShotSpecV2Schema0TwoMaterialsItemAnisotropyMin).max(sceneShotSpecV2Schema0TwoMaterialsItemAnisotropyMax).optional(),
   "anisotropyRotation": zod.number().optional(),
   "ior": zod.number().min(1).max(sceneShotSpecV2Schema0TwoMaterialsItemIorMax).optional(),
-  "reflectivity": zod.number().min(sceneShotSpecV2Schema0TwoMaterialsItemReflectivityMin).max(sceneShotSpecV2Schema0TwoMaterialsItemReflectivityMax).optional()
+  "reflectivity": zod.number().min(sceneShotSpecV2Schema0TwoMaterialsItemReflectivityMin).max(sceneShotSpecV2Schema0TwoMaterialsItemReflectivityMax).optional(),
+  "emissive": zod.union([zod.string().regex(sceneShotSpecV2Schema0TwoMaterialsItemEmissiveOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "emissiveIntensity": zod.number().min(sceneShotSpecV2Schema0TwoMaterialsItemEmissiveIntensityMin).optional(),
+  "transmission": zod.number().min(sceneShotSpecV2Schema0TwoMaterialsItemTransmissionMin).max(sceneShotSpecV2Schema0TwoMaterialsItemTransmissionMax).optional().describe('Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.'),
+  "thickness": zod.number().min(sceneShotSpecV2Schema0TwoMaterialsItemThicknessMin).optional().describe('Optical thickness in scene reference pixels.'),
+  "attenuationColor": zod.union([zod.string().regex(sceneShotSpecV2Schema0TwoMaterialsItemAttenuationColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "attenuationDistance": zod.number().gt(sceneShotSpecV2Schema0TwoMaterialsItemAttenuationDistanceExclusiveMin).optional().describe('Attenuation distance in scene reference pixels.'),
+  "dispersion": zod.number().min(sceneShotSpecV2Schema0TwoMaterialsItemDispersionMin).optional()
 })).max(sceneShotSpecV2Schema0TwoMaterialsMax).optional(),
   "surfaces": zod.record(zod.string(), zod.union([zod.strictObject({
   "source": zod.literal("image"),
@@ -1249,7 +1876,14 @@ zod.number()]).default([0, 0, 0]),
   "anisotropy": zod.number().min(sceneShotSpecV2Schema0ThreeMaterialsItemAnisotropyMin).max(sceneShotSpecV2Schema0ThreeMaterialsItemAnisotropyMax).optional(),
   "anisotropyRotation": zod.number().optional(),
   "ior": zod.number().min(1).max(sceneShotSpecV2Schema0ThreeMaterialsItemIorMax).optional(),
-  "reflectivity": zod.number().min(sceneShotSpecV2Schema0ThreeMaterialsItemReflectivityMin).max(sceneShotSpecV2Schema0ThreeMaterialsItemReflectivityMax).optional()
+  "reflectivity": zod.number().min(sceneShotSpecV2Schema0ThreeMaterialsItemReflectivityMin).max(sceneShotSpecV2Schema0ThreeMaterialsItemReflectivityMax).optional(),
+  "emissive": zod.union([zod.string().regex(sceneShotSpecV2Schema0ThreeMaterialsItemEmissiveOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "emissiveIntensity": zod.number().min(sceneShotSpecV2Schema0ThreeMaterialsItemEmissiveIntensityMin).optional(),
+  "transmission": zod.number().min(sceneShotSpecV2Schema0ThreeMaterialsItemTransmissionMin).max(sceneShotSpecV2Schema0ThreeMaterialsItemTransmissionMax).optional().describe('Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.'),
+  "thickness": zod.number().min(sceneShotSpecV2Schema0ThreeMaterialsItemThicknessMin).optional().describe('Optical thickness in scene reference pixels.'),
+  "attenuationColor": zod.union([zod.string().regex(sceneShotSpecV2Schema0ThreeMaterialsItemAttenuationColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "attenuationDistance": zod.number().gt(sceneShotSpecV2Schema0ThreeMaterialsItemAttenuationDistanceExclusiveMin).optional().describe('Attenuation distance in scene reference pixels.'),
+  "dispersion": zod.number().min(sceneShotSpecV2Schema0ThreeMaterialsItemDispersionMin).optional()
 })).max(sceneShotSpecV2Schema0ThreeMaterialsMax).optional(),
   "surfaces": zod.record(zod.string(), zod.union([zod.strictObject({
   "source": zod.literal("image"),
@@ -1307,7 +1941,14 @@ zod.number()]).default([0, 0, 0]),
   "anisotropy": zod.number().min(sceneShotSpecV2Schema0FourMaterialsItemAnisotropyMin).max(sceneShotSpecV2Schema0FourMaterialsItemAnisotropyMax).optional(),
   "anisotropyRotation": zod.number().optional(),
   "ior": zod.number().min(1).max(sceneShotSpecV2Schema0FourMaterialsItemIorMax).optional(),
-  "reflectivity": zod.number().min(sceneShotSpecV2Schema0FourMaterialsItemReflectivityMin).max(sceneShotSpecV2Schema0FourMaterialsItemReflectivityMax).optional()
+  "reflectivity": zod.number().min(sceneShotSpecV2Schema0FourMaterialsItemReflectivityMin).max(sceneShotSpecV2Schema0FourMaterialsItemReflectivityMax).optional(),
+  "emissive": zod.union([zod.string().regex(sceneShotSpecV2Schema0FourMaterialsItemEmissiveOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "emissiveIntensity": zod.number().min(sceneShotSpecV2Schema0FourMaterialsItemEmissiveIntensityMin).optional(),
+  "transmission": zod.number().min(sceneShotSpecV2Schema0FourMaterialsItemTransmissionMin).max(sceneShotSpecV2Schema0FourMaterialsItemTransmissionMax).optional().describe('Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.'),
+  "thickness": zod.number().min(sceneShotSpecV2Schema0FourMaterialsItemThicknessMin).optional().describe('Optical thickness in scene reference pixels.'),
+  "attenuationColor": zod.union([zod.string().regex(sceneShotSpecV2Schema0FourMaterialsItemAttenuationColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "attenuationDistance": zod.number().gt(sceneShotSpecV2Schema0FourMaterialsItemAttenuationDistanceExclusiveMin).optional().describe('Attenuation distance in scene reference pixels.'),
+  "dispersion": zod.number().min(sceneShotSpecV2Schema0FourMaterialsItemDispersionMin).optional()
 })).max(sceneShotSpecV2Schema0FourMaterialsMax).optional(),
   "surfaces": zod.record(zod.string(), zod.union([zod.strictObject({
   "source": zod.literal("image"),
@@ -1365,7 +2006,14 @@ zod.number()]).default([0, 0, 0]),
   "anisotropy": zod.number().min(sceneShotSpecV2Schema0FiveMaterialsItemAnisotropyMin).max(sceneShotSpecV2Schema0FiveMaterialsItemAnisotropyMax).optional(),
   "anisotropyRotation": zod.number().optional(),
   "ior": zod.number().min(1).max(sceneShotSpecV2Schema0FiveMaterialsItemIorMax).optional(),
-  "reflectivity": zod.number().min(sceneShotSpecV2Schema0FiveMaterialsItemReflectivityMin).max(sceneShotSpecV2Schema0FiveMaterialsItemReflectivityMax).optional()
+  "reflectivity": zod.number().min(sceneShotSpecV2Schema0FiveMaterialsItemReflectivityMin).max(sceneShotSpecV2Schema0FiveMaterialsItemReflectivityMax).optional(),
+  "emissive": zod.union([zod.string().regex(sceneShotSpecV2Schema0FiveMaterialsItemEmissiveOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "emissiveIntensity": zod.number().min(sceneShotSpecV2Schema0FiveMaterialsItemEmissiveIntensityMin).optional(),
+  "transmission": zod.number().min(sceneShotSpecV2Schema0FiveMaterialsItemTransmissionMin).max(sceneShotSpecV2Schema0FiveMaterialsItemTransmissionMax).optional().describe('Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.'),
+  "thickness": zod.number().min(sceneShotSpecV2Schema0FiveMaterialsItemThicknessMin).optional().describe('Optical thickness in scene reference pixels.'),
+  "attenuationColor": zod.union([zod.string().regex(sceneShotSpecV2Schema0FiveMaterialsItemAttenuationColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "attenuationDistance": zod.number().gt(sceneShotSpecV2Schema0FiveMaterialsItemAttenuationDistanceExclusiveMin).optional().describe('Attenuation distance in scene reference pixels.'),
+  "dispersion": zod.number().min(sceneShotSpecV2Schema0FiveMaterialsItemDispersionMin).optional()
 })).max(sceneShotSpecV2Schema0FiveMaterialsMax).optional(),
   "surfaces": zod.record(zod.string(), zod.union([zod.strictObject({
   "source": zod.literal("image"),
@@ -1394,26 +2042,8 @@ zod.number()]).default([0, 0, 0]),
   "endFrame": zod.int().gt(sceneShotSpecV2Schema0FiveSurfacesFourEndFrameExclusiveMin).max(sceneShotSpecV2Schema0FiveSurfacesFourEndFrameMax).optional()
 })]))
 }),zod.strictObject({
+  "kind": zod.literal("mesh"),
   "id": zod.string().min(1).max(sceneShotSpecV2Schema0SixIdMax).regex(sceneShotSpecV2Schema0SixIdRegExp),
-  "kind": zod.literal("text"),
-  "opacity": zod.number().min(sceneShotSpecV2Schema0SixOpacityMin).max(sceneShotSpecV2Schema0SixOpacityMax).default(sceneShotSpecV2Schema0SixOpacityDefault),
-  "lines": zod.array(zod.strictObject({
-  "runs": zod.array(zod.strictObject({
-  "text": zod.string().min(1).max(sceneShotSpecV2Schema0SixLinesItemRunsItemTextMax).regex(sceneShotSpecV2Schema0SixLinesItemRunsItemTextRegExp),
-  "color": zod.union([zod.string().regex(sceneShotSpecV2Schema0SixLinesItemRunsItemColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
-  "emphasis": zod.boolean().optional()
-})).min(1).max(sceneShotSpecV2Schema0SixLinesItemRunsMax)
-})).min(1).max(sceneShotSpecV2Schema0SixLinesMax),
-  "fontFamily": zod.union([zod.string().min(1).max(sceneShotSpecV2Schema0SixFontFamilyOneMax).regex(sceneShotSpecV2Schema0SixFontFamilyOneRegExp),zod.enum(['$brand:fonts.heading', '$brand:fonts.body', '$brand:fonts.caption'])]),
-  "fontWeight": zod.int().min(sceneShotSpecV2Schema0SixFontWeightMin).max(sceneShotSpecV2Schema0SixFontWeightMax),
-  "fontStyle": zod.enum(['normal', 'italic']),
-  "fontSize": zod.number().min(sceneShotSpecV2Schema0SixFontSizeMin).max(sceneShotSpecV2Schema0SixFontSizeMax),
-  "lineHeight": zod.number().min(sceneShotSpecV2Schema0SixLineHeightMin).max(sceneShotSpecV2Schema0SixLineHeightMax).default(sceneShotSpecV2Schema0SixLineHeightDefault),
-  "letterSpacing": zod.number().min(sceneShotSpecV2Schema0SixLetterSpacingMin).max(sceneShotSpecV2Schema0SixLetterSpacingMax).default(sceneShotSpecV2Schema0SixLetterSpacingDefault),
-  "align": zod.enum(['left', 'center', 'right']).default(sceneShotSpecV2Schema0SixAlignDefault),
-  "maxWidth": zod.number().gt(sceneShotSpecV2Schema0SixMaxWidthExclusiveMin).optional(),
-  "color": zod.union([zod.string().regex(sceneShotSpecV2Schema0SixColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]),
-  "space": zod.literal("world"),
   "transform": zod.strictObject({
   "position": zod.tuple([zod.number(),
 zod.number(),
@@ -1422,32 +2052,160 @@ zod.number()]).default([0, 0, 0]),
 zod.number(),
 zod.number()]).default([0, 0, 0]),
   "scale": zod.number().gt(sceneShotSpecV2Schema0SixTransformScaleExclusiveMin).default(sceneShotSpecV2Schema0SixTransformScaleDefault)
-}).default({ "position": [0, 0, 0], "rotation": [0, 0, 0], "scale": 1 as const })
+}).default({ "position": [0, 0, 0], "rotation": [0, 0, 0], "scale": 1 as const }),
+  "opacity": zod.number().min(sceneShotSpecV2Schema0SixOpacityMin).max(sceneShotSpecV2Schema0SixOpacityMax).default(sceneShotSpecV2Schema0SixOpacityDefault),
+  "geometry": zod.union([zod.strictObject({
+  "kind": zod.literal("buffer"),
+  "positions": zod.array(zod.number().min(sceneShotSpecV2Schema0SixGeometryOnePositionsItemMin).max(sceneShotSpecV2Schema0SixGeometryOnePositionsItemMax)).min(sceneShotSpecV2Schema0SixGeometryOnePositionsMin).max(sceneShotSpecV2Schema0SixGeometryOnePositionsMax),
+  "normals": zod.array(zod.number().min(sceneShotSpecV2Schema0SixGeometryOneNormalsItemMin).max(sceneShotSpecV2Schema0SixGeometryOneNormalsItemMax)).min(sceneShotSpecV2Schema0SixGeometryOneNormalsMin).max(sceneShotSpecV2Schema0SixGeometryOneNormalsMax),
+  "uvs": zod.array(zod.number().min(sceneShotSpecV2Schema0SixGeometryOneUvsItemMin).max(sceneShotSpecV2Schema0SixGeometryOneUvsItemMax)).min(sceneShotSpecV2Schema0SixGeometryOneUvsMin).max(sceneShotSpecV2Schema0SixGeometryOneUvsMax),
+  "indices": zod.array(zod.int().min(sceneShotSpecV2Schema0SixGeometryOneIndicesItemMin).max(sceneShotSpecV2Schema0SixGeometryOneIndicesItemMax)).min(sceneShotSpecV2Schema0SixGeometryOneIndicesMin).max(sceneShotSpecV2Schema0SixGeometryOneIndicesMax)
 }),zod.strictObject({
+  "kind": zod.literal("tube"),
+  "points": zod.array(zod.tuple([zod.number().min(sceneShotSpecV2Schema0SixGeometryTwoPointsItem0ItemMin).max(sceneShotSpecV2Schema0SixGeometryTwoPointsItem0ItemMax),
+zod.number().min(sceneShotSpecV2Schema0SixGeometryTwoPointsItem1ItemMin).max(sceneShotSpecV2Schema0SixGeometryTwoPointsItem1ItemMax),
+zod.number().min(sceneShotSpecV2Schema0SixGeometryTwoPointsItem2ItemMin).max(sceneShotSpecV2Schema0SixGeometryTwoPointsItem2ItemMax)])).min(sceneShotSpecV2Schema0SixGeometryTwoPointsMin).max(sceneShotSpecV2Schema0SixGeometryTwoPointsMax),
+  "radius": zod.number().gt(sceneShotSpecV2Schema0SixGeometryTwoRadiusExclusiveMin).max(sceneShotSpecV2Schema0SixGeometryTwoRadiusMax),
+  "closed": zod.boolean(),
+  "tubularSegments": zod.int().min(1).max(sceneShotSpecV2Schema0SixGeometryTwoTubularSegmentsMax),
+  "radialSegments": zod.int().min(sceneShotSpecV2Schema0SixGeometryTwoRadialSegmentsMin).max(sceneShotSpecV2Schema0SixGeometryTwoRadialSegmentsMax)
+})]),
+  "materials": zod.array(zod.strictObject({
+  "role": zod.string().min(1).max(sceneShotSpecV2Schema0SixMaterialsItemRoleMax),
+  "type": zod.enum(['physical', 'unlit']),
+  "color": zod.union([zod.string().regex(sceneShotSpecV2Schema0SixMaterialsItemColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "roughness": zod.number().min(sceneShotSpecV2Schema0SixMaterialsItemRoughnessMin).max(sceneShotSpecV2Schema0SixMaterialsItemRoughnessMax).optional(),
+  "metalness": zod.number().min(sceneShotSpecV2Schema0SixMaterialsItemMetalnessMin).max(sceneShotSpecV2Schema0SixMaterialsItemMetalnessMax).optional(),
+  "clearcoat": zod.number().min(sceneShotSpecV2Schema0SixMaterialsItemClearcoatMin).max(sceneShotSpecV2Schema0SixMaterialsItemClearcoatMax).optional(),
+  "clearcoatRoughness": zod.number().min(sceneShotSpecV2Schema0SixMaterialsItemClearcoatRoughnessMin).max(sceneShotSpecV2Schema0SixMaterialsItemClearcoatRoughnessMax).optional(),
+  "anisotropy": zod.number().min(sceneShotSpecV2Schema0SixMaterialsItemAnisotropyMin).max(sceneShotSpecV2Schema0SixMaterialsItemAnisotropyMax).optional(),
+  "anisotropyRotation": zod.number().optional(),
+  "ior": zod.number().min(1).max(sceneShotSpecV2Schema0SixMaterialsItemIorMax).optional(),
+  "reflectivity": zod.number().min(sceneShotSpecV2Schema0SixMaterialsItemReflectivityMin).max(sceneShotSpecV2Schema0SixMaterialsItemReflectivityMax).optional(),
+  "emissive": zod.union([zod.string().regex(sceneShotSpecV2Schema0SixMaterialsItemEmissiveOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "emissiveIntensity": zod.number().min(sceneShotSpecV2Schema0SixMaterialsItemEmissiveIntensityMin).optional(),
+  "transmission": zod.number().min(sceneShotSpecV2Schema0SixMaterialsItemTransmissionMin).max(sceneShotSpecV2Schema0SixMaterialsItemTransmissionMax).optional().describe('Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.'),
+  "thickness": zod.number().min(sceneShotSpecV2Schema0SixMaterialsItemThicknessMin).optional().describe('Optical thickness in scene reference pixels.'),
+  "attenuationColor": zod.union([zod.string().regex(sceneShotSpecV2Schema0SixMaterialsItemAttenuationColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "attenuationDistance": zod.number().gt(sceneShotSpecV2Schema0SixMaterialsItemAttenuationDistanceExclusiveMin).optional().describe('Attenuation distance in scene reference pixels.'),
+  "dispersion": zod.number().min(sceneShotSpecV2Schema0SixMaterialsItemDispersionMin).optional()
+})).max(sceneShotSpecV2Schema0SixMaterialsMax).optional(),
+  "shader": zod.strictObject({
+  "profile": zod.literal("stateless-fragment-display-linear-v1").default(sceneShotSpecV2Schema0SixShaderProfileDefault),
+  "source": zod.string().min(1).max(sceneShotSpecV2Schema0SixShaderSourceMax),
+  "uniforms": zod.record(zod.string(), zod.strictObject({
+  "type": zod.enum(['float', 'int', 'uint', 'bool', 'vec2', 'vec3', 'vec4', 'mat2', 'mat3', 'mat4']),
+  "value": zod.union([zod.number(),zod.boolean(),zod.array(zod.number()).min(1).max(sceneShotSpecV2Schema0SixShaderUniformsValueThreeMax)])
+})).default(sceneShotSpecV2Schema0SixShaderUniformsDefault),
+  "samplers": zod.record(zod.string(), zod.strictObject({
+  "assetSlot": zod.string().min(1).max(sceneShotSpecV2Schema0SixShaderSamplersAssetSlotMax).regex(sceneShotSpecV2Schema0SixShaderSamplersAssetSlotRegExp).describe('Image asset slot name bound by the clip assets map; never a URL.'),
+  "colorSpace": zod.enum(['srgb', 'data'])
+})).default(sceneShotSpecV2Schema0SixShaderSamplersDefault)
+}).optional(),
+  "instances": zod.array(zod.strictObject({
+  "id": zod.string().min(1).max(sceneShotSpecV2Schema0SixInstancesItemIdMax).regex(sceneShotSpecV2Schema0SixInstancesItemIdRegExp),
+  "transform": zod.strictObject({
+  "position": zod.tuple([zod.number(),
+zod.number(),
+zod.number()]).default([0, 0, 0]),
+  "rotation": zod.tuple([zod.number(),
+zod.number(),
+zod.number()]).default([0, 0, 0]),
+  "scale": zod.number().gt(sceneShotSpecV2Schema0SixInstancesItemTransformScaleExclusiveMin).default(sceneShotSpecV2Schema0SixInstancesItemTransformScaleDefault)
+}).default({ "position": [0, 0, 0], "rotation": [0, 0, 0], "scale": 1 as const })
+})).min(1).max(sceneShotSpecV2Schema0SixInstancesMax).optional()
+}),zod.strictObject({
+  "kind": zod.literal("model"),
+  "profile": zod.enum(['static-glb-untextured-v1', 'static-glb-textured-v1']).default(sceneShotSpecV2Schema0SevenProfileDefault),
   "id": zod.string().min(1).max(sceneShotSpecV2Schema0SevenIdMax).regex(sceneShotSpecV2Schema0SevenIdRegExp),
-  "kind": zod.literal("text"),
+  "transform": zod.strictObject({
+  "position": zod.tuple([zod.number(),
+zod.number(),
+zod.number()]).default([0, 0, 0]),
+  "rotation": zod.tuple([zod.number(),
+zod.number(),
+zod.number()]).default([0, 0, 0]),
+  "scale": zod.number().gt(sceneShotSpecV2Schema0SevenTransformScaleExclusiveMin).default(sceneShotSpecV2Schema0SevenTransformScaleDefault)
+}).default({ "position": [0, 0, 0], "rotation": [0, 0, 0], "scale": 1 as const }),
   "opacity": zod.number().min(sceneShotSpecV2Schema0SevenOpacityMin).max(sceneShotSpecV2Schema0SevenOpacityMax).default(sceneShotSpecV2Schema0SevenOpacityDefault),
+  "assetSlot": zod.string().min(1).max(sceneShotSpecV2Schema0SevenAssetSlotMax).regex(sceneShotSpecV2Schema0SevenAssetSlotRegExp).describe('Image asset slot name bound by the clip assets map; never a URL.'),
+  "size": zod.number().gt(sceneShotSpecV2Schema0SevenSizeExclusiveMin).max(sceneShotSpecV2Schema0SevenSizeMax),
+  "materials": zod.array(zod.strictObject({
+  "role": zod.string().min(1).max(sceneShotSpecV2Schema0SevenMaterialsItemRoleMax),
+  "type": zod.enum(['physical', 'unlit']),
+  "color": zod.union([zod.string().regex(sceneShotSpecV2Schema0SevenMaterialsItemColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "roughness": zod.number().min(sceneShotSpecV2Schema0SevenMaterialsItemRoughnessMin).max(sceneShotSpecV2Schema0SevenMaterialsItemRoughnessMax).optional(),
+  "metalness": zod.number().min(sceneShotSpecV2Schema0SevenMaterialsItemMetalnessMin).max(sceneShotSpecV2Schema0SevenMaterialsItemMetalnessMax).optional(),
+  "clearcoat": zod.number().min(sceneShotSpecV2Schema0SevenMaterialsItemClearcoatMin).max(sceneShotSpecV2Schema0SevenMaterialsItemClearcoatMax).optional(),
+  "clearcoatRoughness": zod.number().min(sceneShotSpecV2Schema0SevenMaterialsItemClearcoatRoughnessMin).max(sceneShotSpecV2Schema0SevenMaterialsItemClearcoatRoughnessMax).optional(),
+  "anisotropy": zod.number().min(sceneShotSpecV2Schema0SevenMaterialsItemAnisotropyMin).max(sceneShotSpecV2Schema0SevenMaterialsItemAnisotropyMax).optional(),
+  "anisotropyRotation": zod.number().optional(),
+  "ior": zod.number().min(1).max(sceneShotSpecV2Schema0SevenMaterialsItemIorMax).optional(),
+  "reflectivity": zod.number().min(sceneShotSpecV2Schema0SevenMaterialsItemReflectivityMin).max(sceneShotSpecV2Schema0SevenMaterialsItemReflectivityMax).optional(),
+  "emissive": zod.union([zod.string().regex(sceneShotSpecV2Schema0SevenMaterialsItemEmissiveOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "emissiveIntensity": zod.number().min(sceneShotSpecV2Schema0SevenMaterialsItemEmissiveIntensityMin).optional(),
+  "transmission": zod.number().min(sceneShotSpecV2Schema0SevenMaterialsItemTransmissionMin).max(sceneShotSpecV2Schema0SevenMaterialsItemTransmissionMax).optional().describe('Nonzero transmission uses the measured pinned single-camera half-float/MSAA4 profile with canonical preparation and observed target allocations; unsupported renderer profiles refuse.'),
+  "thickness": zod.number().min(sceneShotSpecV2Schema0SevenMaterialsItemThicknessMin).optional().describe('Optical thickness in scene reference pixels.'),
+  "attenuationColor": zod.union([zod.string().regex(sceneShotSpecV2Schema0SevenMaterialsItemAttenuationColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "attenuationDistance": zod.number().gt(sceneShotSpecV2Schema0SevenMaterialsItemAttenuationDistanceExclusiveMin).optional().describe('Attenuation distance in scene reference pixels.'),
+  "dispersion": zod.number().min(sceneShotSpecV2Schema0SevenMaterialsItemDispersionMin).optional()
+})).max(sceneShotSpecV2Schema0SevenMaterialsMax).optional(),
+  "materialSourceSha256": zod.string().regex(sceneShotSpecV2Schema0SevenMaterialSourceSha256RegExp).optional()
+}),zod.strictObject({
+  "id": zod.string().min(1).max(sceneShotSpecV2Schema0EightIdMax).regex(sceneShotSpecV2Schema0EightIdRegExp),
+  "kind": zod.literal("text"),
+  "opacity": zod.number().min(sceneShotSpecV2Schema0EightOpacityMin).max(sceneShotSpecV2Schema0EightOpacityMax).default(sceneShotSpecV2Schema0EightOpacityDefault),
   "lines": zod.array(zod.strictObject({
   "runs": zod.array(zod.strictObject({
-  "text": zod.string().min(1).max(sceneShotSpecV2Schema0SevenLinesItemRunsItemTextMax).regex(sceneShotSpecV2Schema0SevenLinesItemRunsItemTextRegExp),
-  "color": zod.union([zod.string().regex(sceneShotSpecV2Schema0SevenLinesItemRunsItemColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "text": zod.string().min(1).max(sceneShotSpecV2Schema0EightLinesItemRunsItemTextMax).regex(sceneShotSpecV2Schema0EightLinesItemRunsItemTextRegExp),
+  "color": zod.union([zod.string().regex(sceneShotSpecV2Schema0EightLinesItemRunsItemColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
   "emphasis": zod.boolean().optional()
-})).min(1).max(sceneShotSpecV2Schema0SevenLinesItemRunsMax)
-})).min(1).max(sceneShotSpecV2Schema0SevenLinesMax),
-  "fontFamily": zod.union([zod.string().min(1).max(sceneShotSpecV2Schema0SevenFontFamilyOneMax).regex(sceneShotSpecV2Schema0SevenFontFamilyOneRegExp),zod.enum(['$brand:fonts.heading', '$brand:fonts.body', '$brand:fonts.caption'])]),
-  "fontWeight": zod.int().min(sceneShotSpecV2Schema0SevenFontWeightMin).max(sceneShotSpecV2Schema0SevenFontWeightMax),
+})).min(1).max(sceneShotSpecV2Schema0EightLinesItemRunsMax)
+})).min(1).max(sceneShotSpecV2Schema0EightLinesMax),
+  "fontFamily": zod.union([zod.string().min(1).max(sceneShotSpecV2Schema0EightFontFamilyOneMax).regex(sceneShotSpecV2Schema0EightFontFamilyOneRegExp),zod.enum(['$brand:fonts.heading', '$brand:fonts.body', '$brand:fonts.caption'])]),
+  "fontWeight": zod.int().min(sceneShotSpecV2Schema0EightFontWeightMin).max(sceneShotSpecV2Schema0EightFontWeightMax),
   "fontStyle": zod.enum(['normal', 'italic']),
-  "fontSize": zod.number().min(sceneShotSpecV2Schema0SevenFontSizeMin).max(sceneShotSpecV2Schema0SevenFontSizeMax),
-  "lineHeight": zod.number().min(sceneShotSpecV2Schema0SevenLineHeightMin).max(sceneShotSpecV2Schema0SevenLineHeightMax).default(sceneShotSpecV2Schema0SevenLineHeightDefault),
-  "letterSpacing": zod.number().min(sceneShotSpecV2Schema0SevenLetterSpacingMin).max(sceneShotSpecV2Schema0SevenLetterSpacingMax).default(sceneShotSpecV2Schema0SevenLetterSpacingDefault),
-  "align": zod.enum(['left', 'center', 'right']).default(sceneShotSpecV2Schema0SevenAlignDefault),
-  "maxWidth": zod.number().gt(sceneShotSpecV2Schema0SevenMaxWidthExclusiveMin).optional(),
-  "color": zod.union([zod.string().regex(sceneShotSpecV2Schema0SevenColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]),
+  "fontSize": zod.number().min(sceneShotSpecV2Schema0EightFontSizeMin).max(sceneShotSpecV2Schema0EightFontSizeMax),
+  "lineHeight": zod.number().min(sceneShotSpecV2Schema0EightLineHeightMin).max(sceneShotSpecV2Schema0EightLineHeightMax).default(sceneShotSpecV2Schema0EightLineHeightDefault),
+  "letterSpacing": zod.number().min(sceneShotSpecV2Schema0EightLetterSpacingMin).max(sceneShotSpecV2Schema0EightLetterSpacingMax).default(sceneShotSpecV2Schema0EightLetterSpacingDefault),
+  "align": zod.enum(['left', 'center', 'right']).default(sceneShotSpecV2Schema0EightAlignDefault),
+  "maxWidth": zod.number().gt(sceneShotSpecV2Schema0EightMaxWidthExclusiveMin).optional(),
+  "color": zod.union([zod.string().regex(sceneShotSpecV2Schema0EightColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]),
+  "space": zod.literal("world"),
+  "transform": zod.strictObject({
+  "position": zod.tuple([zod.number(),
+zod.number(),
+zod.number()]).default([0, 0, 0]),
+  "rotation": zod.tuple([zod.number(),
+zod.number(),
+zod.number()]).default([0, 0, 0]),
+  "scale": zod.number().gt(sceneShotSpecV2Schema0EightTransformScaleExclusiveMin).default(sceneShotSpecV2Schema0EightTransformScaleDefault)
+}).default({ "position": [0, 0, 0], "rotation": [0, 0, 0], "scale": 1 as const })
+}),zod.strictObject({
+  "id": zod.string().min(1).max(sceneShotSpecV2Schema0NineIdMax).regex(sceneShotSpecV2Schema0NineIdRegExp),
+  "kind": zod.literal("text"),
+  "opacity": zod.number().min(sceneShotSpecV2Schema0NineOpacityMin).max(sceneShotSpecV2Schema0NineOpacityMax).default(sceneShotSpecV2Schema0NineOpacityDefault),
+  "lines": zod.array(zod.strictObject({
+  "runs": zod.array(zod.strictObject({
+  "text": zod.string().min(1).max(sceneShotSpecV2Schema0NineLinesItemRunsItemTextMax).regex(sceneShotSpecV2Schema0NineLinesItemRunsItemTextRegExp),
+  "color": zod.union([zod.string().regex(sceneShotSpecV2Schema0NineLinesItemRunsItemColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]).optional(),
+  "emphasis": zod.boolean().optional()
+})).min(1).max(sceneShotSpecV2Schema0NineLinesItemRunsMax)
+})).min(1).max(sceneShotSpecV2Schema0NineLinesMax),
+  "fontFamily": zod.union([zod.string().min(1).max(sceneShotSpecV2Schema0NineFontFamilyOneMax).regex(sceneShotSpecV2Schema0NineFontFamilyOneRegExp),zod.enum(['$brand:fonts.heading', '$brand:fonts.body', '$brand:fonts.caption'])]),
+  "fontWeight": zod.int().min(sceneShotSpecV2Schema0NineFontWeightMin).max(sceneShotSpecV2Schema0NineFontWeightMax),
+  "fontStyle": zod.enum(['normal', 'italic']),
+  "fontSize": zod.number().min(sceneShotSpecV2Schema0NineFontSizeMin).max(sceneShotSpecV2Schema0NineFontSizeMax),
+  "lineHeight": zod.number().min(sceneShotSpecV2Schema0NineLineHeightMin).max(sceneShotSpecV2Schema0NineLineHeightMax).default(sceneShotSpecV2Schema0NineLineHeightDefault),
+  "letterSpacing": zod.number().min(sceneShotSpecV2Schema0NineLetterSpacingMin).max(sceneShotSpecV2Schema0NineLetterSpacingMax).default(sceneShotSpecV2Schema0NineLetterSpacingDefault),
+  "align": zod.enum(['left', 'center', 'right']).default(sceneShotSpecV2Schema0NineAlignDefault),
+  "maxWidth": zod.number().gt(sceneShotSpecV2Schema0NineMaxWidthExclusiveMin).optional(),
+  "color": zod.union([zod.string().regex(sceneShotSpecV2Schema0NineColorOneRegExp),zod.enum(['$brand:colors.background', '$brand:colors.surface', '$brand:colors.text', '$brand:colors.textMuted', '$brand:colors.accent', '$brand:colors.accentStrong', '$brand:colors.accentSoft', '$brand:colors.success', '$brand:colors.warning', '$brand:colors.danger'])]),
   "space": zod.literal("screen"),
   "x": zod.number(),
   "y": zod.number(),
-  "rotation": zod.number().default(sceneShotSpecV2Schema0SevenRotationDefault),
-  "scale": zod.number().gt(sceneShotSpecV2Schema0SevenScaleExclusiveMin).default(sceneShotSpecV2Schema0SevenScaleDefault)
+  "rotation": zod.number().default(sceneShotSpecV2Schema0NineRotationDefault),
+  "scale": zod.number().gt(sceneShotSpecV2Schema0NineScaleExclusiveMin).default(sceneShotSpecV2Schema0NineScaleDefault)
 })]);
 
 export type SceneShotSpecV2Schema0Output = zod.output<typeof SceneShotSpecV2Schema0>;

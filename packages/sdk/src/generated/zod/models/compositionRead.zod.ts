@@ -542,6 +542,21 @@ export const CompositionRead = zod.strictObject({
   "readerOrgIds": zod.array(zod.string()).optional(),
   "writerOrgIds": zod.array(zod.string()).optional()
 }).optional(),
+  "media": zod.record(zod.string(), zod.strictObject({
+  "inputTransform": zod.strictObject({
+  "version": zod.literal(1),
+  "id": zod.enum(['rec709', 'insta360-ilog', 'custom-lut', 'apple-log']),
+  "table": zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean()
+}).optional(),
+  "ycbcr": zod.strictObject({
+  "matrix": zod.enum(['bt709', 'bt2020', 'bt601']),
+  "range": zod.enum(['limited', 'full'])
+}).optional()
+})
+})).optional(),
   "needsUpgrade": zod.array(CompositionUpgradeNeed).optional()
 }).describe('A composition as GET /projects/:id/composition answers it: the kernel\'s Composition, plus `needsUpgrade` when clips are stored in a retired form (absent otherwise).');
 

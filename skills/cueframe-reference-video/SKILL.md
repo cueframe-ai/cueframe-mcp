@@ -15,6 +15,8 @@ Treat the supplied film as the acceptance anchor. Reconstruct what it communicat
 
 Use the current runtime's advertised source and motion-inspection capabilities. An overview finds the phrases; denser samples around a transformation reveal its path, overlap, masking, occlusion and settling. Increase coverage where adjacent observations do not explain the motion. Distinguish a visible cut from an inferred continuous morph.
 
+Before dependent authoring, the receiving author must inspect the actual reference media or delivered frames and relevant consecutive motion. An asset ID, path or prose description alone is not delivery. Recover missing evidence through supported tools; continue independent work while it is unavailable. Reference assets may remain analysis-only and need not appear in the output.
+
 Keep a concise [reference ledger](references/measurement-and-comparison.md) linking observed timing, geometry, type, materials and sound events to evidence. Measure relevant landmarks and projected dimensions before guessing easing or camera behavior. Record unknown assets, fonts and audio separately from observations.
 
 Eve may have no shell or local media access. Use delivered source/motion evidence through available tools; do not assume FFmpeg, downloads or local scripts can run. A capable local host can use FFprobe/FFmpeg for analysis, comparisons and decode checks. These are not substitute renderers for CueFrame. Report missing observation capabilities rather than claiming unseen motion or unheard sound.
@@ -23,7 +25,7 @@ For a local file, `bash scripts/motion-grid.sh INPUT OUTPUT_DIR` creates overvie
 
 ## Author, compare and deliver
 
-Choose useful fidelity anchors and prove the difficult motion early through supported component or timeline previews. Use CueFrame tools for saved authoring, previews and rendering. Keep related motion and sound tied to the same timing decisions; preserve editable text and meaningful parameters. Native peers can help when separate authored work is useful, but continuity still needs integrated review.
+Choose useful fidelity anchors and prove the difficult motion early through supported component or timeline previews. Use CueFrame tools for saved authoring, previews and rendering. Keep related motion and sound tied to the same timing decisions; preserve editable text and meaningful parameters. Native peers can help when separate authored work is useful, but continuity still needs integrated review. Hand off inspectable reference evidence and, once available, candidate evidence with their identities, timestamps and current findings, and verify that the receiver inspected it; coordinator inspection alone is insufficient. Share existing media even while a render slot is busy. See the [comparison handoff guidance](references/measurement-and-comparison.md#handoff-and-review-continuity).
 
 Compare actual output at the reference's timestamps and inspect the intervening motion. When available, use `compare_frames` on an identified source frame and saved preview artifact; its unaligned pair/overlay exposes layout drift without rendering the composition again. Read the [worked comparison](references/measurement-and-comparison.md) for geometry, intentional retiming and evidence limits. Fix located mismatches in scale, pose, direction, timing, readability or material before decorative polish. A score or successful compile cannot approve a failed reference requirement. Separate measured audio properties from listening and reused audio from new sound design.
 

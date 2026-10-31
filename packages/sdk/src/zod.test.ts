@@ -10,10 +10,15 @@ describe("generated zod body schemas", () => {
   });
 
   // Track the reviewed CompositionOp.oneOf count in api/openapi.json.
-  it("exports applyCompositionOpBody as a 32-variant union (CompositionOp.oneOf, exact component.repin-v3 included)", () => {
+  it("exports applyCompositionOpBody as a 35-variant union (color, range cuts and exact component.repin-v3 included)", () => {
     const schema = bodySchemas.applyCompositionOpBody;
     expect(schema).toBeInstanceOf(z.ZodUnion);
-    expect(schema.options).toHaveLength(32);
+    expect(schema.options).toHaveLength(35);
+    for (const type of ["setMediaInputTransform", "setClipColor", "cutRanges"]) {
+      expect(schema.options.some(
+        (option) => option instanceof z.ZodObject && option.shape.type?.safeParse(type).success,
+      )).toBe(true);
+    }
     expect(
       schema.options.some(
         (option) =>

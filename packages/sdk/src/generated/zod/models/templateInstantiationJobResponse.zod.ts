@@ -9,9 +9,31 @@
  */
 import * as zod from 'zod';
 
+export const templateInstantiationJobResponseTemplateVersionExclusiveMin = 0;
+export const templateInstantiationJobResponseTemplateVersionMax = 9007199254740991;
+
+export const templateInstantiationJobResponsePackageReceiptIdMax = 256;
+
+export const templateInstantiationJobResponsePackageArchiveSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const templateInstantiationJobResponsePackageArchiveBytesExclusiveMin = 0;
+export const templateInstantiationJobResponsePackageArchiveBytesMax = 134217728;
+
+export const templateInstantiationJobResponsePackageDocumentSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+
+
 export const TemplateInstantiationJobResponse = zod.strictObject({
   "jobId": zod.string(),
   "projectId": zod.string().nullable(),
+  "mode": zod.enum(['instantiate', 'apply', 'library-import', 'library-export']).optional(),
+  "sourceProjectId": zod.string().optional(),
+  "templateId": zod.string().optional(),
+  "templateVersion": zod.int().gt(templateInstantiationJobResponseTemplateVersionExclusiveMin).max(templateInstantiationJobResponseTemplateVersionMax).optional(),
+  "package": zod.strictObject({
+  "receiptId": zod.string().min(1).max(templateInstantiationJobResponsePackageReceiptIdMax),
+  "archiveSha256": zod.string().regex(templateInstantiationJobResponsePackageArchiveSha256RegExp),
+  "archiveBytes": zod.int().gt(templateInstantiationJobResponsePackageArchiveBytesExclusiveMin).max(templateInstantiationJobResponsePackageArchiveBytesMax),
+  "documentSha256": zod.string().regex(templateInstantiationJobResponsePackageDocumentSha256RegExp)
+}).optional(),
   "status": zod.enum(['preparing', 'ready', 'failed', 'cancelled']),
   "stage": zod.enum(['resolving', 'downloading', 'verifying', 'importing', 'processing', 'attaching', 'applying', 'preflighting', 'ready']),
   "templateRef": zod.string(),

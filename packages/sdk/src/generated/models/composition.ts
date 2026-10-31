@@ -13,6 +13,7 @@ import type { CompositionCaptions } from './compositionCaptions';
 import type { CompositionLicense } from './compositionLicense';
 import type { CompositionLicenseVerification } from './compositionLicenseVerification';
 import type { CompositionMarkersItem } from './compositionMarkersItem';
+import type { CompositionMedia } from './compositionMedia';
 import type { CompositionTracksItem } from './compositionTracksItem';
 import type { Format } from './format';
 
@@ -28,4 +29,5 @@ export interface Composition {
   accessibility?: CompositionAccessibility;
   readonly ownerOrgId?: string;
   readonly acl?: CompositionAcl;
+  media?: CompositionMedia;
 }

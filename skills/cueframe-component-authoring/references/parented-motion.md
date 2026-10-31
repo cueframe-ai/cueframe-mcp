@@ -23,3 +23,9 @@ Use a small set of editable properties for likely corrections: screen inset, car
 Publish a reusable native source once, then pass its exact version and relevant parameters to coauthors. Editing its source creates a new version; placed clips remain pinned to the old version. Explicitly adopt the fitted version in the intended placements through the available admitted composition operation, and inspect those uses. Source publication and placement adoption are separate operations; an isolated preview alone does not prove the timeline changed.
 
 When several authors work on one project, existing clip guards cover the whole clip and its structural dependencies, not independent CSS fields. A shared source adoption or dependent timing revision needs current composition state. If another author or the user changed the target, reread and reconcile the intended edit; preserve their copy, timing and unrelated placements rather than replacing a stale document with a fresh token.
+
+## Two engineering input records
+
+Use the same source and 1920×1080/30fps/four-second wrapper for both records. A uses `contactSec:"2.0"`, `holder:"\"MAYA\""` and `accent:"#4265d5"`. B uses `contactSec:"2.5"`, `holder:"\"ALEXANDRA CHEN-RIVERA\""` and `accent:"#8357b8"`. Retain `settleSec:"1.0"`, `tiltDeg:"28"`, `approachSec:"0.65"` and `responseSec:"0.2"`. The bounded holder width reflows longer names inside the card; it does not change the phone's pose. Keep all other copy unchanged.
+
+Compare the same parent pose before/after the isolated timing change, then the longer-name/palette input change. Record contact frames 60→75, response completion 66→81, mounted screen corners, full text bounds and frame 119. A source/token check proves the input contract only; motion, readability and playback still need captured output. The [worked-example record](worked-examples.md) lists exact identities, remaining evidence and representative existing brief IDs.

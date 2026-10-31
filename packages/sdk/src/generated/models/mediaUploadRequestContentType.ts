@@ -26,9 +26,12 @@ export const MediaUploadRequestContentType = {
   'image/webp': 'image/webp',
   'image/gif': 'image/gif',
   'image/svg+xml': 'image/svg+xml',
+  'image/vndradiance': 'image/vnd.radiance',
+  'model/gltf-binary': 'model/gltf-binary',
   'application/json': 'application/json',
   'font/ttf': 'font/ttf',
   'font/otf': 'font/otf',
   'font/woff': 'font/woff',
   'font/woff2': 'font/woff2',
+  'application/x-cube': 'application/x-cube',
 } as const;

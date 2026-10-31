@@ -60,7 +60,18 @@ test('this repository passes against its own history', () => {
   // The check's own sentence is the useful output when a developer has an un-bumped api/ edit in progress.
   assert.deepEqual(result.problems, [], result.problems.join('\n'));
   assert.equal(result.ok, true);
-  assert.match(result.version.current, /^\d+\.\d+\.\d+$/);
+  assert.match(result.version.current, /^\d+\.\d+\.\d+(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/);
+});
+
+test('versioned local prereleases preserve the contract byte-identity gate', () => {
+  withRepo((repo) => {
+    repo.api('openapi.json', { revision: 2 }).version('1.1.0-ea20261029.1').commit('local engineering archive');
+    assert.equal(repo.check().ok, true);
+    repo.api('openapi.json', { revision: 3 });
+    assert.equal(repo.check().ok, false, 'different bytes cannot reuse the same archive version');
+    repo.version('1.1.0-ea20261029.2');
+    assert.equal(repo.check().ok, true);
+  });
 });
 
 test('a root commit with nothing to compare against passes', () => {

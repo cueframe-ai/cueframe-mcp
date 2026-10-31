@@ -135,7 +135,8 @@
       "post": {
         "grain": 0,
         "vignette": 0,
-        "focus": null
+        "focus": null,
+        "bloom": null
       },
       "constraints": [],
       "camera": {
@@ -374,7 +375,8 @@
       "post": {
         "grain": 0,
         "vignette": 0,
-        "focus": null
+        "focus": null,
+        "bloom": null
       },
       "constraints": [],
       "camera": {

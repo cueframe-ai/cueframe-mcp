@@ -22,4 +22,6 @@ export type SceneShotSpecV2AnimationItemTarget = {
   kind: 'environment';
 } | {
   kind: 'focus';
+} | {
+  kind: 'bloom';
 };

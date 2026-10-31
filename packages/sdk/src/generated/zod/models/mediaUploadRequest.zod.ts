@@ -19,7 +19,7 @@ export const mediaUploadRequestSizeMax = 5368709120;
 
 export const MediaUploadRequest = zod.strictObject({
   "filename": zod.string().min(1).max(mediaUploadRequestFilenameMax),
-  "contentType": zod.enum(['video/mp4', 'video/quicktime', 'video/x-matroska', 'video/webm', 'audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/mp4', 'audio/aac', 'image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml', 'application/json', 'font/ttf', 'font/otf', 'font/woff', 'font/woff2']),
+  "contentType": zod.enum(['video/mp4', 'video/quicktime', 'video/x-matroska', 'video/webm', 'audio/mpeg', 'audio/wav', 'audio/x-wav', 'audio/mp4', 'audio/aac', 'image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml', 'image/vnd.radiance', 'model/gltf-binary', 'application/json', 'font/ttf', 'font/otf', 'font/woff', 'font/woff2', 'application/x-cube']),
   "size": zod.int().gt(mediaUploadRequestSizeExclusiveMin).max(mediaUploadRequestSizeMax),
   "projectId": zod.string().min(1).optional()
 }).describe('POST /media upload initiation body.');

@@ -1,8 +1,8 @@
 {
   "source": {
     "package": "@cueframe/mcp",
-    "version": "0.13.0",
-    "commit": "eb1b033583594eb09f0444589df9764a71ec2921"
+    "version": "0.13.2-ea20261029.3",
+    "commit": "7448f95b9c8a3d48643c9221cc238553be847355"
   },
   "surfaces": [
     "hosted.api",
@@ -14,6 +14,18 @@
     "desktop.cli"
   ],
   "tools": [
+    {
+      "name": "acquire_registry_item",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
     {
       "name": "analyze_transcript",
       "access": "read",
@@ -194,6 +206,13 @@
       ]
     },
     {
+      "name": "create_template_package_upload",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
+      ]
+    },
+    {
       "name": "create_upload",
       "access": "write",
       "surfaces": [
@@ -279,7 +298,8 @@
       "name": "download_media",
       "access": "read",
       "surfaces": [
-        "hosted.api"
+        "hosted.api",
+        "hosted.editor"
       ]
     },
     {
@@ -475,6 +495,14 @@
       ]
     },
     {
+      "name": "export_template_package",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor"
+      ]
+    },
+    {
       "name": "extract_brand_kit",
       "access": "write",
       "surfaces": [
@@ -659,6 +687,32 @@
       ]
     },
     {
+      "name": "get_registry_acquisition",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_registry_item",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
       "name": "get_render",
       "access": "read",
       "surfaces": [
@@ -685,6 +739,22 @@
         "desktop.plan",
         "desktop.external",
         "desktop.cli"
+      ]
+    },
+    {
+      "name": "get_template_job",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor"
+      ]
+    },
+    {
+      "name": "get_template_package_download",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor"
       ]
     },
     {
@@ -744,6 +814,13 @@
         "desktop.director",
         "desktop.external",
         "desktop.cli"
+      ]
+    },
+    {
+      "name": "import_template_package",
+      "access": "write",
+      "surfaces": [
+        "hosted.api"
       ]
     },
     {
@@ -836,6 +913,7 @@
       "access": "read",
       "surfaces": [
         "hosted.api",
+        "hosted.editor",
         "desktop.director",
         "desktop.plan",
         "desktop.external",
@@ -1000,6 +1078,18 @@
       ]
     },
     {
+      "name": "refresh_registry_snapshot",
+      "access": "write",
+      "surfaces": [
+        "hosted.api",
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
       "name": "refresh_render_url",
       "access": "write",
       "surfaces": [
@@ -1056,7 +1146,8 @@
       "name": "resolve_builtin_component",
       "access": "read",
       "surfaces": [
-        "hosted.api"
+        "hosted.api",
+        "hosted.editor"
       ]
     },
     {
@@ -1111,6 +1202,19 @@
       "name": "search_library",
       "access": "read",
       "surfaces": [
+        "hosted.editor",
+        "hosted.compose",
+        "desktop.director",
+        "desktop.plan",
+        "desktop.external",
+        "desktop.cli"
+      ]
+    },
+    {
+      "name": "search_registry_items",
+      "access": "read",
+      "surfaces": [
+        "hosted.api",
         "hosted.editor",
         "hosted.compose",
         "desktop.director",

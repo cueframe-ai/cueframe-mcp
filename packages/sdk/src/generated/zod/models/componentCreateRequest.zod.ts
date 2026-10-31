@@ -126,6 +126,16 @@ export const componentCreateRequestSourceDefinitionPreviewMediaBindingsItemTwoFr
 
 export const componentCreateRequestSourceDefinitionPreviewMediaBindingsItemTwoDurationSecExclusiveMin = 0;
 
+export const componentCreateRequestRegistryProvenanceReceiptRefBundleSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentCreateRequestRegistryProvenanceReceiptRefBundleBytesExclusiveMin = 0;
+export const componentCreateRequestRegistryProvenanceReceiptRefBundleBytesMax = 134217728;
+
+export const componentCreateRequestRegistryProvenanceReceiptRefReceiptIdMax = 128;
+
+export const componentCreateRequestRegistryProvenanceAdaptationReceiptRefSha256RegExp = new RegExp('^[a-f0-9]{64}$');
+export const componentCreateRequestRegistryProvenanceAdaptationReceiptRefByteLengthExclusiveMin = 0;
+export const componentCreateRequestRegistryProvenanceAdaptationReceiptRefByteLengthMax = 134217728;
+
 
 
 export const ComponentCreateRequest = zod.strictObject({
@@ -270,7 +280,20 @@ export const ComponentCreateRequest = zod.strictObject({
 })]))).optional()
 }).optional()
 })
-})
+}),
+  "registryProvenance": zod.strictObject({
+  "receiptRef": zod.strictObject({
+  "bundleSha256": zod.string().regex(componentCreateRequestRegistryProvenanceReceiptRefBundleSha256RegExp),
+  "bundleBytes": zod.int().gt(componentCreateRequestRegistryProvenanceReceiptRefBundleBytesExclusiveMin).max(componentCreateRequestRegistryProvenanceReceiptRefBundleBytesMax),
+  "format": zod.literal("cueframe-registry-provenance-v1"),
+  "receiptId": zod.string().min(1).max(componentCreateRequestRegistryProvenanceReceiptRefReceiptIdMax)
+}),
+  "adaptationReceiptRef": zod.strictObject({
+  "format": zod.literal("cueframe-registry-adaptation-v1"),
+  "sha256": zod.string().regex(componentCreateRequestRegistryProvenanceAdaptationReceiptRefSha256RegExp),
+  "byteLength": zod.int().gt(componentCreateRequestRegistryProvenanceAdaptationReceiptRefByteLengthExclusiveMin).max(componentCreateRequestRegistryProvenanceAdaptationReceiptRefByteLengthMax)
+}).optional()
+}).optional()
 }).describe('POST /components body. Org/user are server-resolved; never accepted from the body.');
 
 export type ComponentCreateRequest = zod.input<typeof ComponentCreateRequest>;

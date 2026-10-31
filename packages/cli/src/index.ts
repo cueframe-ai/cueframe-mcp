@@ -421,12 +421,14 @@ export async function main() {
     .option('-b, --body <body>', 'Request body (inline JSON, @file.json to read from disk, @- for stdin)')
     .option('-H, --header <header...>', 'Additional header (repeatable), e.g. -H "If-Match: \\"abc\\""')
     .option('-i, --include', 'Include response status line + headers in stdout (curl-style). Lets agents read ETag etc.')
+    .option('--timeout-ms <milliseconds>', 'Request timeout in milliseconds (1–2147483647); omitted uses the SDK default. Does not change server deadlines.')
     .action((method: string, path: string, opts: any) =>
       apiCommand(method, path, {
         target: opts.target,
         body: opts.body,
         header: opts.header,
         include: opts.include,
+        timeoutMs: opts.timeoutMs,
         json: globals().json,
       }),
     );
@@ -503,12 +505,14 @@ export async function main() {
     .option('--no-download', 'Print the MP4 URL but skip downloading the file')
     .option('-o, --out <path>', 'Output file path when downloading (default: ./reel-<id>.mp4)')
     .action((renderId: string, opts: any, cmd: any) => {
+      // Commander may consume shared --target/--out options on the render parent.
+      const parentOpts = cmd?.parent?.opts?.() ?? {};
       const target =
-        (cmd?.parent?.opts?.()?.target as string | undefined) ?? opts.target;
+        (parentOpts.target as string | undefined) ?? opts.target;
       return renderWatchCommand(renderId, {
         target,
         project: opts.project,
-        out: opts.out,
+        out: opts.out ?? parentOpts.out,
         download: opts.download !== false,
         json: globals().json,
       });

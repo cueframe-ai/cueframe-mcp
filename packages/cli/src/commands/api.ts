@@ -17,6 +17,7 @@ interface ApiOpts {
   body?: string;
   header?: string[];
   include?: boolean;
+  timeoutMs?: string;
   json?: boolean;
 }
 
@@ -37,7 +38,16 @@ export async function apiCommand(method: string, path: string, opts: ApiOpts) {
     exitWith(ExitCode.UserError);
   }
 
-  initSdk(opts.target);
+  let timeoutMs: number | undefined;
+  if (opts.timeoutMs !== undefined) {
+    timeoutMs = Number(opts.timeoutMs);
+    if (!/^\d+$/.test(opts.timeoutMs) || !Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 2_147_483_647) {
+      emitError(opts, 'api', new Error('--timeout-ms must be an integer between 1 and 2147483647.'), ExitCode.UserError);
+      exitWith(ExitCode.UserError);
+    }
+  }
+  if (timeoutMs === undefined) initSdk(opts.target);
+  else initSdk(opts.target, { timeoutMs });
 
   const headers = parseHeaders(opts.header ?? []);
   const body = await resolveBody(opts.body, upperMethod);

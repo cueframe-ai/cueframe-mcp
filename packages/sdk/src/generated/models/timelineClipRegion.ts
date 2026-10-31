@@ -8,6 +8,9 @@
  * OpenAPI spec version: v1
  */
 
+/**
+ * A window in the frame that the clip draws into and is clipped to (top-left corner and size, each a frame fraction). Inside a region, `position` and `scale` act relative to that window, so content moved past its edge is cut off. Omit it to place the clip against the whole frame.
+ */
 export type TimelineClipRegion = {
   /**
      * @minimum 0

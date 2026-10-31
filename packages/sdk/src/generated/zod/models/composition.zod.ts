@@ -540,7 +540,22 @@ export const Composition = zod.strictObject({
   "public": zod.boolean().optional(),
   "readerOrgIds": zod.array(zod.string()).optional(),
   "writerOrgIds": zod.array(zod.string()).optional()
+}).optional(),
+  "media": zod.record(zod.string(), zod.strictObject({
+  "inputTransform": zod.strictObject({
+  "version": zod.literal(1),
+  "id": zod.enum(['rec709', 'insta360-ilog', 'custom-lut', 'apple-log']),
+  "table": zod.strictObject({
+  "mediaId": zod.string(),
+  "sha256": zod.string(),
+  "enabled": zod.boolean()
+}).optional(),
+  "ycbcr": zod.strictObject({
+  "matrix": zod.enum(['bt709', 'bt2020', 'bt601']),
+  "range": zod.enum(['limited', 'full'])
 }).optional()
+})
+})).optional()
 });
 
 export type Composition = zod.input<typeof Composition>;

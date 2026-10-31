@@ -19,6 +19,7 @@ export * from './health/health';
 export * from './jobs/jobs';
 export * from './media/media';
 export * from './projects/projects';
+export * from './registry/registry';
 export * from './renders/renders';
 export * from './resources/resources';
 export * from './sessions/sessions';

@@ -12,10 +12,51 @@ import * as zod from 'zod';
 import {
   TemplateApplyRequest,
   TemplateInstantiateRequest,
+  TemplatePackageExportRequest,
+  TemplatePackageImportRequest,
+  TemplatePackageUploadRequest,
   TemplatePublishRequest,
   TemplateRenderCreateRequest
 } from '../models';
 
+
+/**
+ * Organization-library operation. Project-bound editor credentials are refused. Reserves exact SHA256/length for a single application/zip PUT; the grant is not a template import.
+ * @summary Reserve a bounded portable template package upload
+ */
+export const CreateTemplatePackageUploadBody = TemplatePackageUploadRequest
+
+/**
+ * Consumes the authenticated actor package upload reservation. No caller storage keys, document bodies or provenance assertions are accepted. Existing destination slugs require the exact expected version and document digest. Poll getTemplateJob; a ready package remains destination-owned. Project-bound editor credentials are refused.
+ * @summary Import an uploaded template package into the organization library
+ */
+export const ImportTemplatePackageBody = TemplatePackageImportRequest
+
+/**
+ * Reads the saved project at expectedRevision and uses the maintained extractTemplate owner. Caller controls select existing parameter sites; caller composition, component source, media sample and provenance assertions are refused. Project-bound editors may export only their exact bound project.
+ * @summary Export an exact saved project as a portable template package
+ */
+export const ExportProjectTemplatePackageParams = zod.object({
+  "projectId": zod.string()
+})
+
+export const ExportProjectTemplatePackageBody = TemplatePackageExportRequest
+
+/**
+ * The receipt owner verifies exact retained archive/document authority before issuing a short-lived URL. A project-bound editor must supply the exact ready export jobId belonging to its bound source project and receipt.
+ * @summary Refresh the download grant for an owned template package receipt
+ */
+export const GetTemplatePackageDownloadParams = zod.object({
+  "receiptId": zod.string()
+})
+
+export const getTemplatePackageDownloadQueryJobIdMax = 256;
+
+
+
+export const GetTemplatePackageDownloadQueryParams = zod.object({
+  "jobId": zod.string().min(1).max(getTemplatePackageDownloadQueryJobIdMax).optional()
+})
 
 /**
  * Store a template document for this org (the kernel validates its schema and every `{{name}}` reference; a republish of the same slug bumps its version), or import a slug from the public catalog (cueframe-ai/cueframe-templates) as this org's copy. The document is capped at 1 MiB. With `dryRun: true` nothing is stored: the answer is 200 with the kernel's problems as data, for the document alone or, when `values`, `media` or `preset` are given, for those inputs bound against this org's media rows.

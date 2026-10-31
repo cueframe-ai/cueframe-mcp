@@ -8,6 +8,7 @@
  * OpenAPI spec version: v1
  */
 import type {
+  GetTemplatePackageDownloadParams,
   ListTemplatesParams,
   TemplateApplyPendingResponse,
   TemplateApplyRequest,
@@ -15,6 +16,11 @@ import type {
   TemplateInstantiateRequest,
   TemplateInstantiationJobResponse,
   TemplateListResponse,
+  TemplatePackageDownloadResponse,
+  TemplatePackageExportRequest,
+  TemplatePackageImportRequest,
+  TemplatePackageUploadRequest,
+  TemplatePackageUploadResponse,
   TemplatePublishRequest,
   TemplateRenderCreateRequest,
   TemplateRenderResponse,
@@ -23,6 +29,154 @@ import type {
 } from '../models';
 
 import { request } from '../../client';
+
+export const getCreateTemplatePackageUploadUrl = () => {
+
+
+
+
+  return `/v1/templates/package-uploads`
+}
+
+/**
+ * Organization-library operation. Project-bound editor credentials are refused. Reserves exact SHA256/length for a single application/zip PUT; the grant is not a template import.
+ * @summary Reserve a bounded portable template package upload
+ */
+export const createTemplatePackageUpload = async (templatePackageUploadRequest: TemplatePackageUploadRequest, options?: Parameters<typeof request>[1]): Promise<TemplatePackageUploadResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<TemplatePackageUploadResponse>(getCreateTemplatePackageUploadUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(templatePackageUploadRequest)
+  }
+);}
+
+
+export const getImportTemplatePackageUrl = () => {
+
+
+
+
+  return `/v1/templates/import`
+}
+
+/**
+ * Consumes the authenticated actor package upload reservation. No caller storage keys, document bodies or provenance assertions are accepted. Existing destination slugs require the exact expected version and document digest. Poll getTemplateJob; a ready package remains destination-owned. Project-bound editor credentials are refused.
+ * @summary Import an uploaded template package into the organization library
+ */
+export const importTemplatePackage = async (templatePackageImportRequest: TemplatePackageImportRequest, options?: Parameters<typeof request>[1]): Promise<TemplateInstantiationJobResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<TemplateInstantiationJobResponse>(getImportTemplatePackageUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(templatePackageImportRequest)
+  }
+);}
+
+
+export const getExportProjectTemplatePackageUrl = (projectId: string,) => {
+
+
+
+
+  return `/v1/projects/${projectId}/template-package`
+}
+
+/**
+ * Reads the saved project at expectedRevision and uses the maintained extractTemplate owner. Caller controls select existing parameter sites; caller composition, component source, media sample and provenance assertions are refused. Project-bound editors may export only their exact bound project.
+ * @summary Export an exact saved project as a portable template package
+ */
+export const exportProjectTemplatePackage = async (projectId: string,
+    templatePackageExportRequest: TemplatePackageExportRequest, options?: Parameters<typeof request>[1]): Promise<TemplateInstantiationJobResponse> => {
+
+    const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
+    if (!h) return {};
+    if (h instanceof Headers) return Object.fromEntries(h.entries());
+    if (Symbol.iterator in h) {
+      return Object.fromEntries(
+        Array.from(h as Iterable<Iterable<string>>, (entry) => Array.from(entry) as [string, string]),
+      );
+    }
+    const headers: Record<string, string | readonly string[]> = {};
+    for (const [name, value] of Object.entries<string | readonly string[] | undefined>(h)) {
+      if (value !== undefined) headers[name] = value;
+    }
+    return headers;
+  };
+return request<TemplateInstantiationJobResponse>(getExportProjectTemplatePackageUrl(projectId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...getHeaders(options?.headers) },
+    body: JSON.stringify(templatePackageExportRequest)
+  }
+);}
+
+
+export const getGetTemplatePackageDownloadUrl = (receiptId: string,
+    params?: GetTemplatePackageDownloadParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/v1/templates/packages/${receiptId}?${stringifiedParams}` : `/v1/templates/packages/${receiptId}`
+}
+
+/**
+ * The receipt owner verifies exact retained archive/document authority before issuing a short-lived URL. A project-bound editor must supply the exact ready export jobId belonging to its bound source project and receipt.
+ * @summary Refresh the download grant for an owned template package receipt
+ */
+export const getTemplatePackageDownload = async (receiptId: string,
+    params?: GetTemplatePackageDownloadParams, options?: Parameters<typeof request>[1]): Promise<TemplatePackageDownloadResponse> => {
+
+  return request<TemplatePackageDownloadResponse>(getGetTemplatePackageDownloadUrl(receiptId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
 
 export const getPublishTemplateUrl = () => {
 
