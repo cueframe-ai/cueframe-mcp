@@ -13,6 +13,7 @@ import {
 
 
 /**
+ * Mint an API key with chosen resource permissions and an optional expiry for scripts and integrations; the secret is shown once. Requires a signed-in session, so API keys are refused with 403.
  * @summary Create a scoped API key (session credential only)
  */
 export const CreateApiKeyBody = ApiKeyCreateRequest

@@ -37,7 +37,7 @@ export const getEditorialGetBriefUrl = (briefId: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Read an editorial brief's goal, audience, format, and other creative direction, plus its current revision. Call it before starting an editorial run, or to get the revision an update must send.
  * @summary Read a shared authored brief
  */
 export const editorialGetBrief = async (briefId: string, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -61,7 +61,7 @@ export const getEditorialUpdateBriefUrl = (briefId: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Replace an editorial brief's goal, audience, format, and other fields. Send its current revision as expectedRevision and the same id in the path and body; call it to refine direction before starting a new run.
  * @summary Update a shared authored brief
  */
 export const editorialUpdateBrief = async (briefId: string,
@@ -107,7 +107,7 @@ export const getEditorialListBriefsUrl = (params: EditorialListBriefsParams,) =>
 }
 
 /**
- * Required permission: projects:read
+ * List a project's editorial briefs, up to 20 per page with a cursor; projectId is required. Call it to find a brief to reuse or update before starting an editorial run.
  * @summary List shared briefs for a project
  */
 export const editorialListBriefs = async (params: EditorialListBriefsParams, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -131,7 +131,7 @@ export const getEditorialCreateBriefUrl = () => {
 }
 
 /**
- * Required permission: projects:write
+ * Write the creative direction for a video edit: goal, audience, platform, duration, tone, and more. This is the first step of an editorial run, which needs the returned brief id; a commandId makes retries safe.
  * @summary Create a shared authored brief
  */
 export const editorialCreateBrief = async (editorialBriefCreateRequest: EditorialBriefCreateRequest, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -169,7 +169,7 @@ export const getEditorialAdoptLegacyBriefUrl = (briefId: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Move an older brief made through POST /v1/briefs into the editorial flow under the same id, so editorial runs can use it. Clip-derived briefs are not eligible, and adopting a brief twice is a conflict.
  * @summary Adopt a legacy authored brief into the shared owner
  */
 export const editorialAdoptLegacyBrief = async (briefId: string,
@@ -215,7 +215,7 @@ export const getEditorialGetRunSourceUrl = (params: EditorialGetRunSourceParams,
 }
 
 /**
- * Required permission: projects:read
+ * Get the constant-frame-rate representation of a project's video source: identity, revision, frame rate, and frame count. Call it before POST /v1/editorial/runs to build frame ranges; it is null when none is certified.
  * @summary Read the certified decode representation for a project source
  */
 export const editorialGetRunSource = async (params: EditorialGetRunSourceParams, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -239,7 +239,7 @@ export const getEditorialCreateRunUrl = () => {
 }
 
 /**
- * Required permission: projects:write
+ * Start an editorial pass that pins a brief, source frame ranges, and a beat outline. Later inspections, findings, and the final edit stay inside those ranges; call it after creating the brief and reading the source.
  * @summary Create a shared editorial run
  */
 export const editorialCreateRun = async (editorialRunCreateRequest: EditorialRunCreateRequest, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -284,7 +284,7 @@ export const getEditorialListRunsUrl = (params: EditorialListRunsParams,) => {
 }
 
 /**
- * Required permission: projects:read
+ * List a project's editorial runs, up to 20 per page with a cursor; projectId is required. Call it to find an active run to continue or to review earlier editing passes.
  * @summary List shared editorial runs for a project
  */
 export const editorialListRuns = async (params: EditorialListRunsParams, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -308,7 +308,7 @@ export const getEditorialGetRunUrl = (runId: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Read an editorial run's state, pinned inputs, outline, integration, and current revision. Call it to resume work or to get the revision that integrate, cancel, and apply calls must send.
  * @summary Read a shared editorial run
  */
 export const editorialGetRun = async (runId: string, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -340,7 +340,7 @@ export const getEditorialListEvidenceUrl = (runId: string,
 }
 
 /**
- * Required permission: projects:read
+ * Page through the frames, motion samples, audio, and transcript spans already delivered in an editorial run, up to 100 at a time. Call it to find the evidence ids a finding must cite and to see inspection coverage.
  * @summary List delivered evidence for a run
  */
 export const editorialListEvidence = async (runId: string,
@@ -365,7 +365,7 @@ export const getEditorialInspectFrameUrl = (runId: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Look at one exact video frame as a base64 JPEG, with an evidence id for citing it in findings. Call it during an active editorial run; the frame must fall inside the run's pinned source ranges.
  * @summary Deliver an exact certified source frame
  */
 export const editorialInspectFrame = async (runId: string,
@@ -404,7 +404,7 @@ export const getEditorialSampleMotionUrl = (runId: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * See how a shot moves: returns two or three JPEG frames sampled across a frame range, with an evidence id and coverage receipt. Call it during an active editorial run for a range inside the pinned inputs.
  * @summary Deliver bounded sampled motion frames
  */
 export const editorialSampleMotion = async (runId: string,
@@ -443,7 +443,7 @@ export const getEditorialInspectAudioUrl = (runId: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Listen to part of a source: returns up to eight seconds of 16 kHz mono WAV audio as base64, with an evidence id. Call it during an active editorial run for a range inside the pinned inputs.
  * @summary Deliver bounded audio from a certified source interval
  */
 export const editorialInspectAudio = async (runId: string,
@@ -482,7 +482,7 @@ export const getEditorialInspectTranscriptUrl = (runId: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Read up to 100 consecutive transcript words with their mapped frame range and an evidence id. Call it during an active editorial run to verify a quote; the words must fall inside the requested range.
  * @summary Deliver a verified transcript word span
  */
 export const editorialInspectTranscript = async (runId: string,
@@ -521,8 +521,8 @@ export const getEditorialFindingsAppendUrl = (runId: string,) => {
 }
 
 /**
- * Required permission: projects:write
- * @summary editorialFindingsAppend
+ * Save an observation about a source range during an active run, citing 1 to 12 evidence ids and an outcome of useful, nothing_useful, or uncertain. Findings feed the integrate step, which selects or omits them.
+ * @summary Record an evidence-backed finding on an editorial run
  */
 export const editorialFindingsAppend = async (runId: string,
     editorialFindingAppendRequest: EditorialFindingAppendRequest, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -568,7 +568,7 @@ export const getEditorialFindingsListUrl = (runId: string,
 }
 
 /**
- * Required permission: projects:read
+ * Page through the findings recorded on an editorial run, up to 100 at a time. Call it before integrating to review what was observed and collect the finding ids to select or omit.
  * @summary List bounded findings for an editorial run
  */
 export const editorialFindingsList = async (runId: string,
@@ -593,8 +593,8 @@ export const getEditorialIntegrateUrl = (runId: string,) => {
 }
 
 /**
- * Required permission: projects:write
- * @summary editorialIntegrate
+ * Record which findings the edit uses, why others were omitted, and any unresolved gaps, once inspection is done. This changes no composition: send expectedRevision, then commit with POST /v1/editorial/runs/{runId}/apply.
+ * @summary Record the integration decision for an editorial run
  */
 export const editorialIntegrate = async (runId: string,
     editorialIntegrateRequest: EditorialIntegrateRequest, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -632,8 +632,8 @@ export const getEditorialCancelRunUrl = (runId: string,) => {
 }
 
 /**
- * Required permission: projects:write
- * @summary editorialCancelRun
+ * End an editorial run that will not be applied, leaving the composition unchanged. Send the run's expectedRevision; only active runs can be cancelled, and continuing the work needs a new run.
+ * @summary Cancel an active editorial run
  */
 export const editorialCancelRun = async (runId: string,
     editorialRunCommandRequest: EditorialRunCommandRequest, options?: Parameters<typeof request>[1]): Promise<void> => {
@@ -671,7 +671,7 @@ export const getEditorialApplyCompositionUrl = (runId: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Apply timeline operations and complete the run in one atomic step, the last step of an editorial run. It needs a prior integrate call and the current run revision; further edits need a new run.
  * @summary Commit an integrated editorial edit to the saved project composition
  */
 export const editorialApplyComposition = async (runId: string,

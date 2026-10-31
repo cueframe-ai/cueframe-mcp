@@ -22,7 +22,6 @@ export * from './projects/projects';
 export * from './registry/registry';
 export * from './renders/renders';
 export * from './resources/resources';
-export * from './selector/selector';
 export * from './sessions/sessions';
 export * from './skills/skills';
 export * from './templates/templates';

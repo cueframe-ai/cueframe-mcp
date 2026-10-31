@@ -34,7 +34,7 @@ export const getListProjectsUrl = (params?: ListProjectsParams,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Page through the video projects this account owns to find the id that composition, media, render, and compose calls need. Call it when resuming earlier work instead of creating a new project.
  * @summary List projects
  */
 export const listProjects = async (params?: ListProjectsParams, options?: Parameters<typeof request>[1]): Promise<ProjectListResponse> => {
@@ -96,7 +96,7 @@ export const getGetProjectUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:read
+ * Read one video project's name, output format, brand kit, active composition summary, and latest render. Call it to check settings or fetch the last render's output URL before editing or rendering again.
  * @summary Get a project by id
  */
 export const getProject = async (id: string, options?: Parameters<typeof request>[1]): Promise<ProjectResponse> => {
@@ -120,7 +120,7 @@ export const getPatchProjectUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Change a project's name, description, output format (aspect ratio, fps, resolution), or attached brand kit. Send at least one field; call it before rendering when the video needs a different format or brand.
  * @summary Update a project
  */
 export const patchProject = async (id: string,
@@ -159,7 +159,7 @@ export const getDeleteProjectUrl = (id: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Remove a video project that is no longer needed. Refused with 409 while renders are in flight, so cancel those first. Members need the owner or admin role; an x402 wallet can delete its own projects.
  * @summary Delete a project
  */
 export const deleteProject = async (id: string, options?: Parameters<typeof request>[1]): Promise<void> => {

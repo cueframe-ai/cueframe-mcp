@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@cueframe/kernel': file:artifacts/cueframe-kernel-0.7.15-ea20261029.10.tgz
+  '@cueframe/kernel': file:artifacts/cueframe-kernel-0.7.15-ea20261029.19.tgz
   '@better-auth/sso': 1.6.22
   add-mcp>js-yaml: 4.3.2
   better-call: 1.3.7
@@ -37,8 +37,8 @@ importers:
   packages/api-contract:
     devDependencies:
       '@cueframe/kernel':
-        specifier: file:../../artifacts/cueframe-kernel-0.7.15-ea20261029.10.tgz
-        version: file:artifacts/cueframe-kernel-0.7.15-ea20261029.10.tgz
+        specifier: file:../../artifacts/cueframe-kernel-0.7.15-ea20261029.19.tgz
+        version: file:artifacts/cueframe-kernel-0.7.15-ea20261029.19.tgz
 
   packages/cli:
     dependencies:
@@ -199,9 +199,9 @@ packages:
     peerDependencies:
       commander: ~15.0.0
 
-  '@cueframe/kernel@file:artifacts/cueframe-kernel-0.7.15-ea20261029.10.tgz':
-    resolution: {integrity: sha512-7Prf8TgqSFgVwblwoYIH9Jx3mMaqgWEf+V9tvzF+dGsJSILyG72PqwqJA/7y+WiEWJpf3+plXfLH7jarHZOaYA==, tarball: file:artifacts/cueframe-kernel-0.7.15-ea20261029.10.tgz}
-    version: 0.7.15-ea20261029.10
+  '@cueframe/kernel@file:artifacts/cueframe-kernel-0.7.15-ea20261029.19.tgz':
+    resolution: {integrity: sha512-2OYRGLXRn21UD+THUeimqZFWorTtLjJEW9FGC2owgY62ARrfInguWjebUvJOXGpPAvQMBPQ65933mvk2iOW8HA==, tarball: file:artifacts/cueframe-kernel-0.7.15-ea20261029.19.tgz}
+    version: 0.7.15-ea20261029.19
     peerDependencies:
       '@ai-sdk/anthropic': ^4.0.39
       '@ai-sdk/openai': ^4.0.42
@@ -209,7 +209,6 @@ packages:
       '@hyperframes/lint': 0.8.145
       '@hyperframes/parsers': 0.8.145
       '@react-three/fiber': ^9.5.0
-      '@shaderfrog/glsl-parser': 7.0.1
       '@uppy/core': ^5.2.0
       '@uppy/react': ^5.2.0
       ai: ^7.0.66
@@ -238,8 +237,6 @@ packages:
       '@hyperframes/parsers':
         optional: true
       '@react-three/fiber':
-        optional: true
-      '@shaderfrog/glsl-parser':
         optional: true
       '@uppy/core':
         optional: true
@@ -876,6 +873,10 @@ packages:
 
   '@sec-ant/readable-stream@0.4.1':
     resolution: {integrity: sha512-831qok9r2t8AlxLko40y2ebgSDhenenCatLVeW/uBtnHPyhHOvG0C7TvfgecV+wHzIm5KUICgzmVpWS+IMEAeg==}
+
+  '@shaderfrog/glsl-parser@7.0.1':
+    resolution: {integrity: sha512-8mpfsoPeRhesY3pOrzNZBL8uG6N5GVX1EHLBYbd4gzKs+c7vaEIqpTNK5VrffU33qQN4cwpP2v3u4aPPBU32sw==}
+    engines: {node: '>=16'}
 
   '@shikijs/engine-oniguruma@3.23.0':
     resolution: {integrity: sha512-1nWINwKXxKKLqPibT5f4pAFLej9oZzQTsby8942OTlsJzOBZ0MWKiwzMsd+jhzu8YPCHAswGnnN1YtQfirL35g==}
@@ -2380,10 +2381,11 @@ snapshots:
     dependencies:
       commander: 15.0.0
 
-  '@cueframe/kernel@file:artifacts/cueframe-kernel-0.7.15-ea20261029.10.tgz':
+  '@cueframe/kernel@file:artifacts/cueframe-kernel-0.7.15-ea20261029.19.tgz':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       '@noble/hashes': 1.8.0
+      '@shaderfrog/glsl-parser': 7.0.1
       css-tree: 3.2.1
       culori: 4.0.2
       immer: 10.2.0
@@ -2819,6 +2821,8 @@ snapshots:
       zod: 4.6.7
 
   '@sec-ant/readable-stream@0.4.1': {}
+
+  '@shaderfrog/glsl-parser@7.0.1': {}
 
   '@shikijs/engine-oniguruma@3.23.0':
     dependencies:

@@ -23,7 +23,6 @@ export * as projects from "./projects/projects";
 export * as registry from "./registry/registry";
 export * as renders from "./renders/renders";
 export * as resources from "./resources/resources";
-export * as selector from "./selector/selector";
 export * as sessions from "./sessions/sessions";
 export * as skills from "./skills/skills";
 export * as templates from "./templates/templates";

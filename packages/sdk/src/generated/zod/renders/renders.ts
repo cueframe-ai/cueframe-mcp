@@ -26,7 +26,7 @@ export const CreateRenderParams = zod.object({
 export const CreateRenderBody = RenderCreateRequest
 
 /**
- * Required permission: renders:read
+ * Page through a project's render jobs, optionally filtered by status such as error or cancelled. Call it to find a finished video, review failures, or recover a render id.
  * @summary List renders for a project
  */
 export const ListProjectRendersParams = zod.object({
@@ -54,7 +54,7 @@ export const PreviewClipParams = zod.object({
 export const PreviewClipBody = PreviewClipRequest
 
 /**
- * Required permission: renders:read
+ * Check a render job's status and progress, and get its video output URL once complete, or the error and error code if it failed. Poll it after starting a render to know when the video is ready to download.
  * @summary Get a render job
  */
 export const GetRenderParams = zod.object({
@@ -63,7 +63,7 @@ export const GetRenderParams = zod.object({
 })
 
 /**
- * Required permission: renders:write
+ * Stop a queued or running render job and get back its updated state. Call it when a render is no longer wanted; a render that already finished is refused, and a 503 means the cancel did not reach the worker, so retry.
  * @summary Cancel a render
  */
 export const CancelRenderParams = zod.object({
@@ -81,7 +81,7 @@ export const RetryRenderParams = zod.object({
 })
 
 /**
- * Required permission: renders:write
+ * Issue a new download URL for a complete render whose outputUrl has expired, and return it with its expiry. Call it instead of rendering the video again; it fails for renders that are not complete.
  * @summary Refresh a render's output URL
  */
 export const RefreshRenderUrlParams = zod.object({

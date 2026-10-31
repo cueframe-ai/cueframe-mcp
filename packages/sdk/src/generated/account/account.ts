@@ -78,7 +78,7 @@ export const getListTasteUrl = () => {
 }
 
 /**
- * Required permission: projects:read
+ * Read the style preferences saved for this org and whether learned taste is switched on. Call it before composing to apply the org's preferences, or to find the id needed to edit or forget an entry.
  * @summary List the org's learned taste
  */
 export const listTaste = async ( options?: Parameters<typeof request>[1]): Promise<TasteListResponse> => {
@@ -140,7 +140,7 @@ export const getUpdateTasteEntryUrl = (tasteId: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Correct the text or source of a saved style preference while keeping its id. Call it when a preference has changed; get the tasteId from GET /v1/profile/taste.
  * @summary Edit a style preference
  */
 export const updateTasteEntry = async (tasteId: string,
@@ -179,7 +179,7 @@ export const getDeleteTasteEntryUrl = (tasteId: string,) => {
 }
 
 /**
- * Required permission: projects:write
+ * Remove one saved style preference from this org's learned taste. Call it when a preference is wrong or outdated; get the tasteId from GET /v1/profile/taste.
  * @summary Forget a style preference
  */
 export const deleteTasteEntry = async (tasteId: string, options?: Parameters<typeof request>[1]): Promise<void> => {
