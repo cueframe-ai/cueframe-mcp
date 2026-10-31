@@ -1,6 +1,6 @@
 {
   "name": "cueframe",
-  "version": "0.4.5-ea20261029.6",
+  "version": "0.4.5-ea20261029.7",
   "description": "Make and edit videos with CueFrame over MCP.",
   "mcpServers": {
     "cueframe": {
