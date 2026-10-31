@@ -31,6 +31,8 @@ Choose an early preview that resolves the largest uncertainty: the difficult han
 
 Use meaningful editable inputs for likely revisions: copy, palette, subject identity, action times, pose and hold duration. Keep object relationships together so a change to the camera or device also moves its mounted contents. Current source pins, media bindings and timing contracts remain authoritative.
 
+When layering graphics with media, use the canonical [visual track order](references/tool-map.md#visual-track-order).
+
 ## Shared authoring over Convex
 
 Work directly for a small edit. Native peers are useful when independent authorship, specialized judgment or parallel investigation can improve the film. Let the task determine the division. All authors work on the same saved project through existing authenticated tools; their conversation is not a second composition store.

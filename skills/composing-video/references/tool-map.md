@@ -2,6 +2,20 @@
 
 Defaults, examples and detail for this topic. The [skill](../SKILL.md) and the [project and capability policy](project-policy.md) take precedence where they differ, and the current tool schemas are authoritative.
 
+## Visual track order
+
+`composition.tracks` is ordered front to back: the first visual track is topmost, regardless of whether it holds video, images or overlays. An opaque full-frame picture on an earlier track covers cards on later tracks; a card's internal CSS `z-index` cannot move it above another track. For titles over footage over a backdrop, use this order (an ordering excerpt; add the actual clips to `contents`):
+
+```json
+{
+  "tracks": [
+    { "id": "titles", "kind": "overlay", "contents": [] },
+    { "id": "footage", "kind": "video", "contents": [] },
+    { "id": "backdrop", "kind": "image", "contents": [] }
+  ]
+}
+```
+
 ## Map craft to CueFrame tools (never invent a tool, primitive, or param)
 
 | Craft goal | Do this in CueFrame |

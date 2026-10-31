@@ -15,6 +15,8 @@ Read [preview workflow](references/preview-workflow.md) to choose the supported 
 
 Locate a finding in the film: when it happens, what is visible or audible, what the brief/reference requires, and which relationship needs to change. For reconstruction, compare matching source/output landmarks and the interval between them. If a requested revision deliberately changed timing, compare corresponding events rather than pretending they still share timestamps.
 
+For a card or title covered by media, inspect the saved [visual track order](../composing-video/references/tool-map.md#visual-track-order) before changing its HTML or typography.
+
 Fix the highest-impact cause you can explain. A layout failure may need a grid change, a position adjustment, a different parent transform or a new shot choice. Do not force every correction into one technique. Use targeted atomic operations against the observed revision and retain concurrent edits. Every committing batch needs the required `if_match` from the current read. After a conflict, reread the changed state and rebuild the intended change; never resend old operations with the error's `currentEtag`.
 
 ## Recheck the affected scene

@@ -505,12 +505,14 @@ export async function main() {
     .option('--no-download', 'Print the MP4 URL but skip downloading the file')
     .option('-o, --out <path>', 'Output file path when downloading (default: ./reel-<id>.mp4)')
     .action((renderId: string, opts: any, cmd: any) => {
+      // Commander may consume shared --target/--out options on the render parent.
+      const parentOpts = cmd?.parent?.opts?.() ?? {};
       const target =
-        (cmd?.parent?.opts?.()?.target as string | undefined) ?? opts.target;
+        (parentOpts.target as string | undefined) ?? opts.target;
       return renderWatchCommand(renderId, {
         target,
         project: opts.project,
-        out: opts.out,
+        out: opts.out ?? parentOpts.out,
         download: opts.download !== false,
         json: globals().json,
       });
