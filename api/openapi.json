@@ -256158,7 +256158,7 @@
         "x-x402": {
           "amount": "100000",
           "deliverable": true,
-          "maxTimeoutSeconds": 1800
+          "maxTimeoutSeconds": 60000
         },
         "requestBody": {
           "required": true,
