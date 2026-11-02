@@ -47,3 +47,8 @@ Chromium captures; the clock never advances). Use these instead:
    clip's start). For motion beyond that, author a native component with `create_component`.
 
 ---
+
+### Observed on the hosted lane
+
+- A card whose html carries a CSS `@import` for a web font is refused at save. Name the family through a font stack and the render fonts the host lists (`list_render_fonts`, `search_fonts`) instead.
+- In one hosted run a `data-cf-split="chars"` group styled through a descendant rule on `--cf-i` showed every glyph at once; explicit per-glyph spans carrying their own inline index var staggered correctly. Verify a split stagger on a saved-composition still before relying on it.

@@ -22,7 +22,7 @@ not only keyframes. A scene tweak can finish with preview evidence; export for f
 1. Create or open a composition at the target aspect and FPS.
 2. Register every image, video, model, or environment asset through the supported media workflow. Bind owned media ids to the declared slots; retain the exact asset bytes for restoration. Capture-backed component surfaces use an exact component id, source version id, capture frame, layout, and optional bake scale.
 3. Read `cueframe://scene-shot` (desktop: `get_scene_contract`), copy its `world-objects` recipe, and replace placeholder ids and copy.
-4. Send `apply_composition` with `dry_run: true`. Fix the exact reported field path.
+4. Send `apply_composition` with `dry_run: true`. Fix the exact reported field path. A scene clip's `startTime` and `duration` must sit on the composition's frame lattice as the exact double (`82/60`, not `1.3666667`); a rounded decimal is refused even though card clips accept it.
 5. Apply the same batch for real. Preview the first frame, object entrances, focus transitions, and the last frame.
 6. Revise with `scene.update`; do not hand-edit a generated wrapper.
 7. Render only after surfaces report ready and the previews show the intended pixels.
