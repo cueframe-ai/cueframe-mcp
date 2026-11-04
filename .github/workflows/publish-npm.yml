@@ -1,6 +1,17 @@
 name: Publish npm packages
 
+# Board decision, 2026-11-04 (Paperclip CUE-49): every merge to main publishes normal versions, through
+# Changesets, with no release pull request. A push to main runs CI (validate), then `changeset version`
+# turns the merged `.changeset/*.md` files into version bumps and CHANGELOG entries and commits them to
+# main (version), then the publish job publishes every package version npm does not have yet (publish).
+#
+# No loop: the version-bump commit is pushed with the job's GITHUB_TOKEN, and GitHub starts no workflow
+# run for a push made with GITHUB_TOKEN; its message also carries `[skip ci]`, and validate refuses to run
+# for the github-actions[bot] actor. workflow_dispatch on main re-runs the same flow (for example after a
+# failed publish: there is no changeset left, so version commits nothing and publish ships what is missing).
 on:
+  push:
+    branches: [main]
   workflow_dispatch: {}
 
 permissions:
@@ -12,14 +23,80 @@ concurrency:
 
 jobs:
   validate:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.actor != 'github-actions[bot]'
     uses: ./.github/workflows/ci.yml
     permissions:
       contents: read
 
-  publish:
+  version:
     needs: validate
-    if: github.ref == 'refs/heads/main' # a dispatch from another branch must not publish that tree as the immutable public version
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write # push the version-bump commit to main; nothing else
+    outputs:
+      release_sha: ${{ steps.release.outputs.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+          persist-credentials: false # only the push step below sees the token
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+      - name: version packages from the merged changesets and commit the bump to main
+        id: release
+        # Only the commit CI validated is versioned. If main has moved on, the run for the newer push
+        # releases these changesets too (they stay in .changeset/ until a version commit consumes them),
+        # unless main moved by this workflow's own version commit on top of this sha: a re-run then
+        # publishes that commit. If branch protection refuses the push, the job fails here and nothing
+        # is published.
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch --quiet origin main
+          main_sha="$(git rev-parse origin/main)"
+          if [ "${main_sha}" != "${GITHUB_SHA}" ]; then
+            if [ "$(git log -1 --format=%P "${main_sha}")" = "${GITHUB_SHA}" ] \
+              && git log -1 --format=%s "${main_sha}" | grep -q '^chore(release): version packages \[skip ci\]$'; then
+              echo "main is this run's version commit ${main_sha}; publishing it"
+              echo "sha=${main_sha}" >> "${GITHUB_OUTPUT}"
+            else
+              echo "::notice::main moved past ${GITHUB_SHA} to ${main_sha}; the run for that push releases these changesets"
+              echo "sha=" >> "${GITHUB_OUTPUT}"
+            fi
+            exit 0
+          fi
+          pnpm changeset version
+          # Files stamped from package versions: the plugin manifests and skill cards follow @cueframe/skills.
+          pnpm build:plugin
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "no pending changesets; publishing ${GITHUB_SHA} as it is"
+            echo "sha=${GITHUB_SHA}" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          {
+            echo 'chore(release): version packages [skip ci]'
+            echo
+            node -e "for (const d of ['api-contract','sdk','skills','cli']) { const p = require('./packages/' + d + '/package.json'); console.log('- ' + p.name + ' ' + p.version); }"
+          } > "${RUNNER_TEMP}/message.txt"
+          git commit --quiet --signoff --file "${RUNNER_TEMP}/message.txt"
+          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:refs/heads/main
+          echo "sha=$(git rev-parse HEAD)" >> "${GITHUB_OUTPUT}"
+
+  publish:
+    needs: version
+    if: needs.version.outputs.release_sha != ''
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -33,6 +110,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ needs.version.outputs.release_sha }}
           persist-credentials: false
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -56,34 +134,17 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - name: no package changed without a version bump (the loop below skips published versions)
+      - name: no package changed without a version bump (changeset publish skips published versions)
         run: pnpm check:published-versions
-      - name: publish committed package versions in dependency order
-        # api-contract has no workspace dependency; sdk and skills are bundled into cli at build time; so
-        # each package's inputs are on npm before it is published. A version that already exists on npm is
-        # skipped, so re-running after a partial failure is safe. Each package's publishConfig.access
-        # decides its visibility. Existing restricted packages need an explicit npm access change.
-        # Publish through pnpm, never `npm publish` in the package directory: npm would ship the raw
-        # manifest (sdk's publishConfig entry points and cli's `workspace:` devDependencies unrewritten).
+      - name: changeset publish
+        # Publishes every package whose version npm does not have, each through `pnpm publish` (packing
+        # with pnpm, so workspace: ranges and publishConfig are rewritten; npm then publishes the tarball
+        # and does the OIDC exchange). Each package's publishConfig.access decides its visibility. A
+        # version already on npm is skipped, so a re-run after a partial failure is safe. No git tags:
+        # the version commit is the record, and this job cannot push.
         env:
-          REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
-        run: |
-          set -euo pipefail
-          provenance_args=()
-          if [ "${REPOSITORY_PRIVATE}" = "false" ]; then
-            provenance_args+=(--provenance)
-          fi
-          for package_dir in packages/api-contract packages/sdk packages/skills packages/cli; do
-            package_name="$(node -p "require('./${package_dir}/package.json').name")"
-            package_version="$(node -p "require('./${package_dir}/package.json').version")"
-            if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
-              echo "${package_name}@${package_version} is already published; skipping"
-              continue
-            fi
-            # A private repository cannot provide public provenance. After the visibility switch,
-            # attest every new public package automatically. Existing immutable versions are skipped.
-            (cd "${package_dir}" && pnpm publish --no-git-checks "${provenance_args[@]}")
-          done
+          NPM_CONFIG_PROVENANCE: ${{ github.event.repository.private == false }}
+        run: pnpm changeset publish --no-git-tag
 
       - name: verify anonymous metadata and tarball access
         run: pnpm check:public-packages

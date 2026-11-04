@@ -24,6 +24,11 @@
 // Also enforced here, so `pnpm check` catches it before the build does: when the sync manifest carries a
 // `contractVersion` (the private sync stamps the version of the checkout it ran against), it must equal the
 // package version.
+//
+// Changesets (board decision, 2026-11-04): a pull request does not edit `version`; it adds a changeset, and
+// the merge to main runs `changeset version`. So "the package version" above means the version the pending
+// changesets plan for @cueframe/api-contract when they plan one (scripts/release-plan.mjs), and the bump
+// rule is met by such a changeset.
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -89,22 +94,27 @@ const blobInTree = (root, path) => (existsSync(resolve(root, path)) ? git(root, 
  * Compare the working tree under `root` against the baseline. Returns `{ ok, problems, warnings, baseline,
  * changed, version }`; `problems` is empty when the tree is acceptable.
  */
-export function checkContractVersion(root, { base = process.env.CONTRACT_BASELINE } = {}) {
+export function checkContractVersion(root, { base = process.env.CONTRACT_BASELINE, planned } = {}) {
   const problems = [];
   const baseline = selectBaseline(root, base);
   const currentPackage = inTree(root, PACKAGE_JSON);
   if (currentPackage === null) {
     return { ok: false, problems: [`${PACKAGE_JSON} is missing`], warnings: baseline.warnings, baseline, changed: [], version: null };
   }
-  const version = { current: versionOf(currentPackage), baseline: null };
+  const version = { current: versionOf(currentPackage), ...(planned ? { planned } : {}), baseline: null };
+  // The version this tree publishes as: the pending changesets' plan when there is one, else the package's.
+  const effective = planned ?? version.current;
 
-  // The sync's own stamp, when present, must name this package version.
+  // The sync's own stamp, when present, must name the version this tree publishes as.
   const syncManifest = inTree(root, 'api/contract-manifest.json');
   const stamped = syncManifest === null ? undefined : JSON.parse(syncManifest).contractVersion;
-  if (stamped !== undefined && stamped !== version.current) {
+  if (stamped !== undefined && stamped !== effective) {
     problems.push(
-      `api/contract-manifest.json records contractVersion ${stamped} but ${PACKAGE_JSON} is ${version.current}; ` +
-        'bump the package or re-run the private sync against this checkout',
+      planned
+        ? `api/contract-manifest.json records contractVersion ${stamped} but the pending changesets release @cueframe/api-contract ${planned}; ` +
+            're-run the private sync so it stamps the planned version'
+        : `api/contract-manifest.json records contractVersion ${stamped} but ${PACKAGE_JSON} is ${version.current}; ` +
+            'add a changeset for @cueframe/api-contract (or re-run the private sync against this checkout)',
     );
   }
 
@@ -114,10 +124,10 @@ export function checkContractVersion(root, { base = process.env.CONTRACT_BASELIN
       if (blobAtRev(root, baseline.rev, `api/${name}`) !== blobInTree(root, `api/${name}`)) changed.push(name);
     }
     version.baseline = versionOf(atRev(root, baseline.rev, PACKAGE_JSON));
-    if (changed.length > 0 && version.baseline === version.current) {
+    if (changed.length > 0 && version.baseline === effective) {
       problems.push(
         `api/${changed.join(', api/')} changed since ${baseline.reason} but ${PACKAGE_JSON} is still ${version.current}; ` +
-          'bump the version (the contract publishes under it) and record the change in CHANGELOG.md',
+          'add a changeset for @cueframe/api-contract (`pnpm changeset`): the contract publishes under the version it plans',
       );
     }
   }
@@ -130,12 +140,18 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const flag = (name) => { const i = process.argv.indexOf(name); return i === -1 ? undefined : process.argv[i + 1]; };
   const ROOT = resolve(flag('--root') ?? resolve(dirname(fileURLToPath(import.meta.url)), '..'));
   const base = flag('--base');
-  const { ok, problems, warnings, baseline, changed, version } = checkContractVersion(ROOT, base ? { base } : {});
+  // Pending changesets plan the version this tree publishes as (see scripts/release-plan.mjs).
+  let planned;
+  if (existsSync(resolve(ROOT, '.changeset/config.json'))) {
+    const { plannedVersions } = await import('./release-plan.mjs');
+    planned = (await plannedVersions(ROOT)).get('@cueframe/api-contract');
+  }
+  const { ok, problems, warnings, baseline, changed, version } = checkContractVersion(ROOT, { ...(base ? { base } : {}), planned });
   for (const warning of warnings) console.warn(`warning: ${warning}`);
   if (!ok) { console.error(problems.join('\n')); process.exit(1); }
   const summary = baseline.rev
     ? changed.length
-      ? `api/${changed.join(', api/')} changed and the package moved ${version.baseline} -> ${version.current}`
+      ? `api/${changed.join(', api/')} changed and the package moved ${version.baseline} -> ${planned ?? version.current}`
       : `api/ unchanged since ${baseline.reason}`
     : baseline.reason;
   console.log(`contract version ok: @cueframe/api-contract ${version.current}; ${summary}`);

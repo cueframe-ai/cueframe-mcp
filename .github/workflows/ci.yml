@@ -15,6 +15,8 @@ jobs:
       # case); both must measure the same baseline. Every commit of a pull request is measured against the
       # PR's base, a push to main against the commit the push replaced; without this each would see one commit.
       CONTRACT_BASELINE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+      # scripts/check-changesets.mjs measures the same range: every commit of the PR, or of the push.
+      CHANGESET_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -32,6 +34,8 @@ jobs:
         # in package.json: vite 8 takes esbuild as a peer, so a `vite>esbuild` override could not
         # reach the 0.27 instance that GHSA-g7r4-m6w7-qqqr flagged.
         run: pnpm audit --prod
+      - name: every change to a published package carries a changeset, and no version is edited by hand
+        run: pnpm check:changesets
       - run: pnpm check
       - name: generated API consumers are current
         run: pnpm check:api-consumer-drift
