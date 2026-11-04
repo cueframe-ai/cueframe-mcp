@@ -75,7 +75,10 @@ jobs:
             exit 0
           fi
           pnpm changeset version
-          # Files stamped from package versions: the plugin manifests and skill cards follow @cueframe/skills.
+          # Files stamped from package versions: the contract sync manifest's contractVersion follows
+          # @cueframe/api-contract (the publish job's build refuses a stale stamp), and the plugin manifests
+          # and skill cards follow @cueframe/skills.
+          node scripts/sync-contract-stamp.mjs
           pnpm build:plugin
           if [ -z "$(git status --porcelain)" ]; then
             echo "no pending changesets; publishing ${GITHUB_SHA} as it is"

@@ -200,14 +200,16 @@ test('the CLI exits 1 with the problem on stderr and 0 with a summary on stdout'
 });
 
 // Changesets (board, 2026-11-04): a pull request never edits `version`; a pending changeset plans it, and
-// the merge's `changeset version` applies it. The check measures against that planned version.
-test('with Changesets: an api/ change passes when a pending changeset plans a new version that the sync stamped', () => {
+// the merge's `changeset version` applies it. The bump rule measures against that planned version; the
+// stamp names the checkout's package version, as the private sync writes it and the package build requires.
+test('with Changesets: an api/ change passes when a pending changeset plans a new version; the sync stamps the current one', () => {
   withRepo((repo) => {
-    repo.publishMain().git('checkout', '--quiet', '-b', 'contract/resync');
+    repo.api('contract-manifest.json', { schemaVersion: 1, kernelVersion: '0.2.64', privateCommit: 'a'.repeat(40), files: {}, contractVersion: '1.0.0' })
+      .amend().publishMain().git('checkout', '--quiet', '-b', 'contract/resync');
     repo.api('openapi.json', { revision: 2 })
-      .api('contract-manifest.json', { schemaVersion: 1, kernelVersion: '0.2.64', privateCommit: 'a'.repeat(40), files: {}, contractVersion: '1.1.0' })
-      .commit('resync for the planned 1.1.0');
-    assert.equal(repo.check().ok, false, 'without a planned bump the stamp names an unknown version');
+      .api('contract-manifest.json', { schemaVersion: 1, kernelVersion: '0.2.64', privateCommit: 'b'.repeat(40), files: {}, contractVersion: '1.0.0' })
+      .commit('resync against the 1.0.0 checkout');
+    assert.equal(repo.check().ok, false, 'without a planned bump the change is unversioned');
     const result = repo.check({ planned: '1.1.0' });
     assert.deepEqual(result.problems, [], result.problems.join('\n'));
     assert.deepEqual(result.version, { current: '1.0.0', planned: '1.1.0', baseline: '1.0.0' });
@@ -224,11 +226,11 @@ test('with Changesets: an api/ change without a planned bump fails and says to a
   });
 });
 
-test('with Changesets: the stamp must equal the planned version, not the current one', () => {
+test('with Changesets: a stamp naming the planned version fails, because the build compares it with package.json', () => {
   withRepo((repo) => {
-    repo.api('contract-manifest.json', { schemaVersion: 1, kernelVersion: '0.2.64', privateCommit: 'a'.repeat(40), files: {}, contractVersion: '1.0.0' }).commit('stamp 1.0.0');
+    repo.api('contract-manifest.json', { schemaVersion: 1, kernelVersion: '0.2.64', privateCommit: 'a'.repeat(40), files: {}, contractVersion: '1.0.1' }).commit('stamp 1.0.1');
     const result = repo.check({ planned: '1.0.1' });
     assert.equal(result.ok, false);
-    assert.match(result.problems[0], /records contractVersion 1\.0\.0 but the pending changesets release @cueframe\/api-contract 1\.0\.1/);
+    assert.match(result.problems[0], /records contractVersion 1\.0\.1 but packages\/api-contract\/package\.json is 1\.0\.0; re-run the private sync/);
   });
 });

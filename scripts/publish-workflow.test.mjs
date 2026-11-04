@@ -91,9 +91,9 @@ test('write access and the OIDC token never share a job', () => {
   assert.equal(publishCheckout.with.ref, '${{ needs.version.outputs.release_sha }}');
 });
 
-test('version runs changeset version, restamps the plugin manifests, then commits; publish gates come before changeset publish', () => {
+test('version runs changeset version, restamps the contract manifest and the plugin manifests, then commits; publish gates come before changeset publish', () => {
   const run = runOf(version.steps.find((s) => /changeset version/.test(runOf(s))));
-  const order = ['pnpm changeset version', 'pnpm build:plugin', 'git commit', 'git push'].map((needle) => run.indexOf(needle));
+  const order = ['pnpm changeset version', 'node scripts/sync-contract-stamp.mjs', 'pnpm build:plugin', 'git commit', 'git push'].map((needle) => run.indexOf(needle));
   assert.ok(order.every((i, n) => i >= 0 && (n === 0 || i > order[n - 1])), `order ${order}`);
   const index = (needle) => steps.findIndex((s) => runOf(s).includes(needle));
   assert.ok(index('pnpm build') < index('pnpm check:published-versions'));

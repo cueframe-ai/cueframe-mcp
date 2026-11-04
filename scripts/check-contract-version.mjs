@@ -26,9 +26,10 @@
 // package version.
 //
 // Changesets (board decision, 2026-11-04): a pull request does not edit `version`; it adds a changeset, and
-// the merge to main runs `changeset version`. So "the package version" above means the version the pending
-// changesets plan for @cueframe/api-contract when they plan one (scripts/release-plan.mjs), and the bump
-// rule is met by such a changeset.
+// the merge to main runs `changeset version`. So the bump rule is met by a pending changeset that plans a
+// new version for @cueframe/api-contract (scripts/release-plan.mjs). The stamp rule is not: the private sync
+// stamps the checkout's package.json version, and the package build compares the stamp with package.json, so
+// this check does too. The release job restamps after `changeset version` (scripts/sync-contract-stamp.mjs).
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
@@ -105,16 +106,15 @@ export function checkContractVersion(root, { base = process.env.CONTRACT_BASELIN
   // The version this tree publishes as: the pending changesets' plan when there is one, else the package's.
   const effective = planned ?? version.current;
 
-  // The sync's own stamp, when present, must name the version this tree publishes as.
+  // The sync's own stamp, when present, must name this checkout's package version: the version the sync ran
+  // against, and the one packages/api-contract/scripts/build.mjs compares it with.
   const syncManifest = inTree(root, 'api/contract-manifest.json');
   const stamped = syncManifest === null ? undefined : JSON.parse(syncManifest).contractVersion;
-  if (stamped !== undefined && stamped !== effective) {
+  if (stamped !== undefined && stamped !== version.current) {
     problems.push(
-      planned
-        ? `api/contract-manifest.json records contractVersion ${stamped} but the pending changesets release @cueframe/api-contract ${planned}; ` +
-            're-run the private sync so it stamps the planned version'
-        : `api/contract-manifest.json records contractVersion ${stamped} but ${PACKAGE_JSON} is ${version.current}; ` +
-            'add a changeset for @cueframe/api-contract (or re-run the private sync against this checkout)',
+      `api/contract-manifest.json records contractVersion ${stamped} but ${PACKAGE_JSON} is ${version.current}; ` +
+        're-run the private sync against this checkout (a pull request adds a changeset and never edits `version`; ' +
+        'after `changeset version`, `node scripts/sync-contract-stamp.mjs` restamps)',
     );
   }
 
