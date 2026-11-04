@@ -1,3 +1,4 @@
+// Demo for Paperclip CUE-51: a package change; do not merge.
 
 export type ClientConfig = {
   baseUrl: string;
