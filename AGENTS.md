@@ -55,6 +55,8 @@ Board decision, 2026-11-04: every merge to `main` publishes normal semver versio
 3. **Never hand-edit `version` in a `package.json`**, and never enter prerelease mode (`.changeset/pre.json`). `pnpm check:changesets` fails both. Internal dependency ranges are Changesets' job (`updateInternalDependencies: "patch"`).
 4. **No prerelease and no local `@cueframe` pins**: no `-ea…`, `-rc` or `-dev` version anywhere, and no `file:`, `link:`, tarball, git or URL source for any `@cueframe/*` dependency, override or catalog entry. Consumers pin versions npm has. `pnpm check:cueframe-pins` checks all three (and the same script runs in cueframe and cueframe-private). Known exception until the kernel publishes a normal version from the application repository: the `@cueframe/kernel` contract-build pin (root `pnpm.overrides` → `artifacts/`, and the `packages/api-contract` devDependency), which is why that check is not yet a CI step here (Paperclip CUE-51).
 
+Landmine: GitHub skips every push workflow for a commit whose message contains `[skip ci]` (or `[ci skip]`, `[no ci]`, `[skip actions]`, `[actions skip]`). The release commit uses that on purpose; anywhere else it silently skips the release of that merge. Never write those markers in a commit message, pull request title or description (a squash or a "title and description" merge commit repeats them).
+
 ## Conventions
 
 - Apache-2.0, inbound equals outbound; sign every commit (`git commit -s`).
