@@ -58,9 +58,14 @@ function extract(tgz, into) {
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const scratch = mkdtempSync(join(tmpdir(), 'cf-published-'));
   let failed = false;
+  // Changesets: a package a pending changeset releases moves to a new version on merge, so its content
+  // is compared only once `changeset version` has run (the publish workflow runs this check after it).
+  const { plannedVersions } = await import('./release-plan.mjs');
+  const planned = await plannedVersions(ROOT);
   try {
     for (const dir of PUBLISHED_PACKAGES) {
       const { name, version } = JSON.parse(readFileSync(join(ROOT, dir, 'package.json'), 'utf8'));
+      if (planned.has(name)) { console.log(`next ${name}@${version}: a pending changeset releases ${planned.get(name)} on merge`); continue; }
       const published = await publishedTarball(name, version);
       if (!published) { console.log(`new  ${name}@${version}: not on npm yet; the publish loop will ship it`); continue; }
       const work = join(scratch, name.replace(/[@/]/g, '_'));
@@ -71,7 +76,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       const changed = differingFiles(extract(join(work, localTgz), join(work, 'local')), extract(join(work, 'published.tgz'), join(work, 'published')));
       if (changed.length) {
         failed = true;
-        console.error(`FAIL ${name}@${version} is already on npm with different content (${changed.slice(0, 8).join(', ')}${changed.length > 8 ? ', …' : ''}); bump ${dir}/package.json`);
+        console.error(`FAIL ${name}@${version} is already on npm with different content (${changed.slice(0, 8).join(', ')}${changed.length > 8 ? ', …' : ''}); add a changeset for ${name} (\`pnpm changeset\`)`);
       } else {
         console.log(`ok   ${name}@${version}: matches the published tarball`);
       }

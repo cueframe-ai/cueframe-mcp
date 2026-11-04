@@ -4,6 +4,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { plannedVersions } from '../release-plan.mjs';
 const root = new URL('../../', import.meta.url);
 const read = (file) => readFileSync(new URL(file, root), 'utf8');
 const { cli } = JSON.parse(read('scripts/plugin/cli-version.json'));
@@ -11,10 +13,13 @@ const cliPackage = JSON.parse(read('packages/cli/package.json'));
 // `npx -y cueframe@<major.minor>` in a convention is a placeholder, not a pin.
 const pinOf = (text) => [...text.matchAll(/npx -y cueframe(@[^\s`]+)?/g)].map((m) => m[1] ?? '(unpinned)').filter((pin) => !pin.startsWith('@<'));
 
-test('cli-version.json pins the major.minor of the cueframe CLI package in this repo', () => {
+// With Changesets the pull request that bumps the CLI's minor does not edit its `version`; it adds a
+// changeset, and the pin must already name the version that changeset plans (scripts/release-plan.mjs).
+test('cli-version.json pins the major.minor of the cueframe CLI package in this repo (as the pending changesets plan it)', async () => {
   assert.equal(cliPackage.name, 'cueframe');
-  const [major, minor] = cliPackage.version.split('.');
-  assert.equal(cli, `${major}.${minor}`, `scripts/plugin/cli-version.json says ${cli}; packages/cli is ${cliPackage.version}`);
+  const version = (await plannedVersions(fileURLToPath(root))).get('cueframe') ?? cliPackage.version;
+  const [major, minor] = version.split('.');
+  assert.equal(cli, `${major}.${minor}`, `scripts/plugin/cli-version.json says ${cli}; packages/cli releases as ${version}`);
 });
 
 test('every skill and user-facing doc runs the CLI at that pin', () => {

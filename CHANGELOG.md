@@ -1,6 +1,6 @@
 # Changelog
 
-One entry per package per release. Versions follow each package's `package.json`.
+From the first Changesets release on (board decision, 2026-11-04), each package's entries are written by `changeset version` into `packages/<package>/CHANGELOG.md`; this file keeps the history before that. Versions follow each package's `package.json`.
 
 ## @cueframe/skills 0.4.6
 
