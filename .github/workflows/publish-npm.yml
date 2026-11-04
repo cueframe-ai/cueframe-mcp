@@ -24,29 +24,35 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: read
-      id-token: write # npm provenance for public repositories
+      id-token: write # npm trusted publishing (OIDC token exchange) and provenance
+    # npm trusted publishing (docs.npmjs.com/trusted-publishers): every package below is published with a
+    # short-lived token that npm exchanges for this job's GitHub OIDC token; no npm token is stored here.
+    # It needs npm CLI 11.5.1 or later, Node 22.14.0 or later and a GitHub-hosted runner (self-hosted
+    # runners are not supported). Each package's trusted publisher on npmjs.com names this repository and
+    # the workflow file `publish-npm.yml`, with no environment.
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        # No `registry-url`: it would write an .npmrc auth line and export a placeholder auth token variable,
+        # so a failed OIDC exchange would surface as a confusing registry 401/404 instead of ENEEDAUTH.
         with:
           node-version: 24
           cache: pnpm
-          registry-url: https://registry.npmjs.org
-      - name: NPM_TOKEN is present
-        # The publish step authenticates through NODE_AUTH_TOKEN (setup-node's `registry-url` above points
-        # NPM_CONFIG_USERCONFIG at an .npmrc whose auth line reads that variable). Fail here, before the
-        # build, rather than on the first `pnpm publish`. The install itself needs no token: every
-        # workspace dependency, @cueframe/skills included, resolves through the workspace protocol.
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: npm CLI for trusted publishing
+        # pnpm 10 does not exchange the OIDC token itself: `pnpm publish` packs the package (rewriting
+        # `workspace:` ranges and applying publishConfig) and then runs `npm publish <tarball>` with the
+        # npm next to node (pnpm v10.32.1 releasing/plugin-commands-publishing/src/publish.ts). npm does
+        # the exchange, so the npm on PATH must be 11.5.1 or later. Pinned; check the version it reports.
         run: |
-          if [ -z "${NPM_TOKEN}" ]; then
-            echo "::error::NPM_TOKEN is not set; nothing can be published"
-            exit 1
-          fi
+          set -euo pipefail
+          npm install --global npm@11.21.1
+          npm_version="$(npm --version)"
+          echo "npm ${npm_version}"
+          node -e "const [a,b,c]=process.argv[1].split('.').map(Number); process.exit(a>11||(a===11&&(b>5||(b===5&&c>=1)))?0:1)" "${npm_version}" \
+            || { echo "::error::npm ${npm_version} is older than 11.5.1; trusted publishing would fail"; exit 1; }
       - name: pnpm install
         run: pnpm install --frozen-lockfile
       - run: pnpm build
@@ -57,8 +63,9 @@ jobs:
         # each package's inputs are on npm before it is published. A version that already exists on npm is
         # skipped, so re-running after a partial failure is safe. Each package's publishConfig.access
         # decides its visibility. Existing restricted packages need an explicit npm access change.
+        # Publish through pnpm, never `npm publish` in the package directory: npm would ship the raw
+        # manifest (sdk's publishConfig entry points and cli's `workspace:` devDependencies unrewritten).
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
         run: |
           set -euo pipefail
