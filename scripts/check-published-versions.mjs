@@ -14,6 +14,11 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 export const PUBLISHED_PACKAGES = ['packages/api-contract', 'packages/sdk', 'packages/skills', 'packages/cli'];
 
+/** True when a semver string carries a prerelease part (`1.2.3-ea…`); build metadata (`+…`) is not one. */
+export function isPrerelease(version) {
+  return /^\d+\.\d+\.\d+-/.test(version.split('+')[0]);
+}
+
 function files(dir) {
   const out = new Map();
   const walk = (d) => {

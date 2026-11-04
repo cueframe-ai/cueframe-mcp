@@ -2,14 +2,25 @@
 
 One entry per package per release. Versions follow each package's `package.json`.
 
-## @cueframe/skills 0.4.5-ea20261029.6
+## @cueframe/skills 0.4.6
 
 - Add an experimental editable optical scene study with bounded field, transmission, text and clock controls through the existing scene contract.
+- Three new reference files; none removed. Skills run the CLI as `npx -y cueframe@0.12`.
 
-## cueframe 0.11.4-ea20261029.8
+## cueframe 0.12.0
 
-- Emit composition and ETag inside the completion event for `composition get --json`, keeping every output line valid NDJSON.
-- Include the updated skills and experimental optical scene study.
+- Breaking for scripts that read `--json` output: `composition get`, `put` and `apply` no longer print a separate result object. The composition and ETag are inside the `*_complete` event, so every output line is valid NDJSON.
+- Breaking: `composition validate` returns the server's verdict and exits non-zero when the composition is invalid. It used to report `{valid:true}` regardless.
+- Add `api --timeout-ms`. `render` reads the parent command's `--out`.
+- Include the updated skills and experimental optical scene study. Built against `@cueframe/sdk` 0.17.1.
+
+## @cueframe/sdk 0.17.1
+
+- Generated from contract 7.0.2. Additive only: new optional fields (such as `color`), registry types, and the `setClipColor` and `setMediaInputTransform` ops. No export removed.
+
+## @cueframe/api-contract 7.0.2
+
+- The same contract as the published `7.0.2-ea20261031.1`, released as a normal version. Changes since 7.0.1 are additive.
 
 ## @cueframe/api-contract 7.0.0
 

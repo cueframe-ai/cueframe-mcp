@@ -255,4 +255,4 @@ frames) before declaring done.
   which is the engine's job now.
 - This recipe lives in a skill on purpose: the engine stays use-case-free; the
   product opinions (what to extract, which overlays, how to brand) live here and
-  ship via `npx -y cueframe@0.11 install`.
+  ship via `npx -y cueframe@0.12 install`.
