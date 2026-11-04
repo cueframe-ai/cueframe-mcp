@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { differingFiles } from './check-published-versions.mjs';
+import { differingFiles, isPrerelease, PUBLISHED_PACKAGES } from './check-published-versions.mjs';
 
 const tree = (entries) => new Map(Object.entries(entries).map(([name, text]) => [name, Buffer.from(text)]));
 
@@ -16,4 +17,19 @@ test('a changed, added or removed file is a difference', () => {
 
 test('an empty file added locally still counts', () => {
   assert.deepEqual(differingFiles(tree({ 'empty.txt': '' }), tree({})), ['empty.txt']);
+});
+
+test('a version with a prerelease suffix is a prerelease', () => {
+  assert.equal(isPrerelease('0.17.1-ea20261031.1'), true);
+  assert.equal(isPrerelease('1.0.0-rc.1'), true);
+  assert.equal(isPrerelease('0.17.1'), false);
+  assert.equal(isPrerelease('0.17.1+build.5'), false);
+});
+
+// Board decision, 2026-11-04: publish real versions only, never `-ea` prereleases.
+test('every published package declares a normal version', () => {
+  for (const dir of PUBLISHED_PACKAGES) {
+    const { name, version } = JSON.parse(readFileSync(new URL(`../${dir}/package.json`, import.meta.url), 'utf8'));
+    assert.equal(isPrerelease(version), false, `${name}@${version} is a prerelease; set a normal version`);
+  }
 });

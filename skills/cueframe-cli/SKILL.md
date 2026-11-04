@@ -25,11 +25,11 @@ both MCP and this CLI exist so you do not have to.
 
 ## Overview
 
-The `cueframe` CLI drives the CueFrame platform from the terminal. Optimized for agents — every command supports `--json` (NDJSON event stream) and the binary self-describes via `npx -y cueframe@0.11 describe --json`.
+The `cueframe` CLI drives the CueFrame platform from the terminal. Optimized for agents — every command supports `--json` (NDJSON event stream) and the binary self-describes via `npx -y cueframe@0.12 describe --json`.
 
-**Run it as `npx -y cueframe@0.11 …` — every command in this skill is written that way, and
+**Run it as `npx -y cueframe@0.12 …` — every command in this skill is written that way, and
 that form is executable verbatim.** There is no `cueframe` on your PATH unless you put it
-there: `npx -y cueframe@0.11 install` wires the MCP server and drops these skills, but npx
+there: `npx -y cueframe@0.12 install` wires the MCP server and drops these skills, but npx
 unpacks to an ephemeral cache, so it installs no binary. `npx` re-resolves the current
 version on each call (~0.5s warm, ~5s cold), which also means these commands never go
 stale. If you are running many in a row and want to skip that, `npm i -g cueframe` once
@@ -40,9 +40,9 @@ the documented path.
 **The framework is three verbs:** `upload` (register media) → `composition put` (author the timeline) → `render` (→ MP4). The `Composition` is the contract — render takes the saved composition, nothing else. Everything domain-specific (AI clip suggestions, FCPXML/Premiere export) is a **use-case on-ramp** layered on top, not part of the core.
 
 **Core principle — discover, don't guess.** Never author a composition from the
-examples below alone. The live contract is `npx -y cueframe@0.11 schema composition` (prints
+examples below alone. The live contract is `npx -y cueframe@0.12 schema composition` (prints
 the real wire schema the server enforces); confirm any draft with
-`npx -y cueframe@0.11 composition validate -b @file.json` BEFORE you render. Validation is
+`npx -y cueframe@0.12 composition validate -b @file.json` BEFORE you render. Validation is
 free and instant; a render is neither. The examples here are orientation — the
 schema is the source of truth.
 
@@ -62,7 +62,7 @@ delivery, not checking each edit. CLI validation does not replace visual evidenc
 To compare a certified reference frame with an existing saved preview, use `compare`:
 
 ```bash
-npx -y cueframe@0.11 compare <projectId> --reference-media <mediaId> --reference-representation <identity> --reference-frame 117 --candidate-job <jobId> --candidate-artifact <artifactId> --out ./comparison --json
+npx -y cueframe@0.12 compare <projectId> --reference-media <mediaId> --reference-representation <identity> --reference-frame 117 --candidate-job <jobId> --candidate-artifact <artifactId> --out ./comparison --json
 ```
 
 The command calls the shared comparison operation; it does not rerender the composition. `--views overlay,difference` selects diagnostics and `--crop x,y,width,height` uses one common-coordinate crop. NDJSON contains source identities and image receipts, never base64 payloads. `--out` saves verified PNGs; without it, image receipts explicitly say `metadata_only`. Inspect those images and relevant motion before judging the film.
@@ -72,24 +72,24 @@ The command calls the shared comparison operation; it does not rerender the comp
 #    Commands run against production; auth is stored in ~/.cueframe/auth.json.
 
 # 1. Register media (one or many — mixed video / image / audio).
-npx -y cueframe@0.11 upload "/path/to/source.mp4" --json   # → mediaItemId (process_complete)
+npx -y cueframe@0.12 upload "/path/to/source.mp4" --json   # → mediaItemId (process_complete)
 
 # 2. Create a project (sets aspect/format).
-npx -y cueframe@0.11 project create -n "promo" -a 9:16 --json   # → projectId
+npx -y cueframe@0.12 project create -n "promo" -a 9:16 --json   # → projectId
 
 # 3. Author the composition: tracks of clips (per-clip reframe/trim), optional
 #    captions (captions.segments), brandKitId. The composition is the SSOT.
 #    Discover the live schema, then validate the draft BEFORE saving/rendering:
-npx -y cueframe@0.11 schema composition                                 # → live wire schema
-npx -y cueframe@0.11 composition validate -b @composition.json          # → ✓ valid | per-field errors (no render)
-npx -y cueframe@0.11 composition get <projectId> --json                  # → etag (not found = no composition yet)
-npx -y cueframe@0.11 composition put <projectId> -b @composition.json --if-match <etag>
+npx -y cueframe@0.12 schema composition                                 # → live wire schema
+npx -y cueframe@0.12 composition validate -b @composition.json          # → ✓ valid | per-field errors (no render)
+npx -y cueframe@0.12 composition get <projectId> --json                  # → etag (not found = no composition yet)
+npx -y cueframe@0.12 composition put <projectId> -b @composition.json --if-match <etag>
 #    --if-match is required: a save made since your `get` fails with 409 stale_etag
 #    instead of being overwritten. Re-`get`, re-apply your edit, retry. Use --create
 #    only for the first composition of a project (refused 409 if one exists).
 
 # 4. Render the saved composition to MP4. SSE-watches + downloads when done.
-npx -y cueframe@0.11 render <projectId> -o ./out.mp4 --json
+npx -y cueframe@0.12 render <projectId> -o ./out.mp4 --json
 # → render_queued → render_progress* → render_complete
 #
 # `render` takes ONLY a projectId and renders the SAVED composition (tracks +
@@ -104,14 +104,14 @@ npx -y cueframe@0.11 render <projectId> -o ./out.mp4 --json
 # a hand-authored composition; if absent, the clip is rendered without captions.
 
 # Reattach to an in-flight render later (e.g. after disconnect):
-npx -y cueframe@0.11 render watch <renderId> -p <projectId> -o ./out.mp4 --json
+npx -y cueframe@0.12 render watch <renderId> -p <projectId> -o ./out.mp4 --json
 ```
 
 ## Anatomy of a composition.json
 
 This section orients you to the shape; the authoritative contract is
-`npx -y cueframe@0.11 schema composition` (the live wire schema) — run it when a field is
-unclear, and `npx -y cueframe@0.11 composition validate -b @file.json` to check a draft.
+`npx -y cueframe@0.12 schema composition` (the live wire schema) — run it when a field is
+unclear, and `npx -y cueframe@0.12 composition validate -b @file.json` to check a draft.
 
 `composition put` takes the **bare** `Composition` object (no wrapper; the CLI PUTs
 the `@file` verbatim with your `--if-match` ETag). Minimal valid shape:
@@ -178,18 +178,18 @@ the composition yourself (above).
 
 ```bash
 # 1. Upload + chain the AI clip pass.
-npx -y cueframe@0.11 upload "/path/to/source.mp4" --analyze --json   # mediaItemId + suggestions
-# (or run it explicitly: npx -y cueframe@0.11 analyze <mediaItemId> --wait --json)
+npx -y cueframe@0.12 upload "/path/to/source.mp4" --analyze --json   # mediaItemId + suggestions
+# (or run it explicitly: npx -y cueframe@0.12 analyze <mediaItemId> --wait --json)
 
 # 2. List clip suggestions (publicId sug_…, title, startMs/endMs, score).
-npx -y cueframe@0.11 clips <mediaItemId> --json
+npx -y cueframe@0.12 clips <mediaItemId> --json
 
 # 3. Create a project AND author its composition from the chosen suggestion.
-npx -y cueframe@0.11 project create -n "paul-klein-shorts" -a 9:16 --from-suggestion <sug_…> --json
-#   (or, on an existing project: npx -y cueframe@0.11 composition from-suggestion <projectId> -s <sug_…>)
+npx -y cueframe@0.12 project create -n "paul-klein-shorts" -a 9:16 --from-suggestion <sug_…> --json
+#   (or, on an existing project: npx -y cueframe@0.12 composition from-suggestion <projectId> -s <sug_…>)
 
 # 4. Render — same framework verb as above.
-npx -y cueframe@0.11 render <projectId> -o ./out.mp4 --json
+npx -y cueframe@0.12 render <projectId> -o ./out.mp4 --json
 ```
 
 Both flows converge on `composition put` → `render`; the on-ramp just authors the
@@ -208,10 +208,10 @@ projection `component-library`).
 
 ```bash
 # 1. Scaffold a workspace (writes cueframe.json + cueframe/components/). Idempotent.
-npx -y cueframe@0.11 init --json
+npx -y cueframe@0.12 init --json
 
 # 2a. Scaffold a component in cueframe/components/<id>/ as owned, editable source.
-npx -y cueframe@0.11 new component my-badge --category ui-blocks --json
+npx -y cueframe@0.12 new component my-badge --category ui-blocks --json
 
 # The scaffold is a native (version 4) source: template.html + definition.json, with its
 # manifest in cueframe.json.
@@ -220,38 +220,38 @@ npx -y cueframe@0.11 new component my-badge --category ui-blocks --json
 #    __cfScene.mount(...)) and definition.json (inputs, defaults, timing, capabilities).
 
 # 4. Publish to CueFrame so it can render (the server admits the source or names the rule it breaks).
-npx -y cueframe@0.11 push my-badge --json            # one component
-npx -y cueframe@0.11 sync --json                      # every component in the workspace
+npx -y cueframe@0.12 push my-badge --json            # one component
+npx -y cueframe@0.12 sync --json                      # every component in the workspace
 
 # 5. Reference the component id in your composition as a {kind:'component', componentId, props}
 #    clip, then render with the same verb. Preview a single component first via the MCP
 #    preview_component loop.
-npx -y cueframe@0.11 render <projectId> -o ./out.mp4 --json
+npx -y cueframe@0.12 render <projectId> -o ./out.mp4 --json
 ```
 
 ## Quick reference
 
 | Need to… | Command |
 |---|---|
-| See every command + flags | `npx -y cueframe@0.11 describe --json` |
-| Install/refresh managed skills | `npx -y cueframe@0.11 install` (shared `~/.agents/skills` and Claude `~/.claude/skills`; locally changed or untracked packages are preserved and reported) |
-| List projects | `npx -y cueframe@0.11 list -n 50` |
-| List your media | `npx -y cueframe@0.11 clips` (no mediaId arg) |
-| Discover the live composition schema | `npx -y cueframe@0.11 schema composition` |
-| Validate a draft (no save, no render) | `npx -y cueframe@0.11 composition validate -b @plan.json` |
-| Read composition + ETag | `npx -y cueframe@0.11 composition get <projectId> --json` |
-| Write composition | `npx -y cueframe@0.11 composition put <projectId> -b @plan.json --if-match <etag>` (`--create` for the first composition) |
-| Export to Final Cut | `npx -y cueframe@0.11 export fcpxml <projectId> -s <sug> --wait -o cut.zip` |
-| Export to Premiere | `npx -y cueframe@0.11 export premiere <projectId> -s <sug> --wait -o cut.zip` |
-| Anything not wrapped | `npx -y cueframe@0.11 api GET /v1/...  -i` (escape hatch, like `gh api`) |
-| Validate a composition without mutating | `npx -y cueframe@0.11 composition validate -b @plan.json` |
+| See every command + flags | `npx -y cueframe@0.12 describe --json` |
+| Install/refresh managed skills | `npx -y cueframe@0.12 install` (shared `~/.agents/skills` and Claude `~/.claude/skills`; locally changed or untracked packages are preserved and reported) |
+| List projects | `npx -y cueframe@0.12 list -n 50` |
+| List your media | `npx -y cueframe@0.12 clips` (no mediaId arg) |
+| Discover the live composition schema | `npx -y cueframe@0.12 schema composition` |
+| Validate a draft (no save, no render) | `npx -y cueframe@0.12 composition validate -b @plan.json` |
+| Read composition + ETag | `npx -y cueframe@0.12 composition get <projectId> --json` |
+| Write composition | `npx -y cueframe@0.12 composition put <projectId> -b @plan.json --if-match <etag>` (`--create` for the first composition) |
+| Export to Final Cut | `npx -y cueframe@0.12 export fcpxml <projectId> -s <sug> --wait -o cut.zip` |
+| Export to Premiere | `npx -y cueframe@0.12 export premiere <projectId> -s <sug> --wait -o cut.zip` |
+| Anything not wrapped | `npx -y cueframe@0.12 api GET /v1/...  -i` (escape hatch, like `gh api`) |
+| Validate a composition without mutating | `npx -y cueframe@0.12 composition validate -b @plan.json` |
 
 ## Auth
 
 Commands run against production. Authenticate once:
 
-- `npx -y cueframe@0.11 login` — OAuth device flow (laptops).
-- `npx -y cueframe@0.11 auth <cf_live_… key>` — save a static API key (CI / headless).
+- `npx -y cueframe@0.12 login` — OAuth device flow (laptops).
+- `npx -y cueframe@0.12 auth <cf_live_… key>` — save a static API key (CI / headless).
 
 Creds are stored in `~/.cueframe/auth.json`; the key can also come from the `CUEFRAME_API_KEY` env var.
 
@@ -269,11 +269,11 @@ Errors come as `{"event":"error", "phase":"<step>", "message":"...", "code":"...
 
 | Mistake | Reality |
 |---|---|
-| Reaching for `curl …/v1/...` because the CLI didn't have a command | Use `npx -y cueframe@0.11 api METHOD /v1/...` — same auth, same JSON pipeline. |
-| Polling for render completion with a sleep loop | `npx -y cueframe@0.11 render` already SSE-watches and exits when done. Use `render watch <id>` to reattach. |
+| Reaching for `curl …/v1/...` because the CLI didn't have a command | Use `npx -y cueframe@0.12 api METHOD /v1/...` — same auth, same JSON pipeline. |
+| Polling for render completion with a sleep loop | `npx -y cueframe@0.12 render` already SSE-watches and exits when done. Use `render watch <id>` to reattach. |
 | Skipping `--json` and trying to parse human output | Human output is for humans. Agents always use `--json`. |
 | Hand-editing the composition without an ETag | `composition put` refuses without `--if-match <etag>` from the `composition get` your edit started from. Don't fetch a fresh ETag right before the put: that overwrites anyone who saved in between. `--create` is only for a project's first composition; there is no unconditional overwrite. |
-| Calling `npx -y cueframe@0.11 render <projectId> <suggestionId>` (old two-positional shape) | `render` takes ONLY a projectId; commander rejects the extra arg. It renders the SAVED composition — author it first via `composition put` (hand-author) or `project create --from-suggestion <sug>` (clip-finder on-ramp). |
+| Calling `npx -y cueframe@0.12 render <projectId> <suggestionId>` (old two-positional shape) | `render` takes ONLY a projectId; commander rejects the extra arg. It renders the SAVED composition — author it first via `composition put` (hand-author) or `project create --from-suggestion <sug>` (clip-finder on-ramp). |
 | Assuming `render` needs a clip suggestion / that captions only come from a suggestion | No — `render` renders the saved composition directly; a suggestion is optional. Captions come from `composition.captions` (author them in the `put` JSON). The clip-suggestion on-ramp just fills those captions for you by slicing the transcript at author time. |
 
 ## When this skill applies (routing)

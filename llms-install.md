@@ -74,7 +74,7 @@ OpenClaw manages native `mcp.servers` entries through its CLI or Settings → MC
 
 ### Headless authentication
 
-For unattended use, create a CueFrame API key with `npx -y cueframe@0.11 login`, then `npx -y cueframe@0.11 keys create --name <name>`. Login alone does not create a key. Keep keys outside committed config.
+For unattended use, create a CueFrame API key with `npx -y cueframe@0.12 login`, then `npx -y cueframe@0.12 keys create --name <name>`. Login alone does not create a key. Keep keys outside committed config.
 
 For Codex, replace the OAuth entry with an environment-backed bearer token:
 
@@ -91,7 +91,7 @@ Set `CUEFRAME_API_KEY` in the launching environment to your key (`cf_live_<YOUR_
 Either install this plugin through your client's plugin or marketplace command (the install lines are in [README.md](./README.md)), or let the CLI install the skills into `~/.agents/skills` and `~/.claude/skills`:
 
 ```
-npx -y cueframe@0.11 install
+npx -y cueframe@0.12 install
 ```
 
 Restart your agent session after installation so it can load the server and skills.
