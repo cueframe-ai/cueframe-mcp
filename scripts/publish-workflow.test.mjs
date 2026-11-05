@@ -10,7 +10,6 @@ const text = readFileSync(new URL('../.github/workflows/publish-npm.yml', import
 const workflow = parse(text);
 const publish = workflow.jobs.publish;
 const steps = publish.steps;
-const version = workflow.jobs.version;
 const runOf = (step) => step.run ?? '';
 const atLeast = (version, minimum) => {
   const a = version.split('.').map(Number);
@@ -61,42 +60,75 @@ test('the published-versions and anonymous-access gates still run', () => {
   assert.match(runs, /pnpm check:public-packages/);
 });
 
-// Board decision, 2026-11-04 (Paperclip CUE-49): Changesets, publish on merge, no release pull request.
-test('a push to main (or a dispatch on main) releases; nothing else does', () => {
-  assert.deepEqual(Object.keys(workflow.on).sort(), ['push', 'workflow_dispatch']);
+// Board decisions, 2026-11-04 and 2026-11-05 (Paperclip CUE-49, CUE-51): Changesets; a release is the merge
+// of the "Version packages" pull request, which Homer merges. No hand dispatch.
+const versionPr = workflow.jobs['version-pr'];
+const plan = workflow.jobs['release-plan'];
+const ci = parse(readFileSync(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8'));
+
+test('only a push to main runs the release workflow; there is no dispatch route to a publish', () => {
+  assert.deepEqual(Object.keys(workflow.on), ['push']);
   assert.deepEqual(workflow.on.push, { branches: ['main'] });
   assert.match(workflow.jobs.validate.if, /github\.ref == 'refs\/heads\/main'/);
-  assert.match(version.if, /github\.ref == 'refs\/heads\/main'/);
-  assert.deepEqual(publish.needs, 'version');
-  assert.equal(publish.if, "needs.version.outputs.release_sha != ''");
-});
-
-test('the version commit cannot start another release: GITHUB_TOKEN push, [skip ci], and an actor guard', () => {
-  const run = version.steps.map(runOf).join('\n');
-  assert.match(run, /echo 'chore\(release\): version packages \[skip ci\]'/);
-  assert.match(run, /git push "https:\/\/x-access-token:\$\{GITHUB_TOKEN\}@github\.com\/\$\{GITHUB_REPOSITORY\}\.git" HEAD:refs\/heads\/main/);
-  const step = version.steps.find((s) => /git push/.test(runOf(s)));
-  assert.equal(step.env.GITHUB_TOKEN, '${{ github.token }}', 'a push made with GITHUB_TOKEN starts no workflow run');
-  assert.doesNotMatch(run, /--force|-f /, 'the version commit is a fast-forward or nothing');
   assert.match(workflow.jobs.validate.if, /github\.actor != 'github-actions\[bot\]'/);
 });
 
-test('write access and the OIDC token never share a job', () => {
-  assert.deepEqual(version.permissions, { contents: 'write' });
-  assert.deepEqual(publish.permissions, { contents: 'read', 'id-token': 'write' });
-  const checkout = version.steps.find((s) => String(s.uses).startsWith('actions/checkout@'));
-  assert.equal(checkout.with['persist-credentials'], false, 'only the push step sees the token');
-  assert.equal(checkout.with.ref, '${{ github.sha }}', 'the commit CI validated is the one versioned');
-  const publishCheckout = steps.find((s) => String(s.uses).startsWith('actions/checkout@'));
-  assert.equal(publishCheckout.with.ref, '${{ needs.version.outputs.release_sha }}');
+test('publish runs only when main carries a version npm does not have, which only a merged Version packages PR creates', () => {
+  assert.equal(publish.needs, 'release-plan');
+  assert.equal(publish.if, "needs.release-plan.outputs.unpublished != ''");
+  assert.equal(plan.needs, 'validate');
+  assert.deepEqual(plan.permissions, { contents: 'read' });
+  assert.match(plan.steps.map(runOf).join('\n'), /node scripts\/check-public-packages\.mjs --unpublished/);
+  const checkout = steps.find((s) => String(s.uses).startsWith('actions/checkout@'));
+  assert.equal(checkout.with.ref, '${{ github.sha }}', 'publish ships the commit validate checked');
 });
 
-test('version runs changeset version, restamps the contract manifest and the plugin manifests, then commits; publish gates come before changeset publish', () => {
-  const run = runOf(version.steps.find((s) => /changeset version/.test(runOf(s))));
-  const order = ['pnpm changeset version', 'node scripts/sync-contract-stamp.mjs', 'pnpm build:plugin', 'git commit', 'git push'].map((needle) => run.indexOf(needle));
-  assert.ok(order.every((i, n) => i >= 0 && (n === 0 || i > order[n - 1])), `order ${order}`);
+test('version-pr opens the Version packages PR with a pinned changesets/action and never publishes or pushes main', () => {
+  assert.equal(versionPr.needs, 'validate');
+  assert.deepEqual(versionPr.permissions, { contents: 'write', 'pull-requests': 'write', actions: 'write' });
+  const action = versionPr.steps.find((s) => String(s.uses).startsWith('changesets/action@'));
+  assert.match(action.uses, /^changesets\/action@[0-9a-f]{40}$/, 'pinned to a commit');
+  assert.equal(action.with['publish-script'], undefined, 'no publish-script: the action only versions');
+  assert.equal(action.with['version-script'], 'pnpm release:version');
+  assert.equal(String(action.with['create-github-releases']), 'false');
+  assert.equal(String(action.with['push-git-tags']), 'false');
+  assert.doesNotMatch(versionPr.steps.map(runOf).join('\n'), /git push|changeset publish|npm publish/);
+  assert.equal(versionPr.permissions['id-token'], undefined);
+  const script = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).scripts['release:version'];
+  assert.equal(script, 'changeset version && node scripts/sync-contract-stamp.mjs && pnpm build:plugin');
+});
+
+test('no skip-ci marker can reach the Version packages commit, title or merge commit', () => {
+  const action = versionPr.steps.find((s) => String(s.uses).startsWith('changesets/action@'));
+  const marker = /\[(skip ci|ci skip|no ci|skip actions|actions skip)\]/i;
+  assert.doesNotMatch(action.with['commit-message'], marker);
+  assert.doesNotMatch(action.with['pr-title'], marker);
+  assert.doesNotMatch(text.replace(/^\s*#.*$/gm, ''), marker, 'no marker anywhere outside comments');
+});
+
+test('the Version packages PR gets CI: GITHUB_TOKEN starts no pull_request run, so CI is dispatched on its branch', () => {
+  assert.ok('workflow_dispatch' in ci.on, 'ci.yml accepts workflow_dispatch');
+  const step = versionPr.steps.find((s) => /gh workflow run ci\.yml/.test(runOf(s)));
+  assert.ok(step, 'dispatch step');
+  assert.match(runOf(step), /--ref changeset-release\/main/);
+  assert.equal(step.env.GH_TOKEN, '${{ github.token }}');
+});
+
+test('write access and the OIDC token never share a job', () => {
+  assert.deepEqual(publish.permissions, { contents: 'read', 'id-token': 'write' });
+  for (const [name, job] of Object.entries(workflow.jobs)) {
+    if (name === 'publish' || !job.permissions) continue;
+    assert.equal(job.permissions['id-token'], undefined, `${name} cannot mint an OIDC token`);
+  }
+  assert.equal(publish.permissions.contents, 'read');
+});
+
+test('publish gates come before changeset publish, and the anonymous-access check waits for npm', () => {
   const index = (needle) => steps.findIndex((s) => runOf(s).includes(needle));
   assert.ok(index('pnpm build') < index('pnpm check:published-versions'));
   assert.ok(index('pnpm check:published-versions') < index('changeset publish'));
   assert.ok(index('changeset publish') < index('pnpm check:public-packages'));
+  const verify = steps[index('pnpm check:public-packages')];
+  assert.ok(verify['timeout-minutes'] > 10, 'the step outlives the 10-minute poll');
+  assert.equal(verify.env?.PUBLIC_PACKAGES_TIMEOUT_SECONDS, undefined, 'the default 10-minute wait applies');
 });

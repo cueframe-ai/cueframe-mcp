@@ -28,6 +28,7 @@
     "check:public-packages": "node scripts/check-public-packages.mjs",
     "check:published-versions": "node scripts/check-published-versions.mjs",
     "changeset": "changeset",
+    "release:version": "changeset version && node scripts/sync-contract-stamp.mjs && pnpm build:plugin",
     "check:changesets": "node scripts/check-changesets.mjs",
     "check:cueframe-pins": "node scripts/check-cueframe-pins.mjs"
   },

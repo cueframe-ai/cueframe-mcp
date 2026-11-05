@@ -3,9 +3,11 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
+const changesetBin = createRequire(import.meta.url).resolve('@changesets/cli/bin.js');
 import { PACKAGES, affectedPackages, changesetProblems, checkChangesets, parseChangeset, shipsFile } from './check-changesets.mjs';
 
 test('test files and the release-written CHANGELOG never ship; sources, READMEs and skills do', () => {
@@ -73,19 +75,91 @@ function scratch() {
   return { root, git, write, base, dispose: () => rmSync(root, { recursive: true, force: true }) };
 }
 
-test('against a real git history: the branch fails until it adds a changeset', () => {
+test('against a real git history: the branch fails until it adds a changeset', async () => {
   const repo = scratch();
   try {
     repo.git('checkout', '--quiet', '-b', 'feature');
     repo.write('packages/sdk/src/client.ts', 'export const a = 2;\n');
     repo.git('commit', '--quiet', '-am', 'change sdk');
-    assert.notDeepEqual(checkChangesets(repo.root, { base: repo.base }).problems, []);
+    assert.notDeepEqual((await checkChangesets(repo.root, { base: repo.base })).problems, []);
     repo.write('.changeset/brave-sdk.md', '---\n"@cueframe/sdk": patch\n"cueframe": patch\n---\n\nFix a.\n');
     repo.git('add', '-A'); repo.git('commit', '--quiet', '-m', 'changeset');
-    assert.deepEqual(checkChangesets(repo.root, { base: repo.base }).problems, []);
+    assert.deepEqual((await checkChangesets(repo.root, { base: repo.base })).problems, []);
     repo.write('packages/sdk/package.json', `${JSON.stringify({ name: '@cueframe/sdk', version: '1.0.1' }, null, 2)}\n`);
     repo.git('commit', '--quiet', '-am', 'hand bump');
-    assert.match(checkChangesets(repo.root, { base: repo.base }).problems.join('\n'), /version 1\.0\.0 -> 1\.0\.1/);
+    assert.match((await checkChangesets(repo.root, { base: repo.base })).problems.join('\n'), /version 1\.0\.0 -> 1\.0\.1/);
+  } finally {
+    repo.dispose();
+  }
+});
+
+// Board, 2026-11-05 (Paperclip CUE-51): releases go through the Changesets "Version packages" pull
+// request. That branch is the one place a `version` changes: it is accepted when it is exactly what the
+// base's pending changesets plan, for every planned package.
+const plan = new Map([['@cueframe/sdk', '1.0.1'], ['cueframe', '1.0.1']]);
+const sdkEdit = { file: 'packages/sdk/package.json', name: '@cueframe/sdk', from: '1.0.0', to: '1.0.1' };
+const cliEdit = { file: 'packages/cli/package.json', name: 'cueframe', from: '1.0.0', to: '1.0.1' };
+const versionPrFiles = ['.changeset/brave-sdk.md', 'packages/sdk/package.json', 'packages/sdk/CHANGELOG.md', 'packages/cli/package.json', 'packages/cli/CHANGELOG.md'];
+
+test('a Version packages branch that applies the base plan exactly passes without a new changeset', () => {
+  assert.deepEqual(changesetProblems({ changedFiles: versionPrFiles, changesets: [], versionEdits: [sdkEdit, cliEdit], planned: plan }), []);
+});
+
+test('a version that differs from the plan, or a planned package left out, still fails', () => {
+  const wrong = changesetProblems({ changedFiles: versionPrFiles, changesets: [], versionEdits: [{ ...sdkEdit, to: '1.1.0' }, cliEdit], planned: plan }).join('\n');
+  assert.match(wrong, /version 1\.0\.0 -> 1\.1\.0 edited by hand/);
+  const partial = changesetProblems({ changedFiles: versionPrFiles, changesets: [], versionEdits: [sdkEdit], planned: plan }).join('\n');
+  assert.match(partial, /cueframe: the pending changesets plan 1\.0\.1/);
+  const unplanned = changesetProblems({ changedFiles: ['packages/sdk/package.json'], changesets: [], versionEdits: [sdkEdit], planned: new Map() }).join('\n');
+  assert.match(unplanned, /edited by hand/);
+});
+
+test('a skip-ci marker in a changeset fails: it would reach the Version packages PR and its merge commit', () => {
+  for (const marker of ['[skip ci]', '[ci skip]', '[no ci]', '[skip actions]', '[actions skip]', '[SKIP CI]']) {
+    const changeset = { file: '.changeset/a.md', ...parseChangeset(`---\n"@cueframe/sdk": patch\ncueframe: patch\n---\n\nFix ${marker} a.\n`) };
+    assert.match(changesetProblems({ changedFiles: ['packages/sdk/src/client.ts', '.changeset/a.md'], changesets: [changeset], versionEdits: [] }).join('\n'), /skip/i, marker);
+  }
+});
+
+test('against a real git history: `changeset version` output passes as a Version packages branch; a hand bump on top fails', async () => {
+  const repo = scratch();
+  try {
+    repo.write('.changeset/config.json', readFileSync(new URL('../.changeset/config.json', import.meta.url), 'utf8'));
+    repo.write('package.json', '{ "name": "scratch", "private": true }\n');
+    repo.write('pnpm-workspace.yaml', 'packages:\n  - packages/*\n');
+    repo.write('.changeset/brave-sdk.md', '---\n"@cueframe/sdk": patch\n"cueframe": patch\n---\n\nFix a.\n');
+    repo.git('add', '-A'); repo.git('commit', '--quiet', '-m', 'merged feature with a changeset');
+    const main = repo.git('rev-parse', 'HEAD');
+    repo.git('checkout', '--quiet', '-b', 'changeset-release/main');
+    execFileSync(process.execPath, [changesetBin, 'version'], { cwd: repo.root, stdio: 'pipe' });
+    repo.git('add', '-A'); repo.git('commit', '--quiet', '-m', 'Version Packages');
+    const result = await checkChangesets(repo.root, { base: main });
+    assert.deepEqual(result.problems, []);
+    repo.write('packages/sdk/package.json', `${JSON.stringify({ name: '@cueframe/sdk', version: '1.0.5' }, null, 2)}\n`);
+    repo.git('commit', '--quiet', '-am', 'hand bump');
+    assert.match((await checkChangesets(repo.root, { base: main })).problems.join('\n'), /1\.0\.0 -> 1\.0\.5 edited by hand/);
+  } finally {
+    repo.dispose();
+  }
+});
+
+test('a Version packages pull request merged after main gained another changeset releases only what it consumed', async () => {
+  const repo = scratch();
+  try {
+    repo.write('.changeset/config.json', readFileSync(new URL('../.changeset/config.json', import.meta.url), 'utf8'));
+    repo.write('package.json', '{ "name": "scratch", "private": true }\n');
+    repo.write('pnpm-workspace.yaml', 'packages:\n  - packages/*\n');
+    repo.write('.changeset/brave-sdk.md', '---\n"@cueframe/sdk": patch\n"cueframe": patch\n---\n\nFix a.\n');
+    repo.git('add', '-A'); repo.git('commit', '--quiet', '-m', 'feature one');
+    repo.git('checkout', '--quiet', '-b', 'changeset-release/main');
+    execFileSync(process.execPath, [changesetBin, 'version'], { cwd: repo.root, stdio: 'pipe' });
+    repo.git('add', '-A'); repo.git('commit', '--quiet', '-m', 'Version Packages');
+    repo.git('checkout', '--quiet', 'main');
+    repo.write('.changeset/calm-skills.md', '---\n"@cueframe/skills": minor\n---\n\nNew skill.\n');
+    repo.git('add', '-A'); repo.git('commit', '--quiet', '-m', 'feature two');
+    const before = repo.git('rev-parse', 'HEAD');
+    repo.git('merge', '--quiet', '--no-ff', '-m', 'Merge Version packages', 'changeset-release/main');
+    assert.deepEqual((await checkChangesets(repo.root, { base: before })).problems, []);
   } finally {
     repo.dispose();
   }

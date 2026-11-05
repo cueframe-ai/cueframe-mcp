@@ -1,18 +1,25 @@
 name: Publish npm packages
 
-# Board decision, 2026-11-04 (Paperclip CUE-49): every merge to main publishes normal versions, through
-# Changesets, with no release pull request. A push to main runs CI (validate), then `changeset version`
-# turns the merged `.changeset/*.md` files into version bumps and CHANGELOG entries and commits them to
-# main (version), then the publish job publishes every package version npm does not have yet (publish).
+# Board decisions, 2026-11-04 and 2026-11-05 (Paperclip CUE-49, CUE-51): Changesets, and a release is the
+# merge of the Changesets "Version packages" pull request. Every push to main runs CI (validate), then:
+#   - version-pr: while `.changeset/*.md` files are pending, `changesets/action` versions them on the branch
+#     `changeset-release/main` (bumps, CHANGELOGs, the contract stamp and the plugin manifests) and opens or
+#     updates the "Version packages" pull request into main. It publishes nothing and never pushes to main.
+#   - release-plan: lists every package version on main that npm does not have. Only a merged Version
+#     packages pull request produces one (`pnpm check:changesets` refuses any other version edit).
+#   - publish: runs only when release-plan listed something, and publishes it through npm trusted publishing.
+# Homer merges the Version packages pull request under his approval rules; nobody dispatches a publish. A
+# failed publish is retried with "Re-run failed jobs" on the same run, which publishes the same commit.
 #
-# No loop: the version-bump commit is pushed with the job's GITHUB_TOKEN, and GitHub starts no workflow
-# run for a push made with GITHUB_TOKEN; its message also carries `[skip ci]`, and validate refuses to run
-# for the github-actions[bot] actor. workflow_dispatch on main re-runs the same flow (for example after a
-# failed publish: there is no changeset left, so version commits nothing and publish ships what is missing).
+# No loop: version-pr pushes `changeset-release/main` (not main) with GITHUB_TOKEN, and GitHub starts no
+# workflow run for GITHUB_TOKEN events. That also means the Version packages pull request gets no
+# `pull_request` CI run, so version-pr dispatches CI on its branch (workflow_dispatch is the documented
+# exception for GITHUB_TOKEN). The skip-ci markers never appear in the Version packages commit, title or body:
+# the commit and title are fixed below, and `pnpm check:changesets` refuses a changeset whose summary (which
+# becomes the body) carries one, so the merge commit that must publish is never skipped.
 on:
   push:
     branches: [main]
-  workflow_dispatch: {}
 
 permissions:
   contents: read
@@ -28,21 +35,20 @@ jobs:
     permissions:
       contents: read
 
-  version:
+  version-pr:
     needs: validate
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
-      contents: write # push the version-bump commit to main; nothing else
-    outputs:
-      release_sha: ${{ steps.release.outputs.sha }}
+      contents: write # push the changeset-release/main branch (through the GitHub API, as github-actions[bot])
+      pull-requests: write # open or update the Version packages pull request
+      actions: write # dispatch CI on that branch
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.sha }}
-          fetch-depth: 0
-          persist-credentials: false # only the push step below sees the token
+          fetch-depth: 0 # changesets/action switches to changeset-release/main when it exists
+          persist-credentials: false # the action commits through the GitHub API, not git push
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -50,56 +56,57 @@ jobs:
           cache: pnpm
       - name: pnpm install
         run: pnpm install --frozen-lockfile
-      - name: version packages from the merged changesets and commit the bump to main
-        id: release
-        # Only the commit CI validated is versioned. If main has moved on, the run for the newer push
-        # releases these changesets too (they stay in .changeset/ until a version commit consumes them),
-        # unless main moved by this workflow's own version commit on top of this sha: a re-run then
-        # publishes that commit. If branch protection refuses the push, the job fails here and nothing
-        # is published.
+      - name: open or update the Version packages pull request
+        id: changesets
+        # With no publish-script the action never publishes: with pending changesets it resets
+        # changeset-release/main to this commit, runs the version script, commits the result through the
+        # API and opens or updates the pull request; with none it does nothing.
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        with:
+          version-script: pnpm release:version
+          commit-message: |
+            Version packages
+
+            Signed-off-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          pr-title: Version packages
+          create-github-releases: false
+          push-git-tags: false
+      - name: run CI on the Version packages pull request
+        # A pull request opened or updated with GITHUB_TOKEN starts no pull_request workflow, so CI is
+        # dispatched on the branch; its checks attach to the branch head, which is the pull request's head.
+        if: steps.changesets.outputs.has-changesets == 'true' && steps.changesets.outputs.pr-number != ''
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run ci.yml --repo "${GITHUB_REPOSITORY}" --ref changeset-release/main
+
+  release-plan:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      unpublished: ${{ steps.plan.outputs.unpublished }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: versions on main that npm does not have
+        id: plan
+        # Anonymous metadata lookups; a 404 means "not published", any other error fails the job.
         run: |
           set -euo pipefail
-          git fetch --quiet origin main
-          main_sha="$(git rev-parse origin/main)"
-          if [ "${main_sha}" != "${GITHUB_SHA}" ]; then
-            if [ "$(git log -1 --format=%P "${main_sha}")" = "${GITHUB_SHA}" ] \
-              && git log -1 --format=%s "${main_sha}" | grep -q '^chore(release): version packages \[skip ci\]$'; then
-              echo "main is this run's version commit ${main_sha}; publishing it"
-              echo "sha=${main_sha}" >> "${GITHUB_OUTPUT}"
-            else
-              echo "::notice::main moved past ${GITHUB_SHA} to ${main_sha}; the run for that push releases these changesets"
-              echo "sha=" >> "${GITHUB_OUTPUT}"
-            fi
-            exit 0
-          fi
-          pnpm changeset version
-          # Files stamped from package versions: the contract sync manifest's contractVersion follows
-          # @cueframe/api-contract (the publish job's build refuses a stale stamp), and the plugin manifests
-          # and skill cards follow @cueframe/skills.
-          node scripts/sync-contract-stamp.mjs
-          pnpm build:plugin
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "no pending changesets; publishing ${GITHUB_SHA} as it is"
-            echo "sha=${GITHUB_SHA}" >> "${GITHUB_OUTPUT}"
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          {
-            echo 'chore(release): version packages [skip ci]'
-            echo
-            node -e "for (const d of ['api-contract','sdk','skills','cli']) { const p = require('./packages/' + d + '/package.json'); console.log('- ' + p.name + ' ' + p.version); }"
-          } > "${RUNNER_TEMP}/message.txt"
-          git commit --quiet --signoff --file "${RUNNER_TEMP}/message.txt"
-          git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:refs/heads/main
-          echo "sha=$(git rev-parse HEAD)" >> "${GITHUB_OUTPUT}"
+          unpublished="$(node scripts/check-public-packages.mjs --unpublished)"
+          echo "unpublished: ${unpublished:-none}"
+          echo "unpublished=${unpublished}" >> "${GITHUB_OUTPUT}"
 
   publish:
-    needs: version
-    if: needs.version.outputs.release_sha != ''
+    needs: release-plan
+    if: needs.release-plan.outputs.unpublished != ''
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -113,7 +120,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ needs.version.outputs.release_sha }}
+          ref: ${{ github.sha }}
           persist-credentials: false
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -144,18 +151,21 @@ jobs:
         # with pnpm, so workspace: ranges and publishConfig are rewritten; npm then publishes the tarball
         # and does the OIDC exchange). Each package's publishConfig.access decides its visibility. A
         # version already on npm is skipped, so a re-run after a partial failure is safe. No git tags:
-        # the version commit is the record, and this job cannot push.
+        # the merged Version packages commit is the record, and this job cannot push.
         env:
           NPM_CONFIG_PROVENANCE: ${{ github.event.repository.private == false }}
         run: pnpm changeset publish --no-git-tag
 
       - name: verify anonymous metadata and tarball access
+        # npm may take a few minutes to serve a new version: the check polls every 15 s for up to 10 min
+        # and fails naming the package, version and URL still missing (run 41939613726 checked at once).
+        timeout-minutes: 15
         run: pnpm check:public-packages
 
   registry:
     # Publishes server.json to the MCP registry (registry.modelcontextprotocol.io). server.json lists
     # the hosted remote only, so nothing here depends on what npm serves; it runs after the npm job
-    # only so one dispatch publishes everything in a fixed order.
+    # only so one release publishes everything in a fixed order.
     needs: publish
     runs-on: ubuntu-latest
     timeout-minutes: 30

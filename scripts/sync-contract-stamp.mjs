@@ -4,8 +4,8 @@
 // The stamp names the package version of the checkout the private contract sync ran against. A pull request
 // never edits `version` (Changesets, board decision 2026-11-04), so the sync stamps the released version and
 // the pull request adds a changeset; `pnpm check:contract-version` and the package build both require the
-// stamp to equal package.json. On merge, the release job runs `changeset version`, which moves package.json
-// but not the stamp, then this script, so the version commit carries both and the publish build passes.
+// stamp to equal package.json. The Version packages pull request runs `changeset version`, which moves package.json
+// but not the stamp, then this script (`pnpm release:version`), so it carries both and the publish build passes.
 //
 // Writes only `contractVersion`, and only when the manifest already carries one (an unstamped manifest stays
 // unstamped). Same formatting as the private sync: two-space JSON and a trailing newline.

@@ -29,7 +29,7 @@
 // the merge to main runs `changeset version`. So the bump rule is met by a pending changeset that plans a
 // new version for @cueframe/api-contract (scripts/release-plan.mjs). The stamp rule is not: the private sync
 // stamps the checkout's package.json version, and the package build compares the stamp with package.json, so
-// this check does too. The release job restamps after `changeset version` (scripts/sync-contract-stamp.mjs).
+// this check does too. The Version packages pull request restamps after `changeset version` (scripts/sync-contract-stamp.mjs).
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
