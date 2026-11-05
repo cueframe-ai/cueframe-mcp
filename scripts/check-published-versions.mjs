@@ -32,10 +32,29 @@ function files(dir) {
   return out;
 }
 
+// Object keys sorted, arrays kept in order: pnpm 10 writes the packed manifest's workspace dependencies in
+// the order their ranges resolve, which varies run to run, so package.json is compared by content.
+const canonical = (value) =>
+  Array.isArray(value)
+    ? value.map(canonical)
+    : value && typeof value === 'object'
+      ? Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonical(value[key])]))
+      : value;
+
+function sameFile(name, a, b) {
+  if (a.equals(b)) return true;
+  if (name !== 'package.json') return false;
+  try {
+    return JSON.stringify(canonical(JSON.parse(a.toString('utf8')))) === JSON.stringify(canonical(JSON.parse(b.toString('utf8'))));
+  } catch {
+    return false;
+  }
+}
+
 /** Paths that differ between two extracted package trees (added, removed or changed). */
 export function differingFiles(local, published) {
   const names = new Set([...local.keys(), ...published.keys()]);
-  return [...names].filter((name) => !local.get(name)?.equals(published.get(name) ?? Buffer.alloc(0)) || !published.has(name)).sort();
+  return [...names].filter((name) => !local.has(name) || !published.has(name) || !sameFile(name, local.get(name), published.get(name))).sort();
 }
 
 async function publishedTarball(name, version) {

@@ -15,6 +15,16 @@ test('a changed, added or removed file is a difference', () => {
   assert.deepEqual(differingFiles(local, published), ['dist/a.js', 'dist/gone.js', 'dist/new.js']);
 });
 
+// pnpm 10 packs the CLI's two workspace devDependencies in whichever order their ranges resolve, so the
+// same tree packs `package.json` with `@cueframe/sdk` and `@cueframe/skills` either way round.
+test('package.json is compared by content: key order alone is no difference, a value change is', () => {
+  const a = '{\n  "name": "cueframe",\n  "devDependencies": {\n    "@cueframe/sdk": "^0.17.1",\n    "@cueframe/skills": "0.4.6"\n  }\n}\n';
+  const b = '{\n  "name": "cueframe",\n  "devDependencies": {\n    "@cueframe/skills": "0.4.6",\n    "@cueframe/sdk": "^0.17.1"\n  }\n}\n';
+  assert.deepEqual(differingFiles(tree({ 'package.json': a }), tree({ 'package.json': b })), []);
+  assert.deepEqual(differingFiles(tree({ 'package.json': a }), tree({ 'package.json': b.replace('0.4.6', '0.4.7') })), ['package.json']);
+  assert.deepEqual(differingFiles(tree({ 'package.json': '["a","b"]' }), tree({ 'package.json': '["b","a"]' })), ['package.json'], 'array order still counts');
+});
+
 test('an empty file added locally still counts', () => {
   assert.deepEqual(differingFiles(tree({ 'empty.txt': '' }), tree({})), ['empty.txt']);
 });
