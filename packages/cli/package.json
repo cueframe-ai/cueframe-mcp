@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "add-mcp": "^2.4.0",
-    "better-auth": "1.7.7",
+    "better-auth": "1.7.14",
     "commander": "^15.0.0",
     "open": "^11.0.4",
     "ora": "^9.4.1",
