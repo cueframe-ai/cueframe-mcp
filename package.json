@@ -38,10 +38,10 @@
     }
   },
   "devDependencies": {
-    "@orval/zod": "8.41.0",
+    "@orval/zod": "8.46.0",
     "ajv": "8.20.0",
     "ajv-formats": "3.0.1",
-    "orval": "8.41.0",
+    "orval": "8.46.0",
     "yaml": "^2.8.0",
     "typescript": "npm:@typescript/typescript6@^6.0.2"
   }
