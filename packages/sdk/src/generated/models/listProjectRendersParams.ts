@@ -9,18 +9,14 @@
  */
 
 export type ListProjectRendersParams = {
-/**
- * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only.
- */
-after?: string;
-/**
- * Comma-separated render statuses to include (e.g. `error,cancelled`). Omit for every status.
- */
-status?: string;
+  /**
+   * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /** Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only. */
+  after?: string;
+  /** Comma-separated render statuses to include (e.g. `error,cancelled`). Omit for every status. */
+  status?: string;
 };

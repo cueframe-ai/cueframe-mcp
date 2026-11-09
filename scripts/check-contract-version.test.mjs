@@ -40,7 +40,7 @@ function scratchRepo() {
     amend() { git('add', '-A'); git('commit', '--quiet', '--amend', '--no-edit'); return repo; },
     /** Pretend `main` has been pushed: origin/main points where main does now. */
     publishMain() { git('update-ref', 'refs/remotes/origin/main', 'main'); return repo; },
-    check(options) { return checkContractVersion(root, { base: undefined, ...options }); },
+    check(options) { return checkContractVersion(root, { base: null, ...options }); },
     dispose() { rmSync(root, { recursive: true, force: true }); },
   };
   git('init', '--quiet', '-b', 'main');
@@ -128,6 +128,21 @@ test('on a branch: all commits since the merge-base with origin/main share one v
   });
 });
 
+test('scratch checks ignore the caller baseline while explicit baselines still work', (t) => {
+  const previous = process.env.CONTRACT_BASELINE;
+  process.env.CONTRACT_BASELINE = 'origin/main';
+  t.after(() => {
+    if (previous === undefined) delete process.env.CONTRACT_BASELINE;
+    else process.env.CONTRACT_BASELINE = previous;
+  });
+  withRepo((repo) => {
+    repo.publishMain().git('checkout', '--quiet', '-b', 'contract/resync');
+    repo.api('openapi.json', { revision: 2 }).version('1.1.0').commit('resync + bump');
+    assert.match(repo.check().baseline.reason, /^merge-base of HEAD and origin\/main/);
+    assert.equal(repo.check({ base: 'origin/main' }).baseline.reason, 'requested origin/main');
+  });
+});
+
 test('on a branch: api/ changed with no bump since origin/main fails even when the tip commit is clean', () => {
   withRepo((repo) => {
     repo.publishMain().git('checkout', '--quiet', '-b', 'contract/resync');
@@ -196,5 +211,41 @@ test('the CLI exits 1 with the problem on stderr and 0 with a summary on stdout'
     const passed = cli();
     assert.equal(passed.status, 0);
     assert.match(passed.stdout, /^contract version ok: @cueframe\/api-contract 1\.1\.0; api\/openapi\.json changed and the package moved 1\.0\.0 -> 1\.1\.0/);
+  });
+});
+
+// Changesets: a pull request never edits `version`; a pending changeset plans it, and
+// the Version packages pull request's `changeset version` applies it. The bump rule measures against that planned version; the
+// stamp names the checkout's package version, as the private sync writes it and the package build requires.
+test('with Changesets: an api/ change passes when a pending changeset plans a new version; the sync stamps the current one', () => {
+  withRepo((repo) => {
+    repo.api('contract-manifest.json', { schemaVersion: 1, kernelVersion: '0.2.64', privateCommit: 'a'.repeat(40), files: {}, contractVersion: '1.0.0' })
+      .amend().publishMain().git('checkout', '--quiet', '-b', 'contract/resync');
+    repo.api('openapi.json', { revision: 2 })
+      .api('contract-manifest.json', { schemaVersion: 1, kernelVersion: '0.2.64', privateCommit: 'b'.repeat(40), files: {}, contractVersion: '1.0.0' })
+      .commit('resync against the 1.0.0 checkout');
+    assert.equal(repo.check().ok, false, 'without a planned bump the change is unversioned');
+    const result = repo.check({ planned: '1.1.0' });
+    assert.deepEqual(result.problems, [], result.problems.join('\n'));
+    assert.deepEqual(result.version, { current: '1.0.0', planned: '1.1.0', baseline: '1.0.0' });
+  });
+});
+
+test('with Changesets: an api/ change without a planned bump fails and says to add a changeset', () => {
+  withRepo((repo) => {
+    repo.publishMain().git('checkout', '--quiet', '-b', 'contract/resync');
+    repo.api('openapi.json', { revision: 2 }).commit('resync, no changeset');
+    const result = repo.check({ planned: undefined });
+    assert.equal(result.ok, false);
+    assert.match(result.problems[0], /add a changeset for @cueframe\/api-contract/);
+  });
+});
+
+test('with Changesets: a stamp naming the planned version fails, because the build compares it with package.json', () => {
+  withRepo((repo) => {
+    repo.api('contract-manifest.json', { schemaVersion: 1, kernelVersion: '0.2.64', privateCommit: 'a'.repeat(40), files: {}, contractVersion: '1.0.1' }).commit('stamp 1.0.1');
+    const result = repo.check({ planned: '1.0.1' });
+    assert.equal(result.ok, false);
+    assert.match(result.problems[0], /records contractVersion 1\.0\.1 but packages\/api-contract\/package\.json is 1\.0\.0; re-run the private sync/);
   });
 });

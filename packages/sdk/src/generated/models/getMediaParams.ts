@@ -9,8 +9,6 @@
  */
 
 export type GetMediaParams = {
-/**
- * @minLength 1
- */
-projectId?: string;
+  /** @minLength 1 */
+  projectId?: string;
 };

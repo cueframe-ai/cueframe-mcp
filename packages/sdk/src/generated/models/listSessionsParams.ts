@@ -9,14 +9,12 @@
  */
 
 export type ListSessionsParams = {
-/**
- * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only.
- */
-after?: string;
+  /**
+   * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /** Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only. */
+  after?: string;
 };

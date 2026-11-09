@@ -10,9 +10,7 @@
 import type { GetComponentSourceBuiltinCollection } from './getComponentSourceBuiltinCollection';
 
 export type GetComponentSourceParams = {
-builtinCollection?: GetComponentSourceBuiltinCollection;
-/**
- * @pattern ^[a-f0-9]{64}$
- */
-sourceVersionId?: string;
+  builtinCollection?: GetComponentSourceBuiltinCollection;
+  /** @pattern ^[a-f0-9]{64}$ */
+  sourceVersionId?: string;
 };

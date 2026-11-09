@@ -9,20 +9,20 @@
  */
 
 export type GetMediaTranscriptParams = {
-/**
- * Zero-based utterance cursor returned as pagination.nextCursor.
- * @minimum 0
- */
-after?: number;
-/**
- * Zero-based utterance cursor for a backward page. Do not combine with after.
- * @minimum 0
- */
-before?: number;
-/**
- * Utterances per page.
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
+  /**
+   * Zero-based utterance cursor returned as pagination.nextCursor.
+   * @minimum 0
+   */
+  after?: number;
+  /**
+   * Zero-based utterance cursor for a backward page. Do not combine with after.
+   * @minimum 0
+   */
+  before?: number;
+  /**
+   * Utterances per page.
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
 };

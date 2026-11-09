@@ -10,42 +10,36 @@
 import type { SearchRegistryItemsItemType } from './searchRegistryItemsItemType';
 
 export type SearchRegistryItemsParams = {
-/**
- * @minLength 1
- * @maxLength 2048
- */
-registryOrigin?: string;
-/**
- * @pattern ^[0-9a-f]{40}$
- */
-sourceCommit?: string;
-/**
- * @pattern ^[a-f0-9]{64}$
- */
-inventorySha256?: string;
-/**
- * @pattern ^[a-f0-9]{64}$
- */
-cliArtifactSha256?: string;
-/**
- * @minLength 1
- * @maxLength 500
- */
-query?: string;
-itemType?: SearchRegistryItemsItemType;
-/**
- * @minLength 1
- * @maxLength 255
- */
-tag?: string;
-/**
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * @minLength 1
- * @maxLength 4096
- */
-cursor?: string;
+  /**
+   * @minLength 1
+   * @maxLength 2048
+   */
+  registryOrigin?: string;
+  /** @pattern ^[0-9a-f]{40}$ */
+  sourceCommit?: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  inventorySha256?: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  cliArtifactSha256?: string;
+  /**
+   * @minLength 1
+   * @maxLength 500
+   */
+  query?: string;
+  itemType?: SearchRegistryItemsItemType;
+  /**
+   * @minLength 1
+   * @maxLength 255
+   */
+  tag?: string;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /**
+   * @minLength 1
+   * @maxLength 4096
+   */
+  cursor?: string;
 };

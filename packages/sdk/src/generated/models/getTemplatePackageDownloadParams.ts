@@ -9,9 +9,9 @@
  */
 
 export type GetTemplatePackageDownloadParams = {
-/**
- * @minLength 1
- * @maxLength 256
- */
-jobId?: string;
+  /**
+   * @minLength 1
+   * @maxLength 256
+   */
+  jobId?: string;
 };

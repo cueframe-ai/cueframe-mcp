@@ -10,16 +10,10 @@
 import type { ListMediaFactsKind } from './listMediaFactsKind';
 
 export type ListMediaFactsParams = {
-/**
- * Resolve one exact editor prerequisite. Requires startSec and endSec; the response includes the server-selected `exact` result.
- */
-kind?: ListMediaFactsKind;
-/**
- * Source-in of the clip's trim, in seconds. Must be sent WITH endSec — one without the other is a 400, never a silent whole-source default.
- */
-startSec?: number;
-/**
- * Source-out of the clip's trim, in seconds. Must be sent WITH startSec.
- */
-endSec?: number;
+  /** Resolve one exact editor prerequisite. Requires startSec and endSec; the response includes the server-selected `exact` result. */
+  kind?: ListMediaFactsKind;
+  /** Source-in of the clip's trim, in seconds. Must be sent WITH endSec — one without the other is a 400, never a silent whole-source default. */
+  startSec?: number;
+  /** Source-out of the clip's trim, in seconds. Must be sent WITH startSec. */
+  endSec?: number;
 };

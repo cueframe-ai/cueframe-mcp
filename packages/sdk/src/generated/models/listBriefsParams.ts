@@ -10,22 +10,16 @@
 import type { ListBriefsKind } from './listBriefsKind';
 
 export type ListBriefsParams = {
-/**
- * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only.
- */
-after?: string;
-/**
- * Scope to one project. Omit for every brief in the org.
- */
-projectId?: string;
-/**
- * Which briefs to list. `authored` (default) = human-authored only; `clip` = the machine-minted clip briefs from suggest_briefs; `all` = both.
- */
-kind?: ListBriefsKind;
+  /**
+   * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /** Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only. */
+  after?: string;
+  /** Scope to one project. Omit for every brief in the org. */
+  projectId?: string;
+  /** Which briefs to list. `authored` (default) = human-authored only; `clip` = the machine-minted clip briefs from suggest_briefs; `all` = both. */
+  kind?: ListBriefsKind;
 };

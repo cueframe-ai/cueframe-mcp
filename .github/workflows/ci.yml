@@ -15,12 +15,14 @@ jobs:
       # case); both must measure the same baseline. Every commit of a pull request is measured against the
       # PR's base, a push to main against the commit the push replaced; without this each would see one commit.
       CONTRACT_BASELINE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+      # scripts/check-changesets.mjs measures the same range: every commit of the PR, or of the push.
+      CHANGESET_BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
           fetch-depth: 0 # check:contract-version compares api/ against the event's base commit
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
@@ -32,6 +34,8 @@ jobs:
         # in package.json: vite 8 takes esbuild as a peer, so a `vite>esbuild` override could not
         # reach the 0.27 instance that GHSA-g7r4-m6w7-qqqr flagged.
         run: pnpm audit --prod
+      - name: every change to a published package carries a changeset, and no version is edited by hand
+        run: pnpm check:changesets
       - run: pnpm check
       - name: generated API consumers are current
         run: pnpm check:api-consumer-drift

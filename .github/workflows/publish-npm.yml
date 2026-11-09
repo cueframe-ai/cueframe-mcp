@@ -1,7 +1,30 @@
 name: Publish npm packages
 
+# Changesets releases: a release is the merge of the Changesets "Version packages" pull request. Every
+# push to main runs CI (validate), then:
+#   - version-pr: while `.changeset/*.md` files are pending, `changesets/action` versions them on the branch
+#     `changeset-release/main` (bumps, CHANGELOGs, the contract stamp and the plugin manifests) and opens or
+#     updates the "Version packages" pull request into main. It publishes nothing and never pushes to main.
+#   - release-plan: lists every package version on main that npm does not have. Only a merged Version
+#     packages pull request produces one (`pnpm check:changesets` refuses any other version edit).
+#   - publish: runs only when release-plan listed something, and publishes it through npm trusted publishing.
+#     `npm publish` exiting 0 is the success signal; no step polls npm afterwards.
+#   - tag: tags the released commit `<name>@<version>` for each published package.
+# Nobody dispatches a publish. A failed publish is retried with "Re-run failed jobs" on the same run, which
+# publishes the same commit and skips versions npm already has.
+#
+# Tokens: version-pr and tag use a GitHub App installation token (secrets RELEASE_APP_ID and
+# RELEASE_APP_PRIVATE_KEY), narrowed to the permissions each job needs. GitHub starts no workflow for a pull
+# request opened with GITHUB_TOKEN, so the App token is what gives the Version packages pull request its
+# normal pull_request CI. Both jobs fail if either secret is missing; nothing falls back to GITHUB_TOKEN.
+#
+# No loop: version-pr writes `changeset-release/main`, never main, and tags do not match this workflow's
+# `branches: [main]` filter. The skip-ci markers never appear in the Version packages commit, title or body:
+# the commit and title are fixed below, and `pnpm check:changesets` refuses a changeset whose summary (which
+# becomes the body) carries one, so the merge commit that must publish is never skipped.
 on:
-  workflow_dispatch: {}
+  push:
+    branches: [main]
 
 permissions:
   contents: read
@@ -12,14 +35,89 @@ concurrency:
 
 jobs:
   validate:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.actor != 'github-actions[bot]'
     uses: ./.github/workflows/ci.yml
     permissions:
       contents: read
 
-  publish:
+  version-pr:
     needs: validate
-    if: github.ref == 'refs/heads/main' # a dispatch from another branch must not publish that tree as the immutable public version
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read # the App token below does the writing
+    steps:
+      - name: the release App secrets are set
+        env:
+          RELEASE_APP_ID: ${{ secrets.RELEASE_APP_ID }}
+          RELEASE_APP_PRIVATE_KEY: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+        run: |
+          if [ -z "${RELEASE_APP_ID}" ] || [ -z "${RELEASE_APP_PRIVATE_KEY}" ]; then
+            echo "::error::RELEASE_APP_ID and RELEASE_APP_PRIVATE_KEY must be set; a Version packages pull request opened with GITHUB_TOKEN would get no CI"
+            exit 1
+          fi
+      - name: App token (contents and pull requests, this repository only)
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0 # changesets/action switches to changeset-release/main when it exists
+          persist-credentials: false # with commitMode github-api the action commits through the API
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+      - name: open or update the Version packages pull request
+        # v1.9.0: v2 of the action refuses @changesets/cli 2.x, which this repository uses. With no `publish`
+        # input the action never publishes: with pending changesets it resets changeset-release/main to this
+        # commit, runs the version script, commits the result through the API as the App and opens or
+        # updates the pull request; with none it does nothing.
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          version: pnpm release:version
+          commit: Version packages
+          title: Version packages
+          commitMode: github-api
+          createGithubReleases: false
+
+  release-plan:
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      unpublished: ${{ steps.plan.outputs.unpublished }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: versions on main that npm does not have
+        id: plan
+        # Anonymous metadata lookups; a 404 means "not published", any other error fails the job.
+        run: |
+          set -euo pipefail
+          unpublished="$(node scripts/check-public-packages.mjs --unpublished)"
+          echo "unpublished: ${unpublished:-none}"
+          echo "unpublished=${unpublished}" >> "${GITHUB_OUTPUT}"
+
+  publish:
+    needs: release-plan
+    if: needs.release-plan.outputs.unpublished != ''
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -33,8 +131,9 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
-      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         # No `registry-url`: it would write an .npmrc auth line and export a placeholder auth token variable,
         # so a failed OIDC exchange would surface as a confusing registry 401/404 instead of ENEEDAUTH.
@@ -56,42 +155,60 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
       - run: pnpm build
-      - name: no package changed without a version bump (the loop below skips published versions)
+      - name: no package changed without a version bump (changeset publish skips published versions)
         run: pnpm check:published-versions
-      - name: publish committed package versions in dependency order
-        # api-contract has no workspace dependency; sdk and skills are bundled into cli at build time; so
-        # each package's inputs are on npm before it is published. A version that already exists on npm is
-        # skipped, so re-running after a partial failure is safe. Each package's publishConfig.access
-        # decides its visibility. Existing restricted packages need an explicit npm access change.
-        # Publish through pnpm, never `npm publish` in the package directory: npm would ship the raw
-        # manifest (sdk's publishConfig entry points and cli's `workspace:` devDependencies unrewritten).
+      - name: changeset publish
+        # Publishes every package whose version npm does not have, each through `pnpm publish` (packing
+        # with pnpm, so workspace: ranges and publishConfig are rewritten; npm then publishes the tarball
+        # and does the OIDC exchange). Each package's publishConfig.access decides its visibility. A
+        # version already on npm is skipped, so a re-run after a partial failure is safe. No git tags here:
+        # this job cannot write to the repository; the tag job creates them.
         env:
-          REPOSITORY_PRIVATE: ${{ github.event.repository.private }}
-        run: |
-          set -euo pipefail
-          provenance_args=()
-          if [ "${REPOSITORY_PRIVATE}" = "false" ]; then
-            provenance_args+=(--provenance)
-          fi
-          for package_dir in packages/api-contract packages/sdk packages/skills packages/cli; do
-            package_name="$(node -p "require('./${package_dir}/package.json').name")"
-            package_version="$(node -p "require('./${package_dir}/package.json').version")"
-            if npm view "${package_name}@${package_version}" version >/dev/null 2>&1; then
-              echo "${package_name}@${package_version} is already published; skipping"
-              continue
-            fi
-            # A private repository cannot provide public provenance. After the visibility switch,
-            # attest every new public package automatically. Existing immutable versions are skipped.
-            (cd "${package_dir}" && pnpm publish --no-git-checks "${provenance_args[@]}")
-          done
+          NPM_CONFIG_PROVENANCE: ${{ github.event.repository.private == false }}
+        run: pnpm changeset publish --no-git-tag
 
-      - name: verify anonymous metadata and tarball access
-        run: pnpm check:public-packages
+  tag:
+    needs: [release-plan, publish]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read # the App token below creates the tags
+    steps:
+      - name: the release App secrets are set
+        env:
+          RELEASE_APP_ID: ${{ secrets.RELEASE_APP_ID }}
+          RELEASE_APP_PRIVATE_KEY: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+        run: |
+          if [ -z "${RELEASE_APP_ID}" ] || [ -z "${RELEASE_APP_PRIVATE_KEY}" ]; then
+            echo "::error::RELEASE_APP_ID and RELEASE_APP_PRIVATE_KEY must be set to tag the release"
+            exit 1
+          fi
+      - name: App token (contents, this repository only)
+        id: app-token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          permission-contents: write
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+      - name: tag the released commit once per published package
+        # The same `<name>@<version>` names `changeset publish` creates. A tag already on this commit is
+        # accepted, so a re-run is safe; a tag on another commit fails.
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          UNPUBLISHED: ${{ needs.release-plan.outputs.unpublished }}
+        run: node scripts/tag-release.mjs "${UNPUBLISHED}"
 
   registry:
     # Publishes server.json to the MCP registry (registry.modelcontextprotocol.io). server.json lists
     # the hosted remote only, so nothing here depends on what npm serves; it runs after the npm job
-    # only so one dispatch publishes everything in a fixed order.
+    # only so one release publishes everything in a fixed order.
     needs: publish
     runs-on: ubuntu-latest
     timeout-minutes: 30
