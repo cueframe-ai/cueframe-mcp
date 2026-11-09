@@ -40,7 +40,7 @@ function scratchRepo() {
     amend() { git('add', '-A'); git('commit', '--quiet', '--amend', '--no-edit'); return repo; },
     /** Pretend `main` has been pushed: origin/main points where main does now. */
     publishMain() { git('update-ref', 'refs/remotes/origin/main', 'main'); return repo; },
-    check(options) { return checkContractVersion(root, { base: undefined, ...options }); },
+    check(options) { return checkContractVersion(root, { base: null, ...options }); },
     dispose() { rmSync(root, { recursive: true, force: true }); },
   };
   git('init', '--quiet', '-b', 'main');
@@ -125,6 +125,21 @@ test('on a branch: all commits since the merge-base with origin/main share one v
     assert.deepEqual(result.problems, [], result.problems.join('\n'));
     assert.match(result.baseline.reason, /^merge-base of HEAD and origin\/main \(contract\/resync\)$/);
     assert.deepEqual(result.version, { current: '1.1.0', baseline: '1.0.0' });
+  });
+});
+
+test('scratch checks ignore the caller baseline while explicit baselines still work', (t) => {
+  const previous = process.env.CONTRACT_BASELINE;
+  process.env.CONTRACT_BASELINE = 'origin/main';
+  t.after(() => {
+    if (previous === undefined) delete process.env.CONTRACT_BASELINE;
+    else process.env.CONTRACT_BASELINE = previous;
+  });
+  withRepo((repo) => {
+    repo.publishMain().git('checkout', '--quiet', '-b', 'contract/resync');
+    repo.api('openapi.json', { revision: 2 }).version('1.1.0').commit('resync + bump');
+    assert.match(repo.check().baseline.reason, /^merge-base of HEAD and origin\/main/);
+    assert.equal(repo.check({ base: 'origin/main' }).baseline.reason, 'requested origin/main');
   });
 });
 
