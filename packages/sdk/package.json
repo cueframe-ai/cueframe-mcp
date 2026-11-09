@@ -1,6 +1,6 @@
 {
   "name": "@cueframe/sdk",
-  "version": "0.17.1",
+  "version": "0.17.2",
   "description": "TypeScript SDK for the CueFrame video editing and rendering API: media, compositions, captions and cloud render jobs.",
   "type": "module",
   "exports": {
@@ -21,7 +21,7 @@
     "check": "tsc --noEmit",
     "test": "vitest run",
     "build": "tsup",
-    "prepublishOnly": "node -e \"if(!/pnpm/.test(process.env.npm_config_user_agent||0))throw new Error('publish with pnpm publish \u2014 npm ignores the publishConfig entry-point overrides and ships a broken tarball')\" && pnpm build"
+    "prepublishOnly": "node -e \"if(!/pnpm/.test(process.env.npm_config_user_agent||0))throw new Error('publish with pnpm publish — npm ignores the publishConfig entry-point overrides and ships a broken tarball')\" && pnpm build"
   },
   "dependencies": {
     "zod": "^4.6.7"
