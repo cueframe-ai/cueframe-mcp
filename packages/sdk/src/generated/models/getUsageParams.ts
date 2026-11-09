@@ -9,34 +9,28 @@
  */
 
 export type GetUsageParams = {
-/**
- * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only.
- */
-after?: string;
-/**
- * Only events attributed to this project.
- */
-projectId?: string;
-/**
- * Only events produced by this job — how to answer "did my failed render post a charge?" for one run.
- */
-jobId?: string;
-/**
- * Period start, epoch milliseconds, INCLUSIVE.
- * @minimum -9007199254740991
- * @maximum 9007199254740991
- */
-from?: number;
-/**
- * Period end, epoch milliseconds, EXCLUSIVE.
- * @minimum -9007199254740991
- * @maximum 9007199254740991
- */
-to?: number;
+  /**
+   * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /** Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only. */
+  after?: string;
+  /** Only events attributed to this project. */
+  projectId?: string;
+  /** Only events produced by this job — how to answer "did my failed render post a charge?" for one run. */
+  jobId?: string;
+  /**
+   * Period start, epoch milliseconds, INCLUSIVE.
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  from?: number;
+  /**
+   * Period end, epoch milliseconds, EXCLUSIVE.
+   * @minimum -9007199254740991
+   * @maximum 9007199254740991
+   */
+  to?: number;
 };

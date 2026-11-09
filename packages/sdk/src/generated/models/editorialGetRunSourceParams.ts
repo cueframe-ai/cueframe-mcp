@@ -9,12 +9,8 @@
  */
 
 export type EditorialGetRunSourceParams = {
-/**
- * @minLength 1
- */
-projectId: string;
-/**
- * @minLength 1
- */
-mediaId: string;
+  /** @minLength 1 */
+  projectId: string;
+  /** @minLength 1 */
+  mediaId: string;
 };

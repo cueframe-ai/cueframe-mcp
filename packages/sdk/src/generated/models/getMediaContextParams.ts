@@ -9,19 +9,17 @@
  */
 
 export type GetMediaContextParams = {
-/**
- * Transcript utterances per context page (default 20, maximum 100).
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * Zero-based utterance cursor from transcript.data.pagination.nextCursor.
- */
-after?: string;
-/**
- * Read the item through this project, for media shared into it.
- * @minLength 1
- */
-projectId?: string;
+  /**
+   * Transcript utterances per context page (default 20, maximum 100).
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /** Zero-based utterance cursor from transcript.data.pagination.nextCursor. */
+  after?: string;
+  /**
+   * Read the item through this project, for media shared into it.
+   * @minLength 1
+   */
+  projectId?: string;
 };

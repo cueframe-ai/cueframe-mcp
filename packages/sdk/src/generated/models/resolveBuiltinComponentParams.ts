@@ -9,16 +9,10 @@
  */
 
 export type ResolveBuiltinComponentParams = {
-/**
- * @minLength 1
- */
-collection: string;
-/**
- * @minLength 1
- */
-id: string;
-/**
- * @pattern ^[a-f0-9]{64}$
- */
-revision: string;
+  /** @minLength 1 */
+  collection: string;
+  /** @minLength 1 */
+  id: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  revision: string;
 };

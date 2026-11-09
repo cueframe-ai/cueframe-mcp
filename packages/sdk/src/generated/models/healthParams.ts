@@ -9,8 +9,6 @@
  */
 
 export type HealthParams = {
-/**
- * Pass `1` to run the deep dependency checks instead of the shallow liveness probe.
- */
-deep?: '1';
+  /** Pass `1` to run the deep dependency checks instead of the shallow liveness probe. */
+  deep?: '1';
 };

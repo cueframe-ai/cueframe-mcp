@@ -9,17 +9,13 @@
  */
 
 export type EditorialListBriefsParams = {
-/**
- * @minLength 1
- */
-projectId: string;
-/**
- * @minimum 1
- * @maximum 20
- */
-limit?: number;
-/**
- * @minLength 1
- */
-cursor?: string;
+  /** @minLength 1 */
+  projectId: string;
+  /**
+   * @minimum 1
+   * @maximum 20
+   */
+  limit?: number;
+  /** @minLength 1 */
+  cursor?: string;
 };

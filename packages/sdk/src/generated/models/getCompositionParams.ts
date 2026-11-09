@@ -10,20 +10,12 @@
 import type { GetCompositionIncludeDependencies } from './getCompositionIncludeDependencies';
 
 export type GetCompositionParams = {
-/**
- * The component execution versions this reader accepts, one parameter per version: 3, or 3 and 4 (native placements). Absent readers accept only the historical protocol.
- */
-componentExecutionVersions?: '3' | ['3', '4'];
-/**
- * Return the immutable composition identity, project revision and shared v1 dependency expectations alongside the composition.
- */
-includeDependencies?: GetCompositionIncludeDependencies;
-/**
- * Read a SPECIFIC composition instead of the project's active one. Omit it and the active composition is returned. Pairs with `composition_id` on the apply op: an edit you can make to a second composition is one you can read back.
- */
-compositionId?: string;
-/**
- * Compose-session id: read that session's SCRATCH composition (what the session has been editing) instead of the active one. Mutually exclusive with `compositionId`. An unknown, foreign or scratch-less session is a 404, never the active composition.
- */
-session_id?: string;
+  /** The component execution versions this reader accepts, one parameter per version: 3, or 3 and 4 (native placements). Absent readers accept only the historical protocol. */
+  componentExecutionVersions?: '3' | ['3', '4'];
+  /** Return the immutable composition identity, project revision and shared v1 dependency expectations alongside the composition. */
+  includeDependencies?: GetCompositionIncludeDependencies;
+  /** Read a SPECIFIC composition instead of the project's active one. Omit it and the active composition is returned. Pairs with `composition_id` on the apply op: an edit you can make to a second composition is one you can read back. */
+  compositionId?: string;
+  /** Compose-session id: read that session's SCRATCH composition (what the session has been editing) instead of the active one. Mutually exclusive with `compositionId`. An unknown, foreign or scratch-less session is a 404, never the active composition. */
+  session_id?: string;
 };

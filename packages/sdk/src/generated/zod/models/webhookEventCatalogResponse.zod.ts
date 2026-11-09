@@ -14,7 +14,7 @@ export const WebhookEventCatalogResponse = zod.strictObject({
   "delivery": zod.record(zod.string(), zod.unknown()).describe('The shared HTTP envelope + headers + retry semantics.'),
   "signing": zod.record(zod.string(), zod.unknown()).describe('Standard Webhooks signing: secret format, signed content, how to verify.'),
   "ownershipVerification": zod.record(zod.string(), zod.unknown()).describe('The synchronous echo-the-token activation handshake + recovery.'),
-  "events": zod.array(zod.strictObject({
+  "events": zod.array(zod.looseObject({
   "event": WebhookEvent,
   "when": zod.string(),
   "data": zod.record(zod.string(), zod.string())

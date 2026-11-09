@@ -16,48 +16,30 @@ import type { ListCatalogTier } from './listCatalogTier';
 import type { ListCatalogUseCase } from './listCatalogUseCase';
 
 export type ListCatalogParams = {
-projection?: ListCatalogProjection;
-/**
- * With component-library projection, builtin selects immutable builtin cards; library selects the authenticated org's exact serving datastore.
- */
-origin?: ListCatalogOrigin;
-libraryKind?: ListCatalogLibraryKind;
-/**
- * Filter to one category bucket (text|effects|transitions|layouts|backgrounds|ui-blocks|scenes).
- */
-category?: ListCatalogCategory;
-/**
- * Filter by render kind (component|transition|scene).
- */
-kind?: ListCatalogKind;
-/**
- * Filter by curation tier (recommended|standard|niche).
- */
-tier?: ListCatalogTier;
-/**
- * Filter to entries whose useCase includes this edit role (e.g. intro, title-over-footage, grade).
- */
-useCase?: ListCatalogUseCase;
-/**
- * Filter to entries whose mood tags include this value (e.g. cinematic, minimal).
- */
-mood?: string;
-/**
- * Free-text match across id/name/description/intent/useWhen/tags/mood. Recommend-orders results.
- */
-q?: string;
-/**
- * Alias of `q` framed as recommend-by-intent (e.g. intent=intro). Recommend-orders results.
- */
-intent?: string;
-/**
- * Page size (1..100). Omit to return the whole filtered catalog in one page.
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * Opaque cursor from a previous page's nextCursor (forward-only).
- */
-after?: string;
+  projection?: ListCatalogProjection;
+  /** With component-library projection, builtin selects immutable builtin cards; library selects the authenticated org's exact serving datastore. */
+  origin?: ListCatalogOrigin;
+  libraryKind?: ListCatalogLibraryKind;
+  /** Filter to one category bucket (text|effects|transitions|layouts|backgrounds|ui-blocks|scenes). */
+  category?: ListCatalogCategory;
+  /** Filter by render kind (component|transition|scene). */
+  kind?: ListCatalogKind;
+  /** Filter by curation tier (recommended|standard|niche). */
+  tier?: ListCatalogTier;
+  /** Filter to entries whose useCase includes this edit role (e.g. intro, title-over-footage, grade). */
+  useCase?: ListCatalogUseCase;
+  /** Filter to entries whose mood tags include this value (e.g. cinematic, minimal). */
+  mood?: string;
+  /** Free-text match across id/name/description/intent/useWhen/tags/mood. Recommend-orders results. */
+  q?: string;
+  /** Alias of `q` framed as recommend-by-intent (e.g. intent=intro). Recommend-orders results. */
+  intent?: string;
+  /**
+   * Page size (1..100). Omit to return the whole filtered catalog in one page.
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /** Opaque cursor from a previous page's nextCursor (forward-only). */
+  after?: string;
 };

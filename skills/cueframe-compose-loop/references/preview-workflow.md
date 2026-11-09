@@ -39,3 +39,12 @@ After a correction, capture the affected saved version and compare it with the s
 Use `score_composition` for broader editorial/brand review when useful and within budget. Do not require repeated whole-film judging to verify a known local correction. A judge score does not override a failed acceptance criterion or the user's visual feedback.
 
 Check account balance and current quotes before metered hosted work. Record actual job charges separately for preview, judging, and final export; separate those from agent time/token cost and from infrastructure estimates. Compare workflows only after testing equivalent changes and evidence requirements. Existing previews should be exercised before proposing new infrastructure.
+
+## Metering and delivery facts observed on the hosted lane
+
+- One `preview_frame` job is one capture unit whatever the number of stills in it (a 9-still job and a 12-still job each metered one unit). Batch the timestamps of a whole shot or of several beat boundaries into one job instead of one job per still.
+- `wait_job` delivers up to four images per call; the remaining stills of the same job come back through `imageIndices` on a repeated `wait_job`, which is a free re-read, not a new job.
+- `preview_clip` returns a 864×486 encode. It proves cuts, entrances, continuity and timing; typography, glass edges and material are judged from 1080p stills or the final render, never from the clip.
+- A first preview job after idle includes worker start, up to a few minutes; do not resubmit while the job reports `running`.
+- `preview_card` has no dry run and no `body` envelope: a call with placeholder html is a metered still. Learn a tool's input shape from its schema, not by calling it.
+- `compare_frames` reads the reference from a media item that is registered and certified in the same project as the candidate; a media item from another project is refused with a membership error. `list_media` can lag a just-finalized upload while `get_media_facts` already answers.

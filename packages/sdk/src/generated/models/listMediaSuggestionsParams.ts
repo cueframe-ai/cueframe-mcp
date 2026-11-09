@@ -9,26 +9,18 @@
  */
 
 export type ListMediaSuggestionsParams = {
-/**
- * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only.
- */
-after?: string;
-/**
- * Only suggestions cut for this delivery platform.
- */
-platform?: string;
-/**
- * Only suggestions in this output format.
- */
-format?: string;
-/**
- * Only suggestions matching this topic label.
- */
-topic?: string;
+  /**
+   * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /** Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only. */
+  after?: string;
+  /** Only suggestions cut for this delivery platform. */
+  platform?: string;
+  /** Only suggestions in this output format. */
+  format?: string;
+  /** Only suggestions matching this topic label. */
+  topic?: string;
 };

@@ -49,3 +49,13 @@ Keep actual frame indices, rational FPS/timebase, requested versus sampled time,
 Use the raw pair and overlay at unchanged coordinates. A difference image can locate change but is easily dominated by backgrounds and materials; it is not an acceptance score. Automatic image registration can conceal displacement. Cropping is a view into the same coordinate space, not permission to independently fit the two images.
 
 For an intentional structural revision, record the source-to-output event correspondence and compare those events. Do not temporally warp the evidence or undo the user's changed timing merely to reduce image differences. After editing, compare a preview from the new saved source, then inspect connected motion and sound.
+
+## Worked correction: a phone screen reproduction
+
+In a 1920×1080, 60 fps reference, a phone rose and tilted over 32 frames while its screen showed a static trading UI. The screen was authored as a captured component on a procedural phone and the UI measured against the reference through sub-pixel fits of the phone's edges, a homography that rectified each frame onto the declared 393-point screen grid, and template matching of text rows and a chart trace. Keep the declared grid (device class, island size, corner radius) separate from what was measured; the measured island was 13–15 % narrower than the prior, and that disagreement belongs in the ledger, not in the result.
+
+Three keyframes fitted at the first, middle and last frame left the in-between frames 8–14 px low: the reference rise was eased, and a per-frame residual table from a rendered window exposed it where the three stills could not. A residual that alternates every second frame means 30 fps content in a 60 fps container; average the pairs before fitting easing.
+
+Changing a captured component's `layout` height re-anchors the content; it does not stretch it. A vertical scale error in the UI is corrected in the component's own coordinates, not in the surface layout.
+
+The independent review found the author's "within 4 px" claim true only along the text column the author had probed; the right half of the screen sat 8–16 px left of the reference at every frame, the wordmark was 27 % short and an occluded chart segment was drawn over its pill. Measure landmarks across the whole frame (both edges, both columns, every pill and marker), not along the axis you aligned, before claiming parity.

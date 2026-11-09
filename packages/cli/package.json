@@ -32,11 +32,11 @@
     "access": "public"
   },
   "dependencies": {
-    "add-mcp": "^2.4.0",
-    "better-auth": "1.7.7",
+    "add-mcp": "^2.6.0",
+    "better-auth": "1.7.14",
     "commander": "^15.0.0",
     "open": "^11.0.4",
-    "ora": "^9.4.1",
+    "ora": "^10.0.0",
     "pino": "^10.3.1"
   },
   "scripts": {
@@ -48,13 +48,13 @@
   },
   "devDependencies": {
     "@cueframe/sdk": "workspace:^",
-    "zod": "^4.6.7",
-    "@types/node": "^26.6.5",
+    "@cueframe/skills": "workspace:*",
+    "@types/node": "^26.6.6",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "tsup": "^8.5.1",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "vitest": "^5.0.3",
-    "@cueframe/skills": "workspace:*",
-    "@typescript/native": "npm:typescript@^7.0.2"
+    "zod": "^4.6.7"
   },
   "repository": {
     "type": "git",

@@ -9,13 +9,11 @@
  */
 
 export type EditorialFindingsListParams = {
-/**
- * @minimum 1
- * @maximum 100
- */
-limit?: number;
-/**
- * @minLength 1
- */
-cursor?: string;
+  /**
+   * @minimum 1
+   * @maximum 100
+   */
+  limit?: number;
+  /** @minLength 1 */
+  cursor?: string;
 };

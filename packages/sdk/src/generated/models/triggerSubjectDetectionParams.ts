@@ -10,8 +10,6 @@
 import type { TriggerSubjectDetectionDetector } from './triggerSubjectDetectionDetector';
 
 export type TriggerSubjectDetectionParams = {
-/**
- * Which detector to run. Defaults to `face`; an unknown value is refused, never defaulted.
- */
-detector?: TriggerSubjectDetectionDetector;
+  /** Which detector to run. Defaults to `face`; an unknown value is refused, never defaulted. */
+  detector?: TriggerSubjectDetectionDetector;
 };
