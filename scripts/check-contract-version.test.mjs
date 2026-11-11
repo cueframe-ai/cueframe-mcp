@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CONTRACT_FILES, PACKAGE_JSON, checkContractVersion } from './check-contract-version.mjs';
+import { plannedVersions } from './release-plan.mjs';
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -55,8 +56,9 @@ function withRepo(fn) {
   try { return fn(repo); } finally { repo.dispose(); }
 }
 
-test('this repository passes against its own history', () => {
-  const result = checkContractVersion(REPO_ROOT);
+test('this repository passes against its own history', async () => {
+  const planned = (await plannedVersions(REPO_ROOT)).get('@cueframe/api-contract');
+  const result = checkContractVersion(REPO_ROOT, { planned });
   // The check's own sentence is the useful output when a developer has an un-bumped api/ edit in progress.
   assert.deepEqual(result.problems, [], result.problems.join('\n'));
   assert.equal(result.ok, true);
