@@ -25,12 +25,8 @@ export const CreateBriefBody = BriefCreateRequest
  * DEFAULT lists human-authored briefs only. Machine-minted clip briefs (suggest_briefs output) are opt-in: ?kind=clip lists just them, ?kind=all lists everything. Any other kind value is a 400, never silently empty.
  * @summary List briefs (optionally scoped to a project)
  */
-export const listBriefsQueryLimitMax = 100;
-
-
-
 export const ListBriefsQueryParams = zod.object({
-  "limit": zod.int().min(1).max(listBriefsQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.'),
   "projectId": zod.string().optional().describe('Scope to one project. Omit for every brief in the org.'),
   "kind": zod.enum(['authored', 'clip', 'all']).optional().describe('Which briefs to list. `authored` (default) = human-authored only; `clip` = the machine-minted clip briefs from suggest_briefs; `all` = both.')

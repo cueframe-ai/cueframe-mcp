@@ -9,11 +9,8 @@
  */
 import * as zod from 'zod';
 
-export const listBrandKitsParamsLimitMax = 100;
-
-
 export const ListBrandKitsParams = zod.strictObject({
-  "limit": zod.int().min(1).max(listBrandKitsParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional()
 })
 

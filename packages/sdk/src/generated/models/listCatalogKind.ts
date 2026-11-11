@@ -12,6 +12,7 @@ export type ListCatalogKind = typeof ListCatalogKind[keyof typeof ListCatalogKin
 
 
 export const ListCatalogKind = {
+  '': '',
   component: 'component',
   transition: 'transition',
   scene: 'scene',

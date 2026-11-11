@@ -98,13 +98,11 @@ export const CreateMediaUploadBody = MediaUploadRequest
  * Paginated library list. Filter with ?kind= (video|audio|image|gif|asset|source|stock), ?source= (upload|generated|import-url|stock), ?tag= (exact tag) so a real library isn't an undifferentiated soup.
  * @summary List media items
  */
-export const listMediaQueryLimitMax = 100;
-
 
 
 
 export const ListMediaQueryParams = zod.object({
-  "limit": zod.int().min(1).max(listMediaQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.'),
   "projectId": zod.string().min(1).optional(),
   "kind": zod.enum(['video', 'audio', 'image', 'gif', 'asset', 'source', 'stock']).optional().describe('Filter to one media kind.'),

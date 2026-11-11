@@ -9,11 +9,8 @@
  */
 import * as zod from 'zod';
 
-export const listBriefsParamsLimitMax = 100;
-
-
 export const ListBriefsParams = zod.strictObject({
-  "limit": zod.int().min(1).max(listBriefsParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional(),
   "projectId": zod.string().optional(),
   "kind": zod.enum(['authored', 'clip', 'all']).optional()

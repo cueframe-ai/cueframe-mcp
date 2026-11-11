@@ -14,7 +14,7 @@ export const composeSessionOpenRequestLeaseJobIdMax = 64;
 
 
 export const ComposeSessionOpenRequest = zod.strictObject({
-  "seedComposition": zod.unknown().optional(),
+  "seedComposition": zod.record(zod.string(), zod.unknown()).optional(),
   "leaseJobId": zod.string().min(1).max(composeSessionOpenRequestLeaseJobIdMax).optional()
 });
 

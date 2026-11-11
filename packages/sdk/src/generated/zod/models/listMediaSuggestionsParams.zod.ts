@@ -9,11 +9,8 @@
  */
 import * as zod from 'zod';
 
-export const listMediaSuggestionsParamsLimitMax = 100;
-
-
 export const ListMediaSuggestionsParams = zod.strictObject({
-  "limit": zod.int().min(1).max(listMediaSuggestionsParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional(),
   "platform": zod.string().optional(),
   "format": zod.string().optional(),

@@ -54,6 +54,6 @@
     "url": "https://github.com/cueframe-ai/cueframe-mcp/issues"
   },
   "devDependencies": {
-    "@cueframe/kernel": "0.7.15-ea20261029.19"
+    "@cueframe/kernel": "0.7.15-ea20261029.21"
   }
 }

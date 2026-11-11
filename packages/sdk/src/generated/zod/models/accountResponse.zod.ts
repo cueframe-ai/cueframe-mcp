@@ -18,6 +18,7 @@ export const AccountResponse = zod.strictObject({
   "spent": zod.number().nullable(),
   "remaining": zod.number().nullable()
 }),zod.null()]).describe('Separate lifetime generation cap before a credit-pack purchase. Wallet balance is still shared; generation must also fit this remaining provider-cost allowance. null means unknown.'),
+  "userId": zod.string().describe('The user resolved from the authenticated credential.'),
   "orgId": zod.string().describe('The org this API key is bound to — resolved server-side from the Authorization credential, NEVER from the request body/query.'),
   "displayName": zod.string().nullable().describe('Org/customer display name from the billing record; null when not set or unknown.'),
   "plan": zod.union([zod.strictObject({

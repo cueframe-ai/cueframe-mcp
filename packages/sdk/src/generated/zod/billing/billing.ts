@@ -18,8 +18,6 @@ import {
  * Every metered billing event, newest-first, with attribution: featureId, amount, the project/job that produced it, and the event's LIST price in USD (the invoice may zero it inside a plan allowance). Filter by projectId, jobId, and/or a [from, to) epoch-ms period. Events appear moments after the job's success terminal (the meter is scheduler-dispatched).
  * @summary List metered usage events (the A2 usage ledger)
  */
-export const getUsageQueryLimitMax = 100;
-
 export const getUsageQueryFromMin = -9007199254740991;
 export const getUsageQueryFromMax = 9007199254740991;
 
@@ -29,7 +27,7 @@ export const getUsageQueryToMax = 9007199254740991;
 
 
 export const GetUsageQueryParams = zod.object({
-  "limit": zod.int().min(1).max(getUsageQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.'),
   "projectId": zod.string().optional().describe('Only events attributed to this project.'),
   "jobId": zod.string().optional().describe('Only events produced by this job — how to answer "did my failed render post a charge?" for one run.'),

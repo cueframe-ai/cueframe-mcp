@@ -9,12 +9,10 @@
  */
 import * as zod from 'zod';
 
-export const listMediaParamsLimitMax = 100;
-
 
 
 export const ListMediaParams = zod.strictObject({
-  "limit": zod.int().min(1).max(listMediaParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional(),
   "projectId": zod.string().min(1).optional(),
   "kind": zod.enum(['video', 'audio', 'image', 'gif', 'asset', 'source', 'stock']).optional(),

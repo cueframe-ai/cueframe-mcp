@@ -19,6 +19,8 @@ import type { AccountResponseSurfaces } from './accountResponseSurfaces';
 export interface AccountResponse {
   /** Separate lifetime generation cap before a credit-pack purchase. Wallet balance is still shared; generation must also fit this remaining provider-cost allowance. null means unknown. */
   generationLimit: AccountResponseGenerationLimit;
+  /** The user resolved from the authenticated credential. */
+  userId: string;
   /** The org this API key is bound to — resolved server-side from the Authorization credential, NEVER from the request body/query. */
   orgId: string;
   /**

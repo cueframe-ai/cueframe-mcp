@@ -12,6 +12,7 @@ export type ListCatalogTier = typeof ListCatalogTier[keyof typeof ListCatalogTie
 
 
 export const ListCatalogTier = {
+  '': '',
   recommended: 'recommended',
   standard: 'standard',
   niche: 'niche',
