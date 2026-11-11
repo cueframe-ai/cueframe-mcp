@@ -9,11 +9,8 @@
  */
 import * as zod from 'zod';
 
-export const listSessionsParamsLimitMax = 100;
-
-
 export const ListSessionsParams = zod.strictObject({
-  "limit": zod.int().min(1).max(listSessionsParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional()
 })
 

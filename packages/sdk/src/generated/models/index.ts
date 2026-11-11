@@ -651,6 +651,7 @@ export * from './mediaContextResponseBeatGridMethod';
 export * from './mediaContextResponseEnvelope';
 export * from './mediaContextResponseEnvelopeEnvelopeClass';
 export * from './mediaContextResponseFaces';
+export * from './mediaContextResponseFacesState';
 export * from './mediaContextResponseFacesStatus';
 export * from './mediaContextResponseThumbnail';
 export * from './mediaContextResponseTranscript';

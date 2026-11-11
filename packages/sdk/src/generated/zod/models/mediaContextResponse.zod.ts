@@ -24,6 +24,8 @@ export const MediaContextResponse = zod.strictObject({
 }),zod.null()]).describe('Presigned processing thumbnail (~1 week) — the footage at a glance. For stills at chosen timestamps, use preview_frame with a one-clip composition over this media.'),
   "faces": zod.strictObject({
   "status": zod.enum(['ready', 'not_detected']),
+  "state": zod.enum(['ready', 'pending', 'no_usable_subject', 'failed', 'not_requested']),
+  "reason": zod.string().optional(),
   "windows": zod.array(ContextSubjectWindow)
 }),
   "transcript": zod.strictObject({

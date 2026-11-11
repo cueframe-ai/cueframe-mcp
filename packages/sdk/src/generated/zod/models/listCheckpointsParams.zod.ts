@@ -9,11 +9,8 @@
  */
 import * as zod from 'zod';
 
-export const listCheckpointsParamsLimitMax = 100;
-
-
 export const ListCheckpointsParams = zod.strictObject({
-  "limit": zod.int().min(1).max(listCheckpointsParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional(),
   "composeJobId": zod.string().optional(),
   "projectId": zod.string().optional()

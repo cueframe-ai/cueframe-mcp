@@ -19,12 +19,8 @@ import {
  * Page through the webhook endpoints registered on this account, with their URLs, subscribed events, and enabled state. Call it to see what already receives render, media, and compose events before adding another.
  * @summary List webhook endpoints
  */
-export const listWebhooksQueryLimitMax = 100;
-
-
-
 export const ListWebhooksQueryParams = zod.object({
-  "limit": zod.int().min(1).max(listWebhooksQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.')
 })
 

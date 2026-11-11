@@ -1,5 +1,14 @@
 # Kernel used for local contract generation
 
+The current contract-generation override selects
+`cueframe-kernel-0.7.15-ea20261029.21.tgz`, copied byte-for-byte from the
+contract source's committed build artifact. SHA-256:
+`c861b3d5ebb3cddf6c4ba880ca94ed971d062378c9b2bf151464c0ff5f45e87f`.
+The manifest records this identity and the exact source commit. This updates the
+existing contract-build artifact exception; it is not a newly published kernel.
+
+The following entries retain historical artifact provenance.
+
 `cueframe-kernel-0.7.6.tgz` is the selected packed kernel from the frozen,
 uncommitted integration source based on public commit
 `3149381bec40d585c849a92b4fb961abf8968a97`. It is a local candidate, not a published

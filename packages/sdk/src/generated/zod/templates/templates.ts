@@ -68,12 +68,8 @@ export const PublishTemplateBody = TemplatePublishRequest
  * Page through the video templates saved in this account, newest first, as summaries without their full documents. Call it to find a template id for rendering, applying to a project, or starting a new project.
  * @summary List this org's templates
  */
-export const listTemplatesQueryLimitMax = 100;
-
-
-
 export const ListTemplatesQueryParams = zod.object({
-  "limit": zod.int().min(1).max(listTemplatesQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.')
 })
 

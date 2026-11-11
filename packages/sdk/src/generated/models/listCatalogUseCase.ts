@@ -12,6 +12,7 @@ export type ListCatalogUseCase = typeof ListCatalogUseCase[keyof typeof ListCata
 
 
 export const ListCatalogUseCase = {
+  '': '',
   intro: 'intro',
   outro: 'outro',
   'full-scene': 'full-scene',

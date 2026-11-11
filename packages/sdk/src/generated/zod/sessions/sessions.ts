@@ -20,12 +20,8 @@ import {
  * Page through this account's sessions, each a named set of media files with its mux status. Call it to find a session id for checking or retrying an audio-onto-video job.
  * @summary List sessions
  */
-export const listSessionsQueryLimitMax = 100;
-
-
-
 export const ListSessionsQueryParams = zod.object({
-  "limit": zod.int().min(1).max(listSessionsQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.')
 })
 

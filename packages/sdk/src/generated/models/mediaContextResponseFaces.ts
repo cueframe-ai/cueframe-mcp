@@ -8,9 +8,12 @@
  * OpenAPI spec version: v1
  */
 import type { ContextSubjectWindow } from './contextSubjectWindow';
+import type { MediaContextResponseFacesState } from './mediaContextResponseFacesState';
 import type { MediaContextResponseFacesStatus } from './mediaContextResponseFacesStatus';
 
 export type MediaContextResponseFaces = {
   status: MediaContextResponseFacesStatus;
+  state: MediaContextResponseFacesState;
+  reason?: string;
   windows: ContextSubjectWindow[];
 };

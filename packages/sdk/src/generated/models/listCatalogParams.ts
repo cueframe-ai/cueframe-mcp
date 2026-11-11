@@ -34,12 +34,8 @@ export type ListCatalogParams = {
   q?: string;
   /** Alias of `q` framed as recommend-by-intent (e.g. intent=intro). Recommend-orders results. */
   intent?: string;
-  /**
-   * Page size (1..100). Omit to return the whole filtered catalog in one page.
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: number;
+  /** Page size (1..100); invalid values use the default and out-of-range values clamp. Omit to return the whole filtered catalog in one page. Component-library projection requires a valid integer. */
+  limit?: unknown;
   /** Opaque cursor from a previous page's nextCursor (forward-only). */
   after?: string;
 };

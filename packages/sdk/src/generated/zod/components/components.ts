@@ -46,22 +46,18 @@ export const ResolveBuiltinComponentQueryParams = zod.object({
  * Discover the one built-in primitive (heroText, the behind-subject overlay) plus your installed components; pass projection=component-library for the maintained builtin presets and recipes. Narrow with facet filters (category, kind, tier, useCase, mood) or free-text (q / intent); when ANY filter is set, results are ordered recommended-tier-first. With NO `limit` the WHOLE (filtered) catalog returns in one page — pass `limit` only to page. Each entry carries a `placement` hint telling you exactly how to author it on the timeline.
  * @summary List component catalog (defaults + installed)
  */
-export const listCatalogQueryLimitMax = 100;
-
-
-
 export const ListCatalogQueryParams = zod.object({
   "projection": zod.enum(['component-library']).optional(),
   "origin": zod.enum(['builtin', 'library']).optional().describe('With component-library projection, builtin selects immutable builtin cards; library selects the authenticated org\'s exact serving datastore.'),
   "libraryKind": zod.enum(['definition', 'preset', 'recipe']).optional(),
-  "category": zod.enum(['text', 'effects', 'transitions', 'layouts', 'backgrounds', 'ui-blocks', 'scenes']).optional().describe('Filter to one category bucket (text|effects|transitions|layouts|backgrounds|ui-blocks|scenes).'),
-  "kind": zod.enum(['component', 'transition', 'scene']).optional().describe('Filter by render kind (component|transition|scene).'),
-  "tier": zod.enum(['recommended', 'standard', 'niche']).optional().describe('Filter by curation tier (recommended|standard|niche).'),
-  "useCase": zod.enum(['intro', 'outro', 'full-scene', 'title-over-footage', 'transition', 'background', 'grade', 'emphasis', 'explainer', 'social-cut']).optional().describe('Filter to entries whose useCase includes this edit role (e.g. intro, title-over-footage, grade).'),
+  "category": zod.enum(['', 'text', 'effects', 'transitions', 'layouts', 'backgrounds', 'ui-blocks', 'scenes']).optional().describe('Filter to one category bucket (text|effects|transitions|layouts|backgrounds|ui-blocks|scenes).'),
+  "kind": zod.enum(['', 'component', 'transition', 'scene']).optional().describe('Filter by render kind (component|transition|scene).'),
+  "tier": zod.enum(['', 'recommended', 'standard', 'niche']).optional().describe('Filter by curation tier (recommended|standard|niche).'),
+  "useCase": zod.enum(['', 'intro', 'outro', 'full-scene', 'title-over-footage', 'transition', 'background', 'grade', 'emphasis', 'explainer', 'social-cut']).optional().describe('Filter to entries whose useCase includes this edit role (e.g. intro, title-over-footage, grade).'),
   "mood": zod.string().optional().describe('Filter to entries whose mood tags include this value (e.g. cinematic, minimal).'),
   "q": zod.string().optional().describe('Free-text match across id/name/description/intent/useWhen/tags/mood. Recommend-orders results.'),
   "intent": zod.string().optional().describe('Alias of `q` framed as recommend-by-intent (e.g. intent=intro). Recommend-orders results.'),
-  "limit": zod.int().min(1).max(listCatalogQueryLimitMax).optional().describe('Page size (1..100). Omit to return the whole filtered catalog in one page.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100); invalid values use the default and out-of-range values clamp. Omit to return the whole filtered catalog in one page. Component-library projection requires a valid integer.'),
   "after": zod.string().optional().describe('Opaque cursor from a previous page\'s nextCursor (forward-only).')
 })
 
