@@ -233088,13 +233088,7 @@
       "ComposeSessionOpenRequest": {
         "type": "object",
         "properties": {
-          "seedComposition": {
-            "type": "object",
-            "propertyNames": {
-              "type": "string"
-            },
-            "additionalProperties": {}
-          },
+          "seedComposition": {},
           "leaseJobId": {
             "type": "string",
             "minLength": 1,

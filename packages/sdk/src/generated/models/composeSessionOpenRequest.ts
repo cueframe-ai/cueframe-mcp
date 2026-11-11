@@ -7,10 +7,9 @@
  * See: https://docs.cueframe.ai
  * OpenAPI spec version: v1
  */
-import type { ComposeSessionOpenRequestSeedComposition } from './composeSessionOpenRequestSeedComposition';
 
 export interface ComposeSessionOpenRequest {
-  seedComposition?: ComposeSessionOpenRequestSeedComposition;
+  seedComposition?: unknown;
   /**
      * @minLength 1
      * @maxLength 64

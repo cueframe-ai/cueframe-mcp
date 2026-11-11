@@ -396,7 +396,6 @@ export * from './composeSelectResponseMergeResult';
 export * from './composeSelectResponseMergeResultDroppedEditsItem';
 export * from './composeSelectResponseMergeResultDroppedEditsItemReason';
 export * from './composeSessionOpenRequest';
-export * from './composeSessionOpenRequestSeedComposition';
 export * from './composition';
 export * from './compositionAccessibility';
 export * from './compositionAcl';
