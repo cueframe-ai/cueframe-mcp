@@ -3,7 +3,10 @@ on:
   push:
     branches: [main]
   pull_request: {}
-  workflow_call: {}
+  workflow_call:
+    secrets:
+      NPM_TOKEN:
+        required: true
 permissions:
   contents: read
 jobs:
@@ -28,7 +31,18 @@ jobs:
           node-version: 24
           cache: pnpm
       - name: pnpm install
-        run: pnpm install --frozen-lockfile
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          : "${NPM_TOKEN:?NPM_TOKEN is required to read restricted build dependencies}"
+          umask 077
+          install_npmrc="$(mktemp "$RUNNER_TEMP/cueframe-npmrc.XXXXXX")"
+          trap 'rm -f "$install_npmrc"' EXIT
+          # npm expands the placeholder; never write the token value to this file.
+          # shellcheck disable=SC2016
+          printf '%s\n' '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > "$install_npmrc"
+          NPM_CONFIG_USERCONFIG="$install_npmrc" pnpm install --frozen-lockfile
       - name: production dependency audit
         # Fails on any advisory. esbuild is pinned to 0.28.2 through a global `pnpm.overrides` entry
         # in package.json: vite 8 takes esbuild as a peer, so a `vite>esbuild` override could not

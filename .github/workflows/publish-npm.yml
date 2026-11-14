@@ -37,6 +37,8 @@ jobs:
   validate:
     if: github.ref == 'refs/heads/main' && github.actor != 'github-actions[bot]'
     uses: ./.github/workflows/ci.yml
+    secrets:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     permissions:
       contents: read
 
@@ -75,7 +77,18 @@ jobs:
           node-version: 24
           cache: pnpm
       - name: pnpm install
-        run: pnpm install --frozen-lockfile
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          : "${NPM_TOKEN:?NPM_TOKEN is required to read restricted build dependencies}"
+          umask 077
+          install_npmrc="$(mktemp "$RUNNER_TEMP/cueframe-npmrc.XXXXXX")"
+          trap 'rm -f "$install_npmrc"' EXIT
+          # npm expands the placeholder; never write the token value to this file.
+          # shellcheck disable=SC2016
+          printf '%s\n' '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > "$install_npmrc"
+          NPM_CONFIG_USERCONFIG="$install_npmrc" pnpm install --frozen-lockfile
       - name: open or update the Version packages pull request
         # v1.9.0: v2 of the action refuses @changesets/cli 2.x, which this repository uses. With no `publish`
         # input the action never publishes: with pending changesets it resets changeset-release/main to this
@@ -124,7 +137,8 @@ jobs:
       contents: read
       id-token: write # npm trusted publishing (OIDC token exchange) and provenance
     # npm trusted publishing (docs.npmjs.com/trusted-publishers): every package below is published with a
-    # short-lived token that npm exchanges for this job's GitHub OIDC token; no npm token is stored here.
+    # short-lived token that npm exchanges for this job's GitHub OIDC token. The dependency install
+    # alone uses the existing read token; its temporary npm configuration is removed before publishing.
     # It needs npm CLI 11.5.1 or later, Node 22.14.0 or later and a GitHub-hosted runner (self-hosted
     # runners are not supported). Each package's trusted publisher on npmjs.com names this repository and
     # the workflow file `publish-npm.yml`, with no environment.
@@ -153,7 +167,18 @@ jobs:
           node -e "const [a,b,c]=process.argv[1].split('.').map(Number); process.exit(a>11||(a===11&&(b>5||(b===5&&c>=1)))?0:1)" "${npm_version}" \
             || { echo "::error::npm ${npm_version} is older than 11.5.1; trusted publishing would fail"; exit 1; }
       - name: pnpm install
-        run: pnpm install --frozen-lockfile
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          : "${NPM_TOKEN:?NPM_TOKEN is required to read restricted build dependencies}"
+          umask 077
+          install_npmrc="$(mktemp "$RUNNER_TEMP/cueframe-npmrc.XXXXXX")"
+          trap 'rm -f "$install_npmrc"' EXIT
+          # npm expands the placeholder; never write the token value to this file.
+          # shellcheck disable=SC2016
+          printf '%s\n' '//registry.npmjs.org/:_authToken=${NPM_TOKEN}' > "$install_npmrc"
+          NPM_CONFIG_USERCONFIG="$install_npmrc" pnpm install --frozen-lockfile
       - run: pnpm build
       - name: no package changed without a version bump (changeset publish skips published versions)
         run: pnpm check:published-versions
