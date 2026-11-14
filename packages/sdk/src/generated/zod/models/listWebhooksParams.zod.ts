@@ -9,11 +9,8 @@
  */
 import * as zod from 'zod';
 
-export const listWebhooksParamsLimitMax = 100;
-
-
 export const ListWebhooksParams = zod.strictObject({
-  "limit": zod.int().min(1).max(listWebhooksParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional()
 })
 

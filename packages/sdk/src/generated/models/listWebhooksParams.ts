@@ -9,12 +9,8 @@
  */
 
 export type ListWebhooksParams = {
-  /**
-   * Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.
-   * @minimum 1
-   * @maximum 100
-   */
-  limit?: number;
+  /** Page size (1..100), default 20. Out-of-range or unparseable clamps into the range. */
+  limit?: unknown;
   /** Opaque cursor from the previous page's `pagination.nextCursor`. Forward-only. */
   after?: string;
 };

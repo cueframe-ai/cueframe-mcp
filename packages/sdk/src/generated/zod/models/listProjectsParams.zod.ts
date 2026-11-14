@@ -9,11 +9,8 @@
  */
 import * as zod from 'zod';
 
-export const listProjectsParamsLimitMax = 100;
-
-
 export const ListProjectsParams = zod.strictObject({
-  "limit": zod.int().min(1).max(listProjectsParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional()
 })
 

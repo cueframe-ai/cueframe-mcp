@@ -9,6 +9,8 @@
  */
 import * as zod from 'zod';
 
+
+
 export const brandKitResponseAudioMusicMoodMax = 300;
 
 
@@ -78,8 +80,9 @@ export const BrandKitResponse = zod.strictObject({
   "tagline": zod.string().nullable(),
   "colors": zod.record(zod.string(), zod.string()),
   "extraColors": zod.array(zod.strictObject({
-  "name": zod.string(),
-  "value": zod.string()
+  "hex": zod.string().min(1),
+  "label": zod.string().min(1),
+  "usage": zod.string().optional()
 })).optional(),
   "fonts": zod.strictObject({
   "heading": zod.union([zod.strictObject({

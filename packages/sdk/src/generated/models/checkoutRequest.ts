@@ -14,5 +14,5 @@ export interface CheckoutRequest {
   /** Plan tier to subscribe to. */
   plan: CheckoutRequestPlan;
   /** Billing interval: 'month' (monthly) or 'year' (annual, ~2 months free). */
-  interval: CheckoutRequestInterval;
+  interval?: CheckoutRequestInterval;
 }

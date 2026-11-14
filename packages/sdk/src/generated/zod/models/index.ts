@@ -279,6 +279,7 @@ export * from './uploadTokenRequest.zod';
 export * from './uploadTokenResponse.zod';
 export * from './usageEventResponse.zod';
 export * from './usageListResponse.zod';
+export * from './validateCompositionBody.zod';
 export * from './verifyJobResult.zod';
 export * from './webhookCreateRequest.zod';
 export * from './webhookCreateResponse.zod';

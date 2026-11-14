@@ -21,12 +21,8 @@ import {
  * Page through the account's brand kits, each with its colors, fonts, and voice guidelines. Call it to find a brandKitId before attaching a brand to a project or rendering a template on brand.
  * @summary List brand kits (read-only)
  */
-export const listBrandKitsQueryLimitMax = 100;
-
-
-
 export const ListBrandKitsQueryParams = zod.object({
-  "limit": zod.int().min(1).max(listBrandKitsQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.')
 })
 

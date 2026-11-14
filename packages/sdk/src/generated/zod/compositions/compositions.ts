@@ -10,7 +10,6 @@
 import * as zod from 'zod';
 
 import {
-  Composition,
   CompositionApplyRequest,
   CompositionCreateRequest,
   CompositionOp,
@@ -106,7 +105,7 @@ export const DeriveCompositionBody = DeriveCompositionRequest
  * Dry-run the FULL save-time authoring guard set against a Composition body WITHOUT persisting it and without a project. Runs the same pure, DB-free guards saveComposition enforces — wire shape, primitive membership (unknown_primitive / custom_missing_sourcecode), required-param shape (invalid_primitive_params), clip↔track family (clip_source_track_mismatch), reframe coverage (reframe_coverage_gap), and font admission (font_not_reproducible: a caption/param face that is neither bundled nor sealed in a brand font asset) — and returns ONE shape, `200 { valid, errors[] }`, for BOTH wire-shape and deep-invariant failures (no 400-vs-200 split). `valid:false` lists every authoring error (sanitized envelopes) to fix before save/render. The ONLY checks NOT run here are the two DB-bound ones — trim-bounds (media duration) and image/asset-on-video-track (media kind) — which can only be caught at save/render.
  * @summary Validate a composition body without saving it (dry-run)
  */
-export const ValidateCompositionBody = Composition
+export const ValidateCompositionBody = zod.unknown()
 
 /**
  * Delete a composition and its version history. REFUSES the project's ACTIVE composition (409 composition_active) — make another one active first, or delete the project.

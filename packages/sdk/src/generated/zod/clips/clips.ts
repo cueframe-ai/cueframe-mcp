@@ -36,12 +36,8 @@ export const ListMediaSuggestionsParams = zod.object({
   "id": zod.string()
 })
 
-export const listMediaSuggestionsQueryLimitMax = 100;
-
-
-
 export const ListMediaSuggestionsQueryParams = zod.object({
-  "limit": zod.int().min(1).max(listMediaSuggestionsQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.'),
   "platform": zod.string().optional().describe('Only suggestions cut for this delivery platform.'),
   "format": zod.string().optional().describe('Only suggestions in this output format.'),
