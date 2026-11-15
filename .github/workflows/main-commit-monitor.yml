@@ -7,10 +7,14 @@ on:
   push:
     branches: [main]
 
+# Each scope serves a read the monitor makes: compare and commits (contents), commits/<sha>/pulls
+# (pull-requests), check runs (checks), commit statuses (statuses) and the workflow runs that tie a
+# check suite or status to its producing workflow (actions).
 permissions:
+  actions: read
+  checks: read
   contents: read
   pull-requests: read
-  checks: read
   statuses: read
 
 jobs:

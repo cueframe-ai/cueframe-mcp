@@ -141,6 +141,8 @@ test('the workflow runs the monitor on every push to main, only in the organizat
   const workflow = readFileSync(new URL('../.github/workflows/main-commit-monitor.yml', import.meta.url), 'utf8');
   assert.match(workflow, /^on:\n  push:\n    branches: \[main\]\n\n/m);
   assert.match(workflow, /if: github\.repository_owner == 'cueframe-ai'/);
+  // Listing permissions sets every other scope to none; these are the reads inspect() makes.
+  assert.match(workflow, /^permissions:\n  actions: read\n  checks: read\n  contents: read\n  pull-requests: read\n  statuses: read\n\n/m);
   assert.equal(/^          REQUIRED_CHECKS: (.*)$/m.exec(workflow)[1], "''");
   parseRequired(/^          REQUIRED_CHECKS: '?(.*?)'?$/m.exec(workflow)[1]);
   assert.match(workflow, /MAIN_MONITOR_WEBHOOK: \$\{\{ secrets\.MAIN_MONITOR_WEBHOOK \}\}/);
