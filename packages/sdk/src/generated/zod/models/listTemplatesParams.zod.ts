@@ -9,11 +9,8 @@
  */
 import * as zod from 'zod';
 
-export const listTemplatesParamsLimitMax = 100;
-
-
 export const ListTemplatesParams = zod.strictObject({
-  "limit": zod.int().min(1).max(listTemplatesParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional()
 })
 

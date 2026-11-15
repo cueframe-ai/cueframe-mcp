@@ -12,6 +12,7 @@ export type ListCatalogCategory = typeof ListCatalogCategory[keyof typeof ListCa
 
 
 export const ListCatalogCategory = {
+  '': '',
   text: 'text',
   effects: 'effects',
   transitions: 'transitions',

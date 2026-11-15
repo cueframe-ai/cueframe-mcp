@@ -33,12 +33,8 @@ export const ListProjectRendersParams = zod.object({
   "id": zod.string()
 })
 
-export const listProjectRendersQueryLimitMax = 100;
-
-
-
 export const ListProjectRendersQueryParams = zod.object({
-  "limit": zod.int().min(1).max(listProjectRendersQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.'),
   "status": zod.string().optional().describe('Comma-separated render statuses to include (e.g. `error,cancelled`). Omit for every status.')
 })

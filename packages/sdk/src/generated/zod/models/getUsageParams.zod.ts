@@ -9,8 +9,6 @@
  */
 import * as zod from 'zod';
 
-export const getUsageParamsLimitMax = 100;
-
 export const getUsageParamsFromMin = -9007199254740991;
 export const getUsageParamsFromMax = 9007199254740991;
 
@@ -19,7 +17,7 @@ export const getUsageParamsToMax = 9007199254740991;
 
 
 export const GetUsageParams = zod.strictObject({
-  "limit": zod.int().min(1).max(getUsageParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional(),
   "projectId": zod.string().optional(),
   "jobId": zod.string().optional(),

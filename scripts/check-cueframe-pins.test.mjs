@@ -18,7 +18,7 @@ test('local, tarball, git and URL sources are refused', () => {
 });
 
 test('prerelease versions and ranges are refused', () => {
-  for (const spec of ['0.7.15-ea20261029.19', '^0.7.15-ea20261029.19', '1.0.0-rc.1', '~2.0.0-dev.3']) {
+  for (const spec of ['0.7.15-ea20261029.21', '^0.7.15-ea20261029.21', '1.0.0-rc.1', '~2.0.0-dev.3']) {
     assert.match(specProblem(spec) ?? '', /prerelease/, spec);
   }
 });

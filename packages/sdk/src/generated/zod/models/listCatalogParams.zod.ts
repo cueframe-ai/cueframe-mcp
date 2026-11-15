@@ -9,21 +9,18 @@
  */
 import * as zod from 'zod';
 
-export const listCatalogParamsLimitMax = 100;
-
-
 export const ListCatalogParams = zod.strictObject({
   "projection": zod.enum(['component-library']).optional(),
   "origin": zod.enum(['builtin', 'library']).optional(),
   "libraryKind": zod.enum(['definition', 'preset', 'recipe']).optional(),
-  "category": zod.enum(['text', 'effects', 'transitions', 'layouts', 'backgrounds', 'ui-blocks', 'scenes']).optional(),
-  "kind": zod.enum(['component', 'transition', 'scene']).optional(),
-  "tier": zod.enum(['recommended', 'standard', 'niche']).optional(),
-  "useCase": zod.enum(['intro', 'outro', 'full-scene', 'title-over-footage', 'transition', 'background', 'grade', 'emphasis', 'explainer', 'social-cut']).optional(),
+  "category": zod.enum(['', 'text', 'effects', 'transitions', 'layouts', 'backgrounds', 'ui-blocks', 'scenes']).optional(),
+  "kind": zod.enum(['', 'component', 'transition', 'scene']).optional(),
+  "tier": zod.enum(['', 'recommended', 'standard', 'niche']).optional(),
+  "useCase": zod.enum(['', 'intro', 'outro', 'full-scene', 'title-over-footage', 'transition', 'background', 'grade', 'emphasis', 'explainer', 'social-cut']).optional(),
   "mood": zod.string().optional(),
   "q": zod.string().optional(),
   "intent": zod.string().optional(),
-  "limit": zod.int().min(1).max(listCatalogParamsLimitMax).optional(),
+  "limit": zod.unknown().optional(),
   "after": zod.string().optional()
 })
 

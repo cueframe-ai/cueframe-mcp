@@ -224626,16 +224626,21 @@
             "items": {
               "type": "object",
               "properties": {
-                "name": {
-                  "type": "string"
+                "hex": {
+                  "type": "string",
+                  "minLength": 1
                 },
-                "value": {
+                "label": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "usage": {
                   "type": "string"
                 }
               },
               "required": [
-                "name",
-                "value"
+                "hex",
+                "label"
               ],
               "additionalProperties": false
             }
@@ -230617,6 +230622,10 @@
             ],
             "description": "Separate lifetime generation cap before a credit-pack purchase. Wallet balance is still shared; generation must also fit this remaining provider-cost allowance. null means unknown."
           },
+          "userId": {
+            "type": "string",
+            "description": "The user resolved from the authenticated credential."
+          },
           "orgId": {
             "type": "string",
             "description": "The org this API key is bound to — resolved server-side from the Authorization credential, NEVER from the request body/query."
@@ -230725,6 +230734,7 @@
         },
         "required": [
           "generationLimit",
+          "userId",
           "orgId",
           "displayName",
           "plan",
@@ -230838,6 +230848,19 @@
                   "not_detected"
                 ]
               },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "ready",
+                  "pending",
+                  "no_usable_subject",
+                  "failed",
+                  "not_requested"
+                ]
+              },
+              "reason": {
+                "type": "string"
+              },
               "windows": {
                 "type": "array",
                 "items": {
@@ -230847,6 +230870,7 @@
             },
             "required": [
               "status",
+              "state",
               "windows"
             ],
             "additionalProperties": false
@@ -231727,8 +231751,8 @@
             "description": "Plan tier to subscribe to."
           },
           "interval": {
-            "default": "month",
             "description": "Billing interval: 'month' (monthly) or 'year' (annual, ~2 months free).",
+            "default": "month",
             "type": "string",
             "enum": [
               "month",
@@ -231737,8 +231761,7 @@
           }
         },
         "required": [
-          "plan",
-          "interval"
+          "plan"
         ],
         "additionalProperties": false
       },
@@ -233069,7 +233092,13 @@
       "ComposeSessionOpenRequest": {
         "type": "object",
         "properties": {
-          "seedComposition": {},
+          "seedComposition": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
           "leaseJobId": {
             "type": "string",
             "minLength": 1,
@@ -358347,11 +358376,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",
@@ -359250,6 +359275,16 @@
               }
             }
           },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal error.",
             "content": {
@@ -359712,6 +359747,16 @@
           },
           "404": {
             "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
             "content": {
               "application/json": {
                 "schema": {
@@ -360503,9 +360548,7 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Composition"
-              }
+              "schema": {}
             }
           }
         },
@@ -362085,11 +362128,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",
@@ -362376,8 +362415,28 @@
               }
             }
           },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable — billing_unavailable / honest-503 for runtime deps.",
             "content": {
               "application/json": {
                 "schema": {
@@ -363477,6 +363536,16 @@
               }
             }
           },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal error.",
             "content": {
@@ -363544,11 +363613,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",
@@ -364484,6 +364549,16 @@
           },
           "404": {
             "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
             "content": {
               "application/json": {
                 "schema": {
@@ -366817,11 +366892,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",
@@ -367831,11 +367902,124 @@
         },
         "responses": {
           "200": {
-            "description": "SSE stream (text/event-stream).",
+            "description": "Parsed SSE events with JSON data. The wire remains text/event-stream, for example `event: error\ndata: {\"message\":\"Render not found\"}\n\n`.",
             "content": {
               "text/event-stream": {
                 "schema": {
-                  "type": "string"
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "required": [
+                        "event",
+                        "data"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "event": {
+                          "type": "string",
+                          "enum": [
+                            "progress"
+                          ]
+                        },
+                        "data": {
+                          "type": "string",
+                          "contentMediaType": "application/json",
+                          "contentSchema": {
+                            "allOf": [
+                              {
+                                "$ref": "#/components/schemas/RenderProgress"
+                              }
+                            ],
+                            "unevaluatedProperties": false
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "event",
+                        "data"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "event": {
+                          "type": "string",
+                          "enum": [
+                            "complete"
+                          ]
+                        },
+                        "data": {
+                          "type": "string",
+                          "contentMediaType": "application/json",
+                          "contentSchema": {
+                            "type": "object",
+                            "required": [
+                              "outputUrl",
+                              "outputExpiresAt",
+                              "duration"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                              "outputUrl": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "format": "uri"
+                              },
+                              "outputExpiresAt": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "format": "date-time"
+                              },
+                              "duration": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "exclusiveMinimum": 0
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "event",
+                        "data"
+                      ],
+                      "additionalProperties": false,
+                      "properties": {
+                        "event": {
+                          "type": "string",
+                          "enum": [
+                            "error"
+                          ]
+                        },
+                        "data": {
+                          "type": "string",
+                          "contentMediaType": "application/json",
+                          "contentSchema": {
+                            "type": "object",
+                            "required": [
+                              "message"
+                            ],
+                            "additionalProperties": false,
+                            "properties": {
+                              "message": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -369008,11 +369192,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",
@@ -369495,6 +369675,16 @@
           },
           "404": {
             "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
             "content": {
               "application/json": {
                 "schema": {
@@ -370428,6 +370618,16 @@
               }
             }
           },
+          "400": {
+            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Missing or invalid Authorization header.",
             "content": {
@@ -370752,11 +370952,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",
@@ -371409,6 +371605,16 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -371520,6 +371726,16 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
           }
         },
         "parameters": [
@@ -371623,6 +371839,16 @@
           },
           "404": {
             "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
             "content": {
               "application/json": {
                 "schema": {
@@ -372644,11 +372870,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",
@@ -372874,6 +373096,16 @@
           },
           "404": {
             "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
             "content": {
               "application/json": {
                 "schema": {
@@ -376335,11 +376567,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",
@@ -376560,6 +376788,16 @@
           },
           "404": {
             "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
             "content": {
               "application/json": {
                 "schema": {
@@ -377057,8 +377295,28 @@
               }
             }
           },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable — billing_unavailable / honest-503 for runtime deps.",
             "content": {
               "application/json": {
                 "schema": {
@@ -377214,8 +377472,28 @@
               }
             }
           },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable — billing_unavailable / honest-503 for runtime deps.",
             "content": {
               "application/json": {
                 "schema": {
@@ -377371,8 +377649,28 @@
               }
             }
           },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service unavailable — billing_unavailable / honest-503 for runtime deps.",
             "content": {
               "application/json": {
                 "schema": {
@@ -377531,6 +377829,16 @@
               }
             }
           },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal error.",
             "content": {
@@ -377633,6 +377941,16 @@
           },
           "403": {
             "description": "Forbidden — permission insufficient.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
             "content": {
               "application/json": {
                 "schema": {
@@ -377780,6 +378098,16 @@
               }
             }
           },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "503": {
             "description": "Service unavailable — billing_unavailable / honest-503 for runtime deps.",
             "content": {
@@ -377877,6 +378205,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "",
                 "text",
                 "effects",
                 "transitions",
@@ -377895,6 +378224,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "",
                 "component",
                 "transition",
                 "scene"
@@ -377909,6 +378239,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "",
                 "recommended",
                 "standard",
                 "niche"
@@ -377923,6 +378254,7 @@
             "schema": {
               "type": "string",
               "enum": [
+                "",
                 "intro",
                 "outro",
                 "full-scene",
@@ -377967,12 +378299,8 @@
             "name": "limit",
             "in": "query",
             "required": false,
-            "description": "Page size (1..100). Omit to return the whole filtered catalog in one page.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "description": "Page size (1..100); invalid values use the default and out-of-range values clamp. Omit to return the whole filtered catalog in one page. Component-library projection requires a valid integer.",
+            "schema": {}
           },
           {
             "name": "after",
@@ -378955,11 +379283,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",
@@ -380059,11 +380383,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",
@@ -383764,6 +384084,26 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable — invalid_composition / media_in_use / session_in_use / render_not_cancellable.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "429": {
             "description": "Rate limited. Retry-After header present.",
             "content": {
@@ -383901,6 +384241,16 @@
               }
             }
           },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal error.",
             "content": {
@@ -384030,6 +384380,16 @@
           },
           "404": {
             "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
             "content": {
               "application/json": {
                 "schema": {
@@ -384177,6 +384537,16 @@
           },
           "409": {
             "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
             "content": {
               "application/json": {
                 "schema": {
@@ -384778,6 +385148,16 @@
               }
             }
           },
+          "429": {
+            "description": "Rate limited. Retry-After header present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
           "500": {
             "description": "Internal error.",
             "content": {
@@ -384823,11 +385203,7 @@
             "in": "query",
             "required": false,
             "description": "Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.",
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 100
-            }
+            "schema": {}
           },
           {
             "name": "after",

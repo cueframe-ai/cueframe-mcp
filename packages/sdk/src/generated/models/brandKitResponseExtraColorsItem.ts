@@ -9,6 +9,9 @@
  */
 
 export type BrandKitResponseExtraColorsItem = {
-  name: string;
-  value: string;
+  /** @minLength 1 */
+  hex: string;
+  /** @minLength 1 */
+  label: string;
+  usage?: string;
 };

@@ -34,12 +34,8 @@ export const RecordReviewDecisionParams = zod.object({
  * The version stack of approval packets, newest first. Scope with ?composeJobId= to see one run's gate history (v1→vN with per-version status + decisions) or ?projectId= for everything reviewable in a project.
  * @summary List checkpoints (scope to a compose job or project)
  */
-export const listCheckpointsQueryLimitMax = 100;
-
-
-
 export const ListCheckpointsQueryParams = zod.object({
-  "limit": zod.int().min(1).max(listCheckpointsQueryLimitMax).optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
+  "limit": zod.unknown().optional().describe('Page size (1..100), default 20. Out-of-range or unparseable clamps into the range.'),
   "after": zod.string().optional().describe('Opaque cursor from the previous page\'s `pagination.nextCursor`. Forward-only.'),
   "composeJobId": zod.string().optional().describe('Scope to ONE compose run — its v1→vN gate history with per-version status and decisions.'),
   "projectId": zod.string().optional().describe('Scope to everything reviewable in one project.')

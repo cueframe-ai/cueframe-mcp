@@ -55,8 +55,11 @@ function withRepo(fn) {
   try { return fn(repo); } finally { repo.dispose(); }
 }
 
-test('this repository passes against its own history', () => {
-  const result = checkContractVersion(REPO_ROOT);
+test('this repository passes against its own history', async () => {
+  // A pending changeset plans the version this tree publishes as, exactly as the CLI check reads it.
+  const { plannedVersions } = await import('./release-plan.mjs');
+  const planned = (await plannedVersions(REPO_ROOT)).get('@cueframe/api-contract');
+  const result = checkContractVersion(REPO_ROOT, { ...(planned ? { planned } : {}) });
   // The check's own sentence is the useful output when a developer has an un-bumped api/ edit in progress.
   assert.deepEqual(result.problems, [], result.problems.join('\n'));
   assert.equal(result.ok, true);
