@@ -1,5 +1,11 @@
 # cueframe
 
+## 0.12.2
+
+### Patch Changes
+
+- ab47317: Sync the public OpenAPI projection with private main (ccd3894df): API boundary error shapes and validation details.
+
 ## 0.12.1
 
 ### Patch Changes

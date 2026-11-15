@@ -16,5 +16,5 @@
     "scene-schema.json": "2d06da9c75e0d5c515927f0a26c60f6bb64283f5b4350994a85e4d9fc5af6084",
     "scene-examples.json": "1725fbe9b88defdb0606d071bce188f7847b22b89613d670647d22f30e0c0a2c"
   },
-  "contractVersion": "7.0.2"
+  "contractVersion": "7.0.3"
 }
