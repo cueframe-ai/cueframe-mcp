@@ -51,7 +51,7 @@ export const UpdateBriefParams = zod.object({
 export const UpdateBriefBody = BriefPatchRequest
 
 /**
- * Remove a video brief the account no longer plans to compose, returning 204 on success. Call it to clear abandoned plans so the project's brief list stays focused on current work.
+ * Remove a video brief the account no longer plans to compose, returning 204 on success. Call it to clear abandoned plans so the project's brief list stays focused on current work. A brief already adopted to the shared library (409 already_adopted) or referenced by an ACTIVE compose job (409 conflict) is kept.
  * @summary Delete a brief
  */
 export const DeleteBriefParams = zod.object({

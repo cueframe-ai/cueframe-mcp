@@ -373322,7 +373322,7 @@
           "briefs"
         ],
         "summary": "Delete a brief",
-        "description": "Remove a video brief the account no longer plans to compose, returning 204 on success. Call it to clear abandoned plans so the project's brief list stays focused on current work.",
+        "description": "Remove a video brief the account no longer plans to compose, returning 204 on success. Call it to clear abandoned plans so the project's brief list stays focused on current work. A brief already adopted to the shared library (409 already_adopted) or referenced by an ACTIVE compose job (409 conflict) is kept.",
         "security": [
           {
             "bearerAuth": []
@@ -373395,6 +373395,16 @@
           },
           "404": {
             "description": "Resource not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
             "content": {
               "application/json": {
                 "schema": {
