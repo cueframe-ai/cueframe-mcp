@@ -1,7 +1,7 @@
 name: Main commit monitor
 # GitHub does not enforce required checks here, so every push to main is checked after the fact: the
-# commit must be the merge commit of a pull request whose checks passed on its head. An unverified
-# commit opens one revert issue in the company tracker (see scripts/main-commit-monitor.mjs). This repo
+# commits it adds must arrive through a pull request merged in that push whose checks passed on its
+# head. Each unverified commit opens one revert issue in the company tracker (see scripts/main-commit-monitor.mjs). This repo
 # has no aggregate verdict, so every check on the pull request head is required.
 on:
   push:
