@@ -1,5 +1,11 @@
 # cueframe
 
+## 0.12.3
+
+### Patch Changes
+
+- 22df810: Document the 409 conflict response on DELETE /v1/briefs/{id} (sync with private main).
+
 ## 0.12.2
 
 ### Patch Changes

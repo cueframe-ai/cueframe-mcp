@@ -1,5 +1,11 @@
 # @cueframe/sdk
 
+## 0.17.4
+
+### Patch Changes
+
+- 22df810: Document the 409 conflict response on DELETE /v1/briefs/{id} (sync with private main).
+
 ## 0.17.3
 
 ### Patch Changes
