@@ -158,7 +158,7 @@ export const getDeleteBriefUrl = (id: string,) => {
 }
 
 /**
- * Remove a video brief the account no longer plans to compose, returning 204 on success. Call it to clear abandoned plans so the project's brief list stays focused on current work.
+ * Remove a video brief the account no longer plans to compose, returning 204 on success. Call it to clear abandoned plans so the project's brief list stays focused on current work. A brief already adopted to the shared library (409 already_adopted) or referenced by an ACTIVE compose job (409 conflict) is kept.
  * @summary Delete a brief
  */
 export const deleteBrief = async (id: string, options?: Parameters<typeof request>[1]): Promise<void> => {
