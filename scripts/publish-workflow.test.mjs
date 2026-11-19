@@ -1,9 +1,12 @@
-// Static checks on .github/workflows/publish-npm.yml: npm trusted publishing (OIDC), no long-lived token.
+// Checks on install-only registry authentication and token-free npm trusted publishing (OIDC).
 // Requirements quoted from npm's "Trusted publishing for npm packages" page (docs.npmjs.com/trusted-publishers):
 // npm CLI 11.5.1 or later, Node 22.14.0 or later, cloud-hosted runners only.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, mkdtempSync, mkdirSync, writeFileSync, existsSync, rmSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { parse } from 'yaml';
 
 const text = readFileSync(new URL('../.github/workflows/publish-npm.yml', import.meta.url), 'utf8');
@@ -18,8 +21,62 @@ const atLeast = (version, minimum) => {
   return true;
 };
 
-test('no long-lived npm token is read anywhere in the workflow', () => {
-  assert.doesNotMatch(text, /NPM_TOKEN|NODE_AUTH_TOKEN/);
+test('the read token is confined to exactly three frozen-install steps', () => {
+  const allowed = new Map([[ci.jobs.node, 1], [versionPr, 1], [publish, 1]]);
+  assert.deepEqual(ci.on.workflow_call.secrets, { NPM_TOKEN: { required: true } });
+  for (const document of [workflow, ci]) {
+    assert.doesNotMatch(JSON.stringify(document.env ?? {}), /NPM_TOKEN|NODE_AUTH_TOKEN|NPM_CONFIG_USERCONFIG/);
+    for (const job of Object.values(document.jobs)) {
+      assert.doesNotMatch(JSON.stringify(job.env ?? {}), /NPM_TOKEN|NODE_AUTH_TOKEN|NPM_CONFIG_USERCONFIG/);
+      if (job === workflow.jobs.validate) assert.deepEqual(job.secrets, { NPM_TOKEN: '${{ secrets.NPM_TOKEN }}' });
+      else assert.doesNotMatch(JSON.stringify(job.secrets ?? {}), /NPM_TOKEN|NODE_AUTH_TOKEN/);
+      let count = 0;
+      for (const step of job.steps ?? []) {
+        if (String(step.uses).startsWith('actions/setup-node@')) assert.equal(step.with?.['registry-url'], undefined);
+        if (allowed.has(job) && step.name === 'pnpm install') {
+          count++;
+          assert.deepEqual(step.env, { NPM_TOKEN: '${{ secrets.NPM_TOKEN }}' });
+          assert.match(step.run, /umask 077/);
+          assert.match(step.run, /mktemp "\$RUNNER_TEMP\/cueframe-npmrc\.XXXXXX"/);
+          assert.match(step.run, /trap 'rm -f "\$install_npmrc"' EXIT/);
+          assert.ok(step.run.includes("'//registry.npmjs.org/:_authToken=${NPM_TOKEN}'"));
+          assert.match(step.run, /NPM_CONFIG_USERCONFIG="\$install_npmrc" pnpm install --frozen-lockfile/);
+          assert.doesNotMatch(step.run, /NODE_AUTH_TOKEN|GITHUB_ENV|npm config set|export NPM_CONFIG_USERCONFIG/);
+        } else assert.doesNotMatch(JSON.stringify(step), /NPM_TOKEN|NODE_AUTH_TOKEN|NPM_CONFIG_USERCONFIG|_authToken/);
+      }
+      assert.equal(count, allowed.get(job) ?? 0);
+    }
+  }
+});
+
+test('temporary install authentication is removed after a successful or failed child', () => {
+  const scripts = [ci.jobs.node, versionPr, publish].map(job => job.steps.find(step => step.name === 'pnpm install').run);
+  assert.ok(scripts.every(script => script === scripts[0]));
+  for (const exitCode of [0, 17]) {
+    const dir = mkdtempSync(join(tmpdir(), 'mcp-install-auth-'));
+    try {
+      const bin = join(dir, 'bin');
+      mkdirSync(bin);
+      writeFileSync(join(bin, 'pnpm'), `#!${process.execPath}
+const fs = require('node:fs');
+const path = require('node:path');
+const config = process.env.NPM_CONFIG_USERCONFIG;
+if (!config || fs.statSync(config).mode % 512 !== 384) process.exit(21);
+if (fs.readFileSync(config, 'utf8') !== '//registry.npmjs.org/:_authToken=\${NPM_TOKEN}\\n') process.exit(22);
+if (JSON.stringify(process.argv.slice(2)) !== '["install","--frozen-lockfile"]') process.exit(23);
+fs.writeFileSync(path.join(process.env.RUNNER_TEMP, 'used-config-path'), config);
+process.exit(Number(process.env.FAKE_INSTALL_EXIT));
+`, { mode: 0o755 });
+      let status = 0;
+      try {
+        execFileSync('bash', ['-c', scripts[0]], { env: { PATH: `${bin}:${process.env.PATH}`, RUNNER_TEMP: dir,
+          NPM_TOKEN: 'synthetic-read-token', FAKE_INSTALL_EXIT: String(exitCode) }, stdio: 'pipe' });
+      } catch (error) { status = error.status; }
+      assert.equal(status, exitCode);
+      const used = readFileSync(join(dir, 'used-config-path'), 'utf8');
+      assert.equal(existsSync(used), false, 'the auth config must not reach a later publish step');
+    } finally { rmSync(dir, { recursive: true, force: true }); }
+  }
 });
 
 test('the publish job can mint an OIDC token and stays on a GitHub-hosted runner', () => {
