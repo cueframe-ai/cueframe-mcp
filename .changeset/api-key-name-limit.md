@@ -1,7 +1,7 @@
 ---
-"@cueframe/api-contract": patch
-"@cueframe/sdk": patch
+"@cueframe/api-contract": major
+"@cueframe/sdk": minor
 "cueframe": patch
 ---
 
-Correct the API key creation contract to enforce the existing 32-character name limit.
+Breaking: API key creation names are limited to 32 characters in the public contract. The SDK's generated Zod validators now reject longer names locally, matching the existing server limit.
