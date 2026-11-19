@@ -1,0 +1,41 @@
+name: Main commit monitor
+# GitHub does not enforce required checks here, so every push to main is checked after the fact: the
+# commits it adds must arrive through a pull request merged in that push whose checks passed on its
+# head. Each unverified commit opens one revert issue in the company tracker (see scripts/main-commit-monitor.mjs). This repo
+# has no aggregate verdict, so every check on the pull request head is required.
+on:
+  push:
+    branches: [main]
+
+# Each scope serves a read the monitor makes: compare and commits (contents), commits/<sha>/pulls
+# (pull-requests), check runs (checks), commit statuses (statuses) and the workflow runs that tie a
+# check suite or status to its producing workflow (actions).
+permissions:
+  actions: read
+  checks: read
+  contents: read
+  pull-requests: read
+  statuses: read
+
+jobs:
+  main-commit-monitor:
+    # Forks syncing main have no webhook and nothing to revert.
+    if: github.repository_owner == 'cueframe-ai'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts/main-commit-monitor.mjs
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Check the pushed commit
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          REQUIRED_CHECKS: ''
+          MAIN_MONITOR_WEBHOOK: ${{ secrets.MAIN_MONITOR_WEBHOOK }}
+        run: node scripts/main-commit-monitor.mjs
