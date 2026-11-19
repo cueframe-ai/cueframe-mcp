@@ -9,6 +9,7 @@
  */
 import * as zod from 'zod';
 
+export const apiKeyCreateRequestNameMax = 32;
 
 
 export const apiKeyCreateRequestExpiresInExclusiveMin = 0;
@@ -17,7 +18,7 @@ export const apiKeyCreateRequestExpiresInMax = 9007199254740991;
 
 
 export const ApiKeyCreateRequest = zod.strictObject({
-  "name": zod.string().min(1),
+  "name": zod.string().min(1).max(apiKeyCreateRequestNameMax),
   "permissions": zod.record(zod.string(), zod.array(zod.enum(['read', 'write'])).min(1)).describe('Resource → actions grant. Resources: media, sessions, projects, renders, webhooks, billing. Actions: read, write. Least-privilege — grant only what\'s needed (billing:write is required to start a checkout).'),
   "expiresIn": zod.int().gt(apiKeyCreateRequestExpiresInExclusiveMin).max(apiKeyCreateRequestExpiresInMax).optional().describe('Lifetime in seconds; omit for no expiry.')
 });
