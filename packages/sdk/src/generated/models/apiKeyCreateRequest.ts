@@ -10,7 +10,10 @@
 import type { ApiKeyCreateRequestPermissionsItem } from './apiKeyCreateRequestPermissionsItem';
 
 export interface ApiKeyCreateRequest {
-  /** @minLength 1 */
+  /**
+     * @minLength 1
+     * @maxLength 32
+     */
   name: string;
   /** Resource → actions grant. Resources: media, sessions, projects, renders, webhooks, billing. Actions: read, write. Least-privilege — grant only what's needed (billing:write is required to start a checkout). */
   permissions: Partial<Record<'media' | 'sessions' | 'projects' | 'renders' | 'webhooks' | 'billing', ApiKeyCreateRequestPermissionsItem[]>>;
