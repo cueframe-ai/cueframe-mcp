@@ -35,7 +35,7 @@ export const CheckpointResponse = zod.strictObject({
   "revisionCycle": zod.int().min(checkpointResponseRevisionCycleMin).max(checkpointResponseRevisionCycleMax).describe('Revise cycles this gate has consumed. The brief quote states the included count (revisionCyclesIncluded); beyond it, resume(revise) is refused with a typed error.'),
   "decision": zod.unknown().optional().describe('The recorded decision {decision, comments?, globalNote?, decidedAt} once resolved.'),
   "reviewMode": zod.enum(['agent', 'hosted']).optional().describe('How this packet is decided (from the Brief\'s gates). \'hosted\' = the review PAGE captures the decision; absent/\'agent\' = the decision flows back through the driving agent.'),
-  "reviewUrl": zod.string().optional().describe('Hosted review-page URL (present when reviewMode is \'hosted\') — a human decides from this link, no account or agent session; the recorded decision rides the SAME resume rail, and the agent learns of it via checkpoint webhooks / wait_job.'),
+  "reviewUrl": zod.string().optional().describe('Hosted review-page URL (present when reviewMode is \'hosted\'). It carries no credential: a signed-in member of the org decides on that console page, never an agent credential. The decision rides the SAME resume rail; the agent learns of it via checkpoint webhooks / wait_job.'),
   "createdAt": zod.number(),
   "updatedAt": zod.number()
 });

@@ -12,60 +12,10 @@ import type {
   CheckpointResponse,
   CheckpointResumeRequest,
   CheckpointResumeResponse,
-  ListCheckpointsParams,
-  ReviewDecisionResponse,
-  ReviewPacketResponse
+  ListCheckpointsParams
 } from '../models';
 
 import { request } from '../../client';
-
-export const getGetReviewPacketUrl = (id: string,) => {
-
-
-
-
-  return `/v1/review/${id}`
-}
-
-/**
- * The checkpoint page's data: stage artifact (rendered from the packet's own snapshot), presigned stills, critic verdicts, the money triple, the recorded decision once resolved, and the run's v1→vN version stack. Authenticated by the packet's reviewToken (?token=) — the URL from the checkpoint.ready webhook / get_checkpoint. Expired or already-answered packets still render (with their decision), never an error page.
- * @summary Read a hosted review packet (token-authenticated page data)
- */
-export const getReviewPacket = async (id: string, options?: Parameters<typeof request>[1]): Promise<ReviewPacketResponse> => {
-
-  return request<ReviewPacketResponse>(getGetReviewPacketUrl(id),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-export const getRecordReviewDecisionUrl = (id: string,) => {
-
-
-
-
-  return `/v1/review/${id}/decision`
-}
-
-/**
- * Record approve / revise / abandon from the hosted page. Server-side this IS POST /v1/checkpoints/{id}/resume — one implementation; the driving agent learns of the decision via the checkpoint webhooks / wait_job. 409 when the packet is no longer awaiting (superseded, expired, or already decided).
- * @summary Record a hosted review decision (the same resume rail)
- */
-export const recordReviewDecision = async (id: string, options?: Parameters<typeof request>[1]): Promise<ReviewDecisionResponse> => {
-
-  return request<ReviewDecisionResponse>(getRecordReviewDecisionUrl(id),
-  {
-    ...options,
-    method: 'POST'
-
-
-  }
-);}
-
 
 export const getListCheckpointsUrl = (params?: ListCheckpointsParams,) => {
   const normalizedParams = new URLSearchParams();

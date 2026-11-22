@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const HTTP_METHODS = ["get", "put", "post", "delete", "patch", "options", "head", "trace"];
-const ALLOWED_EXTENSIONS = new Set(["x-payment-info", "x-permissions", "x-x402"]);
+const ALLOWED_EXTENSIONS = new Set(["x-payment-info", "x-permissions", "x-sse-events", "x-x402"]);
 const ALLOWED_SERVERS = new Set(["https://api.cueframe.ai"]);
 const FORBIDDEN_STRUCTURAL_KEYS = [
   /^(?:r2|s3)(?:key|keys)$/i,

@@ -15,22 +15,6 @@ import {
 
 
 /**
- * The checkpoint page's data: stage artifact (rendered from the packet's own snapshot), presigned stills, critic verdicts, the money triple, the recorded decision once resolved, and the run's v1→vN version stack. Authenticated by the packet's reviewToken (?token=) — the URL from the checkpoint.ready webhook / get_checkpoint. Expired or already-answered packets still render (with their decision), never an error page.
- * @summary Read a hosted review packet (token-authenticated page data)
- */
-export const GetReviewPacketParams = zod.object({
-  "id": zod.string()
-})
-
-/**
- * Record approve / revise / abandon from the hosted page. Server-side this IS POST /v1/checkpoints/{id}/resume — one implementation; the driving agent learns of the decision via the checkpoint webhooks / wait_job. 409 when the packet is no longer awaiting (superseded, expired, or already decided).
- * @summary Record a hosted review decision (the same resume rail)
- */
-export const RecordReviewDecisionParams = zod.object({
-  "id": zod.string()
-})
-
-/**
  * The version stack of approval packets, newest first. Scope with ?composeJobId= to see one run's gate history (v1→vN with per-version status + decisions) or ?projectId= for everything reviewable in a project.
  * @summary List checkpoints (scope to a compose job or project)
  */

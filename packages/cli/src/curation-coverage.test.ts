@@ -161,8 +161,6 @@ createUploadToken:
   listCritics: 'expert-only: critics via MCP list_critics / cueframe api',
   deleteCritic: 'expert-only: critics via MCP delete_critic / cueframe api',
   getUsage: 'expert-only: the usage ledger via MCP get_usage / cueframe api',
-  getReviewPacket: 'internal: the hosted review page reads this with its ?token, never an API key',
-  recordReviewDecision: 'internal: the hosted review page records decisions with its ?token, never an API key',
   getComponentSource: 'expert-only: primitive source via MCP get_component_source / cueframe api; the CLI edits component source in the local workspace',
   openComposeSession: 'mcp-only-session-op',
   closeComposeSession: 'mcp-only-session-op',

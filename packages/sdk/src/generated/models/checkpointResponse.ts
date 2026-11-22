@@ -43,7 +43,7 @@ export interface CheckpointResponse {
   decision?: unknown;
   /** How this packet is decided (from the Brief's gates). 'hosted' = the review PAGE captures the decision; absent/'agent' = the decision flows back through the driving agent. */
   reviewMode?: CheckpointResponseReviewMode;
-  /** Hosted review-page URL (present when reviewMode is 'hosted') — a human decides from this link, no account or agent session; the recorded decision rides the SAME resume rail, and the agent learns of it via checkpoint webhooks / wait_job. */
+  /** Hosted review-page URL (present when reviewMode is 'hosted'). It carries no credential: a signed-in member of the org decides on that console page, never an agent credential. The decision rides the SAME resume rail; the agent learns of it via checkpoint webhooks / wait_job. */
   reviewUrl?: string;
   createdAt: number;
   updatedAt: number;
