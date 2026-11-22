@@ -9,7 +9,7 @@
  */
 
 /**
- * Who captures the review decision. Default 'agent': you relay the packet and call resume. 'hosted': every checkpoint mints a review-page URL (checkpoint.ready payload + get_checkpoint's reviewUrl) where a human approves/revises from the browser — no account, no agent session; the recorded decision rides the SAME resume rail and you learn of it via checkpoint webhooks / wait_job.
+ * Who captures the review decision. Default 'agent': you relay the packet and call resume. 'hosted': a signed-in org member decides each checkpoint on the console review page (checkpoint.ready payload + get_checkpoint's reviewUrl, which carries no credential). Agent credentials cannot answer a hosted gate; the recorded decision rides the SAME resume rail and you learn of it via checkpoint webhooks / wait_job.
  */
 export type BriefGatesReviewMode = typeof BriefGatesReviewMode[keyof typeof BriefGatesReviewMode];
 

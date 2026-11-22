@@ -26,8 +26,6 @@ export { UpdateBriefParams as updateBriefParams } from "./briefs/briefs";
 export { UpdateBriefBody as updateBriefBody } from "./briefs/briefs";
 export { DeleteBriefParams as deleteBriefParams } from "./briefs/briefs";
 export * from "./checkpoints/checkpoints";
-export { GetReviewPacketParams as getReviewPacketParams } from "./checkpoints/checkpoints";
-export { RecordReviewDecisionParams as recordReviewDecisionParams } from "./checkpoints/checkpoints";
 export { ListCheckpointsQueryParams as listCheckpointsQueryParams } from "./checkpoints/checkpoints";
 export { GetCheckpointParams as getCheckpointParams } from "./checkpoints/checkpoints";
 export { ResumeCheckpointParams as resumeCheckpointParams } from "./checkpoints/checkpoints";

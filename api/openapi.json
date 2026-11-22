@@ -229377,7 +229377,7 @@
             "type": "boolean"
           },
           "reviewMode": {
-            "description": "Who captures the review decision. Default 'agent': you relay the packet and call resume. 'hosted': every checkpoint mints a review-page URL (checkpoint.ready payload + get_checkpoint's reviewUrl) where a human approves/revises from the browser — no account, no agent session; the recorded decision rides the SAME resume rail and you learn of it via checkpoint webhooks / wait_job.",
+            "description": "Who captures the review decision. Default 'agent': you relay the packet and call resume. 'hosted': a signed-in org member decides each checkpoint on the console review page (checkpoint.ready payload + get_checkpoint's reviewUrl, which carries no credential). Agent credentials cannot answer a hosted gate; the recorded decision rides the SAME resume rail and you learn of it via checkpoint webhooks / wait_job.",
             "type": "string",
             "enum": [
               "agent",
@@ -230151,7 +230151,7 @@
             ]
           },
           "reviewUrl": {
-            "description": "Hosted review-page URL (present when reviewMode is 'hosted') — a human decides from this link, no account or agent session; the recorded decision rides the SAME resume rail, and the agent learns of it via checkpoint webhooks / wait_job.",
+            "description": "Hosted review-page URL (present when reviewMode is 'hosted'). It carries no credential: a signed-in member of the org decides on that console page, never an agent credential. The decision rides the SAME resume rail; the agent learns of it via checkpoint webhooks / wait_job.",
             "type": "string"
           },
           "createdAt": {
@@ -230192,172 +230192,6 @@
           "pagination"
         ],
         "additionalProperties": false
-      },
-      "ReviewPacketResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "projectId": {
-            "type": "string"
-          },
-          "composeJobId": {
-            "type": "string"
-          },
-          "briefId": {
-            "type": "string"
-          },
-          "kind": {
-            "type": "string",
-            "enum": [
-              "gate",
-              "score"
-            ]
-          },
-          "stage": {
-            "$ref": "#/components/schemas/CheckpointStage"
-          },
-          "version": {
-            "type": "integer",
-            "minimum": -9007199254740991,
-            "maximum": 9007199254740991
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "awaiting",
-              "approved",
-              "revised",
-              "abandoned",
-              "expired",
-              "superseded"
-            ]
-          },
-          "artifact": {
-            "description": "The stage artifact under review: the locked ComposePlan at content; the composition wire shape at layout/motion; the judged composition snapshot on kind:'score'."
-          },
-          "stillUrls": {
-            "description": "Presigned storyboard/eval stills — the packet's visual evidence (may be GC'd by the retention sweep after the job goes terminal; the decision record is immortal).",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "criticVerdicts": {
-            "description": "Per-criterion scores + critique from the design loop / judge, incl. lock_violation entries."
-          },
-          "quote": {
-            "$ref": "#/components/schemas/CheckpointQuote"
-          },
-          "revisionCycle": {
-            "type": "integer",
-            "minimum": -9007199254740991,
-            "maximum": 9007199254740991,
-            "description": "Revise cycles this gate has consumed. The brief quote states the included count (revisionCyclesIncluded); beyond it, resume(revise) is refused with a typed error."
-          },
-          "decision": {
-            "description": "The recorded decision {decision, comments?, globalNote?, decidedAt} once resolved."
-          },
-          "reviewMode": {
-            "description": "How this packet is decided (from the Brief's gates). 'hosted' = the review PAGE captures the decision; absent/'agent' = the decision flows back through the driving agent.",
-            "type": "string",
-            "enum": [
-              "agent",
-              "hosted"
-            ]
-          },
-          "createdAt": {
-            "type": "number"
-          },
-          "updatedAt": {
-            "type": "number"
-          },
-          "versionStack": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "version": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-                },
-                "stage": {
-                  "type": "string",
-                  "enum": [
-                    "content",
-                    "layout",
-                    "motion"
-                  ]
-                },
-                "status": {
-                  "type": "string"
-                },
-                "decision": {
-                  "type": "string"
-                },
-                "createdAt": {
-                  "type": "number"
-                }
-              },
-              "required": [
-                "id",
-                "version",
-                "status",
-                "createdAt"
-              ],
-              "additionalProperties": false
-            },
-            "description": "The run's v1→vN gate history — per-version status + decision summaries."
-          }
-        },
-        "required": [
-          "id",
-          "projectId",
-          "kind",
-          "version",
-          "status",
-          "artifact",
-          "revisionCycle",
-          "createdAt",
-          "updatedAt",
-          "versionStack"
-        ],
-        "additionalProperties": false
-      },
-      "ReviewDecisionResponse": {
-        "type": "object",
-        "properties": {
-          "ok": {
-            "type": "boolean",
-            "const": true
-          },
-          "stage": {
-            "type": "string",
-            "enum": [
-              "content",
-              "layout",
-              "motion"
-            ]
-          },
-          "version": {
-            "type": "integer",
-            "minimum": -9007199254740991,
-            "maximum": 9007199254740991
-          },
-          "composeJobId": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "ok"
-        ],
-        "additionalProperties": false,
-        "description": "Decision recorded; the run resumes (the SAME rail as POST /checkpoints/{id}/resume)."
       },
       "WebhookListResponse": {
         "type": "object",
@@ -357854,162 +357688,6 @@
         }
       }
     },
-    "/v1/review/{id}": {
-      "get": {
-        "operationId": "getReviewPacket",
-        "tags": [
-          "checkpoints"
-        ],
-        "summary": "Read a hosted review packet (token-authenticated page data)",
-        "description": "The checkpoint page's data: stage artifact (rendered from the packet's own snapshot), presigned stills, critic verdicts, the money triple, the recorded decision once resolved, and the run's v1→vN version stack. Authenticated by the packet's reviewToken (?token=) — the URL from the checkpoint.ready webhook / get_checkpoint. Expired or already-answered packets still render (with their decision), never an error page.",
-        "security": [],
-        "responses": {
-          "200": {
-            "description": "The review packet + version stack.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReviewPacketResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Resource not found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. Retry-After header present.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ]
-      }
-    },
-    "/v1/review/{id}/decision": {
-      "post": {
-        "operationId": "recordReviewDecision",
-        "tags": [
-          "checkpoints"
-        ],
-        "summary": "Record a hosted review decision (the same resume rail)",
-        "description": "Record approve / revise / abandon from the hosted page. Server-side this IS POST /v1/checkpoints/{id}/resume — one implementation; the driving agent learns of the decision via the checkpoint webhooks / wait_job. 409 when the packet is no longer awaiting (superseded, expired, or already decided).",
-        "security": [],
-        "responses": {
-          "200": {
-            "description": "Decision recorded; the run resumes.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ReviewDecisionResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request — validation_error / invalid_cursor / invalid_query.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "402": {
-            "description": "Payment required — billing_required or x402 payment_*.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Resource not found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict — stale_etag / idempotency_conflict / suggestions_already_complete.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited. Retry-After header present.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal error.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorEnvelope"
-                }
-              }
-            }
-          }
-        },
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "path",
-            "name": "id",
-            "required": true
-          }
-        ]
-      }
-    },
     "/v1/skills": {
       "get": {
         "operationId": "listSkills",
@@ -367902,10 +367580,13 @@
         },
         "responses": {
           "200": {
-            "description": "Parsed SSE events with JSON data. The wire remains text/event-stream, for example `event: error\ndata: {\"message\":\"Render not found\"}\n\n`.",
+            "description": "Raw text/event-stream body. Each frame is one event described by x-sse-events, for example `event: error\ndata: {\"message\":\"Render not found\"}\n\n`.",
             "content": {
               "text/event-stream": {
                 "schema": {
+                  "type": "string"
+                },
+                "x-sse-events": {
                   "oneOf": [
                     {
                       "type": "object",

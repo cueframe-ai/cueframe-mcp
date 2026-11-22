@@ -13,8 +13,7 @@ import type {
   RenderCreateRequest,
   RenderListResponse,
   RenderRefreshUrlResponse,
-  RenderResponse,
-  StreamRender200
+  RenderResponse
 } from '../models';
 
 import { request } from '../../client';
@@ -248,9 +247,9 @@ export const getStreamRenderUrl = (id: string,
  * @summary Stream render status (SSE)
  */
 export const streamRender = async (id: string,
-    renderId: string, options?: Parameters<typeof request>[1]): Promise<StreamRender200> => {
+    renderId: string, options?: Parameters<typeof request>[1]): Promise<string> => {
 
-  return request<StreamRender200>(getStreamRenderUrl(id,renderId),
+  return request<string>(getStreamRenderUrl(id,renderId),
   {
     ...options,
     method: 'GET'

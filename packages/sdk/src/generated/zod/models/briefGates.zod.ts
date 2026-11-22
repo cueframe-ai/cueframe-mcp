@@ -16,7 +16,7 @@ export const briefGatesHoldAtMax = 3;
 export const BriefGates = zod.strictObject({
   "holdAt": zod.array(zod.enum(['content', 'layout', 'motion'])).max(briefGatesHoldAtMax).optional().describe('Checkpoint gates — the compose pauses at each named stage for review via resume. DEFAULT (gates absent): the compose holds at EVERY stage — your agent reviews and resumes each one; an unreviewed checkpoint times out loudly after 60min. Auto-progression is the opt-in (gates.autoApprove: true).'),
   "autoApprove": zod.boolean().optional().describe('true = fully autonomous (compose runs with NO gates — the headless opt-in; without it a brief holds at every stage by default). Mutually exclusive with a non-empty holdAt.'),
-  "reviewMode": zod.enum(['agent', 'hosted']).optional().describe('Who captures the review decision. Default \'agent\': you relay the packet and call resume. \'hosted\': every checkpoint mints a review-page URL (checkpoint.ready payload + get_checkpoint\'s reviewUrl) where a human approves/revises from the browser — no account, no agent session; the recorded decision rides the SAME resume rail and you learn of it via checkpoint webhooks / wait_job.')
+  "reviewMode": zod.enum(['agent', 'hosted']).optional().describe('Who captures the review decision. Default \'agent\': you relay the packet and call resume. \'hosted\': a signed-in org member decides each checkpoint on the console review page (checkpoint.ready payload + get_checkpoint\'s reviewUrl, which carries no credential). Agent credentials cannot answer a hosted gate; the recorded decision rides the SAME resume rail and you learn of it via checkpoint webhooks / wait_job.')
 });
 
 export type BriefGates = zod.input<typeof BriefGates>;

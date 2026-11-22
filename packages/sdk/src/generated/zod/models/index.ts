@@ -216,8 +216,6 @@ export * from './resourceImportResponse.zod';
 export * from './resourceSearchRequest.zod';
 export * from './resourceSearchResponse.zod';
 export * from './resourceSearchResult.zod';
-export * from './reviewDecisionResponse.zod';
-export * from './reviewPacketResponse.zod';
 export * from './sceneShotSpecV2.zod';
 export * from './sceneShotSpecV2Schema0.zod';
 export * from './sceneShotSpecV2Schema1.zod';
