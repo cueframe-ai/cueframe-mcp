@@ -1,10 +1,10 @@
 {
   "schemaVersion": 2,
   "kernelVersion": "0.7.15-ea20261029.21",
-  "privateCommit": "885f60b6e2f05d034f94d96fa9cdbfef1d6c9495",
+  "privateCommit": "3943f0e1e7dfd6f31e5e8b6a770d76722f6360b4",
   "privateSource": {
     "kind": "commit",
-    "baseCommit": "885f60b6e2f05d034f94d96fa9cdbfef1d6c9495",
+    "baseCommit": "3943f0e1e7dfd6f31e5e8b6a770d76722f6360b4",
     "lockfileSha256": "7ccb3a65a8d8ce7e574a1276bd535f69070448992cafaaecfbd6b0c70ecd7c94"
   },
   "kernelArtifact": {
