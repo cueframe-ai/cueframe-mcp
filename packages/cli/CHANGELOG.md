@@ -1,5 +1,11 @@
 # cueframe
 
+## 0.12.6
+
+### Patch Changes
+
+- 09d3c53: Bump the CLI's `commander` dependency to `^15.1.0`.
+
 ## 0.12.5
 
 ### Patch Changes
