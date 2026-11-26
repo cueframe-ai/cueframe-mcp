@@ -72,6 +72,9 @@ export const compositionReadCaptionsOneStyleEntranceStaggerMsMin = 0;
 
 export const compositionReadCaptionsOneStyleExitMsMin = 0;
 
+export const compositionReadCaptionsOneStyleLingerMsMin = 0;
+export const compositionReadCaptionsOneStyleLingerMsMax = 2000;
+
 export const compositionReadCaptionsOneStyleEmphasisPlateRadiusMin = 0;
 
 export const compositionReadCaptionsOneStyleAnnotationStrokeWidthMin = 0.5;
@@ -140,6 +143,9 @@ export const compositionReadCaptionsOneLayoutsItemStyleEntranceStaggerMsMin = 0;
 
 export const compositionReadCaptionsOneLayoutsItemStyleExitMsMin = 0;
 
+export const compositionReadCaptionsOneLayoutsItemStyleLingerMsMin = 0;
+export const compositionReadCaptionsOneLayoutsItemStyleLingerMsMax = 2000;
+
 export const compositionReadCaptionsOneLayoutsItemHoldThroughWordIndexMin = 0;
 export const compositionReadCaptionsOneLayoutsItemHoldThroughWordIndexMax = 9007199254740991;
 
@@ -191,6 +197,9 @@ export const compositionReadCaptionsTwoStyleEntranceMsMin = 0;
 export const compositionReadCaptionsTwoStyleEntranceStaggerMsMin = 0;
 
 export const compositionReadCaptionsTwoStyleExitMsMin = 0;
+
+export const compositionReadCaptionsTwoStyleLingerMsMin = 0;
+export const compositionReadCaptionsTwoStyleLingerMsMax = 2000;
 
 export const compositionReadCaptionsTwoStyleEmphasisPlateRadiusMin = 0;
 
@@ -260,6 +269,9 @@ export const compositionReadCaptionsTwoLayoutsItemStyleEntranceStaggerMsMin = 0;
 
 export const compositionReadCaptionsTwoLayoutsItemStyleExitMsMin = 0;
 
+export const compositionReadCaptionsTwoLayoutsItemStyleLingerMsMin = 0;
+export const compositionReadCaptionsTwoLayoutsItemStyleLingerMsMax = 2000;
+
 export const compositionReadCaptionsTwoLayoutsItemHoldThroughWordIndexMin = 0;
 export const compositionReadCaptionsTwoLayoutsItemHoldThroughWordIndexMax = 9007199254740991;
 
@@ -314,7 +326,7 @@ export const CompositionRead = zod.strictObject({
   "color": zod.string().min(1).optional(),
   "highlightColor": zod.string().min(1).optional(),
   "backgroundColor": zod.string().optional(),
-  "plate": zod.enum(['glass', 'solid', 'none']).optional(),
+  "plate": zod.enum(['glass', 'solid', 'none']).optional().describe('Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.'),
   "position": zod.enum(['top', 'center', 'bottom']).optional(),
   "region": zod.strictObject({
   "x": zod.number().min(compositionReadCaptionsOneStyleRegionXMin).max(compositionReadCaptionsOneStyleRegionXMax),
@@ -338,6 +350,7 @@ export const CompositionRead = zod.strictObject({
   "entranceMs": zod.number().min(compositionReadCaptionsOneStyleEntranceMsMin).optional(),
   "entranceStaggerMs": zod.number().min(compositionReadCaptionsOneStyleEntranceStaggerMsMin).optional(),
   "exitMs": zod.number().min(compositionReadCaptionsOneStyleExitMsMin).optional(),
+  "lingerMs": zod.number().min(compositionReadCaptionsOneStyleLingerMsMin).max(compositionReadCaptionsOneStyleLingerMsMax).optional().describe('How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.'),
   "emphasisPlate": zod.boolean().optional(),
   "emphasisPlateColor": zod.string().optional(),
   "emphasisPlateTextColor": zod.string().optional(),
@@ -371,7 +384,7 @@ export const CompositionRead = zod.strictObject({
   "color": zod.string().min(1).optional(),
   "highlightColor": zod.string().min(1).optional(),
   "backgroundColor": zod.string().optional(),
-  "plate": zod.enum(['glass', 'solid', 'none']).optional(),
+  "plate": zod.enum(['glass', 'solid', 'none']).optional().describe('Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.'),
   "textTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
   "letterSpacing": zod.number().min(compositionReadCaptionsOneLayoutsItemStyleLetterSpacingMin).max(compositionReadCaptionsOneLayoutsItemStyleLetterSpacingMax).optional().describe('Base caption glyph spacing in pixels.'),
   "wordGapEm": zod.number().min(compositionReadCaptionsOneLayoutsItemStyleWordGapEmMin).max(compositionReadCaptionsOneLayoutsItemStyleWordGapEmMax).optional().describe('Gap between caption runs as a multiple of base font size; default 0.35.'),
@@ -398,7 +411,8 @@ export const CompositionRead = zod.strictObject({
   "entrance": zod.enum(['none', 'fade', 'word-pop', 'stagger-up']).optional(),
   "entranceMs": zod.number().min(compositionReadCaptionsOneLayoutsItemStyleEntranceMsMin).optional(),
   "entranceStaggerMs": zod.number().min(compositionReadCaptionsOneLayoutsItemStyleEntranceStaggerMsMin).optional(),
-  "exitMs": zod.number().min(compositionReadCaptionsOneLayoutsItemStyleExitMsMin).optional()
+  "exitMs": zod.number().min(compositionReadCaptionsOneLayoutsItemStyleExitMsMin).optional(),
+  "lingerMs": zod.number().min(compositionReadCaptionsOneLayoutsItemStyleLingerMsMin).max(compositionReadCaptionsOneLayoutsItemStyleLingerMsMax).optional().describe('How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.')
 }).optional(),
   "holdThroughWordIndex": zod.int().min(compositionReadCaptionsOneLayoutsItemHoldThroughWordIndexMin).max(compositionReadCaptionsOneLayoutsItemHoldThroughWordIndexMax).optional().describe('Inclusive saved-word index in this segment. The layout stays visible until that word ends.'),
   "wordMarks": zod.array(zod.strictObject({
@@ -427,7 +441,7 @@ export const CompositionRead = zod.strictObject({
   "color": zod.string().min(1).optional(),
   "highlightColor": zod.string().min(1).optional(),
   "backgroundColor": zod.string().optional(),
-  "plate": zod.enum(['glass', 'solid', 'none']).optional(),
+  "plate": zod.enum(['glass', 'solid', 'none']).optional().describe('Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.'),
   "position": zod.enum(['top', 'center', 'bottom']).optional(),
   "region": zod.strictObject({
   "x": zod.number().min(compositionReadCaptionsTwoStyleRegionXMin).max(compositionReadCaptionsTwoStyleRegionXMax),
@@ -451,6 +465,7 @@ export const CompositionRead = zod.strictObject({
   "entranceMs": zod.number().min(compositionReadCaptionsTwoStyleEntranceMsMin).optional(),
   "entranceStaggerMs": zod.number().min(compositionReadCaptionsTwoStyleEntranceStaggerMsMin).optional(),
   "exitMs": zod.number().min(compositionReadCaptionsTwoStyleExitMsMin).optional(),
+  "lingerMs": zod.number().min(compositionReadCaptionsTwoStyleLingerMsMin).max(compositionReadCaptionsTwoStyleLingerMsMax).optional().describe('How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.'),
   "emphasisPlate": zod.boolean().optional(),
   "emphasisPlateColor": zod.string().optional(),
   "emphasisPlateTextColor": zod.string().optional(),
@@ -484,7 +499,7 @@ export const CompositionRead = zod.strictObject({
   "color": zod.string().min(1).optional(),
   "highlightColor": zod.string().min(1).optional(),
   "backgroundColor": zod.string().optional(),
-  "plate": zod.enum(['glass', 'solid', 'none']).optional(),
+  "plate": zod.enum(['glass', 'solid', 'none']).optional().describe('Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.'),
   "textTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
   "letterSpacing": zod.number().min(compositionReadCaptionsTwoLayoutsItemStyleLetterSpacingMin).max(compositionReadCaptionsTwoLayoutsItemStyleLetterSpacingMax).optional().describe('Base caption glyph spacing in pixels.'),
   "wordGapEm": zod.number().min(compositionReadCaptionsTwoLayoutsItemStyleWordGapEmMin).max(compositionReadCaptionsTwoLayoutsItemStyleWordGapEmMax).optional().describe('Gap between caption runs as a multiple of base font size; default 0.35.'),
@@ -511,7 +526,8 @@ export const CompositionRead = zod.strictObject({
   "entrance": zod.enum(['none', 'fade', 'word-pop', 'stagger-up']).optional(),
   "entranceMs": zod.number().min(compositionReadCaptionsTwoLayoutsItemStyleEntranceMsMin).optional(),
   "entranceStaggerMs": zod.number().min(compositionReadCaptionsTwoLayoutsItemStyleEntranceStaggerMsMin).optional(),
-  "exitMs": zod.number().min(compositionReadCaptionsTwoLayoutsItemStyleExitMsMin).optional()
+  "exitMs": zod.number().min(compositionReadCaptionsTwoLayoutsItemStyleExitMsMin).optional(),
+  "lingerMs": zod.number().min(compositionReadCaptionsTwoLayoutsItemStyleLingerMsMin).max(compositionReadCaptionsTwoLayoutsItemStyleLingerMsMax).optional().describe('How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.')
 }).optional(),
   "holdThroughWordIndex": zod.int().min(compositionReadCaptionsTwoLayoutsItemHoldThroughWordIndexMin).max(compositionReadCaptionsTwoLayoutsItemHoldThroughWordIndexMax).optional().describe('Inclusive saved-word index in this segment. The layout stays visible until that word ends.'),
   "wordMarks": zod.array(zod.strictObject({

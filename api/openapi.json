@@ -637,6 +637,7 @@
                         "type": "string"
                       },
                       "plate": {
+                        "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
                         "type": "string",
                         "enum": [
                           "glass",
@@ -766,6 +767,12 @@
                       "exitMs": {
                         "type": "number",
                         "minimum": 0
+                      },
+                      "lingerMs": {
+                        "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 2000
                       },
                       "emphasisPlate": {
                         "type": "boolean"
@@ -912,6 +919,7 @@
                               "type": "string"
                             },
                             "plate": {
+                              "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
                               "type": "string",
                               "enum": [
                                 "glass",
@@ -1044,6 +1052,12 @@
                             "exitMs": {
                               "type": "number",
                               "minimum": 0
+                            },
+                            "lingerMs": {
+                              "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 2000
                             }
                           },
                           "additionalProperties": false
@@ -1202,6 +1216,7 @@
                         "type": "string"
                       },
                       "plate": {
+                        "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
                         "type": "string",
                         "enum": [
                           "glass",
@@ -1331,6 +1346,12 @@
                       "exitMs": {
                         "type": "number",
                         "minimum": 0
+                      },
+                      "lingerMs": {
+                        "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 2000
                       },
                       "emphasisPlate": {
                         "type": "boolean"
@@ -1477,6 +1498,7 @@
                               "type": "string"
                             },
                             "plate": {
+                              "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
                               "type": "string",
                               "enum": [
                                 "glass",
@@ -1609,6 +1631,12 @@
                             "exitMs": {
                               "type": "number",
                               "minimum": 0
+                            },
+                            "lingerMs": {
+                              "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 2000
                             }
                           },
                           "additionalProperties": false
@@ -209506,212 +209534,436 @@
                 "type": "object",
                 "properties": {
                   "fontFamily": {
-                    "type": "string",
-                    "minLength": 1
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "fontSize": {
                     "description": "Font size as % of composition height (1-15, default 5). NOT px.",
-                    "type": "number",
-                    "minimum": 1,
-                    "maximum": 15
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 1,
+                        "maximum": 15
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "fontWeight": {
-                    "type": "integer",
-                    "minimum": 100,
-                    "maximum": 900
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 100,
+                        "maximum": 900
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "color": {
-                    "type": "string",
-                    "minLength": 1
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "highlightColor": {
-                    "type": "string",
-                    "minLength": 1
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "backgroundColor": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "plate": {
-                    "type": "string",
-                    "enum": [
-                      "glass",
-                      "solid",
-                      "none"
+                    "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "glass",
+                          "solid",
+                          "none"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
                     ]
                   },
                   "position": {
-                    "type": "string",
-                    "enum": [
-                      "top",
-                      "center",
-                      "bottom"
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "top",
+                          "center",
+                          "bottom"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
                     ]
                   },
                   "region": {
                     "description": "Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height.",
-                    "type": "object",
-                    "properties": {
-                      "x": {
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 1
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          },
+                          "y": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 1
+                          },
+                          "w": {
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 1
+                          },
+                          "h": {
+                            "type": "number",
+                            "exclusiveMinimum": 0,
+                            "maximum": 1
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y",
+                          "w",
+                          "h"
+                        ]
                       },
-                      "y": {
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 1
-                      },
-                      "w": {
-                        "type": "number",
-                        "exclusiveMinimum": 0,
-                        "maximum": 1
-                      },
-                      "h": {
-                        "type": "number",
-                        "exclusiveMinimum": 0,
-                        "maximum": 1
+                      {
+                        "type": "null"
                       }
-                    },
-                    "required": [
-                      "x",
-                      "y",
-                      "w",
-                      "h"
                     ]
                   },
                   "textTransform": {
-                    "type": "string",
-                    "enum": [
-                      "none",
-                      "uppercase",
-                      "capitalize"
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "none",
+                          "uppercase",
+                          "capitalize"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
                     ]
                   },
                   "letterSpacing": {
                     "description": "Base caption glyph spacing in pixels.",
-                    "type": "number",
-                    "minimum": -5,
-                    "maximum": 20
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": -5,
+                        "maximum": 20
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "wordGapEm": {
                     "description": "Gap between caption runs as a multiple of base font size; default 0.35.",
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 2
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 2
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "lineGapEm": {
                     "description": "Gap between caption lines as a multiple of base font size; default 0.25.",
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 2
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 2
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "emphasisColor": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "emphasisGradient": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "emphasisScale": {
-                    "type": "number",
-                    "exclusiveMinimum": 0
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "exclusiveMinimum": 0
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "emphasisFontFamily": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "emphasisFontWeight": {
-                    "type": "integer",
-                    "minimum": 100,
-                    "maximum": 900
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "minimum": 100,
+                        "maximum": 900
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "emphasisTextTransform": {
-                    "type": "string",
-                    "enum": [
-                      "none",
-                      "uppercase",
-                      "capitalize"
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "none",
+                          "uppercase",
+                          "capitalize"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
                     ]
                   },
                   "emphasisLetterSpacing": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                   },
                   "emphasisFontStyle": {
-                    "type": "string",
-                    "enum": [
-                      "normal",
-                      "italic"
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "normal",
+                          "italic"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
                     ]
                   },
                   "entrance": {
-                    "type": "string",
-                    "enum": [
-                      "none",
-                      "fade",
-                      "word-pop",
-                      "stagger-up"
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "none",
+                          "fade",
+                          "word-pop",
+                          "stagger-up"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
                     ]
                   },
                   "entranceMs": {
-                    "type": "number",
-                    "minimum": 0
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "entranceStaggerMs": {
-                    "type": "number",
-                    "minimum": 0
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "exitMs": {
-                    "type": "number",
-                    "minimum": 0
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "lingerMs": {
+                    "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 2000
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "emphasisPlate": {
-                    "type": "boolean"
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
                   },
                   "emphasisPlateColor": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "emphasisPlateTextColor": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "emphasisPlateAltColor": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "emphasisPlateAltTextColor": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "emphasisPlateRadius": {
-                    "type": "number",
-                    "minimum": 0
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "emphasisPlatePadX": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                   },
                   "emphasisPlatePadY": {
-                    "type": "number"
+                    "type": [
+                      "number",
+                      "null"
+                    ]
                   },
                   "emphasisPlateReveal": {
                     "description": "Grow a shared emphasis plate as saved words appear while reserving its final layout width.",
-                    "type": "boolean"
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
                   },
                   "annotationColor": {
-                    "type": "string"
+                    "type": [
+                      "string",
+                      "null"
+                    ]
                   },
                   "annotationStrokeWidth": {
                     "description": "Annotation stroke width in its 100×100 SVG coordinate system; default 4.",
-                    "type": "number",
-                    "minimum": 0.5,
-                    "maximum": 12
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "minimum": 0.5,
+                        "maximum": 12
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   },
                   "annotationTexture": {
                     "description": "Native annotation stroke finish; default clean.",
-                    "type": "string",
-                    "enum": [
-                      "clean",
-                      "pencil"
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "clean",
+                          "pencil"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
                     ]
                   },
                   "maxWidthPercent": {
-                    "type": "number",
-                    "exclusiveMinimum": 0,
-                    "maximum": 100
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "exclusiveMinimum": 0,
+                        "maximum": 100
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
                   }
                 }
               }
@@ -209721,7 +209973,7 @@
               "style"
             ],
             "additionalProperties": false,
-            "description": "Merge style overrides (font/color/position/emphasis) onto the composition's caption layer. Partial — omitted fields keep their current value; creates the caption container if absent."
+            "description": "Merge style overrides (font/color/position/emphasis/plate/lingerMs) onto the composition's caption layer. Partial: omitted fields keep their current value, a null field is removed so its default applies again; creates the caption container if absent."
           },
           {
             "type": "object",
@@ -209830,6 +210082,7 @@
                     "type": "string"
                   },
                   "plate": {
+                    "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
                     "type": "string",
                     "enum": [
                       "glass",
@@ -209959,6 +210212,12 @@
                   "exitMs": {
                     "type": "number",
                     "minimum": 0
+                  },
+                  "lingerMs": {
+                    "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 2000
                   },
                   "emphasisPlate": {
                     "type": "boolean"
@@ -210120,6 +210379,7 @@
                           "type": "string"
                         },
                         "plate": {
+                          "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
                           "type": "string",
                           "enum": [
                             "glass",
@@ -210252,6 +210512,12 @@
                         "exitMs": {
                           "type": "number",
                           "minimum": 0
+                        },
+                        "lingerMs": {
+                          "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 2000
                         }
                       },
                       "additionalProperties": false
@@ -213443,6 +213709,7 @@
                         "type": "string"
                       },
                       "plate": {
+                        "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
                         "type": "string",
                         "enum": [
                           "glass",
@@ -213572,6 +213839,12 @@
                       "exitMs": {
                         "type": "number",
                         "minimum": 0
+                      },
+                      "lingerMs": {
+                        "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 2000
                       },
                       "emphasisPlate": {
                         "type": "boolean"
@@ -213718,6 +213991,7 @@
                               "type": "string"
                             },
                             "plate": {
+                              "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
                               "type": "string",
                               "enum": [
                                 "glass",
@@ -213850,6 +214124,12 @@
                             "exitMs": {
                               "type": "number",
                               "minimum": 0
+                            },
+                            "lingerMs": {
+                              "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 2000
                             }
                           },
                           "additionalProperties": false
@@ -214008,6 +214288,7 @@
                         "type": "string"
                       },
                       "plate": {
+                        "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
                         "type": "string",
                         "enum": [
                           "glass",
@@ -214137,6 +214418,12 @@
                       "exitMs": {
                         "type": "number",
                         "minimum": 0
+                      },
+                      "lingerMs": {
+                        "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 2000
                       },
                       "emphasisPlate": {
                         "type": "boolean"
@@ -214283,6 +214570,7 @@
                               "type": "string"
                             },
                             "plate": {
+                              "description": "Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.",
                               "type": "string",
                               "enum": [
                                 "glass",
@@ -214415,6 +214703,12 @@
                             "exitMs": {
                               "type": "number",
                               "minimum": 0
+                            },
+                            "lingerMs": {
+                              "description": "How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.",
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 2000
                             }
                           },
                           "additionalProperties": false

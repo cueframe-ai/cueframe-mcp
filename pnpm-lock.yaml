@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@cueframe/kernel': file:artifacts/cueframe-kernel-0.7.15-ea20261029.21.tgz
+  '@cueframe/kernel': file:artifacts/cueframe-kernel-0.10.0.tgz
   '@better-auth/sso': 1.6.22
   add-mcp>js-yaml: 4.3.2
   better-call: 1.3.7
@@ -43,8 +43,8 @@ importers:
   packages/api-contract:
     devDependencies:
       '@cueframe/kernel':
-        specifier: file:../../artifacts/cueframe-kernel-0.7.15-ea20261029.21.tgz
-        version: file:artifacts/cueframe-kernel-0.7.15-ea20261029.21.tgz
+        specifier: file:../../artifacts/cueframe-kernel-0.10.0.tgz
+        version: file:artifacts/cueframe-kernel-0.10.0.tgz
 
   packages/cli:
     dependencies:
@@ -267,9 +267,9 @@ packages:
     peerDependencies:
       commander: ~15.0.0
 
-  '@cueframe/kernel@file:artifacts/cueframe-kernel-0.7.15-ea20261029.21.tgz':
-    resolution: {integrity: sha512-bDled1csddaSlO+k22YcEglUyOUpm3qFOi+YqgFwOye/RZDs+Y8GY/qN3fkvDoLeFfajmsNssY27OUSAqnAqbA==, tarball: file:artifacts/cueframe-kernel-0.7.15-ea20261029.21.tgz}
-    version: 0.7.15-ea20261029.21
+  '@cueframe/kernel@file:artifacts/cueframe-kernel-0.10.0.tgz':
+    resolution: {integrity: sha512-pHWIImmNdTeL8BNEvYURJFbzzzOV9AIFm7MCjdfRORRb2IewRpSkFzwRdYMOZw+QtwYt2pHCdaeHCajUQZAGGg==, tarball: file:artifacts/cueframe-kernel-0.10.0.tgz}
+    version: 0.10.0
     peerDependencies:
       '@ai-sdk/anthropic': ^4.0.39
       '@ai-sdk/openai': ^4.0.42
@@ -2566,7 +2566,7 @@ snapshots:
     dependencies:
       commander: 15.0.0
 
-  '@cueframe/kernel@file:artifacts/cueframe-kernel-0.7.15-ea20261029.21.tgz':
+  '@cueframe/kernel@file:artifacts/cueframe-kernel-0.10.0.tgz':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       '@noble/hashes': 1.8.0
