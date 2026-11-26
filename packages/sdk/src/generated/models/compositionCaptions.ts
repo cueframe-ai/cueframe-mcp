@@ -50,6 +50,7 @@ export type CompositionCaptions = {
   /** @minLength 1 */
   highlightColor?: string;
   backgroundColor?: string;
+  /** Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing. */
   plate?: 'glass' | 'solid' | 'none';
   position?: 'top' | 'center' | 'bottom';
   /** Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height. */
@@ -114,6 +115,12 @@ export type CompositionCaptions = {
   entranceStaggerMs?: number;
   /** @minimum 0 */
   exitMs?: number;
+  /**
+     * How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.
+     * @minimum 0
+     * @maximum 2000
+     */
+  lingerMs?: number;
   emphasisPlate?: boolean;
   emphasisPlateColor?: string;
   emphasisPlateTextColor?: string;
@@ -208,6 +215,7 @@ export type CompositionCaptions = {
   /** @minLength 1 */
   highlightColor?: string;
   backgroundColor?: string;
+  /** Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing. */
   plate?: 'glass' | 'solid' | 'none';
   textTransform?: 'none' | 'uppercase' | 'capitalize';
   /**
@@ -267,6 +275,12 @@ export type CompositionCaptions = {
   entranceStaggerMs?: number;
   /** @minimum 0 */
   exitMs?: number;
+  /**
+     * How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.
+     * @minimum 0
+     * @maximum 2000
+     */
+  lingerMs?: number;
 };
   /**
      * Inclusive saved-word index in this segment. The layout stays visible until that word ends.
@@ -326,6 +340,7 @@ export type CompositionCaptions = {
   /** @minLength 1 */
   highlightColor?: string;
   backgroundColor?: string;
+  /** Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing. */
   plate?: 'glass' | 'solid' | 'none';
   position?: 'top' | 'center' | 'bottom';
   /** Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height. */
@@ -390,6 +405,12 @@ export type CompositionCaptions = {
   entranceStaggerMs?: number;
   /** @minimum 0 */
   exitMs?: number;
+  /**
+     * How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.
+     * @minimum 0
+     * @maximum 2000
+     */
+  lingerMs?: number;
   emphasisPlate?: boolean;
   emphasisPlateColor?: string;
   emphasisPlateTextColor?: string;
@@ -484,6 +505,7 @@ export type CompositionCaptions = {
   /** @minLength 1 */
   highlightColor?: string;
   backgroundColor?: string;
+  /** Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing. */
   plate?: 'glass' | 'solid' | 'none';
   textTransform?: 'none' | 'uppercase' | 'capitalize';
   /**
@@ -543,6 +565,12 @@ export type CompositionCaptions = {
   entranceStaggerMs?: number;
   /** @minimum 0 */
   exitMs?: number;
+  /**
+     * How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.
+     * @minimum 0
+     * @maximum 2000
+     */
+  lingerMs?: number;
 };
   /**
      * Inclusive saved-word index in this segment. The layout stays visible until that word ends.

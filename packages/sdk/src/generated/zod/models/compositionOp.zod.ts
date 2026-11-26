@@ -308,52 +308,55 @@ export const compositionOpOnethreeColorOneGrainSeedMin = 0;
 export const compositionOpOnethreeColorOneGrainSeedMax = 4294967295;
 
 
-export const compositionOpOnefourStyleFontSizeMax = 15;
+export const compositionOpOnefourStyleFontSizeOneMax = 15;
 
-export const compositionOpOnefourStyleFontWeightMin = 100;
-export const compositionOpOnefourStyleFontWeightMax = 900;
+export const compositionOpOnefourStyleFontWeightOneMin = 100;
+export const compositionOpOnefourStyleFontWeightOneMax = 900;
 
 
 
-export const compositionOpOnefourStyleRegionXMin = 0;
-export const compositionOpOnefourStyleRegionXMax = 1;
+export const compositionOpOnefourStyleRegionOneXMin = 0;
+export const compositionOpOnefourStyleRegionOneXMax = 1;
 
-export const compositionOpOnefourStyleRegionYMin = 0;
-export const compositionOpOnefourStyleRegionYMax = 1;
+export const compositionOpOnefourStyleRegionOneYMin = 0;
+export const compositionOpOnefourStyleRegionOneYMax = 1;
 
-export const compositionOpOnefourStyleRegionWExclusiveMin = 0;
-export const compositionOpOnefourStyleRegionWMax = 1;
+export const compositionOpOnefourStyleRegionOneWExclusiveMin = 0;
+export const compositionOpOnefourStyleRegionOneWMax = 1;
 
-export const compositionOpOnefourStyleRegionHExclusiveMin = 0;
-export const compositionOpOnefourStyleRegionHMax = 1;
+export const compositionOpOnefourStyleRegionOneHExclusiveMin = 0;
+export const compositionOpOnefourStyleRegionOneHMax = 1;
 
-export const compositionOpOnefourStyleLetterSpacingMin = -5;
-export const compositionOpOnefourStyleLetterSpacingMax = 20;
+export const compositionOpOnefourStyleLetterSpacingOneMin = -5;
+export const compositionOpOnefourStyleLetterSpacingOneMax = 20;
 
-export const compositionOpOnefourStyleWordGapEmMin = 0;
-export const compositionOpOnefourStyleWordGapEmMax = 2;
+export const compositionOpOnefourStyleWordGapEmOneMin = 0;
+export const compositionOpOnefourStyleWordGapEmOneMax = 2;
 
-export const compositionOpOnefourStyleLineGapEmMin = 0;
-export const compositionOpOnefourStyleLineGapEmMax = 2;
+export const compositionOpOnefourStyleLineGapEmOneMin = 0;
+export const compositionOpOnefourStyleLineGapEmOneMax = 2;
 
-export const compositionOpOnefourStyleEmphasisScaleExclusiveMin = 0;
+export const compositionOpOnefourStyleEmphasisScaleOneExclusiveMin = 0;
 
-export const compositionOpOnefourStyleEmphasisFontWeightMin = 100;
-export const compositionOpOnefourStyleEmphasisFontWeightMax = 900;
+export const compositionOpOnefourStyleEmphasisFontWeightOneMin = 100;
+export const compositionOpOnefourStyleEmphasisFontWeightOneMax = 900;
 
-export const compositionOpOnefourStyleEntranceMsMin = 0;
+export const compositionOpOnefourStyleEntranceMsOneMin = 0;
 
-export const compositionOpOnefourStyleEntranceStaggerMsMin = 0;
+export const compositionOpOnefourStyleEntranceStaggerMsOneMin = 0;
 
-export const compositionOpOnefourStyleExitMsMin = 0;
+export const compositionOpOnefourStyleExitMsOneMin = 0;
 
-export const compositionOpOnefourStyleEmphasisPlateRadiusMin = 0;
+export const compositionOpOnefourStyleLingerMsOneMin = 0;
+export const compositionOpOnefourStyleLingerMsOneMax = 2000;
 
-export const compositionOpOnefourStyleAnnotationStrokeWidthMin = 0.5;
-export const compositionOpOnefourStyleAnnotationStrokeWidthMax = 12;
+export const compositionOpOnefourStyleEmphasisPlateRadiusOneMin = 0;
 
-export const compositionOpOnefourStyleMaxWidthPercentExclusiveMin = 0;
-export const compositionOpOnefourStyleMaxWidthPercentMax = 100;
+export const compositionOpOnefourStyleAnnotationStrokeWidthOneMin = 0.5;
+export const compositionOpOnefourStyleAnnotationStrokeWidthOneMax = 12;
+
+export const compositionOpOnefourStyleMaxWidthPercentOneExclusiveMin = 0;
+export const compositionOpOnefourStyleMaxWidthPercentOneMax = 100;
 
 
 export const compositionOpOnesixSegmentsItemWordsItemStartMsMin = 0;
@@ -399,6 +402,9 @@ export const compositionOpOnesixStyleEntranceMsMin = 0;
 export const compositionOpOnesixStyleEntranceStaggerMsMin = 0;
 
 export const compositionOpOnesixStyleExitMsMin = 0;
+
+export const compositionOpOnesixStyleLingerMsMin = 0;
+export const compositionOpOnesixStyleLingerMsMax = 2000;
 
 export const compositionOpOnesixStyleEmphasisPlateRadiusMin = 0;
 
@@ -467,6 +473,9 @@ export const compositionOpOnesevenLayoutsItemStyleEntranceMsMin = 0;
 export const compositionOpOnesevenLayoutsItemStyleEntranceStaggerMsMin = 0;
 
 export const compositionOpOnesevenLayoutsItemStyleExitMsMin = 0;
+
+export const compositionOpOnesevenLayoutsItemStyleLingerMsMin = 0;
+export const compositionOpOnesevenLayoutsItemStyleLingerMsMax = 2000;
 
 export const compositionOpOnesevenLayoutsItemHoldThroughWordIndexMin = 0;
 export const compositionOpOnesevenLayoutsItemHoldThroughWordIndexMax = 9007199254740991;
@@ -930,51 +939,52 @@ zod.number().min(compositionOpOnethreeColorOneHalationTint2ItemMin).max(composit
 }).describe('Set (or CLEAR, with `color: null`) a video media clip\'s color correction, WHOLESALE: `{version: 1, enabled, grade, looks, display?, creative?}`. `grade` holds every primary control: `exposure` in stops (-4..4) and `contrast`, `highlights`, `shadows`, `whites`, `blacks`, `temperature`, `tint`, `vibrance`, `saturation` each -1..1 (0 = neutral). `looks` (at most 2), `display` and `creative` name uploaded .cube LUTs as `{mediaId, sha256, enabled}`; `creative` adds `strength` 0..1. `display` may instead name a bundled film look as `{bundled, enabled}`, `bundled` one of daylight-negative, tungsten-negative, soft-negative, slide, black-and-white. `halation?: {enabled, amount 0..0.5, radius (picture heights) 0.0005..0.02, threshold 0..16, tint [r,g,b] 0..1}`; `grain?: {enabled, profile (a film look id), gauge super8|super16|super35|65mm, amount 0..2, size 0.5..4, seed uint32}`. Film presets are whole values, applied by replacing `display`, `halation` and `grain` with exactly what the preset names (absent = removed), writing only the grade keys it names, `display` as `{bundled, enabled: true}`, `halation`/`grain` with `enabled: true`, and grain `seed` kept or any uint32. Presets: {"id":"daylight-negative","name":"Daylight Negative","display":"daylight-negative","halation":{"amount":0.015,"radius":0.0026795284030010718,"threshold":0,"tint":[1,0.33333333333333337,0]},"grain":{"profile":"daylight-negative","gauge":"super35","amount":1,"size":1}}; {"id":"tungsten-negative","name":"Tungsten Negative","display":"tungsten-negative","halation":{"amount":0.015,"radius":0.0026795284030010718,"threshold":0,"tint":[1,0.33333333333333337,0]},"grain":{"profile":"tungsten-negative","gauge":"super35","amount":1,"size":1}}; {"id":"soft-negative","name":"Soft Negative","display":"soft-negative","halation":{"amount":0.015,"radius":0.0034833869239013935,"threshold":0,"tint":[1,0.33333333333333337,0]},"grain":{"profile":"soft-negative","gauge":"super35","amount":1,"size":1}}; {"id":"slide","name":"Slide","display":"slide","halation":{"amount":0.015,"radius":0.0034833869239013935,"threshold":0,"tint":[1,0.33333333333333337,0]},"grain":{"profile":"slide","gauge":"super35","amount":1,"size":1}}; {"id":"black-and-white","name":"Black and White","display":"black-and-white","halation":{"amount":0.015,"radius":0.0026795284030010718,"threshold":0,"tint":[1,0.33333333333333337,0]},"grain":{"profile":"black-and-white","gauge":"super35","amount":1,"size":1}}; {"id":"grain-only-fine","name":"Fine grain","grain":{"profile":"daylight-negative","gauge":"65mm","amount":1,"size":1}}; {"id":"halation-only","name":"Halation","halation":{"amount":0.08,"radius":0.0026795284030010718,"threshold":0,"tint":[1,0.25,0]}}. `enabled: false` bypasses the whole correction. Only a media clip on a video track takes color.'),zod.strictObject({
   "type": zod.literal("setCaptionStyle"),
   "style": zod.strictObject({
-  "fontFamily": zod.string().min(1).optional(),
-  "fontSize": zod.number().min(1).max(compositionOpOnefourStyleFontSizeMax).optional().describe('Font size as % of composition height (1-15, default 5). NOT px.'),
-  "fontWeight": zod.int().min(compositionOpOnefourStyleFontWeightMin).max(compositionOpOnefourStyleFontWeightMax).optional(),
-  "color": zod.string().min(1).optional(),
-  "highlightColor": zod.string().min(1).optional(),
-  "backgroundColor": zod.string().optional(),
-  "plate": zod.enum(['glass', 'solid', 'none']).optional(),
-  "position": zod.enum(['top', 'center', 'bottom']).optional(),
-  "region": zod.strictObject({
-  "x": zod.number().min(compositionOpOnefourStyleRegionXMin).max(compositionOpOnefourStyleRegionXMax),
-  "y": zod.number().min(compositionOpOnefourStyleRegionYMin).max(compositionOpOnefourStyleRegionYMax),
-  "w": zod.number().gt(compositionOpOnefourStyleRegionWExclusiveMin).max(compositionOpOnefourStyleRegionWMax),
-  "h": zod.number().gt(compositionOpOnefourStyleRegionHExclusiveMin).max(compositionOpOnefourStyleRegionHMax)
-}).optional().describe('Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height.'),
-  "textTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
-  "letterSpacing": zod.number().min(compositionOpOnefourStyleLetterSpacingMin).max(compositionOpOnefourStyleLetterSpacingMax).optional().describe('Base caption glyph spacing in pixels.'),
-  "wordGapEm": zod.number().min(compositionOpOnefourStyleWordGapEmMin).max(compositionOpOnefourStyleWordGapEmMax).optional().describe('Gap between caption runs as a multiple of base font size; default 0.35.'),
-  "lineGapEm": zod.number().min(compositionOpOnefourStyleLineGapEmMin).max(compositionOpOnefourStyleLineGapEmMax).optional().describe('Gap between caption lines as a multiple of base font size; default 0.25.'),
-  "emphasisColor": zod.string().optional(),
-  "emphasisGradient": zod.string().optional(),
-  "emphasisScale": zod.number().gt(compositionOpOnefourStyleEmphasisScaleExclusiveMin).optional(),
-  "emphasisFontFamily": zod.string().optional(),
-  "emphasisFontWeight": zod.int().min(compositionOpOnefourStyleEmphasisFontWeightMin).max(compositionOpOnefourStyleEmphasisFontWeightMax).optional(),
-  "emphasisTextTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
-  "emphasisLetterSpacing": zod.number().optional(),
-  "emphasisFontStyle": zod.enum(['normal', 'italic']).optional(),
-  "entrance": zod.enum(['none', 'fade', 'word-pop', 'stagger-up']).optional(),
-  "entranceMs": zod.number().min(compositionOpOnefourStyleEntranceMsMin).optional(),
-  "entranceStaggerMs": zod.number().min(compositionOpOnefourStyleEntranceStaggerMsMin).optional(),
-  "exitMs": zod.number().min(compositionOpOnefourStyleExitMsMin).optional(),
-  "emphasisPlate": zod.boolean().optional(),
-  "emphasisPlateColor": zod.string().optional(),
-  "emphasisPlateTextColor": zod.string().optional(),
-  "emphasisPlateAltColor": zod.string().optional(),
-  "emphasisPlateAltTextColor": zod.string().optional(),
-  "emphasisPlateRadius": zod.number().min(compositionOpOnefourStyleEmphasisPlateRadiusMin).optional(),
-  "emphasisPlatePadX": zod.number().optional(),
-  "emphasisPlatePadY": zod.number().optional(),
-  "emphasisPlateReveal": zod.boolean().optional().describe('Grow a shared emphasis plate as saved words appear while reserving its final layout width.'),
-  "annotationColor": zod.string().optional(),
-  "annotationStrokeWidth": zod.number().min(compositionOpOnefourStyleAnnotationStrokeWidthMin).max(compositionOpOnefourStyleAnnotationStrokeWidthMax).optional().describe('Annotation stroke width in its 100×100 SVG coordinate system; default 4.'),
-  "annotationTexture": zod.enum(['clean', 'pencil']).optional().describe('Native annotation stroke finish; default clean.'),
-  "maxWidthPercent": zod.number().gt(compositionOpOnefourStyleMaxWidthPercentExclusiveMin).max(compositionOpOnefourStyleMaxWidthPercentMax).optional()
+  "fontFamily": zod.union([zod.string().min(1),zod.null()]).optional(),
+  "fontSize": zod.union([zod.number().min(1).max(compositionOpOnefourStyleFontSizeOneMax),zod.null()]).optional().describe('Font size as % of composition height (1-15, default 5). NOT px.'),
+  "fontWeight": zod.union([zod.int().min(compositionOpOnefourStyleFontWeightOneMin).max(compositionOpOnefourStyleFontWeightOneMax),zod.null()]).optional(),
+  "color": zod.union([zod.string().min(1),zod.null()]).optional(),
+  "highlightColor": zod.union([zod.string().min(1),zod.null()]).optional(),
+  "backgroundColor": zod.string().nullish(),
+  "plate": zod.union([zod.enum(['glass', 'solid', 'none']),zod.null()]).optional().describe('Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.'),
+  "position": zod.union([zod.enum(['top', 'center', 'bottom']),zod.null()]).optional(),
+  "region": zod.union([zod.strictObject({
+  "x": zod.number().min(compositionOpOnefourStyleRegionOneXMin).max(compositionOpOnefourStyleRegionOneXMax),
+  "y": zod.number().min(compositionOpOnefourStyleRegionOneYMin).max(compositionOpOnefourStyleRegionOneYMax),
+  "w": zod.number().gt(compositionOpOnefourStyleRegionOneWExclusiveMin).max(compositionOpOnefourStyleRegionOneWMax),
+  "h": zod.number().gt(compositionOpOnefourStyleRegionOneHExclusiveMin).max(compositionOpOnefourStyleRegionOneHMax)
+}),zod.null()]).optional().describe('Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height.'),
+  "textTransform": zod.union([zod.enum(['none', 'uppercase', 'capitalize']),zod.null()]).optional(),
+  "letterSpacing": zod.union([zod.number().min(compositionOpOnefourStyleLetterSpacingOneMin).max(compositionOpOnefourStyleLetterSpacingOneMax),zod.null()]).optional().describe('Base caption glyph spacing in pixels.'),
+  "wordGapEm": zod.union([zod.number().min(compositionOpOnefourStyleWordGapEmOneMin).max(compositionOpOnefourStyleWordGapEmOneMax),zod.null()]).optional().describe('Gap between caption runs as a multiple of base font size; default 0.35.'),
+  "lineGapEm": zod.union([zod.number().min(compositionOpOnefourStyleLineGapEmOneMin).max(compositionOpOnefourStyleLineGapEmOneMax),zod.null()]).optional().describe('Gap between caption lines as a multiple of base font size; default 0.25.'),
+  "emphasisColor": zod.string().nullish(),
+  "emphasisGradient": zod.string().nullish(),
+  "emphasisScale": zod.union([zod.number().gt(compositionOpOnefourStyleEmphasisScaleOneExclusiveMin),zod.null()]).optional(),
+  "emphasisFontFamily": zod.string().nullish(),
+  "emphasisFontWeight": zod.union([zod.int().min(compositionOpOnefourStyleEmphasisFontWeightOneMin).max(compositionOpOnefourStyleEmphasisFontWeightOneMax),zod.null()]).optional(),
+  "emphasisTextTransform": zod.union([zod.enum(['none', 'uppercase', 'capitalize']),zod.null()]).optional(),
+  "emphasisLetterSpacing": zod.number().nullish(),
+  "emphasisFontStyle": zod.union([zod.enum(['normal', 'italic']),zod.null()]).optional(),
+  "entrance": zod.union([zod.enum(['none', 'fade', 'word-pop', 'stagger-up']),zod.null()]).optional(),
+  "entranceMs": zod.union([zod.number().min(compositionOpOnefourStyleEntranceMsOneMin),zod.null()]).optional(),
+  "entranceStaggerMs": zod.union([zod.number().min(compositionOpOnefourStyleEntranceStaggerMsOneMin),zod.null()]).optional(),
+  "exitMs": zod.union([zod.number().min(compositionOpOnefourStyleExitMsOneMin),zod.null()]).optional(),
+  "lingerMs": zod.union([zod.number().min(compositionOpOnefourStyleLingerMsOneMin).max(compositionOpOnefourStyleLingerMsOneMax),zod.null()]).optional().describe('How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.'),
+  "emphasisPlate": zod.boolean().nullish(),
+  "emphasisPlateColor": zod.string().nullish(),
+  "emphasisPlateTextColor": zod.string().nullish(),
+  "emphasisPlateAltColor": zod.string().nullish(),
+  "emphasisPlateAltTextColor": zod.string().nullish(),
+  "emphasisPlateRadius": zod.union([zod.number().min(compositionOpOnefourStyleEmphasisPlateRadiusOneMin),zod.null()]).optional(),
+  "emphasisPlatePadX": zod.number().nullish(),
+  "emphasisPlatePadY": zod.number().nullish(),
+  "emphasisPlateReveal": zod.boolean().nullish().describe('Grow a shared emphasis plate as saved words appear while reserving its final layout width.'),
+  "annotationColor": zod.string().nullish(),
+  "annotationStrokeWidth": zod.union([zod.number().min(compositionOpOnefourStyleAnnotationStrokeWidthOneMin).max(compositionOpOnefourStyleAnnotationStrokeWidthOneMax),zod.null()]).optional().describe('Annotation stroke width in its 100×100 SVG coordinate system; default 4.'),
+  "annotationTexture": zod.union([zod.enum(['clean', 'pencil']),zod.null()]).optional().describe('Native annotation stroke finish; default clean.'),
+  "maxWidthPercent": zod.union([zod.number().gt(compositionOpOnefourStyleMaxWidthPercentOneExclusiveMin).max(compositionOpOnefourStyleMaxWidthPercentOneMax),zod.null()]).optional()
 })
-}).describe('Merge style overrides (font/color/position/emphasis) onto the composition\'s caption layer. Partial — omitted fields keep their current value; creates the caption container if absent.'),zod.strictObject({
+}).describe('Merge style overrides (font/color/position/emphasis/plate/lingerMs) onto the composition\'s caption layer. Partial: omitted fields keep their current value, a null field is removed so its default applies again; creates the caption container if absent.'),zod.strictObject({
   "type": zod.literal("setCaptionDepth"),
   "zPlane": zod.enum(['front', 'behind-subject'])
 }).describe('Set the caption compositing plane. Use `behind-subject` to place captions behind the segmented foreground subject; use `front` for conventional captions above all video layers.'),zod.strictObject({
@@ -995,7 +1005,7 @@ zod.number().min(compositionOpOnethreeColorOneHalationTint2ItemMin).max(composit
   "color": zod.string().min(1).optional(),
   "highlightColor": zod.string().min(1).optional(),
   "backgroundColor": zod.string().optional(),
-  "plate": zod.enum(['glass', 'solid', 'none']).optional(),
+  "plate": zod.enum(['glass', 'solid', 'none']).optional().describe('Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.'),
   "position": zod.enum(['top', 'center', 'bottom']).optional(),
   "region": zod.strictObject({
   "x": zod.number().min(compositionOpOnesixStyleRegionXMin).max(compositionOpOnesixStyleRegionXMax),
@@ -1019,6 +1029,7 @@ zod.number().min(compositionOpOnethreeColorOneHalationTint2ItemMin).max(composit
   "entranceMs": zod.number().min(compositionOpOnesixStyleEntranceMsMin).optional(),
   "entranceStaggerMs": zod.number().min(compositionOpOnesixStyleEntranceStaggerMsMin).optional(),
   "exitMs": zod.number().min(compositionOpOnesixStyleExitMsMin).optional(),
+  "lingerMs": zod.number().min(compositionOpOnesixStyleLingerMsMin).max(compositionOpOnesixStyleLingerMsMax).optional().describe('How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.'),
   "emphasisPlate": zod.boolean().optional(),
   "emphasisPlateColor": zod.string().optional(),
   "emphasisPlateTextColor": zod.string().optional(),
@@ -1054,7 +1065,7 @@ zod.number().min(compositionOpOnethreeColorOneHalationTint2ItemMin).max(composit
   "color": zod.string().min(1).optional(),
   "highlightColor": zod.string().min(1).optional(),
   "backgroundColor": zod.string().optional(),
-  "plate": zod.enum(['glass', 'solid', 'none']).optional(),
+  "plate": zod.enum(['glass', 'solid', 'none']).optional().describe('Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing.'),
   "textTransform": zod.enum(['none', 'uppercase', 'capitalize']).optional(),
   "letterSpacing": zod.number().min(compositionOpOnesevenLayoutsItemStyleLetterSpacingMin).max(compositionOpOnesevenLayoutsItemStyleLetterSpacingMax).optional().describe('Base caption glyph spacing in pixels.'),
   "wordGapEm": zod.number().min(compositionOpOnesevenLayoutsItemStyleWordGapEmMin).max(compositionOpOnesevenLayoutsItemStyleWordGapEmMax).optional().describe('Gap between caption runs as a multiple of base font size; default 0.35.'),
@@ -1081,7 +1092,8 @@ zod.number().min(compositionOpOnethreeColorOneHalationTint2ItemMin).max(composit
   "entrance": zod.enum(['none', 'fade', 'word-pop', 'stagger-up']).optional(),
   "entranceMs": zod.number().min(compositionOpOnesevenLayoutsItemStyleEntranceMsMin).optional(),
   "entranceStaggerMs": zod.number().min(compositionOpOnesevenLayoutsItemStyleEntranceStaggerMsMin).optional(),
-  "exitMs": zod.number().min(compositionOpOnesevenLayoutsItemStyleExitMsMin).optional()
+  "exitMs": zod.number().min(compositionOpOnesevenLayoutsItemStyleExitMsMin).optional(),
+  "lingerMs": zod.number().min(compositionOpOnesevenLayoutsItemStyleLingerMsMin).max(compositionOpOnesevenLayoutsItemStyleLingerMsMax).optional().describe('How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.')
 }).optional(),
   "holdThroughWordIndex": zod.int().min(compositionOpOnesevenLayoutsItemHoldThroughWordIndexMin).max(compositionOpOnesevenLayoutsItemHoldThroughWordIndexMax).optional().describe('Inclusive saved-word index in this segment. The layout stays visible until that word ends.'),
   "wordMarks": zod.array(zod.strictObject({

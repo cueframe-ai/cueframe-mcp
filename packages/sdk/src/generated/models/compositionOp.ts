@@ -771,26 +771,17 @@ export type CompositionOp = {
 } | {
   type: 'setCaptionStyle';
   style: {
-  /** @minLength 1 */
-  fontFamily?: string;
-  /**
-     * Font size as % of composition height (1-15, default 5). NOT px.
-     * @minimum 1
-     * @maximum 15
-     */
-  fontSize?: number;
-  /**
-     * @minimum 100
-     * @maximum 900
-     */
-  fontWeight?: number;
-  /** @minLength 1 */
-  color?: string;
-  /** @minLength 1 */
-  highlightColor?: string;
-  backgroundColor?: string;
-  plate?: 'glass' | 'solid' | 'none';
-  position?: 'top' | 'center' | 'bottom';
+  fontFamily?: string | null;
+  /** Font size as % of composition height (1-15, default 5). NOT px. */
+  fontSize?: number | null;
+  fontWeight?: number | null;
+  color?: string | null;
+  highlightColor?: string | null;
+  /** @nullable */
+  backgroundColor?: string | null;
+  /** Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing. */
+  plate?: 'glass' | 'solid' | 'none' | null;
+  position?: 'top' | 'center' | 'bottom' | null;
   /** Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height. */
   region?: {
   /**
@@ -813,71 +804,59 @@ export type CompositionOp = {
      * @exclusiveMinimum 0
      */
   h: number;
-};
-  textTransform?: 'none' | 'uppercase' | 'capitalize';
+} | null;
+  textTransform?: 'none' | 'uppercase' | 'capitalize' | null;
+  /** Base caption glyph spacing in pixels. */
+  letterSpacing?: number | null;
+  /** Gap between caption runs as a multiple of base font size; default 0.35. */
+  wordGapEm?: number | null;
+  /** Gap between caption lines as a multiple of base font size; default 0.25. */
+  lineGapEm?: number | null;
+  /** @nullable */
+  emphasisColor?: string | null;
+  /** @nullable */
+  emphasisGradient?: string | null;
+  emphasisScale?: number | null;
+  /** @nullable */
+  emphasisFontFamily?: string | null;
+  emphasisFontWeight?: number | null;
+  emphasisTextTransform?: 'none' | 'uppercase' | 'capitalize' | null;
+  /** @nullable */
+  emphasisLetterSpacing?: number | null;
+  emphasisFontStyle?: 'normal' | 'italic' | null;
+  entrance?: 'none' | 'fade' | 'word-pop' | 'stagger-up' | null;
+  entranceMs?: number | null;
+  entranceStaggerMs?: number | null;
+  exitMs?: number | null;
+  /** How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition. */
+  lingerMs?: number | null;
+  /** @nullable */
+  emphasisPlate?: boolean | null;
+  /** @nullable */
+  emphasisPlateColor?: string | null;
+  /** @nullable */
+  emphasisPlateTextColor?: string | null;
+  /** @nullable */
+  emphasisPlateAltColor?: string | null;
+  /** @nullable */
+  emphasisPlateAltTextColor?: string | null;
+  emphasisPlateRadius?: number | null;
+  /** @nullable */
+  emphasisPlatePadX?: number | null;
+  /** @nullable */
+  emphasisPlatePadY?: number | null;
   /**
-     * Base caption glyph spacing in pixels.
-     * @minimum -5
-     * @maximum 20
+     * Grow a shared emphasis plate as saved words appear while reserving its final layout width.
+     * @nullable
      */
-  letterSpacing?: number;
-  /**
-     * Gap between caption runs as a multiple of base font size; default 0.35.
-     * @minimum 0
-     * @maximum 2
-     */
-  wordGapEm?: number;
-  /**
-     * Gap between caption lines as a multiple of base font size; default 0.25.
-     * @minimum 0
-     * @maximum 2
-     */
-  lineGapEm?: number;
-  emphasisColor?: string;
-  emphasisGradient?: string;
-  /** @exclusiveMinimum 0 */
-  emphasisScale?: number;
-  emphasisFontFamily?: string;
-  /**
-     * @minimum 100
-     * @maximum 900
-     */
-  emphasisFontWeight?: number;
-  emphasisTextTransform?: 'none' | 'uppercase' | 'capitalize';
-  emphasisLetterSpacing?: number;
-  emphasisFontStyle?: 'normal' | 'italic';
-  entrance?: 'none' | 'fade' | 'word-pop' | 'stagger-up';
-  /** @minimum 0 */
-  entranceMs?: number;
-  /** @minimum 0 */
-  entranceStaggerMs?: number;
-  /** @minimum 0 */
-  exitMs?: number;
-  emphasisPlate?: boolean;
-  emphasisPlateColor?: string;
-  emphasisPlateTextColor?: string;
-  emphasisPlateAltColor?: string;
-  emphasisPlateAltTextColor?: string;
-  /** @minimum 0 */
-  emphasisPlateRadius?: number;
-  emphasisPlatePadX?: number;
-  emphasisPlatePadY?: number;
-  /** Grow a shared emphasis plate as saved words appear while reserving its final layout width. */
-  emphasisPlateReveal?: boolean;
-  annotationColor?: string;
-  /**
-     * Annotation stroke width in its 100×100 SVG coordinate system; default 4.
-     * @minimum 0.5
-     * @maximum 12
-     */
-  annotationStrokeWidth?: number;
+  emphasisPlateReveal?: boolean | null;
+  /** @nullable */
+  annotationColor?: string | null;
+  /** Annotation stroke width in its 100×100 SVG coordinate system; default 4. */
+  annotationStrokeWidth?: number | null;
   /** Native annotation stroke finish; default clean. */
-  annotationTexture?: 'clean' | 'pencil';
-  /**
-     * @maximum 100
-     * @exclusiveMinimum 0
-     */
-  maxWidthPercent?: number;
+  annotationTexture?: 'clean' | 'pencil' | null;
+  maxWidthPercent?: number | null;
 };
 } | {
   type: 'setCaptionDepth';
@@ -921,6 +900,7 @@ export type CompositionOp = {
   /** @minLength 1 */
   highlightColor?: string;
   backgroundColor?: string;
+  /** Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing. */
   plate?: 'glass' | 'solid' | 'none';
   position?: 'top' | 'center' | 'bottom';
   /** Optional caption layout box {x,y,w,h} in normalized output-frame coordinates. Overrides position; text starts at its top edge and wraps/pages within its width and height. */
@@ -985,6 +965,12 @@ export type CompositionOp = {
   entranceStaggerMs?: number;
   /** @minimum 0 */
   exitMs?: number;
+  /**
+     * How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.
+     * @minimum 0
+     * @maximum 2000
+     */
+  lingerMs?: number;
   emphasisPlate?: boolean;
   emphasisPlateColor?: string;
   emphasisPlateTextColor?: string;
@@ -1081,6 +1067,7 @@ export type CompositionOp = {
   /** @minLength 1 */
   highlightColor?: string;
   backgroundColor?: string;
+  /** Caption plate: glass (default) darkens just enough behind each caption to keep text at least 4.5:1 contrast, solid paints backgroundColor, none paints nothing. */
   plate?: 'glass' | 'solid' | 'none';
   textTransform?: 'none' | 'uppercase' | 'capitalize';
   /**
@@ -1140,6 +1127,12 @@ export type CompositionOp = {
   entranceStaggerMs?: number;
   /** @minimum 0 */
   exitMs?: number;
+  /**
+     * How long a caption page stays after its last word ends, in milliseconds (0-2000, default 600). A page never runs past the end of the composition.
+     * @minimum 0
+     * @maximum 2000
+     */
+  lingerMs?: number;
 };
   /**
      * Inclusive saved-word index in this segment. The layout stays visible until that word ends.
