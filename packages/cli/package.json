@@ -34,7 +34,7 @@
   "dependencies": {
     "add-mcp": "^2.6.0",
     "better-auth": "1.7.14",
-    "commander": "^15.0.0",
+    "commander": "^15.1.0",
     "open": "^11.0.4",
     "ora": "^10.0.0",
     "pino": "^10.3.1"
