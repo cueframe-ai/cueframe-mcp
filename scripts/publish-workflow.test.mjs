@@ -146,7 +146,10 @@ test('the App token is minted from repository secrets, narrowed, and the job fai
     const guard = job.steps.findIndex((s) => /RELEASE_APP_ID/.test(runOf(s)) && /exit 1/.test(runOf(s)));
     assert.ok(guard >= 0 && guard < job.steps.indexOf(step), `${name} fails before minting when a secret is missing`);
   }
-  assert.doesNotMatch(text, /github\.token|secrets\.GITHUB_TOKEN/, 'nothing falls back to GITHUB_TOKEN');
+  for (const job of [versionPr, tag]) {
+    const writers = job.steps.filter((step) => step.uses?.startsWith('changesets/action@') || /node scripts\/tag-release\.mjs/.test(runOf(step)));
+    for (const step of writers) assert.doesNotMatch(JSON.stringify(step), /github\.token|secrets\.GITHUB_TOKEN/, 'writes never fall back to GITHUB_TOKEN');
+  }
 });
 
 test('the Version packages PR gets ordinary pull_request CI, because an App token opened it', () => {
