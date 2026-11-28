@@ -1,22 +1,25 @@
-export async function checkReleaseHead({ sha, repository, token, fetch = globalThis.fetch }) {
-  if (!/^[a-f0-9]{40}$/.test(sha ?? '') || !/^[\w.-]+\/[\w.-]+$/.test(repository ?? '') || !token) {
-    throw new Error('Missing or invalid release SHA, repository or token');
+import { execFileSync } from 'node:child_process';
+import { pathToFileURL } from 'node:url';
+
+export function checkReleaseHead({ sha, repository, lookup }) {
+  if (!/^[a-f0-9]{40}$/.test(sha ?? '') || !/^[\w.-]+\/[\w.-]+$/.test(repository ?? '')) {
+    throw new Error('Missing or invalid release SHA or repository');
   }
-  const response = await fetch(`https://api.github.com/repos/${repository}/git/ref/heads/main`, {
-    headers: { authorization: `Bearer ${token}`, accept: 'application/vnd.github+json', 'cache-control': 'no-cache' },
-  });
-  if (!response.ok) throw new Error(`Main ref lookup failed: HTTP ${response.status}`);
-  const ref = await response.json();
+  const ref = JSON.parse(lookup(repository));
   if (ref.ref !== 'refs/heads/main' || ref.object?.type !== 'commit' || ref.object.sha !== sha) {
     throw new Error('Release SHA is not the current main head');
   }
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
-    await checkReleaseHead({ sha: process.env.RELEASE_SHA, repository: process.env.GITHUB_REPOSITORY, token: process.env.GH_TOKEN });
+    checkReleaseHead({
+      sha: process.env.RELEASE_SHA,
+      repository: process.env.GITHUB_REPOSITORY,
+      lookup: (repository) => execFileSync('gh', ['api', `repos/${repository}/git/ref/heads/main`], { encoding: 'utf8' }),
+    });
   } catch (error) {
-    console.error(`::error::${error.message}`);
+    console.error(`::error::Release head check failed: ${error.message}`);
     process.exitCode = 1;
   }
 }
