@@ -19,13 +19,21 @@ test('pinned Changesets reports individual outcomes only after the batch complet
     for (const name of ['alpha', 'beta']) write(`packages/${name}/package.json`, JSON.stringify({ name: `fixture-${name}`, version: '1.0.0' }));
     write('bin/npm', '#!/bin/sh\nif [ "$MOCK_MODE" = skipped ] && [ "$2" = fixture-alpha ]; then printf "{\\"versions\\":[\\"1.0.0\\"]}"; else printf "{\\"error\\":{\\"code\\":\\"E404\\"}}"; fi\n', 0o755);
     write('bin/pnpm', '#!/bin/sh\nif [ "$1" = "--version" ]; then echo 10.32.1; exit 0; fi\nif [ "$1" = "changeset" ]; then shift; exec "$NODE_BINARY" "$CHANGESET_CLI" "$@"; fi\ncase "$PWD" in */beta) if [ "$MOCK_MODE" = partial ]; then echo "{\\"error\\":{\\"code\\":\\"EFAIL\\",\\"summary\\":\\"mock failure\\"}}" >&2; exit 1; fi; if [ "$MOCK_MODE" = interrupted ]; then sleep 10; fi;; esac\nexit 0\n', 0o755);
-    const run = mode => spawnSync(process.execPath, [cli, 'publish', '--no-git-tag'], { cwd: root, encoding: 'utf8', timeout: mode === 'interrupted' ? 1000 : 10000, env: { ...process.env, PATH: `${join(root, 'bin')}:${process.env.PATH}`, MOCK_MODE: mode, CI: 'true', FORCE_COLOR: '0' } });
+    const run = (mode, color = false) => {
+      const env = { ...process.env, PATH: `${join(root, 'bin')}:${process.env.PATH}`, MOCK_MODE: mode, CI: 'true', GITHUB_ACTIONS: 'true', FORCE_COLOR: '0' };
+      if (color) delete env.NO_COLOR; else env.NO_COLOR = '1';
+      return spawnSync(process.execPath, [cli, 'publish', '--no-git-tag'], { cwd: root, encoding: 'utf8', timeout: mode === 'interrupted' ? 1000 : 10000, env });
+    };
     const full = run('complete');
     assert.equal(full.status, 0, full.stderr + full.stdout);
     assert.match(full.stdout + full.stderr, /packages published successfully:/);
     assert.match(full.stdout + full.stderr, /fixture-alpha@1\.0\.0/);
     assert.match(full.stdout + full.stderr, /fixture-beta@1\.0\.0/);
     assert.deepEqual(publishedFromSummary(full.stdout, ['fixture-alpha@1.0.0', 'fixture-beta@1.0.0'], full.status).sort(), ['fixture-alpha@1.0.0', 'fixture-beta@1.0.0']);
+    const colored = run('complete', true);
+    assert.equal(colored.status, 0);
+    assert.match(colored.stdout, /\x1b\[/);
+    assert.deepEqual(publishedFromSummary(colored.stdout, ['fixture-alpha@1.0.0', 'fixture-beta@1.0.0'], colored.status).sort(), ['fixture-alpha@1.0.0', 'fixture-beta@1.0.0']);
     const partial = run('partial');
     assert.notEqual(partial.status, 0);
     assert.match(partial.stdout + partial.stderr, /packages published successfully:/);
@@ -42,7 +50,9 @@ test('pinned Changesets reports individual outcomes only after the batch complet
     const observer = fileURLToPath(new URL('./observe-changesets.mjs', import.meta.url));
     for (const mode of ['complete', 'partial']) {
       const output = join(root, `${mode}.out`);
-      const result = spawnSync(process.execPath, [observer], { cwd: root, encoding: 'utf8', timeout: 10000, env: { ...process.env, PATH: `${join(root, 'bin')}:${process.env.PATH}`, NODE_BINARY: process.execPath, CHANGESET_CLI: cli, MOCK_MODE: mode, CI: 'true', FORCE_COLOR: '0', UNPUBLISHED: 'fixture-alpha@1.0.0 fixture-beta@1.0.0', GITHUB_OUTPUT: output } });
+      const env = { ...process.env, PATH: `${join(root, 'bin')}:${process.env.PATH}`, NODE_BINARY: process.execPath, CHANGESET_CLI: cli, MOCK_MODE: mode, CI: 'true', GITHUB_ACTIONS: 'true', FORCE_COLOR: '0', UNPUBLISHED: 'fixture-alpha@1.0.0 fixture-beta@1.0.0', GITHUB_OUTPUT: output };
+      delete env.NO_COLOR;
+      const result = spawnSync(process.execPath, [observer], { cwd: root, encoding: 'utf8', timeout: 10000, env });
       assert.equal(result.status === 0, mode === 'complete', result.stderr);
       const confirmed = JSON.parse(readFileSync(output, 'utf8').trim().slice('confirmed='.length));
       assert.deepEqual(confirmed.sort(), mode === 'complete' ? ['fixture-alpha@1.0.0', 'fixture-beta@1.0.0'] : []);

@@ -8,7 +8,9 @@ export function publishedFromSummary(output, planned, exitCode) {
   // Changesets writes failed-package names to stdout but their heading to stderr;
   // merged stream ordering is not reliable. A failed batch cannot confirm any package here.
   if (exitCode !== 0) return [];
-  const lines = output.split(/\r?\n/);
+  // picocolors treats FORCE_COLOR='0' as truthy under CI. Accept only SGR color
+  // escapes; unfamiliar control sequences leave the summary unmatched.
+  const lines = output.replace(/\x1b\[[0-9;]*m/g, '').split(/\r?\n/);
   const marker = '🦋  success packages published successfully:';
   if (lines.filter(line => line === marker).length !== 1) return [];
   const start = lines.indexOf(marker) + 1;
@@ -24,7 +26,7 @@ export function publishedFromSummary(output, planned, exitCode) {
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const planned = (process.env.UNPUBLISHED || '').split(/\s+/).filter(Boolean);
-  const child = spawn('pnpm', ['changeset', 'publish', '--no-git-tag'], { env: { ...process.env, FORCE_COLOR: '0' }, stdio: ['ignore', 'pipe', 'pipe'] });
+  const child = spawn('pnpm', ['changeset', 'publish', '--no-git-tag'], { env: { ...process.env, NO_COLOR: '1' }, stdio: ['ignore', 'pipe', 'pipe'] });
   let stdout = '';
   let overflow = false;
   child.stdout.on('data', chunk => { process.stdout.write(chunk); if (stdout.length + chunk.length > 1_000_000) overflow = true; else stdout += chunk.toString(); });
