@@ -123,7 +123,7 @@ jobs:
           unpublished="$(node scripts/check-public-packages.mjs --unpublished)"
           echo "unpublished: ${unpublished:-none}"
           echo "unpublished=${unpublished}" >> "${GITHUB_OUTPUT}"
-          UNPUBLISHED="${unpublished}" node -e 'console.log(`evidence_plan=${JSON.stringify(process.env.UNPUBLISHED)}`)' >> "${GITHUB_OUTPUT}"
+          UNPUBLISHED="${unpublished}" node -e 'console.log("evidence_plan=" + JSON.stringify(process.env.UNPUBLISHED))' >> "${GITHUB_OUTPUT}"
 
   publish:
     needs: release-plan
