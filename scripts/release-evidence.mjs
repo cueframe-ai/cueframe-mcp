@@ -18,7 +18,7 @@ export function evidence({ sha, ciRun, ciAttempt, run, attempt, jobs, plan, conf
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const jobs = JSON.parse(process.env.JOBS);
-  const report = evidence({ sha: process.env.RELEASE_SHA, ciRun: process.env.CI_RUN, ciAttempt: process.env.CI_ATTEMPT, run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT, jobs, plan: jobs['release-plan'].outputs?.unpublished, confirmed: JSON.parse(jobs.publish.outputs?.confirmed || '[]') });
+  const report = evidence({ sha: process.env.RELEASE_SHA, ciRun: process.env.CI_RUN, ciAttempt: process.env.CI_ATTEMPT, run: process.env.GITHUB_RUN_ID, attempt: process.env.GITHUB_RUN_ATTEMPT, jobs, plan: jobs['release-plan'].outputs?.evidence_plan === undefined ? undefined : JSON.parse(jobs['release-plan'].outputs.evidence_plan), confirmed: JSON.parse(jobs.publish.outputs?.confirmed || '[]') });
   writeFileSync(process.env.REPORT_PATH, JSON.stringify(report, null, 2) + '\n');
   appendFileSync(process.env.GITHUB_OUTPUT, `outcome=${report.outcome}\n`);
   console.log(JSON.stringify(report));
