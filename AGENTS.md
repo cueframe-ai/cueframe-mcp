@@ -48,7 +48,7 @@ The hosted MCP server at `https://api.cueframe.ai/v1/mcp` is the product; every 
 
 ## Releases: Changesets, published when the Version packages pull request merges
 
-Changesets, normal semver versions only, and **a merged Version packages pull request publishes**. `.github/workflows/publish-npm.yml` runs on every push to `main`: CI, then
+Changesets, normal semver versions only, and **a merged Version packages pull request publishes**. `.github/workflows/publish-npm.yml` runs after successful push CI on the same current `main` commit, then
 
 - while `.changeset/*.md` files are pending, `changesets/action` (v1, the line that supports `@changesets/cli` 2.x) runs `pnpm release:version` (`changeset version`, then the contract manifest's `contractVersion` and the plugin manifests restamped) on the branch `changeset-release/main` and opens or updates the "Version packages" pull request. It publishes nothing and never pushes to `main`. It authenticates with a GitHub App installation token (secrets `RELEASE_APP_ID`, `RELEASE_APP_PRIVATE_KEY`), so that pull request gets its normal `pull_request` CI; a pull request opened with `GITHUB_TOKEN` would start no workflow. Without the secrets the job fails; it never falls back to `GITHUB_TOKEN`.
 - when `main` carries a package version npm does not have, which only that merge produces, `changeset publish` publishes it through npm trusted publishing. `npm publish` exiting 0 is the success signal; nothing polls npm afterwards (npm may take minutes to serve a new version). Anonymous install checks of published versions run outside this workflow, with `pnpm check:public-packages`.

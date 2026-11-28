@@ -1,7 +1,7 @@
 name: Publish npm packages
 
 # Changesets releases: a release is the merge of the Changesets "Version packages" pull request. Every
-# push to main runs CI (validate), then:
+# successful push CI on the current main head runs this workflow, then:
 #   - version-pr: while `.changeset/*.md` files are pending, `changesets/action` versions them on the branch
 #     `changeset-release/main` (bumps, CHANGELOGs, the contract stamp and the plugin manifests) and opens or
 #     updates the "Version packages" pull request into main. It publishes nothing and never pushes to main.
@@ -23,25 +23,24 @@ name: Publish npm packages
 # the commit and title are fixed below, and `pnpm check:changesets` refuses a changeset whose summary (which
 # becomes the body) carries one, so the merge commit that must publish is never skipped.
 on:
-  push:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
 
 permissions:
   contents: read
+
+env:
+  RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
 
 concurrency:
   group: publish-npm
   cancel-in-progress: false
 
 jobs:
-  validate:
-    if: github.ref == 'refs/heads/main' && github.actor != 'github-actions[bot]'
-    uses: ./.github/workflows/ci.yml
-    permissions:
-      contents: read
-
   version-pr:
-    needs: validate
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_sha == github.sha
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -66,7 +65,7 @@ jobs:
           permission-pull-requests: write
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.RELEASE_SHA }}
           fetch-depth: 0 # changesets/action switches to changeset-release/main when it exists
           persist-credentials: false # with commitMode github-api the action commits through the API
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
@@ -91,7 +90,7 @@ jobs:
           createGithubReleases: false
 
   release-plan:
-    needs: validate
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_sha == github.sha
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -101,7 +100,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.RELEASE_SHA }}
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -131,7 +130,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.RELEASE_SHA }}
           persist-credentials: false
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -192,7 +191,7 @@ jobs:
           permission-contents: write
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.RELEASE_SHA }}
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -203,6 +202,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           UNPUBLISHED: ${{ needs.release-plan.outputs.unpublished }}
+          RELEASE_SHA: ${{ env.RELEASE_SHA }}
         run: node scripts/tag-release.mjs "${UNPUBLISHED}"
 
   registry:
@@ -217,6 +217,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ env.RELEASE_SHA }}
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:

@@ -3,7 +3,7 @@
 // (`<name>@<version>`, for example `@cueframe/sdk@0.17.2`). The publish job runs `changeset publish
 // --no-git-tag` because it cannot write to the repository; this runs in a later job with a GitHub App token.
 //
-// Usage: GH_TOKEN=... GITHUB_REPOSITORY=owner/repo GITHUB_SHA=<sha> node scripts/tag-release.mjs name@version...
+// Usage: GH_TOKEN=... GITHUB_REPOSITORY=owner/repo RELEASE_SHA=<sha> node scripts/tag-release.mjs name@version...
 // A tag that already points at the commit is accepted (a re-run is safe); one that points elsewhere fails.
 import { fileURLToPath } from 'node:url';
 
@@ -49,5 +49,5 @@ export async function tagRelease(specs, { repository, sha, token, fetch: fetchIm
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const specs = process.argv.slice(2).flatMap((a) => a.split(/\s+/)).filter(Boolean);
   if (specs.length === 0) throw new Error('nothing to tag');
-  await tagRelease(specs, { repository: process.env.GITHUB_REPOSITORY, sha: process.env.GITHUB_SHA, token: process.env.GH_TOKEN });
+  await tagRelease(specs, { repository: process.env.GITHUB_REPOSITORY, sha: process.env.RELEASE_SHA, token: process.env.GH_TOKEN });
 }

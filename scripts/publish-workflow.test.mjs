@@ -69,24 +69,51 @@ const tag = workflow.jobs.tag;
 const ci = parse(readFileSync(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8'));
 const appToken = (job) => job.steps.find((s) => String(s.uses).startsWith('actions/create-github-app-token@'));
 
-test('only a push to main runs the release workflow; there is no dispatch route to a publish', () => {
-  assert.deepEqual(Object.keys(workflow.on), ['push']);
-  assert.deepEqual(workflow.on.push, { branches: ['main'] });
-  assert.match(workflow.jobs.validate.if, /github\.ref == 'refs\/heads\/main'/);
+test('only successful push CI on the current main head can start release jobs', () => {
+  assert.deepEqual(workflow.on, { workflow_run: { workflows: ['CI'], types: ['completed'], branches: ['main'] } });
+  const gate = "github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_sha == github.sha";
+  assert.equal(plan.if, gate);
+  assert.equal(versionPr.if, gate);
+  assert.equal(workflow.jobs.validate, undefined);
+  assert.equal(workflow.env.RELEASE_SHA, '${{ github.event.workflow_run.head_sha }}');
+  for (const name of ['version-pr', 'release-plan', 'publish', 'tag', 'registry']) {
+    const checkout = workflow.jobs[name].steps.find((step) => String(step.uses).startsWith('actions/checkout@'));
+    assert.equal(checkout.with.ref, '${{ env.RELEASE_SHA }}', name);
+  }
+  const tagStep = tag.steps.find((step) => /node scripts\/tag-release\.mjs/.test(runOf(step)));
+  assert.equal(tagStep.env.RELEASE_SHA, '${{ env.RELEASE_SHA }}');
+  assert.match(readFileSync(new URL('./tag-release.mjs', import.meta.url), 'utf8'), /sha: process\.env\.RELEASE_SHA, token:/);
+});
+
+test('the release gate rejects failed, cancelled, skipped, non-push and stale CI', () => {
+  const gate = plan.if;
+  const decide = (conclusion, event, head, current) => {
+    const expression = gate
+      .replaceAll('github.event.workflow_run.conclusion', JSON.stringify(conclusion))
+      .replaceAll('github.event.workflow_run.event', JSON.stringify(event))
+      .replaceAll('github.event.workflow_run.head_sha', JSON.stringify(head))
+      .replaceAll('github.sha', JSON.stringify(current));
+    assert.match(expression, /^[\w'" =!&-]+$/);
+    return Function(`"use strict"; return (${expression})`)();
+  };
+  for (const conclusion of ['failure', 'cancelled', 'skipped']) assert.equal(decide(conclusion, 'push', 'a', 'a'), false);
+  assert.equal(decide('success', 'pull_request', 'a', 'a'), false);
+  assert.equal(decide('success', 'push', 'a', 'b'), false);
+  assert.equal(decide('success', 'push', 'a', 'a'), true);
 });
 
 test('publish runs only when main carries a version npm does not have, which only a merged Version packages PR creates', () => {
   assert.equal(publish.needs, 'release-plan');
   assert.equal(publish.if, "needs.release-plan.outputs.unpublished != ''");
-  assert.equal(plan.needs, 'validate');
+  assert.equal(plan.needs, undefined);
   assert.deepEqual(plan.permissions, { contents: 'read' });
   assert.match(plan.steps.map(runOf).join('\n'), /node scripts\/check-public-packages\.mjs --unpublished/);
   const checkout = steps.find((s) => String(s.uses).startsWith('actions/checkout@'));
-  assert.equal(checkout.with.ref, '${{ github.sha }}', 'publish ships the commit validate checked');
+  assert.equal(checkout.with.ref, '${{ env.RELEASE_SHA }}', 'publish ships the CI head');
 });
 
 test('version-pr opens the Version packages PR with pinned changesets/action v1 and an App token, and never publishes', () => {
-  assert.equal(versionPr.needs, 'validate');
+  assert.equal(versionPr.needs, undefined);
   assert.deepEqual(versionPr.permissions, { contents: 'read' }, 'the write access is the App token, not GITHUB_TOKEN');
   const action = versionPr.steps.find((s) => String(s.uses).startsWith('changesets/action@'));
   // v2 of the action refuses @changesets/cli 2.x; v1.9.0 is the line that supports it.
@@ -135,7 +162,7 @@ test('tag marks each published package on the released commit with the App token
   assert.match(runOf(step), /needs\.release-plan\.outputs\.unpublished|UNPUBLISHED/);
   assert.equal(step.env.GH_TOKEN, '${{ steps.app-token.outputs.token }}');
   const checkout = tag.steps.find((s) => String(s.uses).startsWith('actions/checkout@'));
-  assert.equal(checkout.with.ref, '${{ github.sha }}');
+  assert.equal(checkout.with.ref, '${{ env.RELEASE_SHA }}');
   assert.match(runOf(steps.find((s) => /changeset publish/.test(runOf(s)))), /--no-git-tag/);
 });
 
