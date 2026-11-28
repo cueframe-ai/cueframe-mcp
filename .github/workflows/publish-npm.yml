@@ -10,6 +10,8 @@ name: Publish npm packages
 #   - publish: runs only when release-plan listed something, and publishes it through npm trusted publishing.
 #     `npm publish` exiting 0 is the success signal; no step polls npm afterwards.
 #   - tag: tags the released commit `<name>@<version>` for each published package.
+# Each side-effect path rechecks live main immediately before starting. Main can still advance between
+# that lookup and an external write; GitHub and the registries do not offer a shared atomic transaction.
 # Nobody dispatches a publish. A failed publish is retried with "Re-run failed jobs" on the same run, which
 # publishes the same commit and skips versions npm already has.
 #
@@ -75,6 +77,10 @@ jobs:
           cache: pnpm
       - name: pnpm install
         run: pnpm install --frozen-lockfile
+      - name: verify the release is still current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-head.mjs
       - name: open or update the Version packages pull request
         # v1.9.0: v2 of the action refuses @changesets/cli 2.x, which this repository uses. With no `publish`
         # input the action never publishes: with pending changesets it resets changeset-release/main to this
@@ -105,6 +111,10 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
+      - name: verify the release is still current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-head.mjs
       - name: versions on main that npm does not have
         id: plan
         # Anonymous metadata lookups; a 404 means "not published", any other error fails the job.
@@ -156,6 +166,10 @@ jobs:
       - run: pnpm build
       - name: no package changed without a version bump (changeset publish skips published versions)
         run: pnpm check:published-versions
+      - name: verify the release is still current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-head.mjs
       - name: changeset publish
         # Publishes every package whose version npm does not have, each through `pnpm publish` (packing
         # with pnpm, so workspace: ranges and publishConfig are rewritten; npm then publishes the tarball
@@ -196,6 +210,10 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
+      - name: verify the release is still current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-head.mjs
       - name: tag the released commit once per published package
         # The same `<name>@<version>` names `changeset publish` creates. A tag already on this commit is
         # accepted, so a re-run is safe; a tag on another commit fails.
@@ -222,6 +240,10 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
+      - name: verify the release is still current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-head.mjs
       - name: publish server.json when its version is new
         # Authentication is `login http`: the registry fetches https://cueframe.ai/.well-known/mcp-registry-auth
         # (an ed25519 public key, `v=MCPv1; k=ed25519; p=...`) and the private key signs the challenge.
