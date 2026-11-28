@@ -85,7 +85,7 @@ jobs:
         # input the action never publishes: with pending changesets it resets changeset-release/main to this
         # commit, runs the version script, commits the result through the API as the App and opens or
         # updates the pull request; with none it does nothing.
-        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           github-token: ${{ steps.app-token.outputs.token }}
           version: pnpm release:version
