@@ -3,7 +3,7 @@
 // npm CLI 11.5.1 or later, Node 22.14.0 or later, cloud-hosted runners only.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { parse } from 'yaml';
 
 const text = readFileSync(new URL('../.github/workflows/publish-npm.yml', import.meta.url), 'utf8');
@@ -161,4 +161,18 @@ test('publish gates come before changeset publish', () => {
   assert.ok(index('pnpm build') < index('pnpm check:published-versions'));
   assert.ok(index('pnpm check:published-versions') < index('changeset publish'));
   assert.equal(steps.at(-1), steps[index('changeset publish')], 'nothing polls npm after the publish');
+});
+
+test('every workflow bounds Node and pnpm bootstrap', () => {
+  const dir = new URL('../.github/workflows/', import.meta.url);
+  for (const file of readdirSync(dir).filter((f) => /\.ya?ml$/.test(f))) {
+    const wf = parse(readFileSync(new URL(file, dir), 'utf8'));
+    for (const [id, job] of Object.entries(wf.jobs)) {
+      for (const step of job.steps ?? []) {
+        const action = (step.uses ?? '').split('@')[0];
+        if (!['actions/setup-node', 'pnpm/action-setup'].includes(action)) continue;
+        assert.equal(step['timeout-minutes'], action === 'actions/setup-node' ? 2 : 3, `${file}/${id}`);
+      }
+    }
+  }
 });

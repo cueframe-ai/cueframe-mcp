@@ -70,7 +70,9 @@ jobs:
           fetch-depth: 0 # changesets/action switches to changeset-release/main when it exists
           persist-credentials: false # with commitMode github-api the action commits through the API
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        timeout-minutes: 3
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        timeout-minutes: 2
         with:
           node-version: 24
           cache: pnpm
@@ -104,6 +106,7 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        timeout-minutes: 2
         with:
           node-version: 24
       - name: versions on main that npm does not have
@@ -134,7 +137,9 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        timeout-minutes: 3
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        timeout-minutes: 2
         # No `registry-url`: it would write an .npmrc auth line and export a placeholder auth token variable,
         # so a failed OIDC exchange would surface as a confusing registry 401/404 instead of ENEEDAUTH.
         with:
@@ -195,6 +200,7 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        timeout-minutes: 2
         with:
           node-version: 24
       - name: tag the released commit once per published package
@@ -219,6 +225,7 @@ jobs:
         with:
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        timeout-minutes: 2
         with:
           node-version: 24
       - name: publish server.json when its version is new
