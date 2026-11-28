@@ -1,7 +1,7 @@
 name: Publish npm packages
 
 # Changesets releases: a release is the merge of the Changesets "Version packages" pull request. Every
-# push to main runs CI (validate), then:
+# successful push CI on the current main head runs this workflow, then:
 #   - version-pr: while `.changeset/*.md` files are pending, `changesets/action` versions them on the branch
 #     `changeset-release/main` (bumps, CHANGELOGs, the contract stamp and the plugin manifests) and opens or
 #     updates the "Version packages" pull request into main. It publishes nothing and never pushes to main.
@@ -9,9 +9,10 @@ name: Publish npm packages
 #     packages pull request produces one (`pnpm check:changesets` refuses any other version edit).
 #   - publish: runs only when release-plan listed something, and publishes it through npm trusted publishing.
 #     `npm publish` exiting 0 is the success signal; no step polls npm afterwards.
-#   - tag: tags the released commit `<name>@<version>` for each published package.
-# Nobody dispatches a publish. A failed publish is retried with "Re-run failed jobs" on the same run, which
-# publishes the same commit and skips versions npm already has.
+#   - tag: tags the released commit `<name>@<version>` only when every planned package was observed.
+# Each side-effect path rechecks live main immediately before starting. Main can still advance between
+# that lookup and an external write; GitHub and the registries do not offer a shared atomic transaction.
+# Incomplete or uncertain publication needs an owned recovery case; do not automatically retry it.
 #
 # Tokens: version-pr and tag use a GitHub App installation token (secrets RELEASE_APP_ID and
 # RELEASE_APP_PRIVATE_KEY), narrowed to the permissions each job needs. GitHub starts no workflow for a pull
@@ -23,25 +24,24 @@ name: Publish npm packages
 # the commit and title are fixed below, and `pnpm check:changesets` refuses a changeset whose summary (which
 # becomes the body) carries one, so the merge commit that must publish is never skipped.
 on:
-  push:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
 
 permissions:
   contents: read
+
+env:
+  RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
 
 concurrency:
   group: publish-npm
   cancel-in-progress: false
 
 jobs:
-  validate:
-    if: github.ref == 'refs/heads/main' && github.actor != 'github-actions[bot]'
-    uses: ./.github/workflows/ci.yml
-    permissions:
-      contents: read
-
   version-pr:
-    needs: validate
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_sha == github.sha
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
@@ -66,7 +66,7 @@ jobs:
           permission-pull-requests: write
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.RELEASE_SHA }}
           fetch-depth: 0 # changesets/action switches to changeset-release/main when it exists
           persist-credentials: false # with commitMode github-api the action commits through the API
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
@@ -78,6 +78,10 @@ jobs:
           cache: pnpm
       - name: pnpm install
         run: pnpm install --frozen-lockfile
+      - name: verify the release is still current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-head.mjs
       - name: open or update the Version packages pull request
         # v1.9.0: v2 of the action refuses @changesets/cli 2.x, which this repository uses. With no `publish`
         # input the action never publishes: with pending changesets it resets changeset-release/main to this
@@ -93,22 +97,27 @@ jobs:
           createGithubReleases: false
 
   release-plan:
-    needs: validate
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_sha == github.sha
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
     outputs:
       unpublished: ${{ steps.plan.outputs.unpublished }}
+      evidence_plan: ${{ steps.plan.outputs.evidence_plan }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.RELEASE_SHA }}
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         timeout-minutes: 2
         with:
           node-version: 24
+      - name: verify the release is still current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-head.mjs
       - name: versions on main that npm does not have
         id: plan
         # Anonymous metadata lookups; a 404 means "not published", any other error fails the job.
@@ -117,6 +126,7 @@ jobs:
           unpublished="$(node scripts/check-public-packages.mjs --unpublished)"
           echo "unpublished: ${unpublished:-none}"
           echo "unpublished=${unpublished}" >> "${GITHUB_OUTPUT}"
+          UNPUBLISHED="${unpublished}" node -e 'console.log("evidence_plan=" + JSON.stringify(process.env.UNPUBLISHED))' >> "${GITHUB_OUTPUT}"
 
   publish:
     needs: release-plan
@@ -126,6 +136,8 @@ jobs:
     permissions:
       contents: read
       id-token: write # npm trusted publishing (OIDC token exchange) and provenance
+    outputs:
+      confirmed: ${{ steps.publish.outputs.confirmed }}
     # npm trusted publishing (docs.npmjs.com/trusted-publishers): every package below is published with a
     # short-lived token that npm exchanges for this job's GitHub OIDC token; no npm token is stored here.
     # It needs npm CLI 11.5.1 or later, Node 22.14.0 or later and a GitHub-hosted runner (self-hosted
@@ -134,7 +146,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.RELEASE_SHA }}
           persist-credentials: false
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
         timeout-minutes: 3
@@ -162,7 +174,12 @@ jobs:
       - run: pnpm build
       - name: no package changed without a version bump (changeset publish skips published versions)
         run: pnpm check:published-versions
+      - name: verify the release is still current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-head.mjs
       - name: changeset publish
+        id: publish
         # Publishes every package whose version npm does not have, each through `pnpm publish` (packing
         # with pnpm, so workspace: ranges and publishConfig are rewritten; npm then publishes the tarball
         # and does the OIDC exchange). Each package's publishConfig.access decides its visibility. A
@@ -170,7 +187,8 @@ jobs:
         # this job cannot write to the repository; the tag job creates them.
         env:
           NPM_CONFIG_PROVENANCE: ${{ github.event.repository.private == false }}
-        run: pnpm changeset publish --no-git-tag
+          UNPUBLISHED: ${{ needs.release-plan.outputs.unpublished }}
+        run: node scripts/observe-changesets.mjs
 
   tag:
     needs: [release-plan, publish]
@@ -197,25 +215,36 @@ jobs:
           permission-contents: write
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ env.RELEASE_SHA }}
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         timeout-minutes: 2
         with:
           node-version: 24
+      - name: verify the release is still current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-head.mjs
+      - name: require observed publication for every planned tag
+        env:
+          UNPUBLISHED: ${{ needs.release-plan.outputs.unpublished }}
+          CONFIRMED: ${{ needs.publish.outputs.confirmed }}
+        run: |
+          node -e 'const p=process.env.UNPUBLISHED.trim().split(/\s+/).filter(Boolean), c=JSON.parse(process.env.CONFIRMED || "[]"); if (!p.length || !Array.isArray(c) || p.length !== c.length || p.some(x => !c.includes(x))) { console.error("::error::Package publication is incomplete or uncertain; do not tag"); process.exit(1); }'
       - name: tag the released commit once per published package
         # The same `<name>@<version>` names `changeset publish` creates. A tag already on this commit is
         # accepted, so a re-run is safe; a tag on another commit fails.
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           UNPUBLISHED: ${{ needs.release-plan.outputs.unpublished }}
+          RELEASE_SHA: ${{ env.RELEASE_SHA }}
         run: node scripts/tag-release.mjs "${UNPUBLISHED}"
 
   registry:
     # Publishes server.json to the MCP registry (registry.modelcontextprotocol.io). server.json lists
     # the hosted remote only, so nothing here depends on what npm serves; it runs after the npm job
     # only so one release publishes everything in a fixed order.
-    needs: publish
+    needs: [release-plan, publish]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -223,17 +252,29 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ env.RELEASE_SHA }}
           persist-credentials: false
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         timeout-minutes: 2
         with:
           node-version: 24
+      - name: verify the release is still current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/check-release-head.mjs
+      - name: require observed publication before registry publication
+        env:
+          UNPUBLISHED: ${{ needs.release-plan.outputs.unpublished }}
+          CONFIRMED: ${{ needs.publish.outputs.confirmed }}
+        run: |
+          node -e 'const p=process.env.UNPUBLISHED.trim().split(/\s+/).filter(Boolean), c=JSON.parse(process.env.CONFIRMED || "[]"); if (!p.length || !Array.isArray(c) || p.length !== c.length || p.some(x => !c.includes(x))) { console.error("::error::Package publication is incomplete or uncertain; do not publish registry entry"); process.exit(1); }'
       - name: publish server.json when its version is new
         # Authentication is `login http`: the registry fetches https://cueframe.ai/.well-known/mcp-registry-auth
         # (an ed25519 public key, `v=MCPv1; k=ed25519; p=...`) and the private key signs the challenge.
         # Flag names confirmed with `mcp-publisher login http --help` at v1.8.1: -domain, -private-key (hex),
         # -algorithm (default ed25519), -registry.
         env:
+          GH_TOKEN: ${{ github.token }}
           MCP_PUBLISHER_PRIVATE_KEY: ${{ secrets.MCP_PUBLISHER_PRIVATE_KEY }}
           MCP_PUBLISHER_VERSION: 1.8.1
           MCP_PUBLISHER_SHA256: a06c9096dcb9727c13555b6be26c7effa707b01f06a4c561ba7a3635443cf2cc
@@ -255,4 +296,39 @@ jobs:
           echo "${MCP_PUBLISHER_SHA256}  $RUNNER_TEMP/mcp-publisher.tgz" | sha256sum -c -
           tar -xzf "$RUNNER_TEMP/mcp-publisher.tgz" -C "$RUNNER_TEMP" mcp-publisher
           "$RUNNER_TEMP/mcp-publisher" login http --domain cueframe.ai --private-key "${MCP_PUBLISHER_PRIVATE_KEY}"
+          node scripts/check-release-head.mjs
           "$RUNNER_TEMP/mcp-publisher" publish server.json
+
+  release-evidence:
+    # Independent of whether publish succeeds; an empty later plan never replaces this run's artifact.
+    needs: [release-plan, publish, tag, registry]
+    if: always() && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_sha == github.sha
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_SHA }}
+          persist-credentials: false
+      - name: record sanitized release evidence
+        id: evidence
+        env:
+          CI_RUN: ${{ github.event.workflow_run.id }}
+          CI_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          JOBS: ${{ toJSON(needs) }}
+          REPORT_PATH: ${{ runner.temp }}/release-evidence.json
+        run: node scripts/release-evidence.mjs
+      - name: retain release evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release-evidence.json
+          if-no-files-found: error
+      - name: surface incomplete release
+        if: always() && steps.evidence.outputs.outcome == 'investigate'
+        run: |
+          echo '::error::Release outcome incomplete or uncertain; retain evidence and open an owned recovery case.'
+          exit 1

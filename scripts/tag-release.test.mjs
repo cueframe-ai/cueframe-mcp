@@ -2,6 +2,8 @@
 // names `changeset publish` would create. The release gate reads them to find the previous release.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { tagRelease } from './tag-release.mjs';
 
 const SHA = 'a'.repeat(40);
@@ -64,4 +66,13 @@ test('refuses to run without a token, a commit or a well-formed name@version', a
   await assert.rejects(tagRelease(['cueframe@0.12.1'], { ...base, sha: 'main', fetch: gh.fetch }), /commit/);
   await assert.rejects(tagRelease(['cueframe'], { ...base, fetch: gh.fetch }), /name@version/);
   assert.deepEqual(gh.calls, []);
+});
+
+test('the CLI refuses to fall back to the workflow event SHA when the release SHA is missing', () => {
+  const result = spawnSync(process.execPath, [fileURLToPath(new URL('./tag-release.mjs', import.meta.url)), 'cueframe@0.12.1'], {
+    encoding: 'utf8',
+    env: { GITHUB_REPOSITORY: 'cueframe-ai/cueframe-mcp', GITHUB_SHA: OTHER, GH_TOKEN: 'app-token' },
+  });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /not a commit sha/);
 });
