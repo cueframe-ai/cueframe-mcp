@@ -60,7 +60,8 @@ test('workflow checks each path immediately before its effect', () => {
     ['registry', null, 'publish server.json when its version is new'],
   ]) {
     const section = workflow.split(`\n  ${job}:\n`)[1].split(next ? `\n  ${next}:\n` : '\n  nonexistent:\n')[0];
-    assert.match(section, new RegExp(`run: node scripts/check-release-head\\.mjs\\n      - name: ${effect}`), job);
+    assert.ok(section.indexOf('run: node scripts/check-release-head.mjs') >= 0, job);
+    assert.ok(section.indexOf('run: node scripts/check-release-head.mjs') < section.indexOf(`- name: ${effect}`), job);
   }
   assert.match(workflow, /node scripts\/check-release-head\.mjs\n          "\$RUNNER_TEMP\/mcp-publisher" publish server\.json/);
 });

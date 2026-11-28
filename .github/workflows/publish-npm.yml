@@ -9,11 +9,10 @@ name: Publish npm packages
 #     packages pull request produces one (`pnpm check:changesets` refuses any other version edit).
 #   - publish: runs only when release-plan listed something, and publishes it through npm trusted publishing.
 #     `npm publish` exiting 0 is the success signal; no step polls npm afterwards.
-#   - tag: tags the released commit `<name>@<version>` for each published package.
+#   - tag: tags the released commit `<name>@<version>` only when every planned package was observed.
 # Each side-effect path rechecks live main immediately before starting. Main can still advance between
 # that lookup and an external write; GitHub and the registries do not offer a shared atomic transaction.
-# Nobody dispatches a publish. A failed publish is retried with "Re-run failed jobs" on the same run, which
-# publishes the same commit and skips versions npm already has.
+# Incomplete or uncertain publication needs an owned recovery case; do not automatically retry it.
 #
 # Tokens: version-pr and tag use a GitHub App installation token (secrets RELEASE_APP_ID and
 # RELEASE_APP_PRIVATE_KEY), narrowed to the permissions each job needs. GitHub starts no workflow for a pull
@@ -132,6 +131,8 @@ jobs:
     permissions:
       contents: read
       id-token: write # npm trusted publishing (OIDC token exchange) and provenance
+    outputs:
+      confirmed: ${{ steps.publish.outputs.confirmed }}
     # npm trusted publishing (docs.npmjs.com/trusted-publishers): every package below is published with a
     # short-lived token that npm exchanges for this job's GitHub OIDC token; no npm token is stored here.
     # It needs npm CLI 11.5.1 or later, Node 22.14.0 or later and a GitHub-hosted runner (self-hosted
@@ -171,6 +172,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/check-release-head.mjs
       - name: changeset publish
+        id: publish
         # Publishes every package whose version npm does not have, each through `pnpm publish` (packing
         # with pnpm, so workspace: ranges and publishConfig are rewritten; npm then publishes the tarball
         # and does the OIDC exchange). Each package's publishConfig.access decides its visibility. A
@@ -178,7 +180,8 @@ jobs:
         # this job cannot write to the repository; the tag job creates them.
         env:
           NPM_CONFIG_PROVENANCE: ${{ github.event.repository.private == false }}
-        run: pnpm changeset publish --no-git-tag
+          UNPUBLISHED: ${{ needs.release-plan.outputs.unpublished }}
+        run: node scripts/observe-changesets.mjs
 
   tag:
     needs: [release-plan, publish]
@@ -214,6 +217,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/check-release-head.mjs
+      - name: require observed publication for every planned tag
+        env:
+          UNPUBLISHED: ${{ needs.release-plan.outputs.unpublished }}
+          CONFIRMED: ${{ needs.publish.outputs.confirmed }}
+        run: |
+          node -e 'const p=process.env.UNPUBLISHED.trim().split(/\s+/).filter(Boolean), c=JSON.parse(process.env.CONFIRMED || "[]"); if (!p.length || !Array.isArray(c) || p.length !== c.length || p.some(x => !c.includes(x))) { console.error("::error::Package publication is incomplete or uncertain; do not tag"); process.exit(1); }'
       - name: tag the released commit once per published package
         # The same `<name>@<version>` names `changeset publish` creates. A tag already on this commit is
         # accepted, so a re-run is safe; a tag on another commit fails.
@@ -227,7 +236,7 @@ jobs:
     # Publishes server.json to the MCP registry (registry.modelcontextprotocol.io). server.json lists
     # the hosted remote only, so nothing here depends on what npm serves; it runs after the npm job
     # only so one release publishes everything in a fixed order.
-    needs: publish
+    needs: [release-plan, publish]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -244,6 +253,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: node scripts/check-release-head.mjs
+      - name: require observed publication before registry publication
+        env:
+          UNPUBLISHED: ${{ needs.release-plan.outputs.unpublished }}
+          CONFIRMED: ${{ needs.publish.outputs.confirmed }}
+        run: |
+          node -e 'const p=process.env.UNPUBLISHED.trim().split(/\s+/).filter(Boolean), c=JSON.parse(process.env.CONFIRMED || "[]"); if (!p.length || !Array.isArray(c) || p.length !== c.length || p.some(x => !c.includes(x))) { console.error("::error::Package publication is incomplete or uncertain; do not publish registry entry"); process.exit(1); }'
       - name: publish server.json when its version is new
         # Authentication is `login http`: the registry fetches https://cueframe.ai/.well-known/mcp-registry-auth
         # (an ed25519 public key, `v=MCPv1; k=ed25519; p=...`) and the private key signs the challenge.
@@ -274,3 +289,37 @@ jobs:
           "$RUNNER_TEMP/mcp-publisher" login http --domain cueframe.ai --private-key "${MCP_PUBLISHER_PRIVATE_KEY}"
           node scripts/check-release-head.mjs
           "$RUNNER_TEMP/mcp-publisher" publish server.json
+
+  release-evidence:
+    # Independent of whether publish succeeds; an empty later plan never replaces this run's artifact.
+    needs: [release-plan, publish, tag, registry]
+    if: always() && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_sha == github.sha
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_SHA }}
+          persist-credentials: false
+      - name: record sanitized release evidence
+        id: evidence
+        env:
+          CI_RUN: ${{ github.event.workflow_run.id }}
+          CI_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          JOBS: ${{ toJSON(needs) }}
+          REPORT_PATH: ${{ runner.temp }}/release-evidence.json
+        run: node scripts/release-evidence.mjs
+      - name: retain release evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/release-evidence.json
+          if-no-files-found: error
+      - name: surface incomplete release
+        if: always() && steps.evidence.outputs.outcome == 'investigate'
+        run: |
+          echo '::error::Release outcome incomplete or uncertain; retain evidence and open an owned recovery case.'
+          exit 1

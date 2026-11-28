@@ -10,6 +10,8 @@ const text = readFileSync(new URL('../.github/workflows/publish-npm.yml', import
 const workflow = parse(text);
 const publish = workflow.jobs.publish;
 const steps = publish.steps;
+const observer = readFileSync(new URL('./observe-changesets.mjs', import.meta.url), 'utf8');
+const publishStep = steps.find((step) => step.id === 'publish');
 const runOf = (step) => step.run ?? '';
 const atLeast = (version, minimum) => {
   const a = version.split('.').map(Number);
@@ -35,7 +37,7 @@ test('setup-node writes no registry auth line, so a failed OIDC exchange cannot 
 });
 
 test('a pinned npm >= 11.5.1 is installed and asserted before anything is published', () => {
-  const publishIndex = steps.findIndex((step) => /changeset publish/.test(runOf(step)));
+  const publishIndex = steps.indexOf(publishStep);
   const npmIndex = steps.findIndex((step) => /npm install --global npm@/.test(runOf(step)));
   assert.ok(npmIndex >= 0, 'npm upgrade step');
   assert.ok(npmIndex < publishIndex, 'npm is upgraded before the publish step');
@@ -46,7 +48,7 @@ test('a pinned npm >= 11.5.1 is installed and asserted before anything is publis
 });
 
 test('changeset publish packs through pnpm (workspace: ranges and publishConfig rewritten) and skips published versions', () => {
-  const step = steps.find((s) => /changeset publish/.test(runOf(s)));
+  const step = publishStep;
   assert.ok(step, 'changeset publish step');
   assert.doesNotMatch(runOf(step), /(^|[^p])npm publish/, 'publishing a package directory with npm ships the raw manifest');
   // pnpm is the workspace's packageManager, so @changesets/cli publishes each package with `pnpm publish`.
@@ -166,7 +168,7 @@ test('tag marks each published package on the released commit with the App token
   assert.equal(step.env.GH_TOKEN, '${{ steps.app-token.outputs.token }}');
   const checkout = tag.steps.find((s) => String(s.uses).startsWith('actions/checkout@'));
   assert.equal(checkout.with.ref, '${{ env.RELEASE_SHA }}');
-  assert.match(runOf(steps.find((s) => /changeset publish/.test(runOf(s)))), /--no-git-tag/);
+  assert.match(observer, /'--no-git-tag'/);
 });
 
 test('no skip-ci marker can reach the Version packages commit, title or merge commit', () => {
@@ -189,6 +191,6 @@ test('write access and the OIDC token never share a job', () => {
 test('publish gates come before changeset publish', () => {
   const index = (needle) => steps.findIndex((s) => runOf(s).includes(needle));
   assert.ok(index('pnpm build') < index('pnpm check:published-versions'));
-  assert.ok(index('pnpm check:published-versions') < index('changeset publish'));
-  assert.equal(steps.at(-1), steps[index('changeset publish')], 'nothing polls npm after the publish');
+  assert.ok(index('pnpm check:published-versions') < steps.indexOf(publishStep));
+  assert.equal(steps.at(-1), publishStep, 'nothing polls npm after the publish');
 });
